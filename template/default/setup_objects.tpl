@@ -1,0 +1,94 @@
+﻿{foreach from=$jsList item=js}
+<script type="text/javascript" src="{$js}"></script>
+{/foreach}
+
+<div id="edit-object-dialog" style="display: none;">
+<form id="edit-object-form">
+<table class="form">
+	<tr>
+		<th>ID</th>
+		<td>
+			<input id="edit-object-id" name="edit-object-id" class="required" size="25" type="text">
+		</td>
+	</tr>
+	<tr>
+		<th>Nom</th>
+		<td><input id="edit-object-label" name="edit-object-label" class="required" size="30" type="text"></td>
+	</tr>
+	<tr>
+		<th>Type</th>
+		<td>{html_options name=dummy id="edit-object-type" options=$objectTypes}</td>
+	</tr>
+	<tr>
+		<th>GAD</th>
+		<td><input id="edit-object-gad" size="10" type="text"></td>
+	</tr>
+	<tr>
+		<th>Type</th>
+		<td>
+			<input id="edit-object-flag-c" type="checkbox"/><span title="Communication">c</span>
+			<input id="edit-object-flag-r" type="checkbox"/><span title="Read">r</span>
+			<input id="edit-object-flag-w" type="checkbox"/><span title="Write">w</span>
+			<input id="edit-object-flag-t" type="checkbox"/><span title="Transmit">t</span>
+			<input id="edit-object-flag-u" type="checkbox"/><span title="Update">u</span>
+			<input id="edit-object-flag-f" type="checkbox"/><span title="Force">f</span>
+		</td>
+	</tr>
+	<tr>
+		<th>Valeur initial</th>
+		<td>
+			<select id="edit-object-init" onchange="if ($(this).val()=='') $('#edit-object-init-value').css('visibility','visible'); else $('#edit-object-init-value').css('visibility','hidden'); ">
+				<option value="request">request (lire du bus)</option>
+				<option value="persist">persist (lire depuis le stockage persistant)</option>
+				<option value="">autre (définir une valeur)</option>
+			</select>
+			<input type="text" id="edit-object-init-value" size="4">
+		</td>
+	</tr>
+</table>
+</form>
+</div>
+
+<div id="readwrite-object-dialog" style="display: none;">
+<form id="readwrite-object-form">
+<table class="form">
+	<tr>
+		<th>Objet</th>
+		<td>
+			<select id="readwrite-object-id"></select>
+		</td>
+	</tr>
+	<tr>
+		<th>Valeur</th>
+		<td>
+			<select id="readwrite-object-val-select"></select>
+			<input id="readwrite-object-val-input" size="10" type="text">
+		</td>
+	</tr>
+	<tr>
+		<th>Valeur reçue</th>
+		<td><input id="readwrite-object-recv" readonly size="10" type="text"></td>
+	</tr>
+</table>
+</form>
+</div>
+
+
+<table id="objects-tab-table">
+	<thead>
+		<tr>
+			<th width="25%">Objet</th>
+			<th width="25%">Description</th>
+			<th width="25%">GAD</th>
+			<th width="25%">Type</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>

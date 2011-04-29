@@ -1,0 +1,422 @@
+body, html {
+	font-family: Arial, Tahoma, Helvetica, sans-serif;
+	color: #000;
+	background: #FFF;
+	margin: 0;
+	padding: 0;
+	background-repeat: no-repeat;
+	overflow: hidden;
+}
+
+* {
+	font-size: 11px;
+}
+
+img {
+	border: 0px;
+}
+
+#loaderContent{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 300px;
+  height: 80px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  background-color: #F5F5F5;
+  border: 3px solid #000;
+  padding-top: 15px;
+}
+
+#loaderModal
+{
+	display: none;
+  position:absolute;
+  width:100%;
+  height:100%;
+  background-color:#000000;
+  filter:alpha(opacity=60);
+  opacity:0.8;
+  -moz-opacity:0.8;
+  z-index:999;
+
+  text-align:center;
+  vertical-align:middle;
+}
+
+#wrap {
+	width: 100%;
+}
+
+#appTitle {
+	font-weight: bold;
+	font-size: 14px;
+	text-align: center;
+	padding: 15px;
+}
+
+#leftContent {
+	border-right: 1px solid #8DB2E3;
+	background-color: #DFE8F6;
+	width: 200px;
+	height: 100%;
+	padding-right: 2px;
+	padding-left: 2px;
+	vertical-align: top;
+	float: left;
+}
+
+#leftContent .title { 
+	border: 1px solid #2694e8;
+	background: #3baae3 url(../lib/jquery/css/cupertino/images/ui-bg_highlight-hard_70_000000_1x100.png) 50% 50% repeat-x;
+	font-weight: bold;
+	color: #EEE;
+	height: 15px;
+	padding-left: 5px;
+}
+
+#mainContent {
+	position: relative;
+	vertical-align: top;
+	padding: 5px;
+	overflow: auto;
+	height: 100%;
+	margin-left: 210px;
+}
+
+#leftMenu h3.ui-accordion-header {
+	height: 26px;
+	padding-left: 2px;
+	vertical-align: baseline;
+}
+
+#leftMenu h3.ui-accordion-header * {
+	vertical-align: middle;
+}
+
+#leftMenu h3.ui-corner-bottom {
+    -moz-border-radius-bottomleft: 0;
+    -moz-border-radius-bottomright: 0;
+}
+
+#leftMenu div {
+		padding: 0;
+}
+
+#leftMenu div.header{
+	background-color: #FFF;
+	height: 20px;
+	padding: 3px;
+}
+
+#leftMenu div.content {
+		padding: 5px;
+}
+
+#leftMenu .subItem {
+	background: #deedf7 url(../images/subitem-bg.png) 50% 50% repeat-x;
+	height: 20px;
+//	text-align: center;
+	padding-top: 5px;
+	padding-left: 10px;
+	cursor: pointer;
+	font-weight: bold;
+	color: #444;
+}
+
+#leftMenu .subItem img {
+	padding-right: 10px;
+}
+
+#leftMenu .subItem * {
+	vertical-align: middle;
+}
+
+#propertiesContainer {
+	padding-top: 10px;
+	display: none;
+}
+
+.ui-tabs-nav li {position: relative;}
+.ui-tabs-selected a span {padding-right: 10px;}
+.ui-tabs-close {display: none;position: absolute;top: 5px;right: 0px;z-index: 800;width: 16px;height: 14px;font-size: 10px; font-style: normal;cursor: pointer;}
+.ui-tabs-selected .ui-tabs-close {display: block;}
+
+#objects-tab-table {
+	display: none;
+	width: 100%;
+}
+
+label.error {
+	color: #F00;
+	padding-left: 10px;
+}
+
+table.tableize {
+  padding: 0;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	border: 1px solid #8DB2E3;
+}
+
+table.tableize th {
+	height: 30px;
+}
+
+table.tableize td {
+	height: 22px;
+}
+
+table.tableize tbody tr.odd{
+	background-color: #D9E3EB;
+}
+
+table.tableize tbody tr:hover{
+	background-color: #CCC;
+}
+
+table.tableize tr.row_selected{
+	background-color: #CCC;
+	font-weight: bold;
+}
+
+table.tableize tr.odd.row_selected{
+	background-color: #CCC;
+	font-weight: bold;
+}
+
+table.tableize thead tr .header {
+	background-image: url(../images/tablesorter/bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tableize thead tr .headerSortUp {
+	background-image: url(../images/tablesorter/asc.gif);
+}
+table.tableize thead tr .headerSortDown {
+	background-image: url(../images/tablesorter/desc.gif);
+}
+
+table.form {
+	width: 100%;
+}
+
+table.form td {
+	padding: 5px;
+}
+
+#smsgateway-tab-table {
+	width: 100%;
+}
+
+#smsgateway-tab-table th {
+	width: 250px;
+}
+
+#emailserver-tab-table {
+	width: 100%;
+}
+
+#emailserver-tab-table th {
+	width: 250px;
+}
+
+#setupgeneral-tab-table {
+	width: 100%;
+}
+
+#setupgeneral-tab-table th {
+	width: 250px;
+}
+
+#logging-tab-table {
+	width: 100%;
+}
+
+#logging-tab-table th {
+	width: 250px;
+}
+
+#ioports-tab-table {
+	display: none;
+	width: 100%;
+}
+
+#tab-rules {
+	height: 700px;
+}
+
+/***************** Rules ********************/
+
+#tab-rules-container { position:relative; width:100%; height:650px; border:1px dotted red; }
+
+.or {
+    border:1px dotted gray;
+    width: 70px;
+    height:120px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+}
+
+.not {
+    border:1px dotted gray;
+    width: 70px;
+    height:70px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+}
+
+.object {
+    border:1px dotted gray;
+    width: 120px;
+    height:54px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+}
+
+.objectsrc {
+    border:1px dotted gray;
+    width: 120px;
+    height:66px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+}
+
+.objectcompare {
+    border:1px dotted gray;
+    width: 120px;
+    height:52px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+}
+
+.timecounter {
+    border:1px dotted gray;
+    width: 120px;
+    height:42px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+}
+
+.timer {
+    border:1px dotted gray;
+    width: 120px;
+    height:26px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+    padding-top: 10px;
+}
+
+.and {  
+    border:1px dotted gray;
+    width: 70px;
+    height:120px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+}
+
+#action {  
+    border:1px dotted gray;
+    width: 70px;
+    height:40px;
+    z-index:20;
+    position:absolute;
+    color:gray;
+    font-size:0.9em;
+    text-align:center;
+    z-index:40;
+    background-color:white;
+    -o-box-shadow: 0px 0px 17px #044;
+    -webkit-box-shadow: 0px 0px 17px #044;
+    -moz-box-shadow: 0px 0px 17px #044;
+    box-shadow: 0px 0px 17px #044;
+    float: right;
+    top: 200px;
+    right: 50px;
+}
+
+.drag-locked { border:1px solid red; }
+._jsPlumb_endpoint { z-index:50; }
+._jsPlumb_connector { z-index:1; }
+.dropHover { border:1px dotted red; }
+.dragActive { border:2px dotted orange; }
+.cmdLink { font-size:0.80em;}
+ 
+
+/***************** /Rules ********************/

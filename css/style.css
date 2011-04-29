@@ -1,0 +1,290 @@
+body {
+	font-size: 11px;
+	font-family: Arial, Tahoma, Helvetica, sans-serif;
+	color: #000;
+	background: #FFF;
+	margin: 0 0 0 0;
+	background-repeat: no-repeat;
+}
+
+input,select {
+	font-size: 11px;
+}
+		
+#menu {
+	width: 180px;
+}
+
+table.menuContainer {
+  background: #FFF url(../images/menubackground.png) repeat-y left top;
+}
+
+table.menuContainer th {
+	width: 180px;
+	font-weight: bold;
+	font-size: 11px;
+	color: #FFF;
+}
+
+img {
+	border: 0px;
+}
+
+td.menu {
+  width: 180px;
+  vertical-align: top;
+  color: #FFF;
+  font-weight: bold;
+  font-size: 12px;
+  text-align: center;
+}
+		
+.menuItem {
+	width: 160px;
+	height:24px;
+	background-image:url(../images/menuBg.png);
+	display:block;
+	line-height:25px;
+	text-align:right;
+	font-size:12px;
+	color: blue;
+	font-weight: normal;
+	border:1px solid #fff;
+	padding-right: 5px;
+	margin: auto 0;
+	float: right;
+	cursor: pointer;
+}
+
+.menuItemOver{
+	border-bottom:1px solid #ec954e;
+}
+
+.subMenuItem {
+	width: 160px;
+	background-image:url(../images/subMenuBg.png);
+	color: #000;
+	text-align: left;
+	font-size:11px;
+	font-weight: normal;
+	border:1px solid #fff;
+	padding-left: 5px;
+	margin: auto 0 ;
+	float: right;
+	list-style-type: none;
+}
+
+.subMenuItem a {
+	text-decoration: none;
+}
+
+div.notification {
+	height: 18px; 
+	top: 2px;
+	left: 180px;
+	display: none;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 2px;
+	margin-right: 10px; 
+	position: absolute;
+	text-align: left;
+}
+
+.menuTitle {
+	width: 180px;
+	font-size: 15px;
+	font-weight: bold;
+	padding: 2px;
+	color: #666666;
+	position: absolute;
+}
+
+.menuTitle a {
+	text-decoration: none;
+	color: #AAA;
+}
+
+.panel {
+	vertical-align: top;
+}
+
+.panel div {
+	font-size: 12px;
+	padding: 10px;
+}
+
+div.widget {
+	display: none;
+	position: absolute;
+}
+
+tr.editWidget {
+  height: 15px;
+  background-color: black;
+}
+
+div.widgetDiv {
+	display: block;
+	position: absolute;
+}
+
+div.dimmerDiv {
+	display: block;
+	width: 36px; 
+	height: 96px; 
+	overflow: hidden; 
+	border: 1px solid black; 
+	float: left; 
+	margin-right: 10px; 
+	background-color: darkgray; 
+	position: absolute;
+	text-align: center;
+}
+
+div.camDiv {
+	display: block;
+	width: 32px; 
+	height: 32px; 
+	overflow: hidden; 
+	border: 1px solid black; 
+	float: left; 
+	margin-right: 10px; 
+	background-color: darkgray; 
+	position: absolute;
+	text-align: center;
+}
+
+div.camViewDiv {
+	width: 320px; 
+	height: 255px; 
+	overflow: hidden; 
+	border: 1px solid black; 
+	float: left; 
+	margin-right: 10px; 
+	background-color: #EEEEEE; 
+	position: absolute;
+	text-align: center;
+}
+
+div.textDiv {
+	display: block;
+	position: absolute;
+}
+
+table.textDiv td {
+	padding: 2 5 2 5;
+}
+
+div.editDiv {
+	display: block;
+	overflow: hidden; 
+	border: 1px solid black;
+	padding: 5px;
+	float: left; 
+	margin-right: 10px; 
+	background-color: darkgray; 
+	position: absolute;
+	text-align: left;
+}
+
+div.hsliderDiv {
+	display: block;
+	position: absolute;
+}
+
+div.hsliderDiv div {
+	float: left;
+	height; 32px;
+	width: 32px;
+}
+
+.redBorder {
+	border: 1px solid #F00;
+}
+
+.scrollItems{
+	overflow:hidden;
+}
+
+.scrollItems ul{
+	margin:0;
+	padding:0;
+}
+
+.scrollItems li {
+	float:left;
+	list-style-type:none;
+	margin:0;
+	padding:0;
+}
+
+.scrollItems li{
+	float:left;
+	cursor:pointer;
+}
+
+div.ruleHdr {
+	display: block;
+	overflow: hidden; 
+	border: 2px solid black;
+	padding: 5px;
+	text-align: left;
+}
+
+div.ruleDetail {
+	display: block;
+	overflow: hidden; 
+	border: 1px solid black;
+	padding: 5px;
+	text-align: left;
+}
+
+#changeImage {
+	background-color: #EEEEEE;
+	top:300px;
+	position: absolute;
+	z-index:5;
+	display: none;
+  border-style: solid;
+  border-color: #999999;
+  border-width: 1px;
+}
+
+#changeImage td {
+  font-size: 12px;
+}
+
+table.list {
+	color: #000;
+	padding-bottom: 10px;
+}
+
+table.list th {
+	color: #000;
+	height: 20px;
+	background-image: url(../images/menuBg.png);
+}
+
+table.list td {
+	font-size: 11px;
+}
+
+#pageTitle {
+	font-weight: bold;
+	font-size: 16px;
+	padding-bottom: 5px;
+}
+
+#waitDialog {
+	font-size: 14px;
+	position:absolute;
+	width:440px;
+	height:22px;
+	display:none;
+	z-index:9999;
+	padding:20px;
+	background-color: #EEEEEE;
+	border: 1px solid #000000;
+	text-align: center;
+}  
