@@ -1,4 +1,4 @@
-﻿var logging = {
+var logging = {
 
 	refreshData: function() {
 
@@ -25,6 +25,7 @@
 						
 					$("#logging-log4cpp-maxfilesize").val(data.getAttribute('maxfilesize'));
 					$("#logging-log4cpp-maxfileindex").val(data.getAttribute('maxfileindex'));
+					$("#logging-log4cpp-config").val(data.getAttribute('config'));
 				}
 				$("#logging-log4cpp-type").val(data.getAttribute('type'));
 			}
@@ -46,6 +47,7 @@
 				body += 'format="' + $("#logging-customformat").val() + '" ';
 			if ($("#logging-log4cpp-maxfilesize").val()!="") body += 'maxfilesize="' + $("#logging-log4cpp-maxfilesize").val() + '" ';
 			if ($("#logging-log4cpp-maxfileindex").val()!="") body += 'maxfileindex="' + $("#logging-log4cpp-maxfileindex").val() + '" ';
+			if ($("#logging-log4cpp-config").val()!="") body += 'config="' + $("#logging-log4cpp-config").val() + '" ';
 			body += '/>';
 			
 			body += '</config></write>';

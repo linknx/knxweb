@@ -7,12 +7,20 @@ body {
 	background-repeat: no-repeat;
 }
 
+#background {
+  padding: 10px;
+  //position: absolute;
+}
+
 input,select {
 	font-size: 11px;
 }
 		
 #menu {
 	width: 180px;
+	top: 40px;
+	left: 40px;
+	position: absolute;
 }
 
 table.menuContainer {
@@ -166,11 +174,12 @@ div.camViewDiv {
 	position: absolute;
 	text-align: center;
 }
-
+/*
 div.textDiv {
 	display: block;
 	position: absolute;
 }
+*/
 
 table.textDiv td {
 	padding: 2 5 2 5;
@@ -287,4 +296,9 @@ table.list td {
 	background-color: #EEEEEE;
 	border: 1px solid #000000;
 	text-align: center;
-}  
+}
+
+.editWidget {
+  height: 15px;
+  background-color: black;
+}

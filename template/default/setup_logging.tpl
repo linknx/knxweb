@@ -37,7 +37,7 @@
 					<option value="basic">Basic</option>
 					<option value="custom">Personnalisé</option>
 				</select>
-				<input type="text" class="required" id="logging-customformat" size="40">
+				<input type="text" class="required" id="logging-customformat" size="50">
 			</td>
 		</tr>
 		<tr>
@@ -52,6 +52,13 @@
 			<td>
 				<input type="text" class="number" id="logging-log4cpp-maxfileindex" size="10">
 				(Une fois ce nombre de logs atteind, les logs plus anciens sont supprimés)
+			</td>
+		</tr>
+		<tr>
+			<th>Fichier de configuration</th>
+			<td>
+				<input type="text" id="logging-log4cpp-config" size="30">
+				(Si renseigné les autres paramètres sont ignorés)
 			</td>
 		</tr>
 		</tr>

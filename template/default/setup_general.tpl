@@ -46,16 +46,33 @@
 				<select id="setupgeneral-persistence-type">
 					<option value="disabled">disabled</option>
 					<option value="file">file</option>
+					<option value="mysql">Mysql</option>
 				</select>			
 			</td>
 		</tr>
-		<tr>
+		<tr class="setupgeneral-persistence-file">
 			<th>Répertoire de persistance</th>
 			<td><input type="text" class="required" name="setupgeneral-persistence-path" id="setupgeneral-persistence-path" size="40"></td>
 		</tr>
-		<tr>
+		<tr class="setupgeneral-persistence-file">
 			<th>Répertoire de log persistance</th>
 			<td><input type="text" class="" name="setupgeneral-persistence-logpath" id="setupgeneral-persistence-logpath" size="40"></td>
+		</tr>
+		<tr class="setupgeneral-persistence-mysql">
+			<th>Connexion à Mysql</th>
+			<td>
+				Serveur : <input type="text" class="required" name="setupgeneral-persistence-host" id="setupgeneral-persistence-host">
+				Nom d'utilisateur : <input type="text" class="required" name="setupgeneral-persistence-user" id="setupgeneral-persistence-user">
+				Mot de passe : <input type="password" class="required" name="setupgeneral-persistence-password" id="setupgeneral-persistence-password">
+			</td>
+		</tr>
+		<tr class="setupgeneral-persistence-mysql">
+			<th>Base de donnée</th>
+			<td>
+				Base : <input type="text" class="required" name="setupgeneral-persistence-db" id="setupgeneral-persistence-db">
+				Table persistence : <input type="text" class="required" name="setupgeneral-persistence-table" id="setupgeneral-persistence-table">
+				Table Log : <input type="text" class="required" name="setupgeneral-persistence-logtable" id="setupgeneral-persistence-logtable">
+			</td>
 		</tr>
 		<tr>
 			<th>Dates exceptionnelles</th>
@@ -66,7 +83,7 @@
 				</div>
 				<div>
 					<input type="button" value="Ajouter" id="setupgeneral-exceptiondays-add"><br /><br />
-					<input type="button" value="Supprimer" id="setupgeneral-exceptiondays-remove">
+					<!-- <input type="button" value="Supprimer" id="setupgeneral-exceptiondays-remove"> -->
 				</div>
 			</td>
 		</tr>

@@ -1,4 +1,4 @@
-﻿var setupgeneral = {
+var setupgeneral = {
 
 	refreshData: function() {
 
@@ -26,8 +26,20 @@
 					$('#setupgeneral-persistence-type').val(data.getAttribute('type'));
 					$('#setupgeneral-persistence-path').val(data.getAttribute('path'));
 					$('#setupgeneral-persistence-logpath').val(data.getAttribute('logpath'));
+					$('#setupgeneral-persistence-host').val(data.getAttribute('host'));
+					$('#setupgeneral-persistence-user').val(data.getAttribute('user'));
+					$('#setupgeneral-persistence-password').val(data.getAttribute('pass'));
+					$('#setupgeneral-persistence-db').val(data.getAttribute('db'));
+					$('#setupgeneral-persistence-table').val(data.getAttribute('table'));
+					$('#setupgeneral-persistence-logtable').val(data.getAttribute('logtable'));
 			}
 			$('#setupgeneral-persistence-type').trigger('change');
+			
+			var data=$('location',responseXML)[0];
+			if (data) {
+					$('#setupgeneral-location-lat').val(data.getAttribute('lat'));
+					$('#setupgeneral-location-lon').val(data.getAttribute('lon'));
+			}
 
 			$('exceptiondays date', responseXML).each(function() {
 				var date=lz(this.getAttribute('day')) + '/' + lz(this.getAttribute('month')) + ((this.getAttribute('year'))?'/' + this.getAttribute('year'):''); 
@@ -45,11 +57,17 @@
 									'<knxconnection url="' + $('#setupgeneral-knxconnection-type').val() + ':' + $('#setupgeneral-knxconnection-value').val() + '" /> ' +
 									'<xmlserver type="' + $('#setupgeneral-xmlserver-type').val() + '" port="' + $('#setupgeneral-xmlserver-port').val() + '" /> ';
 									
-			if ($('#setupgeneral-persistence-type').val()!='disabled')
+			if ($('#setupgeneral-persistence-type').val()=='file')
 				body += '<persistence type="' + $('#setupgeneral-persistence-type').val() + '" path="' + $('#setupgeneral-persistence-path').val() + '" ' +
 										(($('#setupgeneral-persistence-logpath').val()!='')?'logpath="' + $('#setupgeneral-persistence-logpath').val() + '"':'') + '/> ';
 			else
-				body += '<persistence />';
+				if ($('#setupgeneral-persistence-type').val()=='mysql')
+					body += '<persistence type="' + $('#setupgeneral-persistence-type').val() + '" host="' + $('#setupgeneral-persistence-host').val() + 
+										'" user="' + $('#setupgeneral-persistence-user').val() + '" pass="' + $('#setupgeneral-persistence-password').val() + 
+										'" db="' + $('#setupgeneral-persistence-db').val() + '" table="' + $('#setupgeneral-persistence-table').val() + 
+										'" logtable="' + $('#setupgeneral-persistence-logtable').val() +  '"/> ';
+				else
+					body += '<persistence />';
 			
 			body += '<exceptiondays clear="true">';
 			$("#setupgeneral-exceptiondays option").each(function () {
@@ -95,6 +113,14 @@ jQuery(document).ready(function(){
 	$("#setupgeneral-persistence-type").change(function() {
 		$("#setupgeneral-persistence-path").attr('disabled', ($("#setupgeneral-persistence-type").val()=='disabled') );
 		$("#setupgeneral-persistence-logpath").attr('disabled', ($("#setupgeneral-persistence-type").val()=='disabled') );
+		if ($("#setupgeneral-persistence-type").val()=='mysql'){
+			$(".setupgeneral-persistence-file").each(function(){$(this).hide();});
+			$(".setupgeneral-persistence-mysql").each(function(){$(this).show();});
+		}
+		if ($("#setupgeneral-persistence-type").val()=='file' || $("#setupgeneral-persistence-type").val()=='disabled'){
+			$(".setupgeneral-persistence-file").each(function(){$(this).show();});
+			$(".setupgeneral-persistence-mysql").each(function(){$(this).hide();});
+		}
 	});
 
 	$('#setupgeneral-exceptiondays-add').button();
@@ -102,13 +128,15 @@ jQuery(document).ready(function(){
 		$('#exceptiondays-dialog').dialog('open');
 	});
 
-	$('#setupgeneral-exceptiondays-remove').button();
+	/*
+  $('#setupgeneral-exceptiondays-remove').button();
 	$('#setupgeneral-exceptiondays-remove').click(function() {
 		if ($("#setupgeneral-exceptiondays").val())
 			$("#setupgeneral-exceptiondays option:selected").remove();
 		else
 			messageBox("Veuillez choisir une date dans la liste", "Attention", "alert");
 	});
+	*/
 	
 	$('#exceptiondays-dialog').dialog({ 
 		autoOpen: false,

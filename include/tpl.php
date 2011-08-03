@@ -37,7 +37,7 @@ class MySmarty extends Smarty
 
 		if (file_exists("template/" . $_config['template'] . "/js/default.js")) 
 		    $this->_jsList[] = "template/" . $_config['template'] . "/js/default.js";
-		
+		    
 		$this->registerPlugin('block', 'l', array($this,'lBlock')); 
 		
 		$this->_errors=array();
@@ -76,7 +76,7 @@ class MySmarty extends Smarty
 	{
 		$this->_jsList[] = $path;
 	}
-
+	
 	public function setTitle($title)
 	{
 		$this->_tpl_vars['Title'] = $title;

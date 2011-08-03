@@ -3,14 +3,19 @@ CWidget.prototype.edit = function(canMove, canClose) {
 	
 	$(this.div).draggable("destroy");
 	
-	$('table tbody tr.editWidget', this.div).each(function() { $(this).remove(); offset = -15; });
-
-	if (canMove || canClose) {
+	//$('table tbody tr.editWidget', this.div).each(function() { $(this).remove(); offset = -15; });
+	$('div.editWidget', this.div).each(function() { $(this).remove(); offset = -15; });
+  
+  console.debug("1"+canMove+canClose);
+	
+  if (canMove || canClose) {
 		offset += 15;
-		var headerTr = $("<tr class='editWidget'/>");
-		var header = $("<th align='right'/>");
+		//var headerTr = $("<tr class='editWidget'/>");
+		//var header = $("<th align='right'/>");
+    var headerTr = $("<div class='editWidget'/>");
+		var header = $("<div class='editwidget_close'/>");
 		if (canClose) {
-			var closeBtn = $("<img src='images/close.gif' style='cursor: pointer; margin-right: 2px;'/>").get(0);
+			var closeBtn = $("<img src='images/close.png' style='cursor: pointer; margin-right: 2px;'/>").get(0);
 			closeBtn.owner=this;
 			closeBtn.onclick=function() { UIController.remove(this.owner); };
 			header.append(closeBtn);
@@ -18,7 +23,8 @@ CWidget.prototype.edit = function(canMove, canClose) {
 		headerTr.get(0).owner = this;
 		headerTr.dblclick(function() { this.owner.createEditDialog(); });
 		headerTr.append(header);
-		$('table tbody:first', this.div).prepend(headerTr);
+		//$('table tbody:first', this.div).prepend(headerTr);
+		$(this.div).append(headerTr);
 
 		if (canMove) {
 			headerTr.css('cursor', 'move');
@@ -39,11 +45,15 @@ CWidget.prototype.edit = function(canMove, canClose) {
 			});
 		}
 	}
-	if (offset != 0) {
+	console.debug("2"+offset);
+	console.debug(this.div);
+  /*
+  if (offset != 0) {
 		if (this.div.style.height)
 			this.div.style.height = (parseInt(this.div.style.height, 10)+offset)+'px';
 		this.div.style.top = (parseInt(this.div.style.top, 10)-offset)+'px';
 	}
+	*/
 };
 
 CWidget.prototype.createEditDialog = function() {

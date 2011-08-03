@@ -1,10 +1,10 @@
-﻿var objects = {
+var objects = {
 	
 	// Open edit dialog for object 'id'
 	editObject: function (id) {
 	
 		var object=$('#objects-tab-table tbody tr[object-id=' + id +']');
-	
+
 		if (object)
 		{
 			$("#edit-object-label").val(object[0].data.textContent);
@@ -14,12 +14,14 @@
 			$("#edit-object-gad").val(object[0].data.getAttribute('gad'));
 			
 			$("input[id^='edit-object-flag-']").attr('checked',false);
-			if (object[0].data.getAttribute('flags')!=null) if (object[0].data.getAttribute('flags').indexOf('c')!=-1) $('#edit-object-flag-c').attr('checked',true);
-			if (object[0].data.getAttribute('flags')!=null) if (object[0].data.getAttribute('flags').indexOf('r')!=-1) $('#edit-object-flag-r').attr('checked',true);
-			if (object[0].data.getAttribute('flags')!=null) if (object[0].data.getAttribute('flags').indexOf('w')!=-1) $('#edit-object-flag-w').attr('checked',true);
-			if (object[0].data.getAttribute('flags')!=null) if (object[0].data.getAttribute('flags').indexOf('t')!=-1) $('#edit-object-flag-t').attr('checked',true);
-			if (object[0].data.getAttribute('flags')!=null) if (object[0].data.getAttribute('flags').indexOf('u')!=-1) $('#edit-object-flag-u').attr('checked',true);
-			if (object[0].data.getAttribute('flags')!=null) if (object[0].data.getAttribute('flags').indexOf('f')!=-1) $('#edit-object-flag-f').attr('checked',true);
+			if (object[0].data.getAttribute('flags')!=null) {
+				if (object[0].data.getAttribute('flags').indexOf('c')!=-1) $('#edit-object-flag-c').attr('checked',true);
+				if (object[0].data.getAttribute('flags').indexOf('r')!=-1) $('#edit-object-flag-r').attr('checked',true);
+				if (object[0].data.getAttribute('flags').indexOf('w')!=-1) $('#edit-object-flag-w').attr('checked',true);
+				if (object[0].data.getAttribute('flags').indexOf('t')!=-1) $('#edit-object-flag-t').attr('checked',true);
+				if (object[0].data.getAttribute('flags').indexOf('u')!=-1) $('#edit-object-flag-u').attr('checked',true);
+				if (object[0].data.getAttribute('flags').indexOf('s')!=-1) $('#edit-object-flag-s').attr('checked',true);
+			}
 	
 			if ((object[0].data.getAttribute('init')=='request')||(object[0].data.getAttribute('init')=='persist')) {
 				$("#edit-object-init").val(object[0].data.getAttribute('init'));
@@ -29,12 +31,29 @@
 				$("#edit-object-init").val('');
 				$("#edit-object-init-value").val(object[0].data.getAttribute('init'));
 			}
+			if (object[0].data.getAttribute('log')!=null) $('#edit-object-flag-log').attr('checked',true);
+			
+			var listener = false;
+			$('#edit-object-td-listener').empty();
+			// Listener
+			$('listener', $(object[0].data)).each(function() {
+				// Gad listener
+				var atrlistener = $("<tr>");
+				var id = $("#edit-object-id").val();
+				atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="' + this.getAttribute('gad') + '" size="10" > <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" ' + (this.getAttribute('read')?'checked="true"':'') + '> ' + tr("Lecture") + ' </td>'));
+				atrlistener.appendTo($('#edit-object-td-listener'));
+				listener = true;
+			});
+			
 			$('#edit-object-init').trigger('change');
 	
 			$("#edit-object-form")[0].validator.resetForm();
 			$('#edit-object-dialog').dialog('open');
+			if (listener) {
+				$('#edit-object-dialog').dialog('option','width',650);
+				$('#edit-object-td-listener').show();
+			}
 		}
-		
 	},
 	
 	// Open edit dialog with blank fields
@@ -51,7 +70,9 @@
 			$('#edit-object-init').trigger('change');
 	
 		$("#edit-object-form")[0].validator.resetForm();
+		$('#edit-object-td-listener').empty();
 		$('#edit-object-dialog').dialog('open');
+		$('#edit-object-dialog').dialog('option','width',430);
 	},
 	
 	// Delete object 'id'
@@ -78,14 +99,24 @@
 			if ($('#edit-object-flag-w').attr("checked")) flags+='w';
 			if ($('#edit-object-flag-t').attr("checked")) flags+='t';
 			if ($('#edit-object-flag-u').attr("checked")) flags+='u';
-			if ($('#edit-object-flag-f').attr("checked")) flags+='f';
+			if ($('#edit-object-flag-s').attr("checked")) flags+='s';
 		
 			var body='<write><config><objects><object id="' + $("#edit-object-id").val() + '"' +
 						' gad="' + $("#edit-object-gad").val() + '"' +
 						((flags!='')?' flags="' + flags + '"':'') +
 						' type="' + $("#edit-object-type").val() + '"' +
 						' init="' + ( ($('#edit-object-init').val()!='') ? $("#edit-object-init").val() : $("#edit-object-init-value").val() ) + '"' +
-						'>' +	$("#edit-object-label").val() + '</object></objects></config></write>';
+						(($('#edit-object-flag-log').attr("checked"))?' log="true"':'') +
+						'>' +	$("#edit-object-label").val() + '';
+			
+			//Listener
+			$('input',$('#edit-object-td-listener')).each( function() {
+				body+='<listener gad="' + $(this).val() + '"';
+				if ($(".flag_listener",$(this).parent()).attr('checked')) body+= ' read="true"';
+				body+=' />';
+			});
+			
+			body+='</object></objects></config></write>';
 		
 			loading.show();
 			var responseXML=queryLinknx(body);
@@ -131,7 +162,8 @@
 						tr.append($("<td>").html(this.getAttribute('id')));
 						tr.append($("<td>").html(this.textContent));
 						tr.append($("<td>").html(this.getAttribute('gad')));
-						tr.append($("<td>").html(this.getAttribute('type')));
+						//tr.append($("<td>").html(this.getAttribute('type')));
+						tr.append($("<td>").html(tab_objectTypes[this.getAttribute('type')]));
 						tr.dblclick(function() {
 							objects.editObject(this.data.getAttribute('id'));
 						});
@@ -170,15 +202,24 @@ jQuery(document).ready(function(){
 	// Setup object edit dialog
 	$('#edit-object-dialog').dialog({ 
 		autoOpen: false,
-		buttons: { 
-				"Annuler": function() { $(this).dialog("close"); },
-				"Sauver": function() { if (objects.processAddEdit()) $(this).dialog("close"); }
+		buttons: {
+				"Ajout d'un listener": function() { 
+					var atrlistener = $("<tr>");
+					var id = $("#edit-object-id").val();
+					atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="" size="10" >  <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" > ' + tr("Lecture") + ' </td>'));
+					atrlistener.appendTo($('#edit-object-td-listener'));
+					$(this).dialog('option','width',650); 
+					$('#edit-object-td-listener').show();
+				}, 
+				"Annuler": function() { $(this).dialog("close"); $('#edit-object-td-listener').hide(); $(this).dialog('option','width',430);},
+				"Sauver": function() { if (objects.processAddEdit()) { $(this).dialog("close"); $('#edit-object-td-listener').hide(); $(this).dialog('option','width',430); } }
 		},
 		resizable: false,
 		title: "Ajouter/Editer un objet",
 		width: "430px",
 		modal: true
 	});
+	$('#edit-object-td-listener').hide();
 
 	// Setup read/write object dialog
 	$('#readwrite-object-dialog').dialog({ 
@@ -226,6 +267,29 @@ jQuery(document).ready(function(){
 		}
 	});
 
+	$("#edit-object-type").bind('change', function() {
+		if (_objectTypesValues[$("#edit-object-type option:selected")[0].type])
+		{
+			values=_objectTypesValues[$("#edit-object-type option:selected")[0].type];
+			$("#edit-object-init-val-select").empty();
+			$(values).each(function() { $("#edit-object-init-val-select").append('<option value="' + this + '">' + this + '</option>'); });
+			$("#edit-object-init-val-select").show();
+		} else
+		{
+			$("#edit-object-init-val-select").hide();
+		}
+	});
+
+	$('#edit-object-init').change(function() {
+		if ($('#edit-object-init').val()=='') { 
+			$('#edit-object-init-value').css('visibility','visible');
+			$('#edit-object-init-val-select').css('visibility','visible');
+		} else { 
+			$('#edit-object-init-value').css('visibility','hidden');
+			$('#edit-object-init-val-select').css('visibility','hidden');
+		}
+	});
+	
 	$('#edit-object-init').trigger('change');
 
 	// Setup object table

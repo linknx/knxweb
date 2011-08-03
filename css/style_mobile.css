@@ -1,0 +1,42 @@
+/*!
+ *
+ */
+body {
+  background-color: #000000;
+}
+#pagewait {
+  background: #000000;
+  height: 100%;
+  width: 100%;
+}
+#waitDialog {
+  font-size: 14px;
+  position:absolute;
+  width:200px;
+  height:250px;
+  left: 50%;
+  top: 50%;
+  z-index:9999;
+  background-color: #DDDDDD;
+  text-align: center;
+  -moz-box-sizing: border-box;
+  -moz-user-select: none;
+  border: 1px solid #555555;
+  border-radius: 0.8em 0.8em 0.8em 0.8em;
+  cursor: progress;
+  display: inline-block;
+  outline: medium none;
+  margin-left: -100px;
+  margin-top: -125px;
+}
+
+.portrait {
+	/* portrait orientation changes go here! */
+}
+.landscape {
+	/* landscape orientation changes go here! */
+}
+div.ui-slider {
+  position: absolute;
+  right: 10px;
+}

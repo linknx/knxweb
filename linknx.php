@@ -4,7 +4,7 @@ require_once("include/config.inc.php");
 
 error_reporting(0);
 $max_result_lines = 1000;
-header('Content-Type: application/xml; charset=iso-8859-1');
+header('Content-Type: application/xml; charset=utf-8');
 
 $sock = fsockopen($_config['linknx_host'], $_config['linknx_port'], $errno, $errstr, 30);
 if (!$sock)

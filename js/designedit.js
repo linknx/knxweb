@@ -5,7 +5,13 @@ function modifyCurrentZone()
 
 function saveDesign()
 {
-	var version=prompt(tr('Enter version name'),'design');
+	// recherche mon version
+	var Nameversion = "design";
+	var matched;
+	if (matched = location.search.match(/version=([^&]+)/))	Nameversion = matched[1];
+	
+	//var version=prompt(tr('Enter version name'),'design');
+	var version=prompt(tr('Enter version name'),Nameversion);
 	if (version!=null)
 	{
 		UIController.saveDesign(version);
@@ -22,7 +28,7 @@ function modifyBgImage()
 {
 		var design = UIController.getDesignName();
 		$('#bgImages').empty().append($("<img src='images/loading.gif'/>"));
-		req = jQuery.ajax({ type: 'post', url: 'design.php?action=filelist&name='+design, dataType: 'xml',
+		req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action=filelist&name='+design, dataType: 'xml',
 			success: function(responseXML, status) {
 				$('#bgImages').empty();
 				var xmlResponse = responseXML.documentElement;
@@ -81,7 +87,7 @@ function addDesign()
 {
 	var name=prompt(tr('Enter name for new design'),'');
 	if (name!=null) {
-		req = jQuery.ajax({ type: 'post', url: 'design.php?action=createdesign&name='+name, dataType: 'xml',
+		req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action=createdesign&name='+name, dataType: 'xml',
 			success: function(responseXML, status) {
 				var xmlResponse = responseXML.documentElement;
 				if (xmlResponse.getAttribute('status') != 'error') {
@@ -103,7 +109,7 @@ function addDesign()
 
 function loadDesignList()
 {
-	req = jQuery.ajax({ url: 'design.php?action=designlist', dataType: 'xml',
+	req = jQuery.ajax({ url: 'design_technique.php?action=designlist', dataType: 'xml',
 		success: function(responseXML, status) {
 			$('#designName').empty();
 			var xmlResponse = responseXML.documentElement;
@@ -126,12 +132,16 @@ function loadDesignList()
 function createMenu(element)
 {
 	
-/*	$(element).accordion();
+
+	$(element).accordion();
+  $(element).draggable({ containment: "parent" , scroll: false });
+/*
 	$(element).dialog({
 		title: 'Menu',
 		resizable: false
 	});
 */
+
 return;	
 	
 	$('.subMenuItem', element).hide();
@@ -214,4 +224,5 @@ jQuery(function($) {
 	createMenu($('#menu'));
 	loadDesignList();
 	EIBCommunicator.loadObjectList();
+	loading.hide();
 });

@@ -1,17 +1,62 @@
-﻿var inputEndpoint;
+var inputEndpoint;
 var outputEndpoint;
 var rulestab;
+var pos_top;
+var pos_right;
+var xmlRules;
+
+
+var conditionsList = {
+    'and':'And',
+    'or':'Or',
+    'not':'Not',
+    'object' : 'Object',
+    'objectsrc' : 'Object Src',
+    'objectcompare' : 'Object Compare',
+    'timer':'Timer',
+    'time-counter':'Time Counter',
+    'ioport-rx':'Ioport Rx',
+    'script':'Script'
+};
+
+var actionsList = {
+    'set-value' : 'Set Value',
+    'copy-value' : 'Copy Value',
+    'toggle-value' : 'Toggle Value',
+    'set-string' : 'Set String',
+    'send-read-request' : 'Send Read Request',
+    'cycle-on-off' : 'Cycle On Off',
+    'repeat' : 'Repeat',
+    'conditional' : 'Conditional',
+    'send-sms' : 'Send Sms',
+    'send-email' : 'Send Email',
+    'dim-up' : 'Dim Up',
+    'shell-cmd' : 'Shell Cmd',
+    'ioport-tx' : 'Ioport Tx',
+    'script' : 'Script',
+    'cancel' : 'Cancel'
+}
 
 var rules = {
 
 	addAnd: function() {
 	
 	  var div=$('<div>');
+	  div.addClass('condition');
 	  div.addClass('and');
 	  div.attr("id", ((new Date().getTime())));
 	  div.html('Et');
     div[0].type="and";
+    div[0].condition=true;
 	  $('#tab-rules-container').append(div);
+	  
+	  div.dblclick(function () {
+      if (confirm("Supprimer cette condition ?"))
+      {
+    	  jsPlumb.removeAllEndpoints(this);
+        $(this).remove();
+    	}
+    });
 	  
 	  div.addEndpoint($.extend({ anchor:[0, 0, 0, 0] }, inputEndpoint));
 	  div.addEndpoint($.extend({ anchor:[0, 0.1, 0, 0] }, inputEndpoint));
@@ -27,17 +72,27 @@ var rules = {
 	
 	  div.addEndpoint($.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint));
 	  
-	  jsPlumb.draggable(div);
+	  jsPlumb.draggable(div);                                                               
 	},
 
 	addOr:function() {
 
     var div=$('<div>');
+    div.addClass('condition');
     div.addClass('or');
     div.attr("id", ((new Date().getTime())));
     div.html('Ou');;
     div[0].type="or";
+    div[0].condition=true;
     $('#tab-rules-container').append(div);
+    
+    div.dblclick(function () {
+      if (confirm("Supprimer cette condition ?"))
+      {
+    	  jsPlumb.removeAllEndpoints(this);
+        $(this).remove();
+    	}
+    });
     
     div.addEndpoint($.extend({ anchor:[0, 0, 0, 0] }, inputEndpoint));
     div.addEndpoint($.extend({ anchor:[0, 0.1, 0, 0] }, inputEndpoint));
@@ -59,11 +114,21 @@ var rules = {
 	addNot: function() {
 
     var div=$('<div>');
+    div.addClass('condition');
     div.addClass('not');
     div.attr("id", ((new Date().getTime())));
     div.html('Not');
     div[0].type="not";
+    div[0].condition=true;
     $('#tab-rules-container').append(div);
+    
+    div.dblclick(function () {
+      if (confirm("Supprimer cette condition ?"))
+      {
+    	  jsPlumb.removeAllEndpoints(this);
+        $(this).remove();
+    	}
+    });
     
     div.addEndpoint($.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
 
@@ -77,9 +142,11 @@ var rules = {
 	addObject: function() {
 
     var div=$('<div>');
+    div.addClass('condition');
     div.addClass('object');
     div.attr("id", ((new Date().getTime())));
     div[0].type="object";
+    div[0].condition=true;
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
@@ -111,7 +178,8 @@ var rules = {
 		$('#tab-rules-object-condition-values').val(div.object_value);
     $('#tab-rules-object-condition-value').dialog(div.object_value);
 
-    if (div.object_trigger==true) $('#tab-rules-object-condition-trigger').attr('checked','1'); else $('#tab-rules-object-condition-trigger').removeAttr('checked');
+    if (div.object_trigger==true) $('#tab-rules-object-condition-trigger').attr('checked','1'); 
+    else $('#tab-rules-object-condition-trigger').removeAttr('checked');
 
 		$('#tab-rules-object-condition-dialog').dialog('open');
 	},
@@ -136,9 +204,11 @@ var rules = {
 	addObjectSrc: function() {
 
     var div=$('<div>');
+    div.addClass('condition');
     div.addClass('objectsrc');
     div.attr("id", ((new Date().getTime())));
     div[0].type="objectsrc";
+    div[0].condition=true;
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
@@ -167,13 +237,14 @@ var rules = {
 
 		$('#tab-rules-objectsrc-condition-dialog')[0].editing=div;
 
-		$('#tab-rules-objectsrc-condition-object').val(div.objectsrc_id);
+		//$('#tab-rules-objectsrc-condition-object').val(div.objectsrc_id);
 		$('#tab-rules-objectsrc-condition-operation').val(div.objectsrc_operation);
-		$('#tab-rules-objectsrc-condition-values').val(div.objectsrc_value);
+		//$('#tab-rules-objectsrc-condition-values').val(div.objectsrc_value);
     $('#tab-rules-objectsrc-condition-value').dialog(div.objectsrc_value);
 		$('#tab-rules-objectsrc-condition-src').val(div.objectsrc_src);
 
-    if (div.objectsrc_trigger==true) $('#tab-rules-objectsrc-condition-trigger').attr('checked','1'); else $('#tab-rules-objectsrc-condition-trigger').removeAttr('checked');
+    if (div.objectsrc_trigger==true) $('#tab-rules-objectsrc-condition-trigger').attr('checked','1'); 
+    else $('#tab-rules-objectsrc-condition-trigger').removeAttr('checked');
 
 		$("#tab-rules-objectsrc-condition-form")[0].validator.resetForm();
 		$('#tab-rules-objectsrc-condition-dialog').dialog('open');
@@ -183,16 +254,17 @@ var rules = {
 		if ($("#tab-rules-objectsrc-condition-form").valid())
 		{
 			var div=$('#tab-rules-objectsrc-condition-dialog')[0].editing;
-			div.objectsrc_id=$('#tab-rules-objectsrc-condition-object').val();
+			//div.objectsrc_id=$('#tab-rules-objectsrc-condition-object').val();
 			div.objectsrc_operation=$('#tab-rules-objectsrc-condition-operation').val();
-			if ($('#tab-rules-objectsrc-condition-values').css('display')!='none')
-				div.objectsrc_value=$('#tab-rules-objectsrc-condition-values').val();
-			else
+			//if ($('#tab-rules-objectsrc-condition-values').css('display')!='none')
+				//div.objectsrc_value=$('#tab-rules-objectsrc-condition-values').val();
+			//else
 				div.objectsrc_value=$('#tab-rules-objectsrc-condition-value').val();
 			if ($('#tab-rules-objectsrc-condition-trigger').attr('checked')) div.objectsrc_trigger=true; else div.objectsrc_trigger=false;
 			div.objectsrc_src=$('#tab-rules-objectsrc-condition-src').val();
 			
-			$(div).html('<strong>ObjetSrc</strong><br />' + div.objectsrc_id+'<br />'+div.objectsrc_operation+'<br />'+div.objectsrc_value+'<br />Src = '+div.objectsrc_src);
+			//$(div).html('<strong>ObjetSrc</strong><br />' + div.objectsrc_id+'<br />'+div.objectsrc_operation+'<br />'+div.objectsrc_value+'<br />Src = '+div.objectsrc_src);
+			$(div).html('<strong>ObjetSrc</strong><br />Src = '+div.objectsrc_src+'<br />'+div.objectsrc_operation+'<br />'+div.objectsrc_value);
 			
 			return true;
 		} else return false;
@@ -203,9 +275,11 @@ var rules = {
 	addObjectCompare: function() {
 
     var div=$('<div>');
+    div.addClass('condition');
     div.addClass('objectcompare');
     div.attr("id", ((new Date().getTime())));
-    div[0].type="object-compare";
+    div[0].type="objectcompare";
+    div[0].condition=true;
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
@@ -254,9 +328,11 @@ var rules = {
 	addTimeCounter: function() {
 
     var div=$('<div>');
+    div.addClass('condition');
     div.addClass('timecounter');
     div.attr("id", ((new Date().getTime())));
     div[0].type="time-counter";
+    div[0].condition=true;
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
@@ -307,9 +383,11 @@ var rules = {
 	addTimer: function() {
 
     var div=$('<div>');
+    div.addClass('condition');
     div.addClass('timer');
     div.attr("id", ((new Date().getTime())));
     div[0].type="timer";
+    div[0].condition=true;
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
@@ -554,11 +632,248 @@ var rules = {
 	},
 	// ******************** /Timer ************************
 
+  // ******************** Script ************************
+	addScript: function() {
+    var div=$('<div>');
+    div.addClass('condition');
+    div.addClass('script');
+    div.attr("id", ((new Date().getTime())));
+    div[0].type="script";
+    div[0].condition=true;
+    $('#tab-rules-container').append(div);
+    
+    div.dblclick(function () {
+    	rules.editScriptCondition(this);
+    });
+    
+    div.addEndpoint($.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint));
+    
+    div[0].script='';
+    jsPlumb.draggable(div);
+		
+		this.editScriptCondition(div[0],true);
+	},
+	
+	editScriptCondition: function(div, isNew) {
+
+		if (isNew!='')
+			$('#tab-rules-script-condition-dialog')[0].isNew=isNew; 
+		else
+			$('#tab-rules-script-condition-dialog')[0].isNew=false;
+
+		$('#tab-rules-script-condition-dialog')[0].editing=div;
+
+		$('#tab-rules-script-condition-script').text(div.script);
+		
+		$('#tab-rules-script-condition-dialog').dialog('open');
+	},
+	
+	saveScriptCondition: function() {
+		var div=$('#tab-rules-script-condition-dialog')[0].editing;
+		div.script=$('#tab-rules-script-condition-script').val();
+		
+		$(div).html('<strong>Script</strong>');
+		
+		return true;
+	},
+	// ******************** /Script ************************
+	
+	// ******************** Action ************************
+/*
+    'set-value' : 'Set Value',
+    'copy-value' : 'Copy Value',
+    'toggle-value' : 'Toggle Value',
+    'set-string' : 'Set String',
+    'send-read-request' : 'Send Read Request',
+    'cycle-on-off' : 'Cycle On Off',
+    'repeat' : 'Repeat',
+    'conditional' : 'Conditional',
+    'send-sms' : 'Send Sms',
+    'send-email' : 'Send Email',
+    'dim-up' : 'Dim Up',
+    'shell-cmd' : 'Shell Cmd',
+    'ioport-tx' : 'Ioport Tx',
+    'script' : 'Script',
+    'cancel' : 'Cancel'
+*/
+  addAction: function(type) {
+    var div=$('<div>');
+    div.addClass('action');
+    div.addClass(type);
+    div.attr("id", ((new Date().getTime())));
+    div[0].type=type;
+    div[0].condition=false;
+    $('#tab-rules-container').append(div);
+    
+    div.dblclick(function () {
+    	rules.editAction(this.type, this);
+    });
+    
+    div.addEndpoint($.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
+
+    //div.addEndpoint($.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint));
+    
+    //div[0].script='';
+    // TODO données en fonction du "type" ...
+    
+    switch (type) {
+    	case 'set-value' :
+    		break;
+    	case 'copy-value' :
+    		break;
+    	case 'toggle-value' :
+    		break;
+    	case 'set-string' :
+    		break;
+    	case 'send-read-request' :
+    		break;
+    	case 'cycle-on-off' :
+    		break;
+    	case 'repeat' :
+    		break;
+    	case 'conditional' :
+    		break;
+    	case 'send-sms' :
+    		break;
+    	case 'send-email' :
+    		break;
+    	case 'dim-up' :
+    		break;
+    	case 'shell-cmd' :
+    	  div.cmd='';
+    	  div.css("width","140px");
+    		break;
+    	case 'ioport-tx' :
+    		break;
+    	case 'script' :
+    	  //html = '<br />'+$('#tab-rules-script-action-script').val();
+    	  div.script='';
+    		break;
+    	case 'cancel' :
+    	  //html = '<br />'+$('#tab-rules-cancel-action-value').val();
+    	  div.cancel_rule='';
+    	  div.css("width","140px");
+    		break;
+    }; 
+
+		//div.html('<strong>'+type+'</strong>');    
+    
+    jsPlumb.draggable(div);
+		
+		this.editAction(type, div[0],true);
+	},
+	
+	editAction: function(type, div, isNew) {
+    if (!document.getElementById('tab-rules-'+type+'-action-dialog')) {
+	    rules.createDialog('tab-rules-'+type+'-action-dialog', "Editer "+type, "540px" , true, type);
+	  }
+    if (isNew!='')
+			$('#tab-rules-'+type+'-action-dialog')[0].isNew=isNew; 
+		else
+			$('#tab-rules-'+type+'-action-dialog')[0].isNew=false;
+
+		$('#tab-rules-'+type+'-action-dialog')[0].editing=div;
+
+		//$('#tab-rules-'+type+'-action-script').text(div.script);
+		// TODO données en fonction du "type" ...
+    switch (type) {
+    	case 'set-value' :
+    		break;
+    	case 'copy-value' :
+    		break;
+    	case 'toggle-value' :
+    		break;
+    	case 'set-string' :
+    		break;
+    	case 'send-read-request' :
+    		break;
+    	case 'cycle-on-off' :
+    		break;
+    	case 'repeat' :
+    		break;
+    	case 'conditional' :
+    		break;
+    	case 'send-sms' :
+    		break;
+    	case 'send-email' :
+    		break;
+    	case 'dim-up' :
+    		break;
+    	case 'shell-cmd' :
+    	  $('#tab-rules-shell-cmd-action-value').val(div.cmd);
+    		break;
+    	case 'ioport-tx' :
+    		break;
+    	case 'script' :
+    	  $('#tab-rules-script-action-value').val(div.script);
+    		break;
+    	case 'cancel' :
+    	  $('#tab-rules-cancel-action-value').val(div.cancel_rule);
+    		break;
+    }; 
+		
+		$('#tab-rules-'+type+'-action-dialog').dialog('open');
+ 
+	},
+	
+	saveAction: function(type) {
+	  var div=$('#tab-rules-'+type+'-action-dialog')[0].editing;
+		//div.script=$('#tab-rules-'+type+'-action-script').text();
+
+    var html = '';
+    switch (type) {
+    	case 'set-value' :
+    		break;
+    	case 'copy-value' :
+    		break;
+    	case 'toggle-value' :
+    		break;
+    	case 'set-string' :
+    		break;
+    	case 'send-read-request' :
+    		break;
+    	case 'cycle-on-off' :
+    		break;
+    	case 'repeat' :
+    		break;
+    	case 'conditional' :
+    		break;
+    	case 'send-sms' :
+    		break;
+    	case 'send-email' :
+    		break;
+    	case 'dim-up' :
+    		break;
+    	case 'shell-cmd' :
+    	  div.cmd = $('#tab-rules-shell-cmd-action-value').val();
+    	  html = '<br />'+div.cmd;
+    		break;
+    	case 'ioport-tx' :
+    		break;
+    	case 'script' :
+    	  div.script = $('#tab-rules-script-action-value').val();
+    	  html = '';
+    		break;
+    	case 'cancel' :
+    	  div.cancel_rule = $('#tab-rules-cancel-action-value').val();
+        html = '<br />'+div.cancel_rule;
+        //var width = div.cancel_rule.lenght + 2;
+        //$(div).css("width",width+"em"); 
+    		break;
+    };
+
+		$(div).html('<strong>'+type+'</strong>'+html);
+		
+		return true;
+	},
+	// ******************** /Action ************************
+
+
 	
 	generateNodeXML: function(condition) {
+   if(condition[0].condition) {
     var xml=$('<condition>');
     xml.attr('type',condition[0].type);
-    
     switch (condition[0].type) {
     	case 'object':
     		xml.attr('id',condition[0].object_id);
@@ -567,16 +882,17 @@ var rules = {
     		if (condition[0].object_trigger) xml.attr('trigger','true');
     		break;
     	case 'objectsrc':
-    		xml.attr('id',condition[0].objectsrc_id);
+    		//xml.attr('id',condition[0].objectsrc_id);
     		xml.attr('op',condition[0].objectsrc_operation);
     		xml.attr('value',condition[0].objectsrc_value);
     		xml.attr('src',condition[0].objectsrc_src);
     		if (condition[0].objectsrc_trigger) xml.attr('trigger','true');
     		break;
-    	case 'object-compare':
+    	case 'objectcompare':
     		xml.attr('id',condition[0].objectcompare_id);
     		xml.attr('op',condition[0].objectcompare_operation);
     		xml.attr('id2',condition[0].objectcompare_id2);
+    		break;
     	case 'time-counter':
     		xml.attr('threshold',condition[0].timecounter_threshold);
     		xml.attr('reset-delay',condition[0].timecounter_resetdelay);
@@ -664,8 +980,15 @@ var rules = {
 				}
 
     		break;
+    	case 'ioport-rx':
+    		xml.attr('id',condition[0].ioport_id);
+    		xml.attr('value',condition[0].ioport_value);
+    		//TODO a finir ...
+    		break;
+    	case 'script':
+        xml.text(condition[0].script);
+    		break;
     }
-
     var c = jsPlumb.getConnections({target:condition.attr('id')});
     
     for (var i in c) {
@@ -676,13 +999,71 @@ var rules = {
 		    }
 			}
     }
+    
+    } else {
+      var xml=$('<action>');
+      xml.attr('type',condition[0].type);
+      switch (condition[0].type) {
+      	case 'script':
+      		/*
+          xml.attr('id',condition[0].object_id);
+      		xml.attr('op',condition[0].object_operation);
+      		xml.attr('value',condition[0].object_value);
+      		if (condition[0].object_trigger) xml.attr('trigger','true');
+          */
+      		xml.text(condition[0].script);
+      		break;
+      }
+      var c = jsPlumb.getConnections({source:condition.attr('id')});
+      for (var i in c) {
+  			var l = c[i];
+  			if (l && l.length > 0) {
+  		    for (var j = 0; j < l.length; j++) {
+  					xml.append(this.generateNodeXML($('#'+l[j].targetId)));
+  		    }
+  			}
+      }
+    } 
+
    
     return xml;
 	},
 
 	generateXML: function() {
 
-    xml=this.generateNodeXML($('#action'));
+    xml=this.generateNodeXML($('#actionlist')); // récupère les conditions ratachhées à "actionlist"
+    
+    xmlactionlist = $('<actionlist type="on-true" >');
+    //var c = jsPlumb.getConnections({source:'actionlist'});
+    //var c = jsPlumb.getConnections({sourceEndpoint:'ontrue1'});
+    //var c = jsPlumb.getConnections({sourceEndpoint:["ontrue1", "ontrue2", "ontrue3", "ontrue4", "ontrue5", "ontrue6", "ontrue7", "ontrue8", "ontrue9", "ontrue10"]});
+    var c = jsPlumb.getConnections({source:'actionlistOnTrue'});
+    //var c = jsPlumb.getConnections({scope:'actionlist'});
+    for (var i in c) {
+			var l = c[i];
+			if (l && l.length > 0) {
+		    for (var j = 0; j < l.length; j++) {
+		      //alert("1"+l[j].sourceEndpoint.scope+"1"+l[j].targetId+"1"+l[j].sourceEndpoint.scope+"1"+l[j].sourceEndpoint.connector+"1"+l[j].sourceEndpoint.anchor+"1"+l[j].sourceEndpoint.anchor.uuid);
+					xmlactionlist.append(this.generateNodeXML($('#'+l[j].targetId)));
+		    }
+			}
+		}
+    xml.append(xmlactionlist);
+    
+    xmlactionlist = $('<actionlist type="on-false" >');
+    //var c = jsPlumb.getConnections({sourceEndpoint:["onfalse1", "onfalse2", "onfalse3", "onfalse4", "onfalse5", "onfalse6", "onfalse7", "onfalse8", "onfalse9", "onfalse10"]});
+    var c = jsPlumb.getConnections({source:'actionlistOnFalse'});
+    for (var i in c) {
+			var l = c[i];
+			if (l && l.length > 0) {
+		    for (var j = 0; j < l.length; j++) {
+					//alert("2"+l[j].sourceId+"2"+l[j].targetId);
+          xmlactionlist.append(this.generateNodeXML($('#'+l[j].targetId)));
+		    }
+			}
+		}
+    xml.append(xmlactionlist);
+    
     $("#tab-rules-property").text(xml.html()).html();
 	},
 	
@@ -699,11 +1080,207 @@ var rules = {
 		jsPlumb.removeAllEndpoints(dialog.editing);
 		$(dialog.editing).remove();
 		$(dialog).dialog("close"); 
+	},
+	
+	handleDialogSave: function(dialog) {
+		//jsPlumb.removeAllEndpoints(dialog.editing);
+		//$(dialog.editing).remove();
+		
+		var type = dialog.editing.type;
+		if (dialog.editing.condition) {
+  		switch (type) {
+        case "object":
+        rules.saveObjectCondition();
+        break;
+        case "objectsrc":
+        rules.saveObjectSrcCondition();
+        break;
+        case "objectcompare":
+        rules.saveObjectCompareCondition();
+        break;
+        case "time-counter":
+        rules.saveTimeCounterCondition();
+        break;
+        case "timer":
+        rules.saveTimerCondition();
+        break;
+        /*case "and":
+        break;
+        case "or":
+        break;
+        case "not":
+        break;*/
+        case "ioport-rx":
+        alert("a implémenter ...");
+        break;
+        case "script":
+        rules.saveScriptCondition();
+        break;
+      };
+    } else {
+      // TODO implémenter save+id+Action ?
+      rules.saveAction(type);
+    }
+		$(dialog).dialog("close"); 
+	},
+	
+	createDialog: function(id, title, width, action, type) {
+	  // rules.createDialog("tab-rules-script-condition-dialog", "Editer un script", "540px" , false)
+	  // rules.createDialog("tab-rules-script-action-dialog", "Editer un script", "540px" , true, "script")
+  	if (width=='')
+  	  width = "540px";
+  	if (action=='')
+  	  action = false;
+  	if (!document.getElementById(id)) {
+      $('body').append($('<div id="'+id+'">'));
+      if (action == true) { // Action
+			  var tbody = $('<tbody>');
+        switch (type) {
+        	case 'set-value' :
+        		break;
+        	case 'copy-value' :
+        		break;
+        	case 'toggle-value' :
+        		break;
+        	case 'set-string' :
+        		break;
+        	case 'send-read-request' :
+        		break;
+        	case 'cycle-on-off' :
+        		break;
+        	case 'repeat' :
+        		break;
+        	case 'conditional' :
+        		break;
+        	case 'send-sms' :
+        		break;
+        	case 'send-email' :
+        		break;
+        	case 'dim-up' :
+        		break;
+        	case 'shell-cmd' :
+        	  tbody.append(
+              $('<tr>').append('<th width="150">Command Shell</th>')
+              .append($('<td>').append('<input type="text" id="tab-rules-shell-cmd-action-value" size="50">'))
+              );
+        		break;
+        	case 'ioport-tx' :
+        		break;
+        	case 'script' :
+        	  tbody.append(
+              $('<tr>').append('<th width="150">Script</th>')
+              .append($('<td>').append('<textarea cols="80" rows="4" name="script" class="script" id="tab-rules-script-action-script">'))
+              );
+        		break;
+        	case 'cancel' :
+        	  var listrules = $('#listRules').clone();
+        	  listrules.attr("id","tab-rules-cancel-action-value");
+        	  tbody.append(
+              $('<tr>').append('<th width="150">Cancel Rule</th>')
+              .append($('<td>').append(listrules))
+              );
+        		break;
+        };
+        $('#'+id).append($('<form id="tab-rules-'+type+'-action-form" />').append($('<table class="form" />').append(tbody)));
+      }
+  	}
+  	
+    $('#'+id).dialog({
+  		autoOpen: false,
+  		buttons: { 
+  				"Annuler": function() { rules.handleDialogCancel(this); },
+  				"Supprimer": function() { rules.handleDialogDelete(this); },
+  				"Sauver": function() { if (rules.handleDialogSave(this)) $(this).dialog("close"); }
+  		},
+  		resizable: false,
+  		title: title,
+  		width: width,
+  		closeOnEscape: false,
+  		modal: true
+  	});
 	}
+}
 
+function loadRulesList()
+{
+	var responseXML=queryLinknx('<read><config><rules/></config></read>');
+	xmlRules = '';
+	if (responseXML!=false)
+	{
+  	xmlRules = responseXML;
+  	$('#listRules').append('<option value="">' + tr("Selectionner une règle") + '</option>');
+    $('rule', responseXML).each(function() {
+      $('#listRules').append('<option value="' + this.getAttribute("id") + '">' + this.getAttribute("id") + '</option>');
+    });
+  } else $('#listRules').append('<option value="">' + tr("Aucune règle définie") + '</option>');
 }
 
 jQuery(document).ready(function(){
+  
+  //$("button","#tab-rules").each(function(){$(this).button();});
+  $("#button-add-object").button();
+  $("#button-add-objectsrc").button();
+  $("#button-add-objectcompare").button();
+  $("#button-add-timecounter").button();
+  $("#button-add-timer").button();
+  $("#button-add-and").button();
+  $("#button-add-or").button();
+  $("#button-add-not").button();
+
+  $('#addcondition').append('<option value="">' + tr("Ajouter une condition") + '</option>');
+  
+  var conditionsSelect=$('#addcondition').get(0);
+	for(key in conditionsList) conditionsSelect.options[conditionsSelect.options.length] = new Option(conditionsList[key], key);
+
+  $('#addcondition').change(function(){
+    var type = this.value;
+    switch (type) {
+      case "object":
+      rules.addObject()
+      break;
+      case "objectsrc":
+      rules.addObjectSrc()
+      break;
+      case "objectcompare":
+      rules.addObjectCompare()
+      break;
+      case "time-counter":
+      rules.addTimeCounter()
+      break;
+      case "timer":
+      rules.addTimer()
+      break;
+      case "and":
+      rules.addAnd()
+      break;
+      case "or":
+      rules.addOr()
+      break;
+      case "not":
+      rules.addNot()
+      break;
+      case "ioport-rx":
+      alert("a implémenter ...");
+      break;
+      case "script":
+      rules.addScript();
+      break;
+    };
+    this.value = "";
+  });
+  
+  $('#addaction').append('<option value="todo">Todo ...</option>'); // TODO à supprimer quand les actions seront gérées ...
+  $('#addaction').append('<option value="">' + tr("Ajouter une action") + '</option>');
+  var actionsSelect=$('#addaction').get(0);
+  for(key in actionsList) actionsSelect.options[actionsSelect.options.length] = new Option(actionsList[key], key);
+  
+  $('#addaction').change(function(){
+    var type = this.value;
+    rules.addAction(type);
+    this.value = "";
+  });
+
+  loadRulesList();
 
 	// Move property DOM to left column
 	var property = $('#tab-rules-property').clone();
@@ -739,7 +1316,7 @@ jQuery(document).ready(function(){
 		activeClass:'dragActive'
   };
 
-  var inputColor = '#00D';
+  var inputColor = '#00D'; // bleu
   inputEndpoint = {
 		endpoint:new jsPlumb.Endpoints.Rectangle(),
 		style:{ width:10, height:10, fillStyle:inputColor },
@@ -753,7 +1330,7 @@ jQuery(document).ready(function(){
 		dropOptions : myDropOptions
   };
 																																							
-  var outputColor = '#0A0';
+  var outputColor = '#0A0'; // vert
   outputEndpoint = {
 		endpoint:new jsPlumb.Endpoints.Rectangle(),
 		style:{ width:10, height:10, fillStyle:outputColor },
@@ -766,9 +1343,122 @@ jQuery(document).ready(function(){
 		},
 		dropOptions : myDropOptions
   };
-
-  $('#action').addEndpoint($.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
   
+  pos_top = $('#tab-rules-container').height()/2;
+  pos_right = $('#tab-rules-container').width()/2;
+  
+  var outputEndpointFalse = {
+		endpoint:new jsPlumb.Endpoints.Rectangle(),
+		style:{ width:10, height:10, fillStyle: '#D00' }, //couleur rouge
+		isSource:true,
+		isTarget:false,
+		scope:'connection',
+		connectorStyle : {
+		    lineWidth:3,
+		    strokeStyle:'#000'
+		},
+		dropOptions : myDropOptions
+  };
+  
+    var actionlist =$('<div>');
+	  actionlist.addClass('actionlist');
+	  actionlist.addClass('action');
+    actionlist.attr("id", "actionlist");
+    actionlist.css("height", "240px").css("width", "70px");
+    actionlist.html('Actionlist');
+	  
+    actionlist[0].type="actionlist";
+    actionlist[0].condition=true;
+	  $('#tab-rules-container').append(actionlist);
+
+  $('#actionlist').css("top",pos_top-$('#actionlist').height()/2);
+  $('#actionlist').css("right",pos_right-$('#actionlist').width()/2);
+
+    actionlist.addEndpoint($.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
+	  /*
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0, 0, 0] , uuid: "ontrue1" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.05, 0, 0] , uuid: "ontrue2" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.1, 0, 0] , uuid: "ontrue3" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.15, 0, 0] , uuid: "ontrue4" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.2, 0, 0] , uuid: "ontrue5" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.25, 0, 0] , uuid: "ontrue6" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.3, 0, 0] , uuid: "ontrue7" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.35, 0, 0] , uuid: "ontrue8" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.4, 0, 0] , uuid: "ontrue9" , scope:'ontrue'}, outputEndpoint));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.45, 0, 0] , uuid: "ontrue10" , scope:'ontrue'}, outputEndpoint));
+	  */
+	  //actionlist.append('<span style="position: absolute; top: 25%; text-align: center; right: 10px;">On-True</span>');
+	  var actionlistontrue =$('<div>');
+	  //actionlistontrue.addClass('actionlist');
+    actionlistontrue.attr("id", "actionlistOnTrue");
+    actionlistontrue.css("height", "120px").css("width", "70px").css("top", "0px").css("position", "absolute");
+    //actionlistontrue.html('On-true');
+    actionlistontrue.append('<span style="position: absolute; top: 50%; text-align: center; right: 10px;">On-True</span>');
+	  
+    actionlistontrue[0].type="actionlist";
+    actionlistontrue[0].condition=true;
+	  
+    actionlist.append(actionlistontrue);
+    actionlistontrue.draggable({ disabled: true });
+	  
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0, 0, 0] , uuid: "ontrue1" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.1, 0, 0] , uuid: "ontrue2" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.2, 0, 0] , uuid: "ontrue3" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.3, 0, 0] , uuid: "ontrue4" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.4, 0, 0] , uuid: "ontrue5" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.5, 0, 0] , uuid: "ontrue6" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.6, 0, 0] , uuid: "ontrue7" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.7, 0, 0] , uuid: "ontrue8" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.8, 0, 0] , uuid: "ontrue9" , scope:'ontrue'}, outputEndpoint));
+	  actionlistontrue.addEndpoint($.extend({ anchor:[1, 0.9, 0, 0] , uuid: "ontrue10" , scope:'ontrue'}, outputEndpoint));
+	  jsPlumb.draggable("actionlistOnTrue", false);
+	  
+	  //actionlist.addEndpoint($.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpointFalse));
+	  /*
+    actionlist.addEndpoint($.extend({ anchor:[1, 0.55, 0, 0] , uuid: "onfalse1" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.6, 0, 0] , uuid: "onfalse2" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.65, 0, 0] , uuid: "onfalse3" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.7, 0, 0] , uuid: "onfalse4" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.75, 0, 0] , uuid: "onfalse5" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.8, 0, 0] , uuid: "onfalse6" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.85, 0, 0] , uuid: "onfalse7" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.9, 0, 0] , uuid: "onfalse8" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 0.95, 0, 0] , uuid: "onfalse9" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlist.addEndpoint($.extend({ anchor:[1, 1, 0, 0] , uuid: "onfalse10" , scope:'onfalse'}, outputEndpointFalse));
+    */
+    
+    //actionlist.append('<span style="position: absolute; top: 75%; text-align: center; right: 10px;">On-False</span>');
+  
+    var actionlistonfalse =$('<div>');
+	  //actionlistontrue.addClass('actionlist');
+    actionlistonfalse.attr("id", "actionlistOnFalse");
+    actionlistonfalse.css("height", "120px").css("width", "70px").css("top", "120px").css("position", "absolute");
+    //actionlistontrue.html('On-true');
+    actionlistonfalse.append('<span style="position: absolute; top: 50%; text-align: center; right: 10px;">On-False</span>');
+	  
+    actionlistonfalse[0].type="actionlist";
+    actionlistonfalse[0].condition=true;
+	  
+    actionlist.append(actionlistonfalse);
+    actionlistonfalse.draggable({ disabled: true });
+    actionlist.draggable({ disabled: true });
+	  
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.1, 0, 0] , uuid: "onfalse1" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.2, 0, 0] , uuid: "onfalse2" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.3, 0, 0] , uuid: "onfalse3" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.4, 0, 0] , uuid: "onfalse4" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.5, 0, 0] , uuid: "onfalse5" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.6, 0, 0] , uuid: "onfalse6" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.7, 0, 0] , uuid: "onfalse7" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.8, 0, 0] , uuid: "onfalse8" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 0.9, 0, 0] , uuid: "onfalse9" , scope:'onfalse'}, outputEndpointFalse));
+	  actionlistonfalse.addEndpoint($.extend({ anchor:[1, 1, 0, 0] , uuid: "onfalse10" , scope:'onfalse'}, outputEndpointFalse));
+	  jsPlumb.draggable("actionlistOnFalse", false);
+  
+  
+  
+    jsPlumb.draggable("actionlist", false);
+
 	// Fill object list select
 	var responseXML=queryLinknx('<read><config><objects/></config></read>');
 	if (responseXML!=false)
@@ -777,7 +1467,7 @@ jQuery(document).ready(function(){
 			var option=$('<option>' + this.getAttribute('id') + '</option>').attr('value',this.getAttribute('id'));
 			option[0].type=this.getAttribute('type');
 			$("#tab-rules-object-condition-object").append(option);
-			$("#tab-rules-objectsrc-condition-object").append(option.clone());
+			//$("#tab-rules-objectsrc-condition-object").append(option.clone());
 
 			
 			if (this.getAttribute('type')=='10.001') {
@@ -797,19 +1487,7 @@ jQuery(document).ready(function(){
 	}
 	
 	// Object condition
-	$('#tab-rules-object-condition-dialog').dialog({ 
-		autoOpen: false,
-		buttons: { 
-				"Annuler": function() { rules.handleDialogCancel(this); },
-				"Supprimer": function() { rules.handleDialogDelete(this); },
-				"Sauver": function() { if (rules.saveObjectCondition()) $(this).dialog("close"); }
-		},
-		resizable: false,
-		title: "Editer une condition objet",
-		width: "540px",
-		closeOnEscape: false,
-		modal: true
-	});
+	rules.createDialog("tab-rules-object-condition-dialog", "Editer une condition objet", "540px" );
 	
 	$("#tab-rules-object-condition-object").bind('change', function() {
 		if (_objectTypesValues[$("#tab-rules-object-condition-object option:selected")[0].type])
@@ -828,22 +1506,10 @@ jQuery(document).ready(function(){
 	$("#tab-rules-object-condition-object").trigger('change');
 	
 	// Objectsrc condition
-	$('#tab-rules-objectsrc-condition-dialog').dialog({ 
-		autoOpen: false,
-		buttons: { 
-				"Annuler": function() { rules.handleDialogCancel(this); },
-				"Supprimer": function() { rules.handleDialogDelete(this); },
-				"Sauver": function() { if (rules.saveObjectSrcCondition()) $(this).dialog("close"); }
-		},
-		resizable: false,
-		title: "Editer une condition objet src",
-		width: "540px",
-		closeOnEscape: false,
-		modal: true
-	});
+	rules.createDialog("tab-rules-objectsrc-condition-dialog", "Editer une condition objet src", "540px" );
 
 	$("#tab-rules-objectsrc-condition-form")[0].validator=$("#tab-rules-objectsrc-condition-form").validate();
-
+  /*
 	$("#tab-rules-objectsrc-condition-object").bind('change', function() {
 		if (_objectTypesValues[$("#tab-rules-objectsrc-condition-object option:selected")[0].type])
 		{
@@ -859,52 +1525,18 @@ jQuery(document).ready(function(){
 		}
 	});
 	$("#tab-rules-objectsrc-condition-object").trigger('change');
+	*/
   
 	// Object compare condition
-	$('#tab-rules-objectcompare-condition-dialog').dialog({ 
-		autoOpen: false,
-		buttons: { 
-				"Annuler": function() { rules.handleDialogCancel(this); },
-				"Supprimer": function() { rules.handleDialogDelete(this); },
-				"Sauver": function() { if (rules.saveObjectCompareCondition()) $(this).dialog("close"); }
-		},
-		resizable: false,
-		title: "Editer une condition de comparaison d'objets",
-		width: "540px",
-		closeOnEscape: false,
-		modal: true
-	});
+	rules.createDialog("tab-rules-objectcompare-condition-dialog", "Editer une condition de comparaison d'objets", "540px" );
 
 	// Timecounter condition
-	$('#tab-rules-timecounter-condition-dialog').dialog({ 
-		autoOpen: false,
-		buttons: { 
-				"Annuler": function() { rules.handleDialogCancel(this); },
-				"Sauver": function() { if (rules.saveTimeCounterCondition()) $(this).dialog("close"); }
-		},
-		resizable: false,
-		title: "Editer une condition time-counter",
-		width: "480px",
-		closeOnEscape: false,
-		modal: true
-	});
+	rules.createDialog("tab-rules-timecounter-condition-dialog", "Editer une condition time-counter", "480px" );
 
 	$("#tab-rules-timecounter-condition-form")[0].validator=$("#tab-rules-timecounter-condition-form").validate();
 
 	// Timer condition
-	$('#tab-rules-timer-condition-dialog').dialog({ 
-		autoOpen: false,
-		buttons: { 
-				"Annuler": function() { rules.handleDialogCancel(this); },
-				"Supprimer": function() { rules.handleDialogDelete(this); },
-				"Sauver": function() { if (rules.saveTimerCondition()) $(this).dialog("close"); }
-		},
-		resizable: false,
-		title: "Editer une condition timer",
-		width: "750px",
-		closeOnEscape: false,
-		modal: true
-	});
+	rules.createDialog("tab-rules-timer-condition-dialog", "Editer une condition timer", "750px" );
 
 	$("#tab-rules-timer-condition-form")[0].validator=$("#tab-rules-timer-condition-form").validate();
 	
@@ -1052,6 +1684,9 @@ jQuery(document).ready(function(){
 		}
 	});
 	$("#timer-condition-until-type-other").trigger('change');
+  
+  // Script condition
+  rules.createDialog("tab-rules-script-condition-dialog", "Editer un script", "540px" );
   
   loading.hide();
 });

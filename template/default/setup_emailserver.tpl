@@ -21,15 +21,15 @@
 		</tr>
 		<tr>
 			<th>Nom d'utilisateur</th>
-			<td><input type="text" id="emailserver-user"></td>
+			<td><input type="text" id="emailserver-login" size="40"></td>
 		</tr>
 		<tr>
 			<th>Mot de passe</th>
-			<td><input type="text" id="emailserver-pass"></td>
+			<td><input type="password" id="emailserver-pass"></td>
 		</tr>
 		<tr>
 			<th>Expéditeur</th>
-			<td><input type="text" class="required" name="emailserver-from" id="emailserver-from"></td>
+			<td><input type="text" class="required" name="emailserver-from" id="emailserver-from" size="40"></td>
 		</tr>
 	</tbody>
 </table>

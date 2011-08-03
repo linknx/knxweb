@@ -1,4 +1,6 @@
-var _version='v0.8pre';
+//var _version='v0.9';
+var _version=tab_config['version'];
+var _visuMobile=false;   // TODO a gérer mieux que ça ...
 
 var _objectTypesValues = {
 	'1.001': ['on','off'],
@@ -49,287 +51,6 @@ var runAfter = {
 	}
 }
 
-// EIBCommunicator
-var EIBCommunicator = {
-	listeners: new Object(),
-	
-	add: function(o) {
-		var l=o.getListeningObject();
-		for(var i=0;i<l.length; i++)
-			if (l[i]) {
-				if (!EIBCommunicator.listeners[l[i]]) EIBCommunicator.listeners[l[i]]=Array();
-				EIBCommunicator.listeners[l[i]].push(o);
-			}
-	},
-	remove: function(o) {
-		for(key in EIBCommunicator.listeners) {
-			for (var i=0;i<EIBCommunicator.listeners[key].length; i++) {
-				if (EIBCommunicator.listeners[key][i]==o) EIBCommunicator.listeners[key].splice(i,1);
-			}
-			if (EIBCommunicator.listeners[key].length==0) delete EIBCommunicator.listeners[key];
-		}
-	},
-	eibWrite: function(obj,value, successCallBack) {
-		if (!obj)
-			return;
-		var body = "<write><object id='"+obj+"' value='"+value+"'/></write>";
-
-		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml' ,
-			success: function(responseXML, status) {
-				var xmlResponse = responseXML.documentElement;
-				if (xmlResponse.getAttribute('status') == 'success') {
-		   			EIBCommunicator.sendUpdate(obj, value);
-				}
-				else
-					alert(tr("Error: ")+xmlResponse.textContent);
-				if (successCallBack) successCallBack(response);
-			}
-		})
-	},
-	sendUpdate: function(obj,value) {
-		var listeners = EIBCommunicator.listeners[obj];
-		if (listeners) {
-			for (var i=0;i<listeners.length; i++)
-				listeners[i].updateObject(obj,value);
-		}
-	},
-	eibRead: function(objects,completeCallBack) {
-		if (objects.length > 0) {
-			var body = '<read><objects>';
-			for (i=0; i < objects.length; i++)
-				if (objects[i])
-					body += "<object id='" + objects[i] + "'/>";
-			body += "</objects></read>";
-
-			var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
-				success: function(responseXML, status) {
-					var xmlResponse = responseXML.documentElement;
-					if (xmlResponse.getAttribute('status') != 'error') {
-						// Send update to subscribers
-						var objs = xmlResponse.getElementsByTagName('object');
-						if (objs.length == 0)
-								EIBCommunicator.sendUpdate(objects, xmlResponse.childNodes[0].nodeValue);	
-						else {
-							for (i=0; i < objs.length; i++) {
-								var element = objs[i];
-								EIBCommunicator.sendUpdate(element.getAttribute('id'),element.getAttribute('value'));
-							}
-						}
-					}
-					else
-						UIController.setNotification(tr("Error: ")+xmlResponse.textContent);
-				},
-				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					UIController.setNotification(tr("Error: ")+textStatus);
-				},
-				complete: completeCallBack
-			});
-		}
-		else if (completeCallBack)
-		    completeCallBack();
-	},
-	loadObjectList: function() {
-		var body = '<read><config><objects/></config></read>';
-		var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
-			success: function(responseXML, status) {
-				var xmlResponse = responseXML.documentElement;
-				if (xmlResponse.getAttribute('status') != 'error') {
-					UIController.setObjectsList(xmlResponse);
-				}
-				else
-					alert(tr("Error: ")+xmlResponse.textContent);
-			}
-		});
-	},
-	updateAll: function(completeCallBack) {
-		var obj = new Array();
-		for(key in EIBCommunicator.listeners)
-			obj.push(key);
-		EIBCommunicator.eibRead(obj, completeCallBack);
-	},
-	periodicUpdate: function() {
-		EIBCommunicator.updateAll(function(XMLHttpRequest, textStatus) {
-				setTimeout('EIBCommunicator.periodicUpdate()', 1000);
-			});
-	},
-	removeAll: function() {
-		for(key in EIBCommunicator.listeners) 
-			delete EIBCommunicator.listeners[key];
-	}
-}
-
-// UIController
-var UIController = {
-	objects: new Array(),
-	objectListListeners: new Array(),
-	zoneListListeners: new Array(),
-	editMode: false,
-	leftOffset: null,
-	topOffset: null,
-	currentZone: '',
-	widgetList: new Array(),
-	setConfig: function(doc, name) {
-		this.config = doc;
-		this.designName = name;
-		this.zoneListChanged();
-	},
-	getDesignName: function() {
-		return this.designName;
-	},
-	setObjectsList: function(doc) {
-		UIController.objectlist = doc;
-		for(var i=0;i<this.objectListListeners.length; i++) {
-			this.objectListListeners[i](doc);
-		}
-	},
-	addObjectListListener: function(f) {
-		this.objectListListeners.push(f);
-		f(UIController.objectlist);
-	},
-	addZoneListListener: function(f) {
-		this.zoneListListeners.push(f);
-		f(UIController.config);
-	},
-	zoneListChanged: function() {
-		for(var i=0;i<this.zoneListListeners.length; i++) {
-			this.zoneListListeners[i](UIController.config);
-		}
-	},
-	registerWidget: function(widget) {
-		this.widgetList[widget.type]=widget;
-	},
-	changeZoneBackground: function(zoneid, bg) {
-		$('zone[id='+zoneid+']', UIController.config).attr('img', bg);
-		this.setZoneBackground(bg);
-	},
-	setZoneBackground: function(bg) {
-		if (bg != null && bg != "")
-		{
-			bg = 'design/'+this.designName+'/'+bg;
-			$('body').css('background-image', 'url(' + bg + ')');
-		}
-	},
-	drawZone: function(zoneid) {
-		UIController.removeAll();
-		EIBCommunicator.removeAll();
-		if (!zoneid)
-			zoneid = $('zone', UIController.config).attr('id');
-		this.currentZone = zoneid;
-		var zone = $('zone[id='+zoneid+']', UIController.config);
-			UIController.setZoneBackground(zone.attr('img'));
-		zone.children('control').each(function() {
-			UIController.addWidget(this, UIController.editMode);
-		});
-		EIBCommunicator.updateAll();
-	},
-	editZone: function(mode) {
-		this.editMode = (mode != null) ? mode : !this.editMode;
-		for(var i=0;i<UIController.objects.length; i++)
-		UIController.objects[i].edit(this.editMode, this.editMode);
-	},
-	createWidget: function(conf, modify) {
-		var obj = null;
-		var type = conf.getAttribute('type');
-		var cls = this.widgetList[type];
-		if (cls)
-			obj = new cls(conf);
-		if (obj!=null) {
-			if (modify)
-				obj.edit(true, true);
-			
-			$('body').append(obj.div);
-
-			UIController.objects.push(obj);
-			EIBCommunicator.add(obj);
-			return true;
-		}
-		return false;
-	},
-	addWidget: function(o, modify) {
-		if (!this.createWidget(o, modify)) {
-			var type = o.getAttribute('type');
-			$.getScript("widgets/" + type + "/js/display.js", function() { UIController.createWidget(o, modify); });
-		}
-	},
-	add: function(conf) {
-		$('zone[id='+this.currentZone+']', UIController.config).each(function() {
-			this.appendChild(conf);
-		});
-		UIController.addWidget(conf, true);
-	},
-	createControl: function(type) {
-		var conf = UIController.config.createElement('control');
-   		conf.setAttribute('type', type);
-   		return conf;
-	},
-	remove: function(o) {
-		for(var i=0;i<UIController.objects.length; i++) {
-			if (o==UIController.objects[i]) {
-				document.body.removeChild(o.div);
-				UIController.objects.splice(i,1);
-				$(o.conf).remove();
-				EIBCommunicator.remove(o);
-				return;
-			}
-		}
-	},
-	addZone: function(zoneid, zoneName) {
-		var newzone = UIController.config.createElement('zone');
-		newzone.setAttribute('id', zoneid);
-		newzone.setAttribute('name', zoneName);
-		$('zones', UIController.config).append(newzone);
-		this.zoneListChanged();
-	},
-	removeZone: function(zoneid) {
-		$('zone[id='+zoneid+']', UIController.config).each(function() { this.parentNode.removeChild( this ); });
-		this.zoneListChanged();
-	},
-	serializeToString: function(doc) {
-        if (jQuery.browser.msie)
-            return doc.xml;
-   		return (new XMLSerializer()).serializeToString(doc);
-    },
-	saveDesign: function(version) {
-		var string = this.serializeToString(UIController.config);
-		var url = 'design.php?action=savedesign&name='+this.designName+'&ver='+version;
-		req = jQuery.ajax({ type: 'post', url: url, data: string, processData: false, dataType: 'xml' ,
-			success: function(responseXML, status) {
-				var xmlResponse = responseXML.documentElement;
-				if (xmlResponse.getAttribute('status') == 'success') {
-					UIController.setNotification(tr("Design saved successfully"));
-				}
-				else {
-					UIController.setNotification(tr("Error while saving design: ")+xmlResponse.textContent);
-					alert(tr("Error while saving design: ")+xmlResponse.textContent);
-				}
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				UIController.setNotification(tr("Error while saving design: ")+textStatus);
-			}
-		});
-	},
-	displayDesign: function() {
-        var string = this.serializeToString(UIController.config);
-		var popup = window.open();
-		popup.document.write("<html><body><textarea rows=30 cols=100>"+string+"</textarea></body></html>");
-		popup.document.close();
-	},
-	setNotification: function(text)	{
-		$('#notificationZone').text(text).show();
-		runAfter.add(UIController.clearNotification, 5, this);
-	},
-	clearNotification: function()	{
-		$('#notificationZone').text('').hide();
-	},
-	removeAll: function(o) {
-		zo = UIController.objects.shift();
-		while (zo != null) {
-			document.body.removeChild(zo.div);
-			zo = UIController.objects.shift();
-		}
-	}
-}
-
 function addMenuSection(id, name)
 {
 	var menu = $('<div class="menuItem" />');
@@ -358,7 +79,7 @@ function addScriptMenuSection(id, name,func)
 
 function displayVersion()
 {
-	$('.menuTitle').append("<a href='index.html'><img src='images/settings.gif'/> KnxWeb " + _version + "</a>")
+	$('.menuTitle').append("<a href='#'><img src='images/settings.gif'/> KnxWeb " + _version + "</a>")
 }
 
 function processHTMLTranslate()
@@ -377,7 +98,18 @@ function tr(msg)
 
 function saveConfig()
 {
-	queryLinknx('<admin><save/></admin>');
+  var now = new Date();
+  var month = now.getMonth() + 1;
+  var file = prompt( tr("Please enter path and save file name :"), "config-" + now.getFullYear() + "-" + month + "-"+now.getDate() +".xml" );
+  
+  if (!file) { 
+	  alert(tr("Error: No file to write config to"));
+	  return;
+	} else { 
+	  var body = '<admin><save file="' + file + '"/></admin>';
+	}
+	queryLinknx(body);
+	//queryLinknx('<admin><save/></admin>');
 }
 
 function isObjectUsed(id)
@@ -570,4 +302,99 @@ function queryLinknx(message) {
 
 function lz(i) {
 	if (i<10) return '0'+i; else return i;
+}
+
+/*- Window for create a new widget -*/
+function editWidget(widgetType, textWidget) {
+
+  if($('#editWidget')) { $('#editWidget').remove(); }
+  
+  var divEdit = $('<div id="editWidget" />');
+  divEdit.get(0);  
+
+  var widget = UIController.widgetList[widgetType];
+
+  divEdit.dialog( { title: widget.menuText+' - '+textWidget , width: 300});
+
+  widget.prototype.addObjectFields( divEdit , null);
+}
+
+/*- Window for list image of a directory -*/
+function listImage(DossierImage, Click_img, onOff ) {
+	if(!DossierImage)  DossierImage = "template/default/images/";
+	if($('#listImage')) { $('#listImage').remove(); }
+	
+	var divListImage = $('<div id="listImage" />');
+	divListImage.get(0);
+
+	divListImage.dialog( { title: 'Select Image' , width: 410,
+			close: function(event, ui) {
+				$(this).dialog("destroy");
+  			$(this).remove();
+  	 	}
+	});  
+	divListImage.empty().append($("<img src='images/loading.gif'/>"));
+
+	req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action=filelistdir&name='+DossierImage, dataType: 'xml', 
+			success: function(responseXML, status) 
+			{
+				divListImage.empty();
+				var xmlResponse = responseXML.documentElement;
+				
+				if (xmlResponse.getAttribute('status') != 'error') {
+					$('file', responseXML).each(function() {
+						var file = $(this).text();
+						var re = new RegExp('\.(gif|jpe?g|png)$');
+						if (re.test(file)) {
+							var idpoint = file.lastIndexOf('.', 100);
+							if (onOff && (file.substring(idpoint,idpoint+4) == ".png") && (file.substring(idpoint,idpoint-3) == "_on") ) { // recherche que les "_on" et "_off" en n'en affiche la "paire"
+								// ex file = "light_on.png"
+								var id = file.lastIndexOf('_', 100); // position du "_" dans le nom
+								ext=file.substring(id,id+3);					// ex ext = "_on" ou "_of"
+								imgName=file.substring(0,id);	//on garde le nom ex imgName = "light" 	
+								//$('#ImgconfWifgetOn'+label.val()).attr('src',DossierImage+imgName+'_on.png' ); //on change l'image dans de fenetre conf
+								//$('#ImgconfWifgetOff'+label.val()).attr('src',DossierImage+imgName+'_off.png' );
+								var option = $("<img width='32' height='32' src='"+DossierImage+imgName+"_on.png' alt='"+imgName+"_on' title='"+imgName+"_on'/>");
+								option.click(
+									function () {
+										if(Click_img) 	Click_img(DossierImage+file); 
+										else{
+											return (DossierImage+file); 
+										} 
+									}
+								);
+								divListImage.append(option);
+								var option2 = $("<img width='32' height='32' src='"+DossierImage+imgName+"_off.png' alt='"+imgName+"_off' title='"+imgName+"_off'/>");
+								option2.click(
+									function () {
+										if(Click_img) 	Click_img(DossierImage+file); 
+										else{
+											return (DossierImage+file); 
+										} 
+									}
+								);
+								divListImage.append(option2);
+							}
+							if (!onOff) {
+								var option = $("<img width='32' height='32' src='"+DossierImage+file+"' alt='"+file+"' title='"+file+"'/>");
+								option.click(
+									function () {
+										if(Click_img) 	Click_img(DossierImage+file); 
+										else{
+											return (DossierImage+file); 
+										} 
+									}
+								);
+								divListImage.append(option);
+							}
+						}
+					});
+				}
+				else
+					divListImage.text(tr("Unable to load: ")+xmlResponse.textContent);
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				divListImage.text(tr("Unable to load: ")+textStatus);
+			}
+	});
 }

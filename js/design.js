@@ -26,8 +26,11 @@ function loadDesign(design, version)
 
 jQuery(function($) {
 	displayVersion();
-	var design = "default";
-	var version = "design";
+	//var design = "default";
+	var design = tab_config['defaultDesign'];
+	//var version = "design";
+	var version = tab_config['defaultVersion'];
+	
 	var matched;
 	if (matched = location.search.match(/design=([^&]+)/))
 		design = matched[1];
@@ -38,4 +41,5 @@ jQuery(function($) {
   
 	EIBCommunicator.periodicUpdate();
 	runAfter.init();
+	loading.hide();
 });

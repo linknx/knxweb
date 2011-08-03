@@ -1,9 +1,20 @@
-﻿{foreach from=$jsList item=js}
+<script type="text/javascript" >
+  var tab_objectTypes = {$json_objectTypes};
+</script>
+
+{foreach from=$jsList item=js}
 <script type="text/javascript" src="{$js}"></script>
 {/foreach}
 
+<meta http-equiv="expires" content="0">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache, must-revalidate">
+
 <div id="edit-object-dialog" style="display: none;">
 <form id="edit-object-form">
+<table class="form">
+<tr>
+<td width="65%">
 <table class="form">
 	<tr>
 		<th>ID</th>
@@ -13,7 +24,7 @@
 	</tr>
 	<tr>
 		<th>Nom</th>
-		<td><input id="edit-object-label" name="edit-object-label" class="required" size="30" type="text"></td>
+		<td><input id="edit-object-label" name="edit-object-label" size="30" type="text"></td>
 	</tr>
 	<tr>
 		<th>Type</th>
@@ -31,20 +42,34 @@
 			<input id="edit-object-flag-w" type="checkbox"/><span title="Write">w</span>
 			<input id="edit-object-flag-t" type="checkbox"/><span title="Transmit">t</span>
 			<input id="edit-object-flag-u" type="checkbox"/><span title="Update">u</span>
-			<input id="edit-object-flag-f" type="checkbox"/><span title="Force">f</span>
+			<input id="edit-object-flag-s" type="checkbox"/><span title="Stateless">s</span>
 		</td>
 	</tr>
 	<tr>
 		<th>Valeur initial</th>
 		<td>
-			<select id="edit-object-init" onchange="if ($(this).val()=='') $('#edit-object-init-value').css('visibility','visible'); else $('#edit-object-init-value').css('visibility','hidden'); ">
+			<select id="edit-object-init" > <!--onchange="if ($(this).val()=='') $('#edit-object-init-value').css('visibility','visible'); else $('#edit-object-init-value').css('visibility','hidden'); "-->
 				<option value="request">request (lire du bus)</option>
 				<option value="persist">persist (lire depuis le stockage persistant)</option>
 				<option value="">autre (définir une valeur)</option>
+				<!-- <option value="request">lire du bus</option>
+				<option value="persist">lire depuis le stockage persistant</option>
+				<option value="">définir une valeur</option> -->
 			</select>
 			<input type="text" id="edit-object-init-value" size="4">
+			<!-- <select id="edit-object-init-val-select"></select> -->
 		</td>
 	</tr>
+	<tr>
+		<th>Historique</th>
+		<td><input id="edit-object-flag-log" type="checkbox"/><span title="Log">Historiser les changements de valeur</span></td>
+	</tr>
+</table>
+
+</td>
+<td id="edit-object-td-listener" width="35%"></td>
+</tr>
+
 </table>
 </form>
 </div>
@@ -73,14 +98,13 @@
 </form>
 </div>
 
-
 <table id="objects-tab-table">
 	<thead>
 		<tr>
-			<th width="25%">Objet</th>
-			<th width="25%">Description</th>
-			<th width="25%">GAD</th>
-			<th width="25%">Type</th>
+			<th width="30%">Objet</th>
+			<th width="30%">Description</th>
+			<th width="10%">GAD</th>
+			<th width="30%">Type</th>
 		</tr>
 	</thead>
 	<tbody>

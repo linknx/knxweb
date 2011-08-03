@@ -1,9 +1,24 @@
-﻿{foreach from=$jsList item=js}
+{foreach from=$jsList item=js}
 <script type="text/javascript" src="{$js}"></script>
 {/foreach}
 
 <div id="tab-rules-property" style="display: none;">
   <div class="subItem">Général</div>
+</div>
+
+<div id="tab-rules-script-condition-dialog" style="display: none;">
+<form id="tab-rules-script-condition-form">
+<table class="form">
+	<tbody>
+		<tr>
+			<th width="150">Script</th>
+			<td>
+				<textarea cols="80" rows="4" name="script" class="script" id="tab-rules-script-condition-script"></textarea>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</form>
 </div>
 
 <div id="tab-rules-object-condition-dialog" style="display: none;">
@@ -21,11 +36,11 @@
 			<td>
 				<select id="tab-rules-object-condition-operation">
 					<option value="eq">==</option>
-					<option value="lt"><</option>
-					<option value="gt">></option>
+					<option value="lt">&lt;</option>
+					<option value="gt">&gt;</option>
 					<option value="ne">!=</option>
-					<option value="lte"><=</option>
-					<option value="gte">>=</option>
+					<option value="lte">&lt;=</option>
+					<option value="gte">&gt;=</option>
 				</select>
 			</td>
 		</tr>
@@ -51,10 +66,16 @@
 <form id="tab-rules-objectsrc-condition-form">
 <table class="form">
 	<tbody>
-		<tr>
+		<!-- <tr>
 			<th width="150">Objet</th>
 			<td>
 				<select id="tab-rules-objectsrc-condition-object"></select>
+			</td>
+		</tr> -->
+		<tr>
+			<th>Adresse source (src)</th>
+			<td>
+				<input type="text" class="required" id="tab-rules-objectsrc-condition-src"> (ex.: 1.1.20)
 			</td>
 		</tr>
 		<tr>
@@ -62,18 +83,18 @@
 			<td>
 				<select id="tab-rules-objectsrc-condition-operation">
 					<option value="eq">==</option>
-					<option value="lt"><</option>
-					<option value="gt">></option>
+					<option value="lt">&lt;</option>
+					<option value="gt">&gt;</option>
 					<option value="ne">!=</option>
-					<option value="lte"><=</option>
-					<option value="gte">>=</option>
+					<option value="lte">&lt;=</option>
+					<option value="gte">&gt;=</option>
 				</select>
 			</td>
 		</tr>
 		<tr>
 			<th>Valeur</th>
 			<td>
-				<select id="tab-rules-objectsrc-condition-values"></select>
+				<!-- <select id="tab-rules-objectsrc-condition-values"></select> -->
 				<input type="text" id="tab-rules-objectsrc-condition-value">
 			</td>
 		</tr>
@@ -81,12 +102,6 @@
 			<th>Trigger</th>
 			<td>
 				<input type="checkbox" id="tab-rules-objectsrc-condition-trigger">
-			</td>
-		</tr>
-		<tr>
-			<th>Adresse source (src)</th>
-			<td>
-				<input type="text" class="required" id="tab-rules-objectsrc-condition-src"> (ex.: 1.1.20)
 			</td>
 		</tr>
 	</tbody>
@@ -109,11 +124,11 @@
 			<td>
 				<select id="tab-rules-objectcompare-condition-operation">
 					<option value="eq">==</option>
-					<option value="lt"><</option>
-					<option value="gt">></option>
+					<option value="lt">&lt;</option>
+					<option value="gt">&gt;</option>
 					<option value="ne">!=</option>
-					<option value="lte"><=</option>
-					<option value="gte">>=</option>
+					<option value="lte">&lt;=</option>
+					<option value="gte">&gt;=</option>
 				</select>
 			</td>
 		</tr>
@@ -329,15 +344,21 @@
 
 <div id="xmlOutput" style="float: right; width: 400px;"></div>
 
-<input type="button" value="OBJECT" onclick="rules.addObject()">
-<input type="button" value="OBJECT SRC" onclick="rules.addObjectSrc()">
-<input type="button" value="OBJECT COMPARE" onclick="rules.addObjectCompare()">
-<input type="button" value="TIME COUNTER" onclick="rules.addTimeCounter()">
-<input type="button" value="TIMER" onclick="rules.addTimer()">
-<input type="button" value="AND" onclick="rules.addAnd()">
-<input type="button" value="OR" onclick="rules.addOr()">
-<input type="button" value="NOT" onclick="rules.addNot()">
+<div id="buttonBar">
+  <input type="button" id="button-add-object" value="OBJECT" onclick="rules.addObject()">
+  <input type="button" id="button-add-objectsrc" value="OBJECT SRC" onclick="rules.addObjectSrc()">
+  <input type="button" id="button-add-objectcompare" value="OBJECT COMPARE" onclick="rules.addObjectCompare()">
+  <input type="button" id="button-add-timecounter" value="TIME COUNTER" onclick="rules.addTimeCounter()">
+  <input type="button" id="button-add-timer" value="TIMER" onclick="rules.addTimer()">
+  <input type="button" id="button-add-and" value="AND" onclick="rules.addAnd()">
+  <input type="button" id="button-add-or" value="OR" onclick="rules.addOr()">
+  <input type="button" id="button-add-not" value="NOT" onclick="rules.addNot()">
+  <br />
+  <select id="addcondition" name="addcondition"></select>
+  <select id="addaction" name="addaction"></select>
+  <select id="listRules" name="listRules"></select>
+</div>
 
 <div id="tab-rules-container">
-	<div id="action">Action</div>
+	<!-- <div id="action">Action</div> -->
 </div>

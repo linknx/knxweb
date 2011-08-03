@@ -1,4 +1,4 @@
-﻿var emailserver = {
+var emailserver = {
 
 	refreshData: function() {
 		var body = '<read><config><services></services></config></read>';
@@ -9,7 +9,7 @@
 				$('#emailserver-enable').attr('checked','true');
 				$('#emailserver-type').val(data.getAttribute('type'));
 				$('#emailserver-host').val(data.getAttribute('host'));
-				$('#emailserver-user').val(data.getAttribute('user'));
+				$('#emailserver-login').val(data.getAttribute('login'));
 				$('#emailserver-pass').val(data.getAttribute('pass'));
 				$('#emailserver-from').val(data.getAttribute('from'));
 			} else $('#emailserver-enable').removeAttr('checked');
@@ -26,7 +26,7 @@
 					var body = '<write><config><services><emailserver ' + 
 											'type="' + $('#emailserver-type').val() + '" ' +
 											'host="' + $('#emailserver-host').val() + '" ' +
-											( ($('#emailserver-user').val()!='')?'user="' + $('#emailserver-user').val() + '" ':'') +
+											( ($('#emailserver-login').val()!='')?'login="' + $('#emailserver-login').val() + '" ':'') +
 											( ($('#emailserver-pass').val()!='')?'pass="' + $('#emailserver-pass').val() + '" ':'') +
 											'from="' + $('#emailserver-from').val() + '" ' +
 											'/></services></config></write>';
