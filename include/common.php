@@ -1,8 +1,11 @@
 <?
 
-	require_once('include/config.inc.php');
+	//require_once('include/config.inc.php');
+  $_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
+  unset($_config['comment']); // enleve les commentaires
+
 	require_once('include/tpl.php');
-	require_once('include/lang.php');
+	require_once('lang/lang.php');
 
   // Convert to a Javascript array
 	$json_config = json_encode($_config);
@@ -24,7 +27,8 @@
 	    '12.xxx' => '12.xxx: 32bit unsigned integer (EIS11)',
 	    '13.xxx' => '13.xxx: 32bit signed integer',
 	    '14.xxx' => '14.xxx: 32 bit IEEE 754 floating point number',
-	    '16.000' => '16.000: string (EIS15)',
+	    '16.000' => '16.000: string (EIS15) to ASCII codes 0 to 127',
+	    '16.001' => '16.001: string (EIS15) with range 0 to 255 ',
 	    '20.102' => '20.102: heating mode',
 	    '28.001' => '28.001: variable length string objects',
 	    '29.xxx' => '29.xxx: signed 64bit value'
@@ -100,5 +104,5 @@
 			if (file_exists($info['path'] . '/widget.css')) tpl()->addCss($info['path'] . '/widget.css');
 		}
 	}
-	
+
 ?>

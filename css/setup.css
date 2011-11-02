@@ -5,7 +5,6 @@ body, html {
 	margin: 0;
 	padding: 0;
 	background-repeat: no-repeat;
-	overflow: hidden;
 }
 
 * {
@@ -63,6 +62,7 @@ img {
 	background-color: #DFE8F6;
 	width: 200px;
 	height: 100%;
+	position: fixed;
 	padding-right: 2px;
 	padding-left: 2px;
 	vertical-align: top;
@@ -83,7 +83,6 @@ img {
 	vertical-align: top;
 	padding: 5px;
 	overflow: auto;
-	height: 100%;
 	margin-left: 210px;
 }
 
@@ -356,7 +355,61 @@ table.form td {
 
 /***************** /Rules ********************/
 
+/***************** Design ********************/
 #tab-designedit {
   padding: 0px;
   position: relative;
 }
+/***************** /Design ********************/
+
+/***************** Admin ********************/
+#tab-admin {
+  position: relative;
+}
+.titleadmin {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #000;
+    color: #FFF;
+    height: 40px;
+    line-height: 36px;
+    padding-left: 5px;
+    margin-bottom: 5px;
+}
+
+.titleadmin a{
+    font-size: 13px;
+    color: #AAA;
+}
+
+.titleadmin2 {
+    font-size: 14px;
+    background-color: #DDD;
+    color: #000;
+    height: 25px;
+    line-height: 22px;
+    padding-left: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.codeadmin {
+    background-color: #EEE;
+    border: 1px solid #999;
+    padding: 3px;
+}
+.red {
+    background-color: #DF0000;
+    color: #FFFFFF;
+    font-family: verdana,helvetica;
+    font-size: 10px;
+    font-weight: bold;
+}
+.green {
+    background-color: #00DF00;
+    color: #FFFFFF;
+    font-family: verdana,helvetica;
+    font-size: 10px;
+    font-weight: bold;
+}
+/***************** /Admin ********************/

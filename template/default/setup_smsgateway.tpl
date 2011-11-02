@@ -24,8 +24,16 @@
 			<td><input type="password" class="required" name="smsgateway-password" id="smsgateway-password"></td>
 		</tr>
 		<tr>
+			<th>Confirmation mot de passe</th>
+			<td><input type="password" class="required" id="smsgateway-password-confirm" id="smsgateway-password-confirm"><span class="error" style="color: #F00;display: none;"> Mot de passe différent</span></td>
+		</tr>
+		<tr>
 			<th>API id</th>
 			<td><input type="text" class="required" name="smsgateway-apiid" id="smsgateway-apiid"></td>
+		</tr>		
+		<tr class="minversion_0_0_1_29" >
+			<th>From</th>
+			<td><input type="text" name="smsgateway-from" id="smsgateway-from"><span style="color: #F00;"> Depuis la version 0.0.1.29 de linknx</span></td>
 		</tr>
 	</tbody>
 </table>

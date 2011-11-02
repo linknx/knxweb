@@ -1,6 +1,7 @@
 <?php
 
-require_once("include/config.inc.php");
+$_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
+unset($_config['comment']); 
 
 error_reporting(0);
 $max_result_lines = 1000;

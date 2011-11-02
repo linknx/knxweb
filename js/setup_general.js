@@ -116,6 +116,13 @@ jQuery(document).ready(function(){
 		if ($("#setupgeneral-persistence-type").val()=='mysql'){
 			$(".setupgeneral-persistence-file").each(function(){$(this).hide();});
 			$(".setupgeneral-persistence-mysql").each(function(){$(this).show();});
+			$('#setupgeneral-persistence-password-confirm').change(function() {
+				if($("#setupgeneral-persistence-password").val() == $(this).val()) {
+					$('.error').hide();
+				} else {
+					$('.error').show();
+				} 
+			});
 		}
 		if ($("#setupgeneral-persistence-type").val()=='file' || $("#setupgeneral-persistence-type").val()=='disabled'){
 			$(".setupgeneral-persistence-file").each(function(){$(this).show();});

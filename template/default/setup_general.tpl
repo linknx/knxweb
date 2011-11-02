@@ -64,6 +64,8 @@
 				Serveur : <input type="text" class="required" name="setupgeneral-persistence-host" id="setupgeneral-persistence-host">
 				Nom d'utilisateur : <input type="text" class="required" name="setupgeneral-persistence-user" id="setupgeneral-persistence-user">
 				Mot de passe : <input type="password" class="required" name="setupgeneral-persistence-password" id="setupgeneral-persistence-password">
+				Confimation mot de passe : <input type="password" class="required" name="setupgeneral-persistence-password-confirm" id="setupgeneral-persistence-password-confirm">
+				<span class="error" style="color: #F00;display: none;"> Mot de passe différent</span>
 			</td>
 		</tr>
 		<tr class="setupgeneral-persistence-mysql">
@@ -82,8 +84,9 @@
 					</select>
 				</div>
 				<div>
-					<input type="button" value="Ajouter" id="setupgeneral-exceptiondays-add"><br /><br />
-					<!-- <input type="button" value="Supprimer" id="setupgeneral-exceptiondays-remove"> -->
+					<input type="button" value="Ajouter" id="setupgeneral-exceptiondays-add" >
+					<br /><br />
+					<input type="button" value="Supprimer" id="setupgeneral-exceptiondays-remove" class="minversion_0_0_1_29" > <!-- Depuis la version 0.0.1.29 de linknx -->
 				</div>
 			</td>
 		</tr>

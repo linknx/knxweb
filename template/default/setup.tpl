@@ -62,10 +62,19 @@
 			</div>
 						
 			<h3 tab_id="designedit" tab_label="Edition Design" tab_url="designedit.php"><a href="#"><img src="images/setup.png"> Edition Design</a></h3>
-			<div></div>
+			<div>
+        <div class="subItem" id="button-list-design">List Design</div>
+        <div class="subItem" id="button-add-new-design"><img src="images/add.png" />New design</div>
+        <div class="subItem" id="button-edit-template-design"><img src="images/edit.png" />Modification du style</div>
+      </div>
 			
 			<h3 tab_id="admin" tab_label="Administration" tab_url="setup_admin.php"><a href="#"><img src="images/construct.png"> Admin</a></h3>
-			<div></div>
+			<div>
+			  <div class="subItem" id="button-admin-conf-knxweb">Config KnxWeb</div>
+        <div class="subItem" id="button-admin-log-object">Log Object</div>
+			  <div class="subItem" id="button-admin-log-linknx">Log Linknx</div>
+			  <div class="subItem" id="button-admin-upload-images">Upload Images</div>
+      </div>
 			
 		</div>
 		<div id="propertiesContainer">

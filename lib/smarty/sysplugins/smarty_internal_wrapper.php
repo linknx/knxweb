@@ -3,7 +3,7 @@
 /**
  * Project:     Smarty: the PHP compiling template engine
  * File:        smarty_internal_wrapper.php
- * SVN:         $Id: smarty_internal_wrapper.php,v 1.1 2011/04/29 08:08:26 zikibe Exp $
+ * SVN:         $Id: smarty_internal_wrapper.php,v 1.2 2011/11/02 23:29:44 energy01 Exp $
  * 
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

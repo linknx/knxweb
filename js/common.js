@@ -1,4 +1,4 @@
-//var _version='v0.9';
+
 var _version=tab_config['version'];
 var _visuMobile=false;   // TODO a gérer mieux que ça ...
 
@@ -123,7 +123,7 @@ function isObjectUsed(id)
 			if ((this.getAttribute('type')=='object')&&(this.getAttribute('id')==id))
 			{
 				used=true;
-				return false;
+				return false; // ?? à tester ...
 			}
 		});
 		$('action', responseXML).each(function() {
@@ -259,7 +259,8 @@ var loading = {
 };
 
 function messageBox(message,title,icon) {
-	
+	// icon : alert, info, notice, help, mail-open, mail-closed, comment, person, trash, locked, unlocked, home, star, link, cancel, newwin, refresh
+  // voir pour ajouter la class ui-state-highlight ou ui-state-error en fonction si "bon ou mauvais" 
 	a=$('<div id="dialog-message" title="' + title + '">');
 	a.html('<p><span class="ui-icon ui-icon-' + icon + '" style="float:left; margin:0 7px 50px 0;"></span>' + message + '</p>');
 	a.dialog({
@@ -285,6 +286,27 @@ function queryLinknx(message) {
 	
 	var data;
 	var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: message, processData: false, dataType: 'xml',async: false,
+		success: function(responseXML, status) {
+			var xmlResponse = responseXML.documentElement;
+			if (xmlResponse.getAttribute('status') == 'success') {
+				data=xmlResponse;
+			}
+			else 
+			{
+				messageBox(tr("Error: ")+xmlResponse.textContent, 'Erreur', 'alert');
+				data=false;
+			}
+		}
+	});
+	return data;
+}
+
+function queryKnxweb(action, type, message, callasync) {
+	//if (!type) type = 'xml';
+  //if (!message) message = '';
+  //if (!callasync) callasync = false;
+	var data;
+	var req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action='+action, data: message, processData: false, dataType: type,async: callasync,
 		success: function(responseXML, status) {
 			var xmlResponse = responseXML.documentElement;
 			if (xmlResponse.getAttribute('status') == 'success') {

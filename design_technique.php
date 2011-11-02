@@ -1,6 +1,6 @@
 <?php
 error_reporting(0);
-header('Content-Type: application/xml; charset=iso-8859-1');
+header('Content-Type: application/xml; charset=utf-8');
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) 
 	{
@@ -102,6 +102,24 @@ if (isset($_GET['action'])) {
 				print("<filelist status='error'>Unable to find design '$name' on server\n");
 			print("</filelist>\n");
 			break;
+		case 'saveconfig':
+			$dir = "include";
+	    if (isset($_GET['dir']))
+        $dir = $_GET['dir'];
+			if (ereg("[\\/.$;!?]", $dir) > 0)
+				print("<saveconfig status='error'>Restricted character in dir");
+			elseif ($fp = fopen($dir."/config.xml", 'w')) {
+			    $conf = file_get_contents("php://input");
+				fwrite($fp, $conf);
+				fclose($fp);
+				print("<saveconfig status='success'>");
+			}
+			elseif (!is_writable($dir."/config.xml"))
+				print("<saveconfig status='error'>Config.xml has no write permission on server");
+			else
+				print("<saveconfig status='error'>Unable to create config.xml file");
+			print("</saveconfig>\n");
+	    break;
 		default:
 			print("<response status='error'/>Unknown action</response>\n");
 	    break;

@@ -345,6 +345,7 @@
 <div id="xmlOutput" style="float: right; width: 400px;"></div>
 
 <div id="buttonBar">
+  <!-- 
   <input type="button" id="button-add-object" value="OBJECT" onclick="rules.addObject()">
   <input type="button" id="button-add-objectsrc" value="OBJECT SRC" onclick="rules.addObjectSrc()">
   <input type="button" id="button-add-objectcompare" value="OBJECT COMPARE" onclick="rules.addObjectCompare()">
@@ -354,9 +355,13 @@
   <input type="button" id="button-add-or" value="OR" onclick="rules.addOr()">
   <input type="button" id="button-add-not" value="NOT" onclick="rules.addNot()">
   <br />
-  <select id="addcondition" name="addcondition"></select>
-  <select id="addaction" name="addaction"></select>
-  <select id="listRules" name="listRules"></select>
+  -->
+  <span>Ajouter une condition : </span> <select id="addcondition" name="addcondition"></select>
+  <span>Ajouter une action : </span> <select id="addaction" name="addaction"></select>
+  <span>Liste des rules : </span> <select id="listRules" name="listRules"></select>
+  <br />
+  <strong><span>Id rule : </span><input type="text" id="id-current-rule" size="50"></strong>
+  <input type="button" id="button-save-rule" value="Valider" onclick="validRule()">
 </div>
 
 <div id="tab-rules-container">

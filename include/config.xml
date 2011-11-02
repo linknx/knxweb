@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<param>
+  <linknx_host>127.0.0.1</linknx_host> <!-- ip du serveur linknx -->
+  <linknx_port>1028</linknx_port> <!-- port connexion avec serveur linknx -->
+  <template>default</template> <!-- template utiliser images, css, code html tpl -->
+  <lang>fr</lang> <!-- langue -->
+  <version>0.9</version> <!-- version de KnxWeb -->
+  <title>KnxWeb - Ma maison en un clic</title> <!-- Titre des pages Web -->
+  <Path_Image_Background>design/default/</Path_Image_Background> <!-- emplancement des images de fond d'écran -->
+  <defaultDesign>default</defaultDesign> <!-- version et design par défaut => design/version.xml par dÃ©faut default/design.xml -->
+  <defaultVersion>design</defaultVersion> <!-- fichier xml de description -->
+  <startMobileView>false</startMobileView> <!-- démarrage par défaut de la vue "Mobile" -->
+  <defaultMobileDesign>default</defaultMobileDesign> <!-- version et design par défaut de la visu "Mobile" -->
+  <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu "Mobile" -->
+  <eibd>-d -D -S -T -i ipt:192.168.1.10:3671</eibd> <!-- paramètres d'appel de eibd exemple : ft12:/dev/ttyS0 -->
+  <linknx>-d --config=/var/lib/linknx/linknx.xml</linknx> <!-- paramètres d'appel de linknx -->
+  <loglinknx>file</loglinknx> <!-- type de log de linknx file/mysql/null -->
+</param>
+
+<!--
+
+Ces valeures peuvent Ãªtre utilisÃ©es sans les scripts de la faÃ§on suivante exemple :
+javascript : var _version=tab_config['version'];
+php : $_config['version'];
+tpl : {$_config['version']} ou {$_config.version}
+
+-->

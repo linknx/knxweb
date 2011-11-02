@@ -11,6 +11,7 @@ var emailserver = {
 				$('#emailserver-host').val(data.getAttribute('host'));
 				$('#emailserver-login').val(data.getAttribute('login'));
 				$('#emailserver-pass').val(data.getAttribute('pass'));
+				$('#emailserver-pass-confirm').val(data.getAttribute('pass'));
 				$('#emailserver-from').val(data.getAttribute('from'));
 			} else $('#emailserver-enable').removeAttr('checked');
 			$('#emailserver-enable').trigger('change');
@@ -18,24 +19,29 @@ var emailserver = {
 	},
 	
 	saveData: function() {
-		
-		if ($("#emailserver-form").valid())
+		if ($('#emailserver-pass').val() == $('#emailserver-pass-confirm').val() 
+			|| $('#emailserver-pass').val() == "" ) 
 		{
-			if ($('#emailserver-enable').attr("checked"))
+			if ($("#emailserver-form").valid())
 			{
-					var body = '<write><config><services><emailserver ' + 
-											'type="' + $('#emailserver-type').val() + '" ' +
-											'host="' + $('#emailserver-host').val() + '" ' +
-											( ($('#emailserver-login').val()!='')?'login="' + $('#emailserver-login').val() + '" ':'') +
-											( ($('#emailserver-pass').val()!='')?'pass="' + $('#emailserver-pass').val() + '" ':'') +
-											'from="' + $('#emailserver-from').val() + '" ' +
-											'/></services></config></write>';
-			} else var body = '<write><config><services><emailserver/></services></config></write>';
-				
-			loading.show();
-			var responseXML=queryLinknx(body);
-			loading.hide();
-		  if (responseXML!=false) maintab.tabs('remove', '#tab-emailserver');
+				if ($('#emailserver-enable').attr("checked"))
+				{
+						var body = '<write><config><services><emailserver ' + 
+												'type="' + $('#emailserver-type').val() + '" ' +
+												'host="' + $('#emailserver-host').val() + '" ' +
+												( ($('#emailserver-login').val()!='')?'login="' + $('#emailserver-login').val() + '" ':'') +
+												( ($('#emailserver-pass').val()!='')?'pass="' + $('#emailserver-pass').val() + '" ':'') +
+												'from="' + $('#emailserver-from').val() + '" ' +
+												'/></services></config></write>';
+				} else var body = '<write><config><services><emailserver/></services></config></write>';
+					
+				loading.show();
+				var responseXML=queryLinknx(body);
+				loading.hide();
+				if (responseXML!=false) maintab.tabs('remove', '#tab-emailserver');
+			}
+		} else {
+			$('.error').show();
 		}
 	}
 }
@@ -50,6 +56,14 @@ jQuery(document).ready(function(){
 	$("#emailserver-enable").change(function() {
 		$("#emailserver-tab-table input,select").attr('disabled',!($("#emailserver-enable").attr('checked')));
 	});
+
+	$('#emailserver-pass-confirm').change(function() {
+		if($("#emailserver-pass").val() == $(this).val()) {
+			$('.error').hide();
+		} else {
+			$('.error').show();
+		} 
+	})
 	
 	$("#emailserver-button-save").button();
 	$("#emailserver-button-save").click(emailserver.saveData);

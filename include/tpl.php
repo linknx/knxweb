@@ -1,7 +1,6 @@
 <?
 
 require_once("lib/smarty/Smarty.class.php");
-require_once("include/config.inc.php");
 
 class MySmarty extends Smarty
 {
@@ -27,13 +26,13 @@ class MySmarty extends Smarty
 		$this->plugins_dir = "lib/smarty/plugins/";
 
 		$this->_cssList = array();
-		$this->assign_by_ref('cssList', $this->_cssList);
+		$this->assignByRef('cssList', $this->_cssList);
 		
 		if (file_exists("template/" . $_config['template'] . "/css/style.css")) 
 		    $this->_cssList[] = "template/" . $_config['template'] . "/css/style.css";
 
 		$this->_jsList = array();
-		$this->assign_by_ref('jsList', $this->_jsList);
+		$this->assignByRef('jsList', $this->_jsList);
 
 		if (file_exists("template/" . $_config['template'] . "/js/default.js")) 
 		    $this->_jsList[] = "template/" . $_config['template'] . "/js/default.js";
@@ -41,7 +40,7 @@ class MySmarty extends Smarty
 		$this->registerPlugin('block', 'l', array($this,'lBlock')); 
 		
 		$this->_errors=array();
-		$this->assign_by_ref("errors", $this->_errors);
+		$this->assignByRef("errors", $this->_errors);
 		if ((isset($_GET['error']))&&($_GET['error']!="")) $this->addError($_GET['error']); 
 		if ((isset($_SESSION['error']))&&($_SESSION['error']!=""))
 		{
@@ -50,7 +49,7 @@ class MySmarty extends Smarty
 		}
 
 		$this->_messages=array();
-		$this->assign_by_ref("messages", $this->_messages);
+		$this->assignByRef("messages", $this->_messages);
 		if ((isset($_GET['message']))&&($_GET['message']!="")) $this->addError($_GET['message']); 
 		if ((isset($_SESSION['message']))&&($_SESSION['message']!="")) 
 		{
@@ -134,7 +133,7 @@ function tpl()
 	{
 		$_tpl = new MySmarty();
 		
-		$_tpl->assign_by_ref("_config",$_config);
+		$_tpl->assignByRef("_config",$_config);
 	}
 	
 	return $_tpl;

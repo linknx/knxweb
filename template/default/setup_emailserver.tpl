@@ -28,6 +28,10 @@
 			<td><input type="password" id="emailserver-pass"></td>
 		</tr>
 		<tr>
+			<th>Confirmation mot de passe</th>
+			<td><input type="password" id="emailserver-pass-confirm"><span class="error" style="color: #F00;display: none;"> Mot de passe différent</span></td>
+		</tr>
+		<tr>
 			<th>Expéditeur</th>
 			<td><input type="text" class="required" name="emailserver-from" id="emailserver-from" size="40"></td>
 		</tr>

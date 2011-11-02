@@ -14,8 +14,8 @@ tpl()->addJs("js/uicontroller.js");
 tpl()->addJs("js/common.js");
 
 $widgets=getWidgets();
-tpl()->assign_by_ref('widgets',$widgets);
-tpl()->assign_by_ref('json_config', $json_config);
+tpl()->assignByRef('widgets',$widgets);
+tpl()->assignByRef('json_config', $json_config);
 
 tpl()->addJs('js/widget.js');
 
@@ -45,8 +45,8 @@ tpl()->addJs("lib/jquery-validate/localization/messages_fr.js");
 tpl()->addJs("lib/jquery.jsPlumb-1.2.5-all-min.js");
 
 $widgets=getWidgets();
-tpl()->assign_by_ref('widgets',$widgets);
-tpl()->assign_by_ref('json_config', $json_config);
+tpl()->assignByRef('widgets',$widgets);
+tpl()->assignByRef('json_config', $json_config);
 
 addWidgetsJsCssToTpl(false);
 
