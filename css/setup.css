@@ -249,6 +249,32 @@ table.form td {
 	height: 700px;
 }
 
+#action-dialog-list {
+	width: 100%;
+	padding-top: 10px;
+}
+
+#action-dialog-list tbody tr:hover {
+	background-color: #DDDDDD;
+	cursor: pointer;
+}
+
+
+/***************** Resizable ********************/
+.resizeSE {
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	background-color: #333;
+	border: 1px solid #fff;
+	overflow: hidden;
+	bottom: -10px;
+	right: -10px;
+	cursor: se-resize;
+}
+/***************** /Resizable ********************/
+
+
 /***************** Rules ********************/
 
 #tab-rules-container { position:relative; width:100%; height:650px; border:1px dotted red; }
@@ -355,12 +381,258 @@ table.form td {
 
 /***************** /Rules ********************/
 
+/************ Images Manager ****************/
+
+#images-manager-dialog .thumb {
+  background-color: #EEEEEE;
+  border: 1px solid #CCCCCC;
+  float: left;
+  font-size: 9px;
+  height: 150px;
+  margin-right: 15px;
+  margin-top: 15px;
+  position: relative;
+  text-align: center;
+  width: 120px;
+}
+
+#images-manager-dialog .thumb:hover {
+	background-color: #DDDDDD;
+}
+
+
+#images-manager-dialog .thumb .image {
+  float: left;
+  height: 120px;
+  width: 120px;
+	text-align: center;
+}
+
+#images-manager-dialog .thumb .image img {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#images-manager-dialog .thumb .close {
+	position: absolute;
+	left: 105px;
+	top: 5px;
+}
+
+#images-manager-dialog .thumb .label {
+  float: left;
+  width: 120px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+#images-manager-dialog .info {
+	padding-top: 10px;
+}
+/************ /Images Manager ****************/
+
+
 /***************** Design ********************/
+
+
+#widgetdiv {
+	width: 100%;
+	height: 1280px;
+	border: 1px #FF0000 dotted;
+}
+
+#widgetdiv.selected { 
+	border: 1px dashed #000000;
+}
+
+.selected { 
+	border: 1px dashed #CCCCCC;
+}
+
+#tab-design-menu {
+	width: 180px;
+	top: 40px;
+	left: 600px;
+	position: absolute;
+}
+
+div.widget {
+	position: absolute;
+/*	width: 30px;
+	height: 30px; */
+} 
+
+div.subpage {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+} 
+
+#tab-design-properties {
+	background-color: #F2F5F7;
+	font-size: 10px;
+	width: 250px;
+	top: 350px;
+	left: 600px;
+	position: absolute;
+	border: 1px #DDDDDD solid;
+}
+
+#tab-design-properties .header {
+	line-height: 21px;
+	font-size: 11px;
+	padding-top: 3px;
+	padding-left: 6px;
+}
+
+#tab-design-widget-buttons {
+	padding: 5px;
+}
+
+#tab-design-properties table {
+	width: 100%;
+}
+
+#tab-design-properties table tbody th {
+	height: 20px;
+	width: 40%;
+	text-align: left;
+}
+
+#tab-design-properties table th.comment {
+	background-color: #000;
+	color: #FFF;
+	text-align: center;
+	height: 20px;
+}
+
+#tab-design-properties table tbody td {
+	height: 20px;
+	width: 60%;
+}
+
+#tab-design-properties table tbody td input {
+	border: 0;
+	width: 100%;
+}
+
+#tab-design-properties table tbody td button {
+	width: 100%;
+}
+
+#tab-design-properties table tbody td select {
+	border: 0;
+	width: 100%;
+}
+
+#tab-design-properties table tbody td:last {
+	background-color: #F00;
+}
+
 #tab-designedit {
+  background-color: #FFFFFF;
   padding: 0px;
   position: relative;
+  width: 100%;
+  height: 1280px;
 }
+
 /***************** /Design ********************/
+
+/***************** SubPages ********************/
+
+#widgetsubpagediv {
+	width: 128px;
+	height: 128px;
+	border: 1px #FF0000 dotted;
+}
+
+#widgetsubpagediv.selected { 
+	border: 1px dashed #000000;
+}
+
+#tab-subpages-menu {
+	width: 180px;
+	top: 40px;
+	left: 600px;
+	position: absolute;
+}
+
+#tab-subpages-properties {
+	background-color: #F2F5F7;
+	font-size: 10px;
+	width: 270px;
+	top: 300px;
+	left: 600px;
+	position: absolute;
+	border: 1px #DDDDDD solid;
+}
+
+#tab-subpages-properties .header {
+	line-height: 21px;
+	font-size: 11px;
+	padding-top: 3px;
+	padding-left: 6px;
+}
+
+#tab-subpages-widget-buttons {
+	padding: 5px;
+}
+
+#tab-subpages-properties table {
+	width: 100%;
+}
+
+#tab-subpages-properties table tbody th {
+	height: 20px;
+	width: 40%;
+	text-align: left;
+}
+
+#tab-subpages-properties table th.comment {
+	background-color: #000;
+	color: #FFF;
+	text-align: center;
+	height: 20px;
+}
+
+#tab-subpages-properties table tbody td {
+	height: 20px;
+	width: 60%;
+}
+
+#tab-subpages-properties table tbody td input {
+	border: 0;
+	width: 100%;
+}
+
+#tab-subpages-properties table tbody td button {
+	width: 100%;
+}
+
+#tab-subpages-properties table tbody td select {
+	border: 0;
+	width: 100%;
+}
+
+#tab-subpages-properties table tbody td:last {
+	background-color: #F00;
+}
+
+#tab-subpageedit {
+  background-color: #FFFFFF;
+  padding: 0;
+  position: relative;
+  width: 100%;
+  height: 1280px;
+}
+
+#tab-subpages-parameters-list {
+	width: 100%;
+}
+
+/***************** /SubPages ********************/
+
 
 /***************** Admin ********************/
 #tab-admin {

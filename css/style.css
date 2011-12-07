@@ -3,26 +3,50 @@ body {
 	font-family: Arial, Tahoma, Helvetica, sans-serif;
 	color: #000;
 	background: #FFF;
-	margin: 0 0 0 0;
+	margin: 0;
+	padding: 0;
 	background-repeat: no-repeat;
 }
 
-#background {
-  padding: 10px;
-  //position: absolute;
+* {
+	padding: 0;
+	margin: 0;
+}
+
+#zoneContainer {
+	clear: left;
+	overflow: hidden;
+}
+
+#zoneContainer > div {
+	position: relative;
+}
+
+#zoneContainer li {
+	position: relative;
+	float: left;
+}
+
+#screen .prev {
+	position: absolute;
+	z-index: 9999;
+	display: none;
+}
+
+#screen .next {
+	position: absolute;
+	z-index: 9999;
+	display: none;
+}
+
+li {
+	list-style: none ;
 }
 
 input,select {
 	font-size: 11px;
 }
 		
-#menu {
-	width: 180px;
-	top: 40px;
-	left: 40px;
-	position: absolute;
-}
-
 table.menuContainer {
   background: #FFF url(../images/menubackground.png) repeat-y left top;
 }
@@ -247,21 +271,6 @@ div.ruleDetail {
 	border: 1px solid black;
 	padding: 5px;
 	text-align: left;
-}
-
-#changeImage {
-	background-color: #EEEEEE;
-	top:300px;
-	position: absolute;
-	z-index:5;
-	display: none;
-  border-style: solid;
-  border-color: #999999;
-  border-width: 1px;
-}
-
-#changeImage td {
-  font-size: 12px;
 }
 
 table.list {
