@@ -10,6 +10,7 @@ var design = {
 	
 		design.currentDesign=designName;
 		design.currentVersion=version;
+		design.currentZone=null;
 		
 		$('#tab-design-design-list').val(designName);
 	
@@ -112,6 +113,8 @@ var design = {
 	// Create a new widget
 	newWidget: function(type) {
 		// Fetch default config and add widget
+		if (design.currentZone==null) return false;
+		
 		req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action=newWidget&type='+type, dataType: 'xml',
 			success: function(conf) {
 				var conf = conf.documentElement;
@@ -153,6 +156,8 @@ var design = {
 	// Add a new subpage in the zone
 	addSubPage: function(name) {
 		
+		if (design.currentZone==null) return false;
+
 		var subpage= $('subpage[name=' + name + ']', _subpages);
 
 		var conf = design.config.createElement('subpage');
@@ -212,6 +217,8 @@ var design = {
 	
 	// Show image manager to select a new background for the zone
 	changeZoneBackground: function() {
+		if (design.currentZone==null) return false;
+
 		callbackInput=$('<input>');
 		
 		openImagesManager(callbackInput);
