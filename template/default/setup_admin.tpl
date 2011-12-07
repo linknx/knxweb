@@ -84,23 +84,6 @@
 <input type="button" value="Reload" onclick="reloadLogObject();" >
 <div id="divLogObject" class="codeadmin"><br /><br /><br /></div> 
 
-<div class="titleadmin2">Upload fichier image </div>
-<center>
-  <form method="POST" action="upload.php" enctype="multipart/form-data" target="upload_target" >   
-    <input type="hidden" name="MAX_FILE_SIZE" value="2097152"> <!-- Taille max du fichier 2Mo --> 
-    <input type="file" name="fichier" size="120">
-    <br /><span>Destination :</span>
-    <select name="image_dir">
-      <option value="background" >Background</option>
-      <option value="icone" >Icone</option>
-    </select> 
-    <br /><br />
-    <input type="submit" name="envoyer" value="Envoyer">  
-  </form>
-  <iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff;display: none;"></iframe>
-</center>
- 				     
-
 <div class="titleadmin2">Configuration générale KnxWeb</div>
 <table>
 {foreach from=$_config key=k item=conf}

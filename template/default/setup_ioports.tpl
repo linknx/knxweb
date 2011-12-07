@@ -17,7 +17,7 @@
 			<td>
 				<input type="radio" name="edit-ioport-type" id="edit-ioport-type-tcp" checked>TCP
 				<input type="radio" name="edit-ioport-type" id="edit-ioport-type-udp">UDP
-				<input type="radio" name="edit-ioport-type" id="edit-ioport-type-serial">Série (RS232)
+				<input type="radio" name="edit-ioport-type" id="edit-ioport-type-serial">Serial (RS232)
 			</td>
 		</tr>
 	</tbody>
@@ -47,7 +47,7 @@
 			<td><input name="edit-ioport-tcp-port" id="edit-ioport-tcp-port" class="number required" size="5" type="text"> (ex.: 20000)</td>
 		</tr>
 		<tr>
-			<th>Connection permanente</th>
+			<th>Persistent connection</th>
 			<td><input name="edit-ioport-tcp-permanent" id="edit-ioport-tcp-permanent" type="checkbox"></td>
 		</tr>
 	</tbody>
@@ -58,7 +58,7 @@
 			<td><input name="edit-ioport-serial-dev" id="edit-ioport-serial-dev" class="required" type="text"> (ex.: /dev/ttyS0)</td>
 		</tr>
 		<tr>
-			<th>Vitesse</th>
+			<th>Speed</th>
 			<td><input name="edit-ioport-serial-speed" id="edit-ioport-serial-speed" class="number required" size="5" type="text"> (ex.: 9600)</td>
 		</tr>
 		<tr>
@@ -85,7 +85,7 @@
 		<tr>
 			<th width="33%">ID</th>
 			<th width="33%">Type</th>
-			<th width="33%">Port série/Nom d'hôte</th>
+			<th width="33%">Serial port/hostname</th>
 		</tr>
 	</thead>
 	<tbody>

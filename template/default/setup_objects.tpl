@@ -23,7 +23,7 @@
 		</td>
 	</tr>
 	<tr>
-		<th>Nom</th>
+		<th>Name</th>
 		<td><input id="edit-object-label" name="edit-object-label" size="30" type="text"></td>
 	</tr>
 	<tr>
@@ -35,7 +35,7 @@
 		<td><input id="edit-object-gad" size="10" type="text"></td>
 	</tr>
 	<tr>
-		<th>Type</th>
+		<th>Flags</th>
 		<td>
 			<input id="edit-object-flag-c" type="checkbox"/><span title="Communication">c</span>
 			<input id="edit-object-flag-r" type="checkbox"/><span title="Read">r</span>
@@ -46,23 +46,20 @@
 		</td>
 	</tr>
 	<tr>
-		<th>Valeur initial</th>
+		<th>Initial value</th>
 		<td>
 			<select id="edit-object-init" > <!--onchange="if ($(this).val()=='') $('#edit-object-init-value').css('visibility','visible'); else $('#edit-object-init-value').css('visibility','hidden'); "-->
-				<option value="request">request (lire du bus)</option>
-				<option value="persist">persist (lire depuis le stockage persistant)</option>
-				<option value="">autre (définir une valeur)</option>
-				<!-- <option value="request">lire du bus</option>
-				<option value="persist">lire depuis le stockage persistant</option>
-				<option value="">définir une valeur</option> -->
+				<option value="request">request (read from bus)</option>
+				<option value="persist">persist (read from persistant storage)</option>
+				<option value="">autre (define a value)</option>
 			</select>
 			<input type="text" id="edit-object-init-value" size="4">
 			<!-- <select id="edit-object-init-val-select"></select> -->
 		</td>
 	</tr>
 	<tr>
-		<th>Historique</th>
-		<td><input id="edit-object-flag-log" type="checkbox"/><span title="Log">Historiser les changements de valeur</span></td>
+		<th>History</th>
+		<td><input id="edit-object-flag-log" type="checkbox"/><span title="Log">Record value change</span></td>
 	</tr>
 </table>
 
@@ -78,20 +75,20 @@
 <form id="readwrite-object-form">
 <table class="form">
 	<tr>
-		<th>Objet</th>
+		<th>Object</th>
 		<td>
 			<select id="readwrite-object-id"></select>
 		</td>
 	</tr>
 	<tr>
-		<th>Valeur</th>
+		<th>Value</th>
 		<td>
 			<select id="readwrite-object-val-select"></select>
 			<input id="readwrite-object-val-input" size="10" type="text">
 		</td>
 	</tr>
 	<tr>
-		<th>Valeur reçue</th>
+		<th>Received value</th>
 		<td><input id="readwrite-object-recv" readonly size="10" type="text"></td>
 	</tr>
 </table>
@@ -101,7 +98,7 @@
 <table id="objects-tab-table">
 	<thead>
 		<tr>
-			<th width="30%">Objet</th>
+			<th width="30%">Object</th>
 			<th width="30%">Description</th>
 			<th width="10%">GAD</th>
 			<th width="30%">Type</th>

@@ -7,8 +7,8 @@
 	<tbody>
 		<tr>
 			<td colspan="2" style="color: #F00; font-weight: bold;">
-				Attention, les paramètres de log varient en fonction de vos options de compilation de linknx (loggeur interne ou log4cpp).
-				Plus d'information <a target="_blank" href="http://sourceforge.net/apps/mediawiki/linknx/index.php?title=Configuration#Logging_section">ici</a>.
+				Warning: log parameters depends on linknx's compilation options (internal logger or log4cpp).
+				More information <a target="_blank" href="http://sourceforge.net/apps/mediawiki/linknx/index.php?title=Configuration#Logging_section">here</a>.
 			</td>
 		</tr>
 		<tr>
@@ -35,34 +35,34 @@
 				<select id="logging-format">
 					<option value="simple">Simple</option>
 					<option value="basic">Basic</option>
-					<option value="custom">Personnalisé</option>
+					<option value="custom">Custom</option>
 				</select>
 				<input type="text" class="required" id="logging-customformat" size="50">
 			</td>
 		</tr>
 		<tr>
-			<th>Taille maximum</th>
+			<th>Max size (log4cpp)</th>
 			<td>
 				<input type="text" class="number" id="logging-log4cpp-maxfilesize" size="10">kb
-				(Une fois cette taille atteinte, une rotation des logs à lieu)
+				(Log rotation will happen once this size reached)
 			</td>
 		</tr>
 		<tr>
-			<th>Index maximum des logs</th>
+			<th>Max log file index (log4cpp)</th>
 			<td>
 				<input type="text" class="number" id="logging-log4cpp-maxfileindex" size="10">
-				(Une fois ce nombre de logs atteind, les logs plus anciens sont supprimés)
+				(Older logs will be deleted once this number reach)
 			</td>
 		</tr>
 		<tr>
-			<th>Fichier de configuration</th>
+			<th>Configuration file (log4cpp)</th>
 			<td>
 				<input type="text" id="logging-log4cpp-config" size="30">
-				(Si renseigné les autres paramètres sont ignorés)
+				(if specified, other parameters will be ignored)
 			</td>
 		</tr>
 		</tr>
 	</tbody>
 </table>
 </form>
-<input type="button" value="Enregistrer" id="logging-button-save">
+<input type="button" value="Save" id="logging-button-save">
