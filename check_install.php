@@ -139,6 +139,7 @@ if (isset($_GET["ajax"])) {
 					<li>E-Mail : <?=(($info["haveEmail"])?'<span style="color: #00FF00">Yes</span>':'No')?></li>	
 					<li>Lua : <?=(($info["haveLua"])?'<span style="color: #00FF00">Yes</span>':'No')?></li>	
 					<li>log4cpp : <?=(($info["haveLog4cpp"])?'<span style="color: #00FF00">Yes</span>':'No')?></li>	
+					<li>Mysql : <?=(($info["haveMysql"])?'<span style="color: #00FF00">Yes</span>':'No')?></li>	
 				</ul>
 				<br />
 				Please ensure that linknx is started with the --write parameter, for example:<br />

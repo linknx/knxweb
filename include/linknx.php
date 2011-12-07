@@ -70,6 +70,7 @@ class Linknx {
 			$info['haveEmail']=isset($xml->version->features->{'e-mail'});
 			$info['haveLua']=isset($xml->version->features->lua);
 			$info['haveLog4cpp']=isset($xml->version->features->log4cpp);
+			$info['haveMysql']=isset($xml->version->features->mysql);
 		} else return false;
 		return $info;
 	}
