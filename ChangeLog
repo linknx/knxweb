@@ -1,3 +1,6 @@
+2011-11-27 Cyrille Demaret
+	* Recoded all design part (view and edit)
+	* Created check_install.php
 
 2011-08-04 Anthony Penhard
 	* Add some modifications

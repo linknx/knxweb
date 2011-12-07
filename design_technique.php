@@ -1,6 +1,11 @@
 <?php
+
+require_once "include/common.php";
+
 error_reporting(0);
+
 header('Content-Type: application/xml; charset=utf-8');
+
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) 
 	{
@@ -25,11 +30,12 @@ if (isset($_GET['action'])) {
 				print("<savedesign status='error'>Unable to write design to file");
 			print("</savedesign>\n");
 	    break;
+	    
 		case 'designlist':
 			if ($dh = opendir("design")) {
 				print("<designlist status='success'>\n");
 				while (($file = readdir($dh)) !== false) {
-					if ($file != "." && $file != ".." && is_dir("design/".$file)) {
+					if ($file != "." && $file != ".." && $file != "CVS" && is_dir("design/".$file)) {
 						echo "<design name='$file'>\n";
 						if ($fh = opendir("design/".$file)) {
 							while (($ver = readdir($fh)) !== false) {
@@ -47,6 +53,7 @@ if (isset($_GET['action'])) {
 				print("<designlist status='error'>Unable to find design folder on server\n");
 			print("</designlist>\n");
 	    break;
+	    
 		case 'createdesign':
 	    if (isset($_GET['name'])) {
         $name = $_GET['name'];
@@ -68,9 +75,11 @@ if (isset($_GET['action'])) {
 				print("<createdesign status='error'>No design name specified");
 			print("</createdesign>\n");
 	    break;
+	    
 		case 'savefile':
 			print("<savefile status='error'>File save is not possible, please put the file manually in design folder on server</savefile>\n");
 	    break;
+	    
 		case 'filelist':
 			$name = "default";
 	    if (isset($_GET['name']))
@@ -87,21 +96,30 @@ if (isset($_GET['action'])) {
 				print("<filelist status='error'>Unable to find design '$name' on server\n");
 			print("</filelist>\n");
 	    break;
+	    
 		case 'filelistdir':
 			$name = "images";
 			if (isset($_GET['name']))	$name = $_GET['name'];
-				if ($dh = opendir($name)) {
+			
+			$files=glob($_config['imageDir'] . $name . "*");
+
+			echo("<filelist status='success'>\n");
+			foreach($files as $f) {
+				if (is_dir($f)) echo "<directory>" . basename($f) . "</directory>\n";
+				if (is_file($f)) echo "<file>" . basename($f) . "</file>\n";
+			}
+
+				
+/*				if ($dh = opendir($name)) {
 					print("<filelist status='success'>\n");
 					while (($file = readdir($dh)) !== false) {
 						if ($file != "." && $file != ".." && substr($file, -4) != ".xml")
 							echo "<file>$file</file>\n";
 						}
-					closedir($dh);
-				}
-			else
-				print("<filelist status='error'>Unable to find design '$name' on server\n");
+					closedir($dh); */
 			print("</filelist>\n");
 			break;
+			
 		case 'saveconfig':
 			$dir = "include";
 	    if (isset($_GET['dir']))
@@ -120,11 +138,35 @@ if (isset($_GET['action'])) {
 				print("<saveconfig status='error'>Unable to create config.xml file");
 			print("</saveconfig>\n");
 	    break;
+	    
+		case 'newWidget':
+			$w = getWidget($_GET['type']);
+			
+			$xml = new SimpleXMLElement("<control></control>");
+			$xml->addAttribute("type", $w['name']);
+			
+			foreach($w['settings'] as $s) {
+				if (isset($s['id'])) $xml->addAttribute($s['id'], ((isset($s['default']))?$s['default']:'') );
+			}
+			
+			echo $xml->asXML();
+			break;
+
+		case 'savesubpages':
+			if (file_put_contents("design/subpages.xml", file_get_contents("php://input")))
+				echo "<savesubpages status='success'>";
+			elseif (!is_writable("design/".$name."/".$version.".xml"))
+				echo "<savesubpages status='error'>design/subpages.xml directory has no write permission on server";
+			else
+				echo "<savesubpages status='error'>Unable to write design to file";
+			echo "</savesubpages>\n";
+	    break;
+
 		default:
-			print("<response status='error'/>Unknown action</response>\n");
+			print("<response status='error'>Unknown action</response>\n");
 	    break;
 	}
 }
 else
-	print("<response status='error'/>No action specified</response>\n");
+	print("<response status='error'>No action specified</response>\n");
 ?>
