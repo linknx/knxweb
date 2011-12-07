@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>subpage</name>
+	<label>Sub-page</label>
+	<description>Sub-page</description>
+	<version>1.0</version>
+	<category>Advanced widgets</category>
+	<settings>
+		<setting id="subpage" label="Sub-page" type="subpage" />
+	</settings>
+	<feedbacks>
+	</feedbacks>
+</widget>

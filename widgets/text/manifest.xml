@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>text</name>
+	<label>Text</label>
+	<description>Text</description>
+	<version>1.0</version>
+	<category>Basic widgets</category>
+	<settings>
+		<setting id="text" label="Text" type="text" default="My text" />
+		<setting label="Style" type="comment" />
+		<setting id="size" label="Font size" type="text" default="12" />
+		<setting id="color" label="Color" type="color" default="#000000" />
+		<setting id="bgcolor" label="Background color" type="color" default="" />
+		<setting id="align" label="Text align" type="list" default="default" >
+			<option key="" value="Default" />
+			<option key="left" value="Left" />
+			<option key="center" value="Center" />
+			<option key="right" value="Right" />
+		</setting>
+		<setting id="style" label="Custom style" type="text" />
+		<setting label="Feedback object" type="comment" />
+		<setting id="object" label="Objet" type="object" />
+		<setting id="pattern" label="Pattern" type="text" default="(.*)" />
+	</settings>
+	<feedbacks>
+		<feedback id="object" />
+	</feedbacks>
+</widget>

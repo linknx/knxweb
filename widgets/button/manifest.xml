@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>button</name>
+	<label>Button</label>
+	<description>Simple button</description>
+	<version>1.0</version>
+	<category>Basic widgets</category>
+	<settings>
+		<setting id="picture" label="Picture" type="picture" />
+		<setting id="picture-active" label="Active picture" type="picture" />
+
+		<setting label="Label" type="comment" />
+		<setting id="text" label="Text" type="text" default="My button" />
+		<setting id="size" label="Font size" type="text" default="12" />
+		<setting id="color" label="Color" type="color" default="#000000" />
+		<setting id="align" label="Text align" type="list" default="default" >
+			<option key="" value="Default" />
+			<option key="left" value="Left" />
+			<option key="center" value="Center" />
+			<option key="right" value="Right" />
+		</setting>
+		<setting id="text-padding" label="Top padding" type="text" default="0" />
+
+		<setting label="State object" type="comment" />
+		<setting id="feedback-object" label="Feedback object" type="object" />
+		<setting id="feedback-compare" label="Operator" type="list" default="eq">
+			<option key="eq" value="Equal to" />
+			<option key="neq" value="Not equal to" />
+			<option key="gt" value="Greater than" />
+			<option key="lt" value="Less than" />
+			<option key="gte" value="Greater or equal to" />
+			<option key="lte" value="Less or equal to" />
+		</setting>
+		<setting id="feedback-value" label="Value for active" type="text" />
+
+		<setting label="Action when inactive" type="comment" />
+		<setting id="inactive-goto" label="Goto zone" type="zone" />
+		<setting id="inactive-action" label="Action" type="action" />
+
+		<setting label="Action when active" type="comment" />
+		<setting id="active-goto" label="Goto zone" type="zone" />
+		<setting id="active-action" label="Action" type="action" />
+</settings>
+	<feedbacks>
+		<feedback id="feedback-object" />
+	</feedbacks>
+</widget>

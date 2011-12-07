@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>html</name>
+	<label>HTML</label>
+	<description>Html code</description>
+	<version>1.0</version>
+	<category>Basic widgets</category>
+	<settings>
+		<setting id="html" label="HTML" type="text" />
+	</settings>
+</widget>

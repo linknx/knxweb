@@ -1,0 +1,5 @@
+.hprogressbar .bar {
+	background-repeat: repeat-x;
+	width: 0;
+	height: 100%;
+}

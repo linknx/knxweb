@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>hprogressbar</name>
+	<label>Horizontal progress bar</label>
+	<description>Horizontal progress bar</description>
+	<version>1.0</version>
+	<category>Basic widgets</category>
+	<settings>
+		<setting id="progress-color" label="Progress color" type="color" default="#FF0000" />
+		<setting id="progress-picture" label="Progress picture" type="picture" />
+		<setting id="border" label="Border" type="list" default="true">
+			<option key="true" value="Yes" />
+			<option key="false" value="No" />
+		</setting>
+		<setting id="border-color" label="Border color" type="color" default="#000000" />
+
+		<setting id="feedback-object" label="Feedback object" type="object" />
+</settings>
+	<feedbacks>
+		<feedback id="feedback-object" />
+	</feedbacks>
+</widget>
