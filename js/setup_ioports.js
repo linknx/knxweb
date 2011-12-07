@@ -71,7 +71,7 @@
 			var responseXML=queryLinknx(body);
 			if (responseXML!=false)	ioports.refreshIOportList();
 			loading.hide();
-		} else messageBox('Vous ne pouvez pas supprimer ce IO port car il est utilisé dans une règle.','Erreur','error');
+		} else messageBox("You cannot delete this IO port because it's used in a rule.", 'Error','error');
 	},
 	
 	// Process add/edit ioport
@@ -160,7 +160,7 @@
 					$("#ioports-tab-table").trigger("refresh");
 				}
 				else
-					messageBox(tr("Error: ")+responseXML.textContent, 'Erreur', 'alert');
+					messageBox(tr("Error: ")+responseXML.textContent, 'Error', 'alert');
 				loading.hide();
 			}
 		});
@@ -175,11 +175,11 @@ jQuery(document).ready(function(){
 	$('#button-add-ioport').bind('click', ioports.newIOport);
 	$('#button-edit-ioport').bind('click', function() {
 		var selected=$('.row_selected:first','#ioports-tab-table')[0];
-		if (selected) ioports.editIOport(selected.data.getAttribute('id')); else messageBox('Veuillez choisir un port IO dans la liste','Attention','alert');
+		if (selected) ioports.editIOport(selected.data.getAttribute('id')); else messageBox('Please select an IO port in the list','Warning','alert');
 	});
 	$('#button-remove-ioport').bind('click', function() {
 		var selected=$('.row_selected:first','#ioports-tab-table')[0];
-		if (selected) ioports.deleteIOport(selected.data.getAttribute('id')); else messageBox('Veuillez choisir un port IO dans la liste','Attention','alert');
+		if (selected) ioports.deleteIOport(selected.data.getAttribute('id')); else messageBox('Please select an IO port in the list','Warning','alert');
 	});
 	
 	// Setup ioport edit form
@@ -189,11 +189,11 @@ jQuery(document).ready(function(){
 	$('#edit-ioport-dialog').dialog({ 
 		autoOpen: false,
 		buttons: { 
-				"Annuler": function() { $(this).dialog("close"); },
-				"Sauver": function() { if (ioports.processAddEdit()) $(this).dialog("close"); }
+				"Cancel": function() { $(this).dialog("close"); },
+				"Save": function() { if (ioports.processAddEdit()) $(this).dialog("close"); }
 		},
 		resizable: false,
-		title: "Ajouter/Editer un port IO",
+		title: "Add/Edit IO port",
 		width: "540px",
 		modal: true
 	});

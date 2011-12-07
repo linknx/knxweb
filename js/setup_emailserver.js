@@ -33,10 +33,11 @@ var emailserver = {
 												( ($('#emailserver-pass').val()!='')?'pass="' + $('#emailserver-pass').val() + '" ':'') +
 												'from="' + $('#emailserver-from').val() + '" ' +
 												'/></services></config></write>';
-				} else var body = '<write><config><services><emailserver/></services></config></write>';
+				} else var body = '<write><config><services><emailserver/></services></config></write><admin><save/></admin>';
 					
 				loading.show();
 				var responseXML=queryLinknx(body);
+				saveConfig();
 				loading.hide();
 				if (responseXML!=false) maintab.tabs('remove', '#tab-emailserver');
 			}

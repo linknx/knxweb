@@ -90,6 +90,7 @@ var setupgeneral = {
 //return;
 			loading.show();
 			var responseXML=queryLinknx(body);
+			saveConfig();
 			loading.hide();
 		  if (responseXML!=false) maintab.tabs('remove', '#tab-setupgeneral');
 		}	
@@ -108,34 +109,34 @@ jQuery(document).ready(function(){
 	});
 	
 	$("#setupgeneral-button-save").button();
-	$("#setupgeneral-button-save").click(setupgeneral.saveData);
+	$("#setupgeneral-button-save").click(function() {
+		setupgeneral.saveData();
+	});
 
 	$("#setupgeneral-persistence-type").change(function() {
-		$("#setupgeneral-persistence-path").attr('disabled', ($("#setupgeneral-persistence-type").val()=='disabled') );
-		$("#setupgeneral-persistence-logpath").attr('disabled', ($("#setupgeneral-persistence-type").val()=='disabled') );
+		$("#setupgeneral-form .setupgeneral-persistence-file").hide();
+		$("#setupgeneral-form .setupgeneral-persistence-mysql").hide();
+		// Disable inputs for form validation
+		$("#setupgeneral-form .setupgeneral-persistence-file input").attr("disabled", "1");
+		$("#setupgeneral-form .setupgeneral-persistence-mysql input").attr("disabled", "1");
+		
 		if ($("#setupgeneral-persistence-type").val()=='mysql'){
-			$(".setupgeneral-persistence-file").each(function(){$(this).hide();});
-			$(".setupgeneral-persistence-mysql").each(function(){$(this).show();});
-			$('#setupgeneral-persistence-password-confirm').change(function() {
-				if($("#setupgeneral-persistence-password").val() == $(this).val()) {
-					$('.error').hide();
-				} else {
-					$('.error').show();
-				} 
-			});
+			$("#setupgeneral-form .setupgeneral-persistence-mysql").show();
+			$("#setupgeneral-form .setupgeneral-persistence-mysql input").removeAttr("disabled");
 		}
-		if ($("#setupgeneral-persistence-type").val()=='file' || $("#setupgeneral-persistence-type").val()=='disabled'){
-			$(".setupgeneral-persistence-file").each(function(){$(this).show();});
-			$(".setupgeneral-persistence-mysql").each(function(){$(this).hide();});
+		if ($("#setupgeneral-persistence-type").val()=='file'){
+			$("#setupgeneral-form .setupgeneral-persistence-file").show();
+			$("#setupgeneral-form .setupgeneral-persistence-file input").removeAttr("disabled");
 		}
 	});
 
 	$('#setupgeneral-exceptiondays-add').button();
 	$('#setupgeneral-exceptiondays-add').click(function() {
+		$("#exceptiondays-dialog-date").val('');
 		$('#exceptiondays-dialog').dialog('open');
 	});
 
-	/*
+	
   $('#setupgeneral-exceptiondays-remove').button();
 	$('#setupgeneral-exceptiondays-remove').click(function() {
 		if ($("#setupgeneral-exceptiondays").val())
@@ -143,13 +144,12 @@ jQuery(document).ready(function(){
 		else
 			messageBox("Veuillez choisir une date dans la liste", "Attention", "alert");
 	});
-	*/
 	
 	$('#exceptiondays-dialog').dialog({ 
 		autoOpen: false,
 		buttons: { 
-				"Annuler": function() { $(this).dialog("close"); },
-				"Ajouter": function() {
+				"Cancel": function() { $(this).dialog("close"); },
+				"Add": function() {
 					if ($("#exceptiondays-form").valid())
 					{
 						var option=$('<option value="' + $("#exceptiondays-dialog-date").val() + '">' + $("#exceptiondays-dialog-date").val() + '</option>');
@@ -159,10 +159,22 @@ jQuery(document).ready(function(){
 				}
 		},
 		resizable: false,
-		title: "Ajouter une date",
+		title: "Add date",
 		width: 400,
 		modal: true
 	});
+	
+	$('#setupgeneral-persistence-password-confirm').change(function() {
+		if($("#setupgeneral-persistence-password").val() == $(this).val()) {
+			$('.error').hide();
+		} else {
+			$('.error').show();
+		} 
+	});
+
+	
+	// Setup form validator
+	$("#setupgeneral-form").validate();
 	
 	$("#exceptiondays-form")[0].validator=$("#exceptiondays-form").validate();
 	$("#exceptiondays-dialog-date").rules("add", { regex: "^[0-9]{1,2}\/[0-9]{1,2}(\/[0-9]{4}){0,1}$" });

@@ -35,6 +35,7 @@ var smsgateway = {
 				} else var body = '<write><config><services><smsgateway/></services></config></write>';
 				loading.show();
 				var responseXML=queryLinknx(body);
+				saveConfig();
 				loading.hide();
 				if (responseXML!=false) maintab.tabs('remove', '#tab-smsgateway');
 			}

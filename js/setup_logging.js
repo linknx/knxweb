@@ -8,13 +8,11 @@ var logging = {
 			var data=$('logging',responseXML)[0];
 			$('#logging-level').val('INFO');
 			if (data) {
-				if (data.getAttribute('type')=='simple')
+				if (data.getAttribute('format')=='simple')
 				{
 					if (data.getAttribute('level')!='') $('#logging-level').val(data.getAttribute('type')); else $('#logging-level').val('INFO');
 				} else
 				{
-					$("#logging-log4cpp-output").val(data.getAttribute('output'));
-					
 					if ((data.getAttribute('format')=='simple')||(data.getAttribute('format')=='basic'))
 						$("#logging-format").val(data.getAttribute('format'));
 					else
@@ -28,6 +26,7 @@ var logging = {
 					$("#logging-log4cpp-config").val(data.getAttribute('config'));
 				}
 				$("#logging-log4cpp-type").val(data.getAttribute('type'));
+				$("#logging-log4cpp-output").val(data.getAttribute('output'));
 			}
 			$("#logging-format").trigger('change');
 		}
@@ -54,6 +53,7 @@ var logging = {
 
 			loading.show();
 			var responseXML=queryLinknx(body);
+			saveConfig();
 			loading.hide();
 		  if (responseXML!=false) maintab.tabs('remove', '#tab-logging');
 		}	

@@ -1,4 +1,3 @@
-
 var _version=tab_config['version'];
 var _visuMobile=false;   // TODO a gérer mieux que ça ...
 
@@ -51,42 +50,6 @@ var runAfter = {
 	}
 }
 
-function addMenuSection(id, name)
-{
-	var menu = $('<div class="menuItem" />');
-	menu.click(function () { $('#'+id).toggle() });
-	menu.mouseover(function () { this.className='menuItem menuItemOver' });
-	menu.mouseout(function () { this.className='menuItem' });
-	menu.text(tr(name));
-	
-	var submenu = $('<div class="subMenuItem" style="display: none;" id="'+id+'"/>');
-	$("td.menu").append(menu).append(submenu);
-	return submenu;
-}
-
-function addScriptMenuSection(id, name,func)
-{
-	var menu = $('<div class="menuItem" />');
-	menu.click(func);
-	menu.mouseover(function () { this.className='menuItem menuItemOver' });
-	menu.mouseout(function () { this.className='menuItem' });
-	menu.text(tr(name));
-	
-	var submenu = $('<div class="subMenuItem" style="display: none;" id="'+id+'"/>');
-	$("td.menu").append(menu).append(submenu);
-	return submenu;
-}
-
-function displayVersion()
-{
-	$('.menuTitle').append("<a href='#'><img src='images/settings.gif'/> KnxWeb " + _version + "</a>")
-}
-
-function processHTMLTranslate()
-{
-	$('translate').each(function() { this.innerHTML=tr(this.innerHTML); });
-}
-
 function tr(msg)
 {
 	var cRet = (typeof(i18n)!='undefined') ? i18n[msg] : msg;
@@ -98,7 +61,8 @@ function tr(msg)
 
 function saveConfig()
 {
-  var now = new Date();
+// Anthony, a quoi ça sert?
+/*  var now = new Date();
   var month = now.getMonth() + 1;
   var file = prompt( tr("Please enter path and save file name :"), "config-" + now.getFullYear() + "-" + month + "-"+now.getDate() +".xml" );
   
@@ -108,8 +72,9 @@ function saveConfig()
 	} else { 
 	  var body = '<admin><save file="' + file + '"/></admin>';
 	}
-	queryLinknx(body);
-	//queryLinknx('<admin><save/></admin>');
+	queryLinknx(body); */
+	
+	queryLinknx('<admin><save/></admin>');
 }
 
 function isObjectUsed(id)
@@ -322,101 +287,119 @@ function queryKnxweb(action, type, message, callasync) {
 	return data;
 }
 
+function loadSubPages() {
+	var url = 'design/subpages.xml';
+
+	req = jQuery.ajax({ url: url, dataType: 'xml', async: false, cache: false,
+		success: function(responseXML, status) {
+			_subpages=responseXML
+		}
+	});
+}
+
+function serializeXmlToString(data) {
+	if (jQuery.browser.msie)
+		return data.xml;
+	return (new XMLSerializer()).serializeToString(data);
+}
+
 function lz(i) {
 	if (i<10) return '0'+i; else return i;
 }
 
-/*- Window for create a new widget -*/
-function editWidget(widgetType, textWidget) {
-
-  if($('#editWidget')) { $('#editWidget').remove(); }
-  
-  var divEdit = $('<div id="editWidget" />');
-  divEdit.get(0);  
-
-  var widget = UIController.widgetList[widgetType];
-
-  divEdit.dialog( { title: widget.menuText+' - '+textWidget , width: 300});
-
-  widget.prototype.addObjectFields( divEdit , null);
-}
-
-/*- Window for list image of a directory -*/
-function listImage(DossierImage, Click_img, onOff ) {
-	if(!DossierImage)  DossierImage = "template/default/images/";
-	if($('#listImage')) { $('#listImage').remove(); }
+$.fn.widgetMovable = function(method) {
 	
-	var divListImage = $('<div id="listImage" />');
-	divListImage.get(0);
+	function select(widget) {
+		var options= $(widget).data('widgetMovable');
 
-	divListImage.dialog( { title: 'Select Image' , width: 410,
-			close: function(event, ui) {
-				$(this).dialog("destroy");
-  			$(this).remove();
-  	 	}
-	});  
-	divListImage.empty().append($("<img src='images/loading.gif'/>"));
-
-	req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action=filelistdir&name='+DossierImage, dataType: 'xml', 
-			success: function(responseXML, status) 
+		if (!$(widget).hasClass("selected"))
+		{
+			$('div').removeClass("selected");
+			$(widget).addClass("selected");
+			
+			$(".resizeSE").hide();
+			$(".resizeSE", widget).show();
+		
+			if (options.onSelect!=null) 
 			{
-				divListImage.empty();
-				var xmlResponse = responseXML.documentElement;
+				options.onSelect(widget);
+			}
+		}
+	}
+
+  var methods = {
+    init : function( options ) { 
+    	
+    	return this.each(function() {
+
+				options = $.extend({
+					resizable: true,
+					onSelect: null,
+					onMove: null,
+					onResize: null
+				}, options);
+
+				var $this = $(this);
+		
+				$this.data('widgetMovable', options);
 				
-				if (xmlResponse.getAttribute('status') != 'error') {
-					$('file', responseXML).each(function() {
-						var file = $(this).text();
-						var re = new RegExp('\.(gif|jpe?g|png)$');
-						if (re.test(file)) {
-							var idpoint = file.lastIndexOf('.', 100);
-							if (onOff && (file.substring(idpoint,idpoint+4) == ".png") && (file.substring(idpoint,idpoint-3) == "_on") ) { // recherche que les "_on" et "_off" en n'en affiche la "paire"
-								// ex file = "light_on.png"
-								var id = file.lastIndexOf('_', 100); // position du "_" dans le nom
-								ext=file.substring(id,id+3);					// ex ext = "_on" ou "_of"
-								imgName=file.substring(0,id);	//on garde le nom ex imgName = "light" 	
-								//$('#ImgconfWifgetOn'+label.val()).attr('src',DossierImage+imgName+'_on.png' ); //on change l'image dans de fenetre conf
-								//$('#ImgconfWifgetOff'+label.val()).attr('src',DossierImage+imgName+'_off.png' );
-								var option = $("<img width='32' height='32' src='"+DossierImage+imgName+"_on.png' alt='"+imgName+"_on' title='"+imgName+"_on'/>");
-								option.click(
-									function () {
-										if(Click_img) 	Click_img(DossierImage+file); 
-										else{
-											return (DossierImage+file); 
-										} 
-									}
-								);
-								divListImage.append(option);
-								var option2 = $("<img width='32' height='32' src='"+DossierImage+imgName+"_off.png' alt='"+imgName+"_off' title='"+imgName+"_off'/>");
-								option2.click(
-									function () {
-										if(Click_img) 	Click_img(DossierImage+file); 
-										else{
-											return (DossierImage+file); 
-										} 
-									}
-								);
-								divListImage.append(option2);
-							}
-							if (!onOff) {
-								var option = $("<img width='32' height='32' src='"+DossierImage+file+"' alt='"+file+"' title='"+file+"'/>");
-								option.click(
-									function () {
-										if(Click_img) 	Click_img(DossierImage+file); 
-										else{
-											return (DossierImage+file); 
-										} 
-									}
-								);
-								divListImage.append(option);
-							}
+				var widgetContainer=$this.parent();
+			
+				var left=Math.round($this.css('left').replace(/px$/,"")) + widgetContainer.offset().left;
+				var top=Math.round($this.css('top').replace(/px$/,"")) + widgetContainer.offset().top;
+			
+				if (options.resizable) {
+					var div=$('<div class="resizeSE"></div>');
+					div.hide();
+					$this.append(div);
+					div.draggable({
+						containment: [left,top,9999,9999],
+						drag: function(event, ui) {
+							var div=$(this).parent();
+							div.width(ui.position.left);
+							div.height(ui.position.top);
+						},
+						stop: function(event, ui) {
+							if (options.onResize!=null) options.onResize($(this).parent().get(0));
 						}
 					});
 				}
-				else
-					divListImage.text(tr("Unable to load: ")+xmlResponse.textContent);
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				divListImage.text(tr("Unable to load: ")+textStatus);
-			}
-	});
-}
+
+				$this.draggable({
+					containment: 'parent',
+					delay: 50,
+					stop: function(event, ui) {
+						var left=Math.round($(this).css('left').replace(/px$/,"")) + widgetContainer.offset().left;
+						var top=Math.round($(this).css('top').replace(/px$/,"")) + widgetContainer.offset().top;
+						$('.resizeSE', this).draggable( "option", "containment", [left,top,9999,9999] );
+						if (options.onMove!=null) options.onMove(this, ui.position.left, ui.position.top);
+					},
+					start: function(event, ui) {
+						select(this);
+					}
+				});
+				
+				$this.click(function() {
+						select(this);
+						return false;
+				});
+			});
+    },
+    select : function( ) {
+    	select(this.get(0));
+    },
+    refreshHelperPosition : function( ) {
+    	$(".resizeSE",this).css('top','');
+    	$(".resizeSE",this).css('left','');
+    }    
+  };
+  
+	if ( methods[method] ) {
+		return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
+	} else if ( typeof method === 'object' || ! method ) {
+		return methods.init.apply( this, arguments );
+	} else {
+		$.error( 'Method ' +  method + ' does not exists.' );
+	}    
+  
+};

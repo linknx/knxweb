@@ -11,6 +11,7 @@ var objects = {
 			$("#edit-object-id").val(object[0].data.getAttribute('id'));
 			$("#edit-object-id").attr('readonly','1');
 			$("#edit-object-type").val(object[0].data.getAttribute('type'));
+			$("#edit-object-type").attr('disabled','1');
 			$("#edit-object-gad").val(object[0].data.getAttribute('gad'));
 			
 			$("input[id^='edit-object-flag-']").attr('checked',false);
@@ -63,6 +64,7 @@ var objects = {
 		$("#edit-object-id").val('');
 		$("#edit-object-id").removeAttr('readonly');
 		$("#edit-object-type").val('1.001');
+		$("#edit-object-type").removeAttr('disabled');
 		$("#edit-object-gad").val('');
 		$("input[id^='edit-object-flag-']").attr('checked',false);
 	
@@ -150,6 +152,9 @@ var objects = {
 				if (xmlResponse.getAttribute('status') != 'error') {
 					
 					$('#objects-tab-table tbody').empty();
+
+					// Update object cache
+					_objects=xmlResponse;
 	
 					$('object', responseXML).each(function() {
 						// set defaults
@@ -227,7 +232,7 @@ jQuery(document).ready(function(){
 		buttons: { 
 				"Lire": function() {
 					var value=readObjectValue($("#readwrite-object-id").val());
-					if (value!=false) 
+					if (value!==false) 
 						$("#readwrite-object-recv").val(value);
 					else
 						messageBox("Erreur lors de la lecture de l'object","Erreur","error");
@@ -244,7 +249,7 @@ jQuery(document).ready(function(){
 				"Fermer": function() { $(this).dialog("close"); }
 		},
 		resizable: false,
-		title: "Lire/Envoyer un objet",
+		title: "Lire/Envoyer la valeur d'un objet",
 		width: "430px",
 		modal: true
 	});

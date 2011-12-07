@@ -1,5 +1,11 @@
 <?
 
+	if (file_exists("check_install.php"))
+	{
+		header('Location: check_install.php');
+		die;
+	}
+
 	//require_once('include/config.inc.php');
   $_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
   unset($_config['comment']); // enleve les commentaires
@@ -9,6 +15,7 @@
 
   // Convert to a Javascript array
 	$json_config = json_encode($_config);
+	tpl()->assign_by_ref("json_config",$json_config);
 	//echo '<script type="text/javascript" >var tab_config = '.$json_config.';</script>';
 
 	$_objectTypes = array(
@@ -49,45 +56,88 @@
 		//'i' => 'Init'
 	);
 
+	function parseSetting($xml) {
+		$setting=array();
+		foreach($xml->attributes() as	$key => $value)  $setting[(string)$key]=(string)$value;
+		
+		if ($setting['type']=='list') {
+			$setting['options']=array();
+			foreach($xml as $value) $setting['options'][(string)$value->attributes()->key]=(string)$value->attributes()->value;
+		}
+		return $setting;
+	}
+	
+	function getWidget($type) {
+		$path='widgets/' . $type;
+		if (file_exists($path . '/manifest.xml'))
+		{
+			$xml = (array)simplexml_load_file($path . '/manifest.xml');
+			
+			$ret=array(
+				"name"	=>	$type,
+				"path"	=>	$path,
+				"label"	=>	$xml['label'],
+				"description"	=>	$xml['description'],
+				"version" => $xml['version'],
+				"category" => $xml['category'],
+				"settings" => array()
+			);
+
+			$settings=(array)$xml['settings'];
+			if ($settings) {
+				if (is_array($settings['setting'])) {
+					// Multiple settings
+					foreach((array)$settings['setting'] as $v) {
+						$setting=parseSetting($v);
+						$ret['settings'][]=$setting;
+					}
+				} else
+				{
+					// single setting
+					$setting=parseSetting($settings['setting']);
+					$ret['settings'][]=$setting;
+				}
+			}
+
+			$feedbacks=(array)$xml['feedbacks'];
+			if ($feedbacks) {
+				if (is_array($feedbacks['feedback'])) {
+					// Multiple feedbacks
+					foreach((array)$feedbacks['setting'] as $v)
+						$ret['feedbacks'][]=(string)$v->attributes()->id;
+				} else
+				{
+					// single feedback
+					if (isset($feedbacks['feedback'])) $ret['feedbacks'][]=(string)$feedbacks['feedback']->attributes()->id;
+				}
+			}
+	
+			return $ret;
+		} else return false;
+	}
+	
 	function getWidgets()
 	{
 		$plugins = glob('widgets/*', GLOB_ONLYDIR);
 		$ret=array();
 		foreach ($plugins as $path)
 		{
-			if (file_exists($path . '/manifest.xml'))
-			{
-				$xml = simplexml_load_file($path . '/manifest.xml');
-				$ret[(string)$xml->name]=array(
-					"path"	=>	$path,
-					"label"	=>	(string)$xml->label,
-					"description"	=>	(string)$xml->description,
-					"version" => (string)$xml->version,
-					"category" => (string)$xml->category
-				);
-			}
+			$w=getWidget(basename($path));
+			if ($w!=false) $ret[basename($path)]=$w;
 		}
 		return $ret;
 	}
 
 	function getWidgetsByCategory()
 	{
-		$plugins = glob('widgets/*', GLOB_ONLYDIR);
+		$widgets=getWidgets();
+		
 		$ret=array();
-		foreach ($plugins as $path)
-		{
-			if (file_exists($path . '/manifest.xml'))
-			{
-				$xml = simplexml_load_file($path . '/manifest.xml');
-				if (!isset($ret[(string)$xml->category])) $ret[(string)$xml->category]=array();
-				$ret[(string)$xml->category][]=array(
-					"name" 	=>	(string)$xml->name,
-					"path"	=>	$path,
-					"label"	=>	(string)$xml->label,
-					"description"	=>	(string)$xml->description,
-					"version" => (string)$xml->version
-				);
-			}
+		foreach($widgets as $id => $w) {
+			$cat=$w['category'];
+			unset($w['category']);
+			if (!isset($ret[$cat])) $ret[$cat]=array();
+			$ret[$cat][]=$w;
 		}
 		return $ret;
 	}
@@ -97,11 +147,11 @@
 		$widgets = getWidgets();
 		foreach($widgets as $name => $info)
 		{
-			if (!$isMobile) tpl()->addJs($info['path'] . '/js/display.js');
-			if ($isEdit && file_exists($info['path'] . '/js/edit.js')) tpl()->addJs($info['path'] . '/js/edit.js');
-			if ($isMobile && file_exists($info['path'] . '/js/mobile.js')) tpl()->addJs($info['path'] . '/js/mobile.js');
+//			if (!$isMobile) tpl()->addJs($info['path'] . '/js/display.js');
+//			if ($isMobile && file_exists($info['path'] . '/js/mobile.js')) tpl()->addJs($info['path'] . '/js/mobile.js');
 			
 			if (file_exists($info['path'] . '/widget.css')) tpl()->addCss($info['path'] . '/widget.css');
+			tpl()->addJs($info['path'] . '/widget.js');
 		}
 	}
 

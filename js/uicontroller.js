@@ -1,3 +1,5 @@
+// TODO - Delete this file, not used anymore except UIController.widgetList
+
 // UIController
 var UIController = {
 	objects: new Array(),
@@ -9,17 +11,20 @@ var UIController = {
 	deviceNumber: 0,        // incrément pour les id des composants
 	
 	objectListListeners: new Array(),
-	zoneListListeners: new Array(),
 	editMode: false,
 	leftOffset: null,
 	topOffset: null,
 	currentZone: '',
 	HouseName: '',
+	selectCallback: null,			// callback when a widget is selected in edit mode
+	widgetMoveCallback: null,			// callback when a widget is moved
+	widgetResizeCallback: null,			// callback when a widget is resized
 	widgetList: new Array(),
+
+	// Set XML config of design
 	setConfig: function(doc, name) {
 		this.config = doc; // flux xml complet du "design" 
 		this.designName = name;
-		this.zoneListChanged();
 	},
 	getDesignName: function() {
 		return this.designName;
@@ -34,15 +39,6 @@ var UIController = {
 		this.objectListListeners.push(f);
 		f(UIController.objectlist);
 	},
-	addZoneListListener: function(f) {
-		this.zoneListListeners.push(f);
-		f(UIController.config);
-	},
-	zoneListChanged: function() {
-		for(var i=0;i<this.zoneListListeners.length; i++) {
-			this.zoneListListeners[i](UIController.config);
-		}
-	},
 	registerWidget: function(widget) {
 		this.widgetList[widget.type]=widget;
 	},
@@ -53,15 +49,14 @@ var UIController = {
 	setZoneBackground: function(bg) {
 		if (bg != null && bg != "")
 		{
-			bg = 'design/'+this.designName+'/'+bg;
-			//ant $('body').css('background-image', 'url(' + bg + ')');
-			//ant $('#tab-designedit').css('background-image', 'url(' + bg + ')');
+			bg = 'design/' + this.designName + '/' + bg;
 			$('#bgImage').attr('src', bg);
 		}
 	},
 	drawZone: function(zoneid) { // TODO : paragrpahe a revoir pour regrouper "mobile" et non ...
   	if (_visuMobile) {
       if (zoneid) {
+      	// Cyrille - A revoir
         var pageCurrent = UIController.tableArea[zoneid];
         var indexArea = zoneid;
         zoneid = pageCurrent.id; 
@@ -94,18 +89,19 @@ var UIController = {
 	  } else {
   		UIController.removeAll();
   		EIBCommunicator.removeAll();
-  		if (!zoneid)
-  			zoneid = $('zone', UIController.config).attr('id');
+  		
+  		// If zoneid not defined, get first zone id
+  		if (!zoneid) zoneid = $('zone', UIController.config).attr('id');
   		this.currentZone = zoneid;
   		var zone = $('zone[id='+zoneid+']', UIController.config);
-  			UIController.setZoneBackground(zone.attr('img'));
+  		UIController.setZoneBackground(zone.attr('img'));
   		zone.children('control').each(function() {
   			UIController.addWidget(this, UIController.editMode);
   		});
   		EIBCommunicator.updateAll();
 		}
-	},
-  drawPage: function() { // Only for MobileVisu
+	},	
+  drawPage: function() { // Cyrille - A revoir - Only for MobileVisu
 
 		this.HouseName = $(_areas, UIController.config).attr('name');
 		
@@ -179,50 +175,60 @@ var UIController = {
       UIController.addWidgetMobile(this, UIController.indexArea, UIController.editMode); 
     });
   },
-  drawAllPage: function() { // Only for MobileVisu
+  drawAllPage: function() { // Cyrille - A revoir - Only for MobileVisu
     for (var i=1; i < UIController.tableArea.length; i++ )
     {
       UIController.drawZone(i);
     }
 	},
-	editZone: function(mode) {
-		this.editMode = (mode != null) ? mode : !this.editMode;
+	// Set zone editable
+	editZone: function() {
+		UIController.editMode=true;
 		for(var i=0;i<UIController.objects.length; i++)
-		  UIController.objects[i].edit(this.editMode, this.editMode);
+		  UIController.objects[i].edit(UIController.selectCallback, UIController.widgetMoveCallback, UIController.widgetResizeCallback);
 	},
-	createWidget: function(conf, modify) {
+	// Add widget to DOM
+	createWidget: function(conf) {
 		var obj = null;
 		var type = conf.getAttribute('type');
 		var cls = this.widgetList[type];
-		if (cls)
-			obj = new cls(conf);
-		if (obj!=null) {
-			if (modify)
-				obj.edit(true, true);
-			
-			//ant $('body').append(obj.div);
-			$('#widgetdiv').append(obj.div);
 
-			UIController.objects.push(obj);
-			EIBCommunicator.add(obj);
-			return true;
-		}
-		return false;
+		if (cls)
+		{
+			obj = new cls(conf);
+			
+			if (obj!=null) {
+
+				// If edit mode, set widget editable
+				if (UIController.editMode)	obj.edit(UIController.selectCallback, UIController.widgetMoveCallback, UIController.widgetResizeCallback);
+
+				$('#widgetdiv').append(obj.div);
+
+				UIController.objects.push(obj);
+				EIBCommunicator.add(obj);
+				return true;
+			}
+			return false;
+		}	else return false;
 	},
-	addWidget: function(o, modify) {
-		if (!this.createWidget(o, modify)) {
+	
+	// Load widget JS and add widget to DOM
+	addWidget: function(o) {
+		if (!this.createWidget(o)) {
+
 			var type = o.getAttribute('type');
-			$.getScript("widgets/" + type + "/js/display.js", function() { UIController.createWidget(o, modify); });
+			$.getScript("widgets/" + type + "/widget.js", function() { UIController.createWidget(o); });
 		}
 	},
-	createWidgetMobile: function(conf, page, modify) { // Only for MobileVisu
+	
+	createWidgetMobile: function(conf, page) { // Cyrille - A revoir - Only for MobileVisu
 		var obj = null;
 		var type = conf.getAttribute('type');
 		var cls = this.widgetList[type];
 		if (cls)
 			obj = new cls(conf);
 		if (obj!=null) {
-			if (modify)
+			if (UIController.editMode)
 				obj.edit(true, true);
 
       var area = UIController.tableArea[page];
@@ -241,27 +247,29 @@ var UIController = {
 		}
 		return false;
 	},
-	addWidgetMobile: function(o, modify) { // Only for MobileVisu
-		if (!this.createWidgetMobile(o, page, modify)) {
+	
+	addWidgetMobile: function(o) { // Cyrille - A revoir - Only for MobileVisu
+		if (!this.createWidgetMobile(o, page)) {
 			var type = o.getAttribute('type');
 			// TODO pour le moment on ne traite que certains composants si non présent dans la liste on ne fait rien plus tard on appelera le script associé  "c"+type+"_mobile.js"
-			//$.getScript("js/c"+type+"_mobile.js", function() { UIController.createWidgetMobile(o, page, modify); });
+			//$.getScript("js/c"+type+"_mobile.js", function() { UIController.createWidgetMobile(o, page); });
 		}
 	},
+	
+	// Add a new widget to current zone
 	add: function(conf) {
 		$('zone[id='+this.currentZone+']', UIController.config).each(function() {
 			this.appendChild(conf);
 		});
-		UIController.addWidget(conf, true);
+		
+		UIController.addWidget(conf, UIController.editMode);
 	},
-	createControl: function(type) {
-		var conf = UIController.config.createElement('control');
-   		conf.setAttribute('type', type);
-   		return conf;
-	},
+	// Remove a widget from zone
 	remove: function(o) {
 		for(var i=0;i<UIController.objects.length; i++) {
 			if (o==UIController.objects[i]) {
+				
+				// Cyrille - A revoir
 				if (_visuMobile) {
   				if (o.conf.getAttribute("type")=="goto") {
     			   $("#navbar > ul","#page0").remove(o.div);
@@ -269,7 +277,7 @@ var UIController = {
     			   $(".content:first","#page0").remove(o.div);
     			}
     		} else {
-          document.body.removeChild(o.div);
+          o.div.remove();
         }
 				UIController.objects.splice(i,1);
 				$(o.conf).remove();
@@ -278,22 +286,30 @@ var UIController = {
 			}
 		}
 	},
+	// Clear all widgets
+	removeAll: function(o) {
+		if (!_visuMobile) {
+      var zo = UIController.objects.shift();
+  		while (zo != null) {
+  			zo.div.remove();
+  			zo = UIController.objects.shift();
+  		}
+  	}
+	},
+	// Add a new zone
 	addZone: function(zoneid, zoneName) {
 		var newzone = UIController.config.createElement('zone');
 		newzone.setAttribute('id', zoneid);
 		newzone.setAttribute('name', zoneName);
 		$('zones', UIController.config).append(newzone);
-		this.zoneListChanged();
 	},
+	// Remove a zone
 	removeZone: function(zoneid) {
 		$('zone[id='+zoneid+']', UIController.config).each(function() { this.parentNode.removeChild( this ); });
-		this.zoneListChanged();
 	},
-	serializeToString: function(doc) {
-        if (jQuery.browser.msie)
-            return doc.xml;
-   		return (new XMLSerializer()).serializeToString(doc);
-    },
+	serializeToString: function() {
+		return serializeXmlToString(UIController.config);
+	},
 	saveDesign: function(version) {
 		var string = this.serializeToString(UIController.config);
 		var url = 'design_technique.php?action=savedesign&name='+this.designName+'&ver='+version;
@@ -313,15 +329,6 @@ var UIController = {
 			}
 		});
 	},
-	displayDesign: function() {
-        var string = this.serializeToString(UIController.config);
-    $('#fluxxml').empty().append("<textarea rows=30 cols=150>"+string+"</textarea>");
-    //$('#fluxxml').dialog({ autoOpen: true , show: "blind" , hide: "explode" , width: 460 });
-    $('#fluxxml').dialog({ width: 460 });
-    /*var popup = window.open();
-		popup.document.write("<html><body><textarea rows=30 cols=100>"+string+"</textarea></body></html>");
-		popup.document.close();*/
-	},
 	setNotification: function(text)	{
 		if (_visuMobile) {
 		  alert(text);
@@ -332,14 +339,5 @@ var UIController = {
 	},
 	clearNotification: function()	{
 		$('#notificationZone').text('').hide();
-	},
-	removeAll: function(o) {
-		if (!_visuMobile) {
-      zo = UIController.objects.shift();
-  		while (zo != null) {
-  			document.body.removeChild(zo.div);
-  			zo = UIController.objects.shift();
-  		}
-  	}
 	}
 }

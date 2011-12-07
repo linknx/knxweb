@@ -1,4 +1,3 @@
-
 // EIBCommunicator
 var EIBCommunicator = {
 	listeners: new Object(),
@@ -18,6 +17,10 @@ var EIBCommunicator = {
 			}
 			if (EIBCommunicator.listeners[key].length==0) delete EIBCommunicator.listeners[key];
 		}
+	},
+	refreshListeningObject: function(o) {
+		EIBCommunicator.remove(o);
+		EIBCommunicator.add(o);		
 	},
 	eibWrite: function(obj,value, successCallBack) {
 		if (!obj)
@@ -78,18 +81,27 @@ var EIBCommunicator = {
 		else if (completeCallBack)
 		    completeCallBack();
 	},
-	loadObjectList: function() {
-		var body = '<read><config><objects/></config></read>';
-		var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
+	executeActionList: function(actionsList) {
+		var actions=actionsList.get(0).childNodes;
+		if (actions.length>0) {
+  		var xml='<execute>';
+  		for(i=0; i<actions.length; i++)
+  		{
+  			var action=actions[i];
+  			// Already dispatch new value if type == set-value
+  			if (action.getAttribute('type')=='set-value') EIBCommunicator.sendUpdate(action.getAttribute('id'), action.getAttribute('value'));
+  			xml+=serializeXmlToString(actions[i]);
+  		}
+  		xml+='</execute>';
+  		EIBCommunicator.query(xml);
+  	}
+	},
+	query: function(body, successCallBack) {
+		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml' ,
 			success: function(responseXML, status) {
-				var xmlResponse = responseXML.documentElement;
-				if (xmlResponse.getAttribute('status') != 'error') {
-					UIController.setObjectsList(xmlResponse);
-				}
-				else
-					alert(tr("Error: ")+xmlResponse.textContent);
+				if (successCallBack) successCallBack(responseXML.documentElement);
 			}
-		});
+		})
 	},
 	updateAll: function(completeCallBack) {
 		var obj = new Array();
