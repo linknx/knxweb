@@ -64,7 +64,7 @@ if (isset($_GET['action'])) {
 				elseif (mkdir("design/".$name, 0777) == false)
 					print("<createdesign status='error'>Unable to create design folder");
 				elseif ($fp = fopen("design/".$name."/design.xml", 'w')) {
-					fwrite($fp, "<?xml version='1.0'?><config><zones/></config>\n");
+					fwrite($fp, "<?xml version='1.0'?><config width='1280' height='1024' enableSlider='false'><zones/></config>\n");
 					fclose($fp);
 					print("<createdesign status='success'>");
 				}
