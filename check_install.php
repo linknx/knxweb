@@ -42,6 +42,16 @@ if (isset($_GET["ajax"])) {
 				?>
 			</li>
 			<li>
+				Does <strong>template/template_c/</strong> exists? 
+				<? 
+					if (file_exists('template/template_c/')) echo '<span style="color: #00FF00">ok</span>'; 
+					else {
+						echo "<span style='color: #FF0000'>no</span> => mkdir $pwd/template/template_c/";
+						$error=true;
+					}
+				?>
+			</li>
+			<li>
 				Is <strong>template/template_c/</strong> directory writable? 
 				<? 
 					if (is_writable('template/template_c/')) echo '<span style="color: #00FF00">ok</span>'; 
