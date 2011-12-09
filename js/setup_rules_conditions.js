@@ -427,13 +427,13 @@ $.extend(rules, {
         $('#tab-rules-object-condition-object').val(div.object_id);
         $('#tab-rules-object-condition-operation').val(div.object_operation);
         $('#tab-rules-object-condition-values').val(div.object_value);
-        $('#tab-rules-object-condition-value').dialog(div.object_value);
+        $('#tab-rules-object-condition-value').val(div.object_value);
         if (div.object_trigger==true) $('#tab-rules-object-condition-trigger').attr('checked','1'); 
         else $('#tab-rules-object-condition-trigger').removeAttr('checked');
         break;
       case "objectsrc":
         $('#tab-rules-objectsrc-condition-operation').val(div.objectsrc_operation);
-        $('#tab-rules-objectsrc-condition-value').dialog(div.objectsrc_value);
+        $('#tab-rules-objectsrc-condition-value').val(div.objectsrc_value);
         $('#tab-rules-objectsrc-condition-src').val(div.objectsrc_src);
         if (div.objectsrc_trigger==true) $('#tab-rules-objectsrc-condition-trigger').attr('checked','1'); 
         else $('#tab-rules-objectsrc-condition-trigger').removeAttr('checked');

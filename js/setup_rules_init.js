@@ -378,9 +378,10 @@ function loadRulesList()
   
   $('#listRules').change(function(){
     //messageBox(" Selection rule :"+this.value,"Rule","info");
-    $('#id-current-rule').val(this.value);
+    //$('#id-current-rule').val(this.value);
     $("#tab-rules-property").text(serializeToString(arrayRules[this.value]));
     loadRule(arrayRules[this.value]);
+    $('#id-current-rule').val(this.value);
     
     this.value = "";
   });

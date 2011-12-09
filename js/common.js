@@ -227,7 +227,11 @@ function messageBox(message,title,icon) {
 	// icon : alert, info, notice, help, mail-open, mail-closed, comment, person, trash, locked, unlocked, home, star, link, cancel, newwin, refresh
   // voir pour ajouter la class ui-state-highlight ou ui-state-error en fonction si "bon ou mauvais" 
 	a=$('<div id="dialog-message" title="' + title + '">');
-	a.html('<p><span class="ui-icon ui-icon-' + icon + '" style="float:left; margin:0 7px 50px 0;"></span>' + message + '</p>');
+	if (icon != '') {
+		a.html('<p><span class="ui-icon ui-icon-' + icon + '" style="float:left; margin:0 7px 50px 0;"></span>' + message + '</p>');
+	} else {
+    a.html('<p></span>' + message + '</p>');
+  }
 	a.dialog({
 			width: 350,
 			autosize: true,
