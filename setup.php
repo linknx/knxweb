@@ -69,8 +69,7 @@ tpl()->addJs('js/action-editor.js');
 tpl()->addJs("lib/jquery.tablesorter.js");
 tpl()->addJs("lib/jquery-validate/jquery.validate.min.js");
 tpl()->addJs("lib/jquery-validate/localization/messages_fr.js");
-tpl()->addJs("lib/jquery.jsPlumb-1.2.5-all-min.js");
-//tpl()->addJs("lib/jsplumb/jquery.jsPlumb-1.3.3-all.js");
+tpl()->addJs("lib/jsplumb/jquery.jsPlumb-1.3.3-all.js");
 tpl()->addJs('lib/jquery.scrollTo-1.4.2-min.js');
 tpl()->addJs('lib/jquery.serialScroll-1.2.2-min.js');
 

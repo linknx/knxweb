@@ -91,9 +91,9 @@
 						
 			<h3 tab_id="designedit" tab_label="Edition Design" tab_url="setup_design.php"><a href="#"><img src="images/setup.png"> Edition Design</a></h3>
 			<div>
+        <div class="subItem" id="button-add-design"><img src="images/add.png" />New design</div>
         <div class="subItem" id="button-add-new-zone"><img src="images/add.png" />New zone</div>
         <div class="subItem" id="button-remove-zone"><img src="images/remove.png" />Remove zone</div>
-        <div class="subItem" id="button-add-design"><img src="images/add.png" />New design</div>
 
         <div class="subItem"><img src="images/add.png" />
         

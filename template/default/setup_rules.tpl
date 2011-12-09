@@ -148,20 +148,20 @@
 </form>
 </div>
 
-<div id="tab-rules-timecounter-condition-dialog" style="display: none;">
-<form id="tab-rules-timecounter-condition-form">
+<div id="tab-rules-time-counter-condition-dialog" style="display: none;">
+<form id="tab-rules-time-counter-condition-form">
 <table class="form">
 	<tbody>
 		<tr>
 			<th>Seuil (threshold)</th>
 			<td>
-				<input type="text" class="required number" name="tab-rules-timecounter-condition-threshold" id="tab-rules-timecounter-condition-threshold" size="4"> seconde(s)
+				<input type="text" class="required number" name="tab-rules-time-counter-condition-threshold" id="tab-rules-time-counter-condition-threshold" size="4"> seconde(s)
 			</td>
 		</tr>
 		<tr>
 			<th>Délai de reset (reset-delay)</th>
 			<td>
-				<input type="text" class="required number" name="tab-rules-timecounter-condition-reset-delay" id="tab-rules-timecounter-condition-reset-delay" size="4"> seconde(s)
+				<input type="text" class="required number" name="tab-rules-time-counter-condition-reset-delay" id="tab-rules-time-counter-condition-reset-delay" size="4"> seconde(s)
 			</td>
 		</tr>
 	</tbody>
@@ -233,7 +233,11 @@
 								</tr>
 								<tr>
 									<td>Exception</td>
-									<td colspan="2"><input type="checkbox" id="timer-condition-at-exception"></td>
+									<td colspan="2">
+									  <input type="radio" id="timer-condition-at-exception-dontcare" name="timer-condition-at-exception" checked="checked"> Dont Care
+										<input type="radio" id="timer-condition-at-exception-yes" name="timer-condition-at-exception"> Yes
+										<input type="radio" id="timer-condition-at-exception-no" name="timer-condition-at-exception"> No
+                  </td>
 								</tr>
 								<tr>
 									<td>Offset</td>
@@ -315,7 +319,11 @@
 								</tr>
 								<tr>
 									<td>Exception</td>
-									<td colspan="2"><input type="checkbox" id="timer-condition-until-exception"></td>
+									<td colspan="2">
+									  <input type="radio" id="timer-condition-until-exception-dontcare" name="timer-condition-until-exception" checked="checked"> Dont Care
+										<input type="radio" id="timer-condition-until-exception-yes" name="timer-condition-until-exception"> Yes
+										<input type="radio" id="timer-condition-until-exception-no" name="timer-condition-until-exception"> No
+                  </td>
 								</tr>
 								<tr>
 									<td>Offset</td>
@@ -362,6 +370,9 @@
   <br />
   <strong><span>Id rule : </span><input type="text" id="id-current-rule" size="50"></strong>
   <input type="button" id="button-save-rule" value="Valider" onclick="validRule()">
+  <input type="button" id="button-reload-rule" value="Actualiser XML" onclick="rules.generateXML()">
+  <input type="button" id="button-init-rule" value="Init" onclick="rules.deleteAllCurrentRule()">
+  <!-- <button id="button-init-rule" onclick="rules.deleteAllCurrentRule()">Init</button> -->
 </div>
 
 <div id="tab-rules-container">

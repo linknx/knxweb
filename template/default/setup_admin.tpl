@@ -37,7 +37,6 @@
   		</div>
     </td>
 	</tr>
-	<!-- TODO gérer les pgm supplémentaire quelque part ... -->
 {foreach from=$pgmrunning key=k item=it}
 	<tr>
   	<td width="100">{$k}</td>
@@ -55,9 +54,8 @@
     </td>
 	</tr>
 {/foreach}
-	<!-- /TODO -->
 </table>
-<input type="button" value="Restart EIBD and linknx" onclick="queryKnxweb('restarteiblinknx', 'xml', '', true);">
+<!-- <input type="button" value="Restart EIBD and linknx" onclick="queryKnxweb('restarteiblinknx', 'xml', '', true);">  /TODO -->
 
 <div class="titleadmin2">Object log files (last 20 lines)</div>
 <select id="selectLogObject">

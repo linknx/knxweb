@@ -167,14 +167,9 @@ if (isset($_GET["ajax"])) {
   <lang>fr</lang> <!-- langue -->
   <version>0.9</version> <!-- version de KnxWeb -->
   <title>KnxWeb - Ma maison en un clic</title> <!-- Titre des pages Web -->
-  <Path_Image_Background>design/default/</Path_Image_Background> <!-- emplancement des images de fond d'écran -->
-  <defaultDesign>default</defaultDesign> <!-- version et design par défaut => design/version.xml par dÃ©faut default/design.xml -->
-  <defaultVersion>design</defaultVersion> <!-- fichier xml de description -->
-  <startMobileView>false</startMobileView> <!-- démarrage par défaut de la vue \"Mobile\" -->
-  <defaultMobileDesign>default</defaultMobileDesign> <!-- version et design par défaut de la visu \"Mobile\" -->
-  <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu \"Mobile\" -->
+  <Path_Image_Background>images/</Path_Image_Background> <!-- emplancement des images de fond d'écran -->
   <eibd>-d -D -S -T -i ipt:192.168.1.10:3671</eibd> <!-- paramètres d'appel de eibd exemple : ft12:/dev/ttyS0 -->
-  <linknx>-d --config=/var/lib/linknx/linknx.xml</linknx> <!-- paramètres d'appel de linknx -->
+  <linknx>-d -w --config=/var/lib/linknx/linknx.xml</linknx> <!-- paramètres d'appel de linknx -->
   <loglinknx>file</loglinknx> <!-- type de log de linknx file/mysql/null -->
   <imageDir>pictures/</imageDir> <!-- chemin d'accès aux images -->
 </param>";
