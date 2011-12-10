@@ -168,6 +168,11 @@ if (isset($_GET["ajax"])) {
   <version>0.9</version> <!-- version de KnxWeb -->
   <title>KnxWeb - Ma maison en un clic</title> <!-- Titre des pages Web -->
   <Path_Image_Background>images/</Path_Image_Background> <!-- emplancement des images de fond d'écran -->
+  <defaultDesign>default</defaultDesign> <!-- version et design par défaut => design/version.xml par défaut default/design.xml -->
+  <defaultVersion>design</defaultVersion> <!-- fichier xml de description -->
+  <startMobileView>false</startMobileView> <!-- démarrage par défaut de la vue \"Mobile\" -->
+  <defaultMobileDesign>default</defaultMobileDesign> <!-- version et design par défaut de la visu \"Mobile\" -->
+  <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu \"Mobile\" -->
   <eibd>-d -D -S -T -i ipt:192.168.1.10:3671</eibd> <!-- paramètres d'appel de eibd exemple : ft12:/dev/ttyS0 -->
   <linknx>-d -w --config=/var/lib/linknx/linknx.xml</linknx> <!-- paramètres d'appel de linknx -->
   <loglinknx>file</loglinknx> <!-- type de log de linknx file/mysql/null -->
