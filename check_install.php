@@ -177,6 +177,7 @@ if (isset($_GET["ajax"])) {
   <linknx>-d -w --config=/var/lib/linknx/linknx.xml</linknx> <!-- paramètres d'appel de linknx -->
   <loglinknx>file</loglinknx> <!-- type de log de linknx file/mysql/null -->
   <imageDir>pictures/</imageDir> <!-- chemin d'accès aux images -->
+  <useJavaIfAvailable>false</useJavaIfAvailable> <!-- Use java applet to update objects value on display design if Java is installed on client -->
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
 		if ($res!==false)
