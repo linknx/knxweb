@@ -6,21 +6,23 @@ var design = {
 	
 	// Load design
 	load: function(designName, version)	{
-		var url = 'design/' + designName + '/' + version + '.xml';
-	
-		design.currentDesign=designName;
-		design.currentVersion=version;
-		design.currentZone=null;
+		if ((designName!="")&&(designName!=null)) {
+			var url = 'design/' + designName + '/' + version + '.xml';
 		
-		$('#tab-design-design-list').val(designName);
-	
-		req = jQuery.ajax({ url: url, dataType: 'xml', async:false, cache: false,
-			success: function(responseXML, status) {
-				design.config=responseXML;
-				design.clear();
-				design.refreshZoneList();
-			}
-		});
+			design.currentDesign=designName;
+			design.currentVersion=version;
+			design.currentZone=null;
+			
+			$('#tab-design-design-list').val(designName);
+		
+			req = jQuery.ajax({ url: url, dataType: 'xml', async:false, cache: false,
+				success: function(responseXML, status) {
+					design.config=responseXML;
+					design.clear();
+					design.refreshZoneList();
+				}
+			});
+		}
 	},
 	
 	// Save design
@@ -53,7 +55,7 @@ var design = {
 
 	// Load design list
 	loadDesignList: function() {
-		req = jQuery.ajax({ url: 'design_technique.php?action=designlist', dataType: 'xml',
+		req = jQuery.ajax({ url: 'design_technique.php?action=designlist', async: false, dataType: 'xml',
 			success: function(responseXML, status) {
 				$('#tab-design-design-list').empty();
 				var xmlResponse = responseXML.documentElement;
@@ -633,7 +635,7 @@ jQuery(function($) {
 		design.displayDesignProperties();
 	});
 
-	design.load(tab_config['defaultDesign'], tab_config['defaultVersion']);
+	design.load($('#tab-design-design-list').val(), tab_config['defaultVersion']);
 	design.draw($('#tab-design-zone-list').val());
 	design.displayDesignProperties();
 	
