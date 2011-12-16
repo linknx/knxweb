@@ -147,7 +147,15 @@ jQuery(function($) {
 			force:true
 		});
 	}
-  
-	EIBCommunicator.periodicUpdate();
+ 
+  if (tab_config.useJavaIfAvailable=='true')
+  {
+	  if (navigator.javaEnabled())
+	  {
+	  	// Update all object
+			EIBCommunicator.updateAll();
+	  } else EIBCommunicator.periodicUpdate();
+	} else EIBCommunicator.periodicUpdate();
+		
 	loading.hide();
 });
