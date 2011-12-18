@@ -1,29 +1,47 @@
 <?php
 
 require_once("include/common.php");
+require_once("include/linknx.php");
 
 header('Content-Type: text/html; charset=UTF-8');
 
 tpl()->addJs('js/setup_admin.js');
 
-$_tpl->assignByRef("lang",$lang);
+tpl()->assignByRef("lang",$lang);
 
-// TODO amélioré ces données qui doivent être récupéré dans le paramétrage  
-
-
-//$Fconfeibd = 'ClinuxEib/eibd.conf';//$cheminD_ClinuxEib.'admin/
-//$Fxmllinknx = 'ClinuxEib/linknx.xml';// admin/config/ClinuxEib/linknx.xml
 $Fnetwork ='/etc/network/interfaces';
+$log_Linknx =''; // /tmp/linknx.log ou autre exemple : /var/lib/linknx/linknx.log
+$pathLog = ''; // exemple : "/var/lib/linknx/log"
+$logType = ''; // '' / 'file' / 'mysql'
 
+$linknx=new Linknx($_config['linknx_host'], $_config['linknx_port']);
+$info=$linknx->getLogging();
+if ($info!==false) {
+  $log_Linknx = $info['logging']['output'];
+}
+$info=$linknx->getServices();
+if ($info!==false) {
+  $logType = $info['persistence']['type'];
+  if ($logType == 'file') $pathLog = $info['persistence']['logpath'];
+}
 
-$log_Linknx ='/tmp/linknx.log'; // ou autre exemple : /var/lib/linknx/linknx.log
-
-
-$pathLog = "/var/lib/linknx/log"; // TODO : gérer par rapport au type de log de linknx ...  
-//$pathLog = "../linknx/log"; 
-$logfile = glob($pathLog.'/*.log'); 
-
-tpl()->assignByRef('logFile', $logfile );
+if ($logType == 'file') {
+  $objects=$linknx->getObjects();
+  $logfile = glob($pathLog.'*.log');
+  $order = array( $pathLog , '.log' );
+  foreach ($logfile as $value) {
+    $id = str_replace($order, '', $value); 
+    $type = $objects[$id]["type"];
+    $listobjectlog[$id] = $value . '_type_' . $type;
+  } 
+}
+if ($logType == 'mysql') {
+  // TODO ...
+  // requete sur la base mysql $info['persistence'][] host/user/pass/db/table/logtable
+  // $listobjectlog[$object] = $object 
+}
+tpl()->assignByRef('logFile', $listobjectlog );
+tpl()->assignByRef('logType',$logType);
 
 require("include/admin.php");
 
@@ -34,9 +52,6 @@ tpl()->assignByRef('eibd_running_param', $eibd_running_param);
 tpl()->assignByRef('linknx_running', $linknx_running);
 tpl()->assignByRef('linknx_running_param', $linknx_running_param);
 tpl()->assignByRef('network', $network);
-//tpl()->assignByRef('eib', $eib);
-//tpl()->assignByRef('serials', $serials);
-//tpl()->assignByRef('linknxConfig', $linknxConfig);
 tpl()->assignByRef('linknxLog', $linknxLog);
 
 

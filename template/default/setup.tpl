@@ -84,9 +84,17 @@
 
 			<h3 tab_id="rules" tab_label="Rules" tab_url="setup_rules.php"><a href="#"><img src="images/rules.png"> Rules</a></h3>
 			<div>
-				<div class="subItem" id="button-add-rule"><img src="images/add.png" />Add rule</div>
-				<div class="subItem" id="button-remove-rule"><img src="images/remove.png" />Remove rule</div>
-				<div class="subItem" id="button-edit-rule"><img src="images/edit.png" />Edit rule</div>
+				<div class="subItem" id="button-edit-rule" onclick="validRule()" ><img src="images/fetch.png" />Save rule</div>
+				<div class="subItem" id="button-delete-rule" onclick="deleteRule()" ><img src="images/remove.png" />Delete rule</div>
+				<div class="subItem" id="button-remove-rule" onclick="rules.deleteAllCurrentRule()"><img src="images/refresh.gif" />Init</div>
+			</div>
+			
+			<h3 tab_id="events" tab_label="Events" tab_url="setup_events.php"><a href="#"><img src="images/rules.png"> Events</a></h3>
+			<div>
+				<div class="subItem" id="button-add-event"><img src="images/add.png" />Add new event</div>
+				<div class="subItem" id="button-remove-event"><img src="images/remove.png" />Delete event</div>
+				<div class="subItem" id="button-edit-event"><img src="images/edit.png" />Edit event</div>
+				<div class="subItem" id="button-refresh-event" onclick="events.loadEventsStatusList();"><img src="images/refresh.gif" />Reload events</div>
 			</div>
 						
 			<h3 tab_id="designedit" tab_label="Edition Design" tab_url="setup_design.php"><a href="#"><img src="images/setup.png"> Edition Design</a></h3>
@@ -137,11 +145,11 @@
 
       </div>
 			
-			<h3 tab_id="admin" tab_label="Administration" tab_url="setup_admin.php"><a href="#"><img src="images/construct.png"> Admin</a></h3>
+			<h3 tab_id="admin" tab_label="Administer" tab_url="setup_admin.php"><a href="#"><img src="images/construct.png"> Admin</a></h3>
 			<div>
-			  <div class="subItem" id="button-admin-conf-knxweb">Config KnxWeb</div>
-        <div class="subItem" id="button-admin-log-object">Log Object</div>
-			  <div class="subItem" id="button-admin-log-linknx">Log Linknx</div>
+			  <!-- <div class="subItem" tab_id="admin-config-knxweb" tab_label="Config KnxWeb" tab_url="setup_admin.php?configknxweb"><img src="images/fetch.png" /> Config KnxWeb</div>
+        <div class="subItem" tab_id="admin-config-log-objects" tab_label="Log of Objects" tab_url="setup_admin.php?logobjects"><img src="images/setup.png" /> Log of Objects</div>
+			  <div class="subItem" tab_id="admin-config-log-linknx" tab_label="Log Linknx" ><img src="images/setup.png" /> Log Linknx</div> -->
       </div>
 			
 		</div>

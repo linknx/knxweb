@@ -4,10 +4,13 @@ jQuery(document).ready(function(){
   $( "input:button","#tab-rules").button();
   
   
-  $('#addcondition').append('<option value="">' + tr("Ajouter une condition") + '</option>');
+  $('#addcondition').append('<option value="">' + tr("Add a condition") + '</option>');
   
   var conditionsSelect=$('#addcondition').get(0);
-  for(key in conditionsList) conditionsSelect.options[conditionsSelect.options.length] = new Option(conditionsList[key], key);
+  for(key in conditionsList) {
+    if ( key != 'script' || tab_config['haveLua'] == "true" )
+      conditionsSelect.options[conditionsSelect.options.length] = new Option(conditionsList[key], key);
+  }
 
   $('#addcondition').change(function(){
     var type = this.value;
@@ -15,9 +18,15 @@ jQuery(document).ready(function(){
     this.value = "";
   });
   
-  $('#addaction').append('<option value="">' + tr("Ajouter une action") + '</option>');
+  $('#addaction').append('<option value="">' + tr("Add an action") + '</option>');
   var actionsSelect=$('#addaction').get(0);
-  for(key in actionsList) actionsSelect.options[actionsSelect.options.length] = new Option(actionsList[key], key);
+  
+  for(key in actionsList) {
+    if ( ( key != 'send-sms' || tab_config['haveSMS'] == "true" ) &&
+    ( key != 'send-email' || tab_config['haveEmail'] == "true" ) &&
+    ( key != 'script' || tab_config['haveLua'] == "true" ) )
+      actionsSelect.options[actionsSelect.options.length] = new Option(actionsList[key], key);
+  }
   
   $('#addaction').change(function(){
     var type = this.value;

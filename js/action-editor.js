@@ -2,6 +2,7 @@ var actionEditor = {
 	config: null,
 	isNew: false,
 	subPageObjects: [ ],
+  prefix: '',
 
 	actionsList: {
 	    'set-value' : 'Set Value', // < type="" id="" value="" />
@@ -55,7 +56,7 @@ var actionEditor = {
     tr.append(td);
     tr.append($("<td><img src='images/remove.png' onclick='actionEditor.del($(this).parent().parent());'></td>"));
 
-		$("#action-dialog-list tbody").append(tr);
+		$("#"+this.prefix+"action-dialog-list tbody").append(tr);
 
     return tr;
 	},
@@ -268,14 +269,14 @@ var actionEditor = {
 		
 		actionEditor.config=conf;
 		
-		$("#action-dialog-list tbody").empty();
+		$("#"+this.prefix+"action-dialog-list tbody").empty();
 	
 		$('action', actionEditor.config).each(function() {
 			actionEditor.add(this);
 		});
 		
-		
-		$("#action-dialog").dialog('open');
+		if (this.prefix === '')
+		  $("#action-dialog").dialog('open');
 	},
 	
 	fillObjectsSelect: function(div) {
@@ -333,7 +334,7 @@ var actionEditor = {
 
 jQuery(function($) {
   var actionsSelect=$('#action-dialog-select').get(0);
-  actionsSelect.options[actionsSelect.options.length] = new Option(tr("Ajouter une action"), "");
+  actionsSelect.options[actionsSelect.options.length] = new Option(tr("Add an action"), "")
   for(key in actionEditor.actionsList) actionsSelect.options[actionsSelect.options.length] = new Option(actionEditor.actionsList[key], key);
   
   $('#action-dialog-select').change(function(e){

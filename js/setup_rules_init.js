@@ -215,7 +215,7 @@ var rules = {
 
     var c = jsPlumb.getConnections({source:'actionlistOnFalse'});
     
-    if (c) {    
+    if (c.lenght > 0) {    
       if ($("span", '#actionlistOnFalse').text() == 'On-False') {
         xmlactionlist = $('<actionlist type="on-false" >');
       } else {
@@ -312,25 +312,16 @@ function loadRule(xml)
   rules.deleteAllCurrentRule();
   nbrAction = 0;
   nbrCondition = 0;
-  /*
-  $('condition',xml).each(function() { // TODO gérér les stopcondition entre autre ...
-    rules.addCondition(this.getAttribute('type'));
-  });
-  */
-  //console.log("condition 0 principale :",$('condition:first', xml).attr('type'));
 
   var k = 0;
   $(xml).children("condition").each(function () {
-    var condition = rules.addConditionRule(this.getAttribute('type'), this, k);
-    /* il y a qu'une condition gloable !! rattacher condition à actionlist */
-    jsPlumb.connect({source:condition[0].endpoint[0], target:actionlist[0].endpoint[0]});
+    var type = this.getAttribute('type');
+    var condition = rules.addConditionRule(type, this, k);
+    /* il y a qu'une condition globale !! rattacher condition à actionlist */
+    if (type == "and" || type == "or" || type == "not" ) {
+      jsPlumb.connect({source:condition[0].endpoint[0], target:actionlist[0].endpoint[0]});
+    } else jsPlumb.connect({source:condition[0].endpointout, target:actionlist[0].endpoint[0]}); 
   });
-
-/*
-  $(conf).children("condition").each(function () {
-    div.append(createCondition(this).getHTML());
-  });
-*/
 
   $('actionlist', xml).each(function() { // TODO gérér les if/on true et false, les stopcondition ...
     var i = 0;
@@ -347,14 +338,14 @@ function loadRule(xml)
         var action = rules.addActionRule( this.getAttribute('type'), this, i);
         i++;
         jsPlumb.connect({source:actionlist[0].ontrue[i], target: action[0].endpointin});
-        if (i>10) { messageBox("Nombre maximum d'action atteint","Action On-True","alert"); return 0; }// TODO gérer si plus de 10 action ... 
+        if (i>10) { messageBox("Nombre maximum d'action atteint","Action On-True","alert"); return 0; }// TODO gérer si plus de 10 actions ... 
       });
     } else if ( typeactionlist == "on-false" || typeactionlist == "if-false") {
       $('action', this).each(function() {
         var action = rules.addActionRule( this.getAttribute('type'), this, i);
         i++;
         jsPlumb.connect({source:actionlist[0].onfalse[i], target: action[0].endpointin});
-        if (i>10) { messageBox("Nombre maximum d'action atteint","Action On-False","alert"); return 0; }// TODO gérer si plus de 10 action ... 
+        if (i>10) { messageBox("Nombre maximum d'action atteint","Action On-False","alert"); return 0; }// TODO gérer si plus de 10 actions ... 
       });
     }
 
@@ -369,12 +360,12 @@ function loadRulesList()
   if (responseXML!=false)
   {
     xmlRules = responseXML;
-    $('#listRules').append('<option value="">' + tr("Selectionner une règle") + '</option>');
+    $('#listRules').append('<option value="">' + tr("Select a rule") + '</option>');
     $('rule', responseXML).each(function() {
       $('#listRules').append('<option value="' + this.getAttribute("id") + '">' + this.getAttribute("id") + '</option>');
       arrayRules[this.getAttribute('id')]=this; 
     });
-  } else $('#listRules').append('<option value="">' + tr("Aucune règle définie") + '</option>');
+  } else $('#listRules').append('<option value="">' + tr("No definite rule") + '</option>');
   
   $('#listRules').change(function(){
     //messageBox(" Selection rule :"+this.value,"Rule","info");
@@ -388,6 +379,7 @@ function loadRulesList()
 };
 function validRule()
 {
+  rules.generateXML();
   var rule = $("#tab-rules-property").text();
   var body = '<write><config><rules>'+rule+'</rules></config></write>';
   // TODO à remplacer par le querylinknx
@@ -411,7 +403,13 @@ function validRule()
         messageBox(tr("Error: ")+xmlResponse.textContent,"Error Saving Rule","alert");
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
-      messageBox(tr("Error while saving rules: ")+textStatus,"Error Saving Rule","alert");
+      messageBox(tr("Error while saving rule: ")+textStatus,"Error Saving Rule","alert");
     }
   });
+};
+
+
+function deleteRule()
+{
+  messageBox(tr("Not yet implemented"),"TODO","alert");
 };

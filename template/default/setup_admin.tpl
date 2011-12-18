@@ -59,9 +59,9 @@
 
 <div class="titleadmin2">Object log files (last 20 lines)</div>
 <select id="selectLogObject">
-<option value="">   Choisissez un object </option>
-{foreach from=$logFile item=lf} 
-  <option value="{$lf}">{$lf}</option>
+<option value="">Choose an Object</option>
+{foreach from=$logFile key=k item=lf} 
+  <option value="{$lf}">{$k}</option>
 {/foreach}
 </select>
 <select id="selectLogObjectCount">
@@ -82,7 +82,7 @@
 <input type="button" value="Reload" onclick="reloadLogObject();" >
 <div id="divLogObject" class="codeadmin"><br /><br /><br /></div> 
 
-<div class="titleadmin2">Configuration générale KnxWeb</div>
+<div class="titleadmin2">Config KnxWeb</div>
 <table>
 {foreach from=$_config key=k item=conf}
 	<tr>
@@ -102,7 +102,11 @@
   			    <option value="mysql" {if ($conf=='mysql')} selected="true" {/if}>Mysql</option>
           </select>
         {else}
-          <input id="config-{$k}-id" class="required" value="{$conf}" size="100" type="text">
+          {if ($conf=='true' || $conf=='false')}
+            <input id="config-{$k}-id" class="required" type="checkbox" {if ($conf=='true')} checked="checked" {/if}>
+          {else}
+            <input id="config-{$k}-id" class="required" value="{$conf}" size="100" type="text">
+          {/if}
         {/if}
 			{/if}
 		</td>

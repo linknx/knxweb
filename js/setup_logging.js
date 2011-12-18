@@ -7,13 +7,16 @@ var logging = {
 		if (responseXML!=false)	{
 			var data=$('logging',responseXML)[0];
 			$('#logging-level').val('INFO');
+			$("#logging-format").val('simple');
 			if (data) {
 				if (data.getAttribute('format')=='simple')
 				{
-					if (data.getAttribute('level')!='') $('#logging-level').val(data.getAttribute('type')); else $('#logging-level').val('INFO');
+					if (data.getAttribute('level')!='') $('#logging-level').val(data.getAttribute('level')); else $('#logging-level').val('INFO');
+					$("#logging-format").val(data.getAttribute('format'));
 				} else
 				{
-					if ((data.getAttribute('format')=='simple')||(data.getAttribute('format')=='basic'))
+					if (data.getAttribute('level')!='') $('#logging-level').val(data.getAttribute('level')); else $('#logging-level').val('INFO');
+          if ((data.getAttribute('format')=='simple')||(data.getAttribute('format')=='basic'))
 						$("#logging-format").val(data.getAttribute('format'));
 					else
 					{

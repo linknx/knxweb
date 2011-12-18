@@ -89,15 +89,6 @@ tpl()->addCss('css/setup.css');
 
 tpl()->addJs('js/setup.js');
 
-/*
-  TODO : ajouter un css pour mettre la class minversion_0_0_1_29 à display: none si la version de linknx est < à 0.0.1.29
-.minversion_0_0_1_29 {
-  display: none;
-}
-tpl()->addCss('css/linknx_0_0_1_29.css');
-*/
-
-
 tpl()->display('setup.tpl');
 
 ?>

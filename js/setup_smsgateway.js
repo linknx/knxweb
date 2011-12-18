@@ -53,7 +53,10 @@ jQuery(document).ready(function(){
 	});
 	
 	$("#smsgateway-enable").change(function() {
-		$("#smsgateway-tab-table input,select").attr('disabled',!($("#smsgateway-enable").attr('checked')));
+    if ($(this).attr('checked') == "checked" && tab_config['haveSMS'] != "true")
+      messageBox("We can't use this fonction your compiled version of linknx does not support SMS", 'Error', 'alert');
+    else 
+		  $("#smsgateway-tab-table input,select").attr('disabled',!($("#smsgateway-enable").attr('checked')));
 	});
 
 	$('#smsgateway-password-confirm').change(function() {

@@ -2,7 +2,7 @@
 <script type="text/javascript" src="{$js}"></script>
 {/foreach}
 				
-<input type="checkbox" id="emailserver-enable" value="1">Activé<br />
+<input type="checkbox" id="emailserver-enable" value="1">Enable<br />
 <br />
 <form id="emailserver-form">
 <table id="emailserver-tab-table">
@@ -20,19 +20,19 @@
 			<td><input type="text" class="required" name="emailserver-host" id="emailserver-host"></td>
 		</tr>
 		<tr>
-			<th>Nom d'utilisateur</th>
+			<th>Username</th>
 			<td><input type="text" id="emailserver-login" size="40"></td>
 		</tr>
 		<tr>
-			<th>Mot de passe</th>
+			<th>Password</th>
 			<td><input type="password" id="emailserver-pass"></td>
 		</tr>
 		<tr>
-			<th>Confirmation mot de passe</th>
+			<th>Password confirmation</th>
 			<td><input type="password" id="emailserver-pass-confirm"><span class="error" style="color: #F00;display: none;"> Mot de passe différent</span></td>
 		</tr>
 		<tr>
-			<th>Expéditeur</th>
+			<th>From</th>
 			<td><input type="text" class="required" name="emailserver-from" id="emailserver-from" size="40"></td>
 		</tr>
 	</tbody>

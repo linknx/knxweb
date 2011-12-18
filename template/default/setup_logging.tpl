@@ -26,7 +26,7 @@
 			<th>Fichier log</th>
 			<td>
 				<input type="text" class="" id="logging-log4cpp-output" size="40">
-				(Vide = stdout)
+				(Empty = stdout)
 			</td>
 		</tr>
 		<tr>

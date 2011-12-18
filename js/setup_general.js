@@ -86,8 +86,6 @@ var setupgeneral = {
 				body += '<location lon="' + $('#setupgeneral-location-lon').val() + '" lat="' + $('#setupgeneral-location-lat').val() + '"/>';
 				
 			body += '</services></config></write>';
-//alert(body);
-//return;
 			loading.show();
 			var responseXML=queryLinknx(body);
 			saveConfig();

@@ -1,4 +1,4 @@
-<div id="action-dialog">
+<div id="action-dialog" style="display:none;" >
 	<select id="action-dialog-select"></select>
 	<table id="action-dialog-list">
 		<thead>
@@ -12,7 +12,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-set-value-dialog">
+<div id="action-dialog-set-value-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Object</th>
@@ -25,7 +25,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-copy-value-dialog">
+<div id="action-dialog-copy-value-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">From object</th>
@@ -38,7 +38,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-toggle-value-dialog">
+<div id="action-dialog-toggle-value-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Object</th>
@@ -47,7 +47,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-set-string-dialog">
+<div id="action-dialog-set-string-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Object</th>
@@ -60,7 +60,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-send-read-request-dialog">
+<div id="action-dialog-send-read-request-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Object</th>
@@ -69,7 +69,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-cycle-on-off-dialog">
+<div id="action-dialog-cycle-on-off-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Object</th>
@@ -90,7 +90,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-send-sms-dialog">
+<div id="action-dialog-send-sms-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Number</th>
@@ -103,7 +103,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-send-email-dialog">
+<div id="action-dialog-send-email-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">To</th>
@@ -120,7 +120,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-dim-up-dialog">
+<div id="action-dialog-dim-up-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Object</th>
@@ -141,7 +141,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-shell-cmd-dialog">
+<div id="action-dialog-shell-cmd-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Command</th>
@@ -150,7 +150,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-ioport-tx-dialog">
+<div id="action-dialog-ioport-tx-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">IO Port</th>
@@ -163,7 +163,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-script-dialog">
+<div id="action-dialog-script-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Script</th>
@@ -172,7 +172,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-formula-dialog">
+<div id="action-dialog-formula-dialog" style="display:none;" >
 	<br />Formula : object = a*x^m+b*y^n+c<br /><br />
 	<table>
 		<tr>
@@ -210,7 +210,7 @@
 	</table>
 </div>
 
-<div id="action-dialog-start-actionlist-dialog">
+<div id="action-dialog-start-actionlist-dialog" style="display:none;" >
 	<table>
 		<tr>
 			<th width="150">Rule</th>

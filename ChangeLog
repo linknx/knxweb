@@ -1,3 +1,7 @@
+2011-12-17 Anthony Penhard
+	* Bugs Fixed in Rules Editor
+	* Add Events Editor for "lite rules" with only 1 condition "timer" and "basic" actions "on-true"
+
 2011-12-09 Anthony Penhard
 	* Rules Editor
 

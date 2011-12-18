@@ -75,6 +75,31 @@ class Linknx {
 		return $info;
 	}
 	
+	function getServices() {
+		$info=array();
+		if ($this->query("<read><config><services></services></config></read>", $xml)) 
+		{
+      $info['smsgateway']=$xml->config->services->smsgateway->attributes();
+      $info['ioports']=$xml->config->services->ioports->attributes();
+      $info['knxconnection']=$xml->config->services->knxconnection->attributes();
+      $info['xmlserver']=$xml->config->services->xmlserver->attributes();
+      $info['persistence']=$xml->config->services->persistence->attributes();
+      $info['location']=$xml->config->services->location->attributes();
+      //$info['exceptiondays']=(string)$xml->config->services->exceptiondays->date; // TODO a gérer dans une fonction à part ...
+      $info['knxconnection']=$xml->config->services->smsgateway->attributes();
+		} else return false;
+		return $info;
+	}
+	
+	function getLogging() {
+		$info=array();
+		if ($this->query("<read><config><logging /></config></read>", $xml)) 
+		{
+      $info['logging']=$xml->config->logging->attributes();
+		} else return false;
+		return $info;
+	}
+		
 }
 
 ?>

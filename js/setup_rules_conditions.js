@@ -33,15 +33,6 @@ $.extend(rules, {
     }
     
     switch (type) {
-/*    // exemple action 
-      case 'set-value' :
-        div[0].objid=condition.getAttribute('id');
-        div[0].objvalue=condition.getAttribute('value');
-        div.css("width","140px");
-        break;
-      case 'script' :
-        div[0].script=condition.getAttribute('script');
-        break;*/
       case "object":
         div[0].object_id=condition.getAttribute('id');
         div[0].object_operation=condition.getAttribute('op');
@@ -94,8 +85,7 @@ $.extend(rules, {
           if (this.getAttribute('exception')) 
             div[0].timer_at_exception=(this.getAttribute('exception') == 'yes')?"yes":"no";
           div[0].timer_at_offset=this.getAttribute('offset');
-          div[0].timer_every_hour='0';
-          div[0].timer_every_min='0';
+          div[0].timer_every='';
         });
         $(condition).children("every").each(function () {
           div[0].timer_atevery='every'; // 'at' ou 'every'
@@ -112,31 +102,8 @@ $.extend(rules, {
           div[0].timer_at_dateobject='';
           div[0].timer_at_exception='';
           div[0].timer_at_offset='0';
-          // this.textContent(); // <every>1h</every>  ?? ou <every hour="8" min="0"> 
-          /*
-          la doc est pas claire cf. https://sourceforge.net/apps/mediawiki/linknx/index.php?title=Condition%27s_Syntax
-          "Elements every and during have no attributes. The element's text defines a number of seconds."
-          et un exemple : "<every hour="8" min="0">"
-          */
-          div[0].timer_every_hour=this.getAttribute('hour'); 
-          div[0].timer_every_min=this.getAttribute('min');
+          div[0].timer_every=this.textContent;
         }); 
-        /*div[0].timer_atevery='at'; // 'at' ou 'every'
-        div[0].timer_at_type='other'; // 'other' 'sunrise' 'sunset' 'noon'
-        div[0].timer_at_time_constantvariable='constant'; // 'constant' 'variable' 
-        div[0].timer_at_hour='';
-        div[0].timer_at_min='';
-        div[0].timer_at_day='';
-        div[0].timer_at_month='';
-        div[0].timer_at_year='';
-        div[0].timer_at_timeobject='';
-        div[0].timer_at_date_constantvariable='constant'; // 'constant' 'variable'
-        div[0].timer_at_dow='1234567'; // '1234567'
-        div[0].timer_at_dateobject='';
-        div[0].timer_at_exception='';
-        div[0].timer_at_offset='0';
-        div[0].timer_every_hour='0';
-        div[0].timer_every_min='0';*/
     
         div[0].timer_untilduring='none'; // 'none' 'until' 'during'
         div[0].timer_until_type='other'; // 'other' 'sunrise' 'sunset' 'noon'
@@ -152,8 +119,7 @@ $.extend(rules, {
         div[0].timer_until_dateobject='';
         div[0].timer_until_exception='';
         div[0].timer_until_offset='0';
-        div[0].timer_during_hour='0';
-        div[0].timer_during_min='0';
+        div[0].timer_during='';
         $(condition).children("until").each(function () {
           div[0].timer_untilduring='until';
           div[0].timer_until_type='other';
@@ -181,14 +147,11 @@ $.extend(rules, {
           if (this.getAttribute('exception')) 
             div[0].timer_until_exception=(this.getAttribute('exception') == 'yes')?"yes":"no";
           div[0].timer_until_offset=this.getAttribute('offset');
-          div[0].timer_during_hour='0';
-          div[0].timer_during_min='0';
+          div[0].timer_during='';
         });
         $(condition).children("during").each(function () {
           div[0].timer_untilduring='during';
-          // this.textContent(); // <during>1h</during>
-          div[0].timer_during_hour=this.textContent();
-          div[0].timer_during_min='0';
+          div[0].timer_during=this.textContent;
         });
         
         div[0].timer_trigger=false;
@@ -358,8 +321,7 @@ $.extend(rules, {
         div[0].timer_at_dateobject='';
         div[0].timer_at_exception='';
         div[0].timer_at_offset='0';
-        div[0].timer_every_hour='0';
-        div[0].timer_every_min='0';
+        div[0].timer_every='';
     
         div[0].timer_untilduring='none';
         div[0].timer_until_type='other';
@@ -375,8 +337,7 @@ $.extend(rules, {
         div[0].timer_until_dateobject='';
         div[0].timer_until_exception='';
         div[0].timer_until_offset='0';
-        div[0].timer_during_hour='0';
-        div[0].timer_during_min='0';
+        div[0].timer_during='';
         
         div[0].timer_trigger=false;
         
@@ -490,8 +451,7 @@ $.extend(rules, {
           $("#timer-condition-at-type-other").trigger('change');
         } else {
           $("#timer-condition-every").attr('checked','1');
-          $("#timer-condition-every-hour").val(div.timer_every_hour);
-          $("#timer-condition-every-minute").val(div.timer_every_min);
+          $("#timer-condition-every-text").val(div.timer_every);
         }
         $("#timer-condition-at").trigger('change');
         
@@ -531,8 +491,7 @@ $.extend(rules, {
           $("#timer-condition-until-type-other").trigger('change');
         } else if (div.timer_untilduring=='during') {
           $("#timer-condition-during").attr('checked','1');
-          $("#timer-condition-during-hour").val(div.timer_during_hour);
-          $("#timer-condition-during-minute").val(div.timer_during_min);
+          $("#timer-condition-during-text").val(div.timer_during);
         } else
         {
           $("#timer-condition-none").attr('checked','1');
@@ -639,8 +598,7 @@ $.extend(rules, {
   
         div.timer_at_offset=$('#timer-condition-at-offset').val();
   
-        div.timer_every_hour=$('#timer-condition-every-hour').val();
-        div.timer_every_min=$('#timer-condition-every-minute').val();
+        div.timer_every=$('#timer-condition-every-text').val();
   
   
         if ($('#timer-condition-until').attr('checked')) div.timer_untilduring='until';
@@ -681,8 +639,7 @@ $.extend(rules, {
   
         div.timer_until_offset=$('#timer-condition-until-offset').val();
   
-        div.timer_during_hour=$('#timer-condition-during-hour').val();
-        div.timer_during_min=$('#timer-condition-during-minute').val();
+        div.timer_during=$('#timer-condition-during-text').val();
   
         div.timer_trigger=($('#tab-rules-timer-condition-trigger').attr('checked')!='');
         html = '';
@@ -773,10 +730,8 @@ $.extend(rules, {
             if (condition[0].timer_at_offset!='') at.attr('offset',condition[0].timer_at_offset);
           }
         } else {
-          var every=$('<every>');
+          var every=$('<every>' + condition[0].timer_every + '</every>');
           xml.append(every);
-          every.attr('hour',condition[0].timer_every_hour);
-          every.attr('min',condition[0].timer_every_min);
         }
 
 
@@ -814,10 +769,8 @@ $.extend(rules, {
             if (condition[0].timer_until_offset!='') until.attr('offset',condition[0].timer_until_offset);
           }
         } else if (condition[0].timer_untilduring=='during') {
-          var during=$('<during>');
+          var during=$('<during>' + condition[0].timer_during + '</during>');
           xml.append(during);
-          during.attr('hour',condition[0].timer_during_hour);
-          during.attr('min',condition[0].timer_during_min);
         }
 
         break;
@@ -915,12 +868,12 @@ $.extend(rules, {
                 $("#timer-condition-at-constanttime").trigger('change');
                 $("#timer-condition-at-constantdate").trigger('change');
                 $("#timer-condition-at-type-other").trigger('change');
-                $('input[id^="timer-condition-every-"]').attr('disabled','1');
+                $("#timer-condition-every-text").attr('disabled','1');
               } else
               {
                 $('input[id^="timer-condition-at-"]').attr('disabled','1');
                 $('select[id^="timer-condition-at-"]').attr('disabled','1');
-                $('input[id^="timer-condition-every-"]').removeAttr('disabled');
+                $("#timer-condition-every-text").removeAttr('disabled');
               }
             });
             $("input[name='timer-condition-atevery']").trigger('change');
@@ -984,15 +937,15 @@ $.extend(rules, {
                 $("#timer-condition-until-constanttime").trigger('change');
                 $("#timer-condition-until-constantdate").trigger('change');
                 $("#timer-condition-until-type-other").trigger('change');
-                $('input[id^="timer-condition-during-"]').attr('disabled','1');
+                $("#timer-condition-during-text").attr('disabled','1');
               } else if ($('#timer-condition-during').attr('checked')) 
               {
                 $('input[id^="timer-condition-until-"]').attr('disabled','1');
                 $('select[id^="timer-condition-until-"]').attr('disabled','1');
-                $('input[id^="timer-condition-during-"]').removeAttr('disabled');
+                $("#timer-condition-during-text").removeAttr('disabled');
               } else
               {
-                $('input[id^="timer-condition-during-"]').attr('disabled','1');
+                $("#timer-condition-during-text").attr('disabled','1');
                 $('input[id^="timer-condition-until-"]').attr('disabled','1');
                 $('select[id^="timer-condition-until-"]').attr('disabled','1');
               }

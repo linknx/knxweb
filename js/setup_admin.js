@@ -1,3 +1,4 @@
+/*
 var admin = {
 
 	refreshData: function() {
@@ -36,44 +37,23 @@ var admin = {
 		}	
 	}
 }
+*/
 function saveConfigKnxWeb()
 {
-  var string = '<?xml version="1.0" encoding="utf-8" standalone="no"?><param>';
+  var string = '<?xml version="1.0" encoding="utf-8" standalone="no"?>\n<param>\n';
   for (var key in tab_config) 
   {
-    string = string+'<'+key+'>'+tab_config[key]+'</'+key+'>';
+    if ($("#config-"+key+"-id")[0].type == "checkbox" ) {
+      if ($("#config-"+key+"-id").attr("checked")) tab_config[key] = "true"; else tab_config[key] = "false";
+    } else { 
+      tab_config[key] = $("#config-"+key+"-id").val();
+    }
+    string = string+'  <'+key+'>'+tab_config[key]+'</'+key+'>\n';
   }
   string = string+'</param>';
   
-  //queryKnxweb(action, type, message, async)
   if (queryKnxweb('saveconfig', 'xml', string, false)) 
-    messageBox(tr("Design saved successfully")+" il faut actualiser la page web de KnxWeb pour en tenir compte imédiatement", 'Info', 'info');
-
-
-	//var url = 'design_technique.php?action=saveconfig&dir=toto';
-/*
-	var url = 'design_technique.php?action=saveconfig';
-	req = jQuery.ajax({ type: 'post', url: url, data: string, processData: false, dataType: 'xml' ,
-		success: function(responseXML, status) {
-			var xmlResponse = responseXML.documentElement;
-			if (xmlResponse.getAttribute('status') == 'success') {
-				//UIController.setNotification(tr("Design saved successfully"));
-				//alert(tr("Design saved successfully")+" il faut actualiser la page web de KnxWeb pour en tenir compte imédiatement");
-				messageBox(tr("Design saved successfully")+" il faut actualiser la page web de KnxWeb pour en tenir compte imédiatement", 'Info', 'info');
-			}
-			else {
-				//UIController.setNotification(tr("Error while saving design: ")+xmlResponse.textContent);
-				//alert(tr("Error while saving design: ")+xmlResponse.textContent);
-				messageBox(tr("Error while saving design: ")+xmlResponse.textContent, 'Erreur', 'alert');
-			}
-		},
-		error: function (XMLHttpRequest, textStatus, errorThrown) {
-			//UIController.setNotification(tr("Error while saving design: ")+textStatus);
-			//alert(tr("Error while saving design: ")+textStatus);
-			messageBox(tr("Error while saving design: ")+textStatus, 'Erreur', 'alert');
-		}
-	});
-*/
+    messageBox("Config saved successfully reload the web page for take effect in KnxWeb immediately", 'Info', 'info');
 
 };
 
@@ -87,7 +67,6 @@ function readFile(pathlogfile, nbenreg, dest)
   				$("#"+dest).html(responseHTML);
   			},
   			error: function (XMLHttpRequest, textStatus, errorThrown) {
-  				//alert(tr("Unable to load: ")+textStatus);
   				messageBox(tr("Error Unable to load: ")+textStatus, 'Erreur', 'alert');
   			}
   	});

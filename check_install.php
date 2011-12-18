@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once("include/linknx.php");
 
@@ -126,10 +126,21 @@ if (isset($_GET["ajax"])) {
 			echo "<br />";
 			try {
 				$linknx=new Linknx($_GET['linknx_host'], $_GET['linknx_port']);
+        $info=$linknx->getServices();
+        if ($info!==false) {
+          $_SESSION['loglinknx']=$info['persistence']['type'];
+        }
 				$info=$linknx->getInfo();
 				if ($info!==false) {
 					$_SESSION['linknx_host']=$_GET['linknx_host'];
 					$_SESSION['linknx_port']=$_GET['linknx_port'];
+					$_SESSION['version']=$info["version"];
+					$_SESSION['haveSMS']=($info["haveSMS"]==1)?"true":"false";
+					$_SESSION['haveEmail']=($info["haveEmail"]==1)?"true":"false";
+					$_SESSION['haveLua']=($info["haveLua"]==1)?"true":"false";
+					$_SESSION['haveLog4cpp']=($info["haveLog4cpp"]==1)?"true":"false";
+					$_SESSION['haveMysql']=($info["haveMysql"]==1)?"true":"false";
+					
 ?>
 				Found Linknx version : <?=$info["version"]?><br />
 				<br />
@@ -175,9 +186,15 @@ if (isset($_GET["ajax"])) {
   <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu \"Mobile\" -->
   <eibd>-d -D -S -T -i ipt:192.168.1.10:3671</eibd> <!-- paramètres d'appel de eibd exemple : ft12:/dev/ttyS0 -->
   <linknx>-d -w --config=/var/lib/linknx/linknx.xml</linknx> <!-- paramètres d'appel de linknx -->
-  <loglinknx>file</loglinknx> <!-- type de log de linknx file/mysql/null -->
+  <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx> <!-- type de log de linknx file/mysql/null -->
   <imageDir>pictures/</imageDir> <!-- chemin d'accès aux images -->
   <useJavaIfAvailable>false</useJavaIfAvailable> <!-- Use java applet to update objects value on display design if Java is installed on client -->
+  <versionLinknx>" . $_SESSION['version'] . "</versionLinknx> <!-- linknx peux gérer les SMS -->
+  <haveSMS>" . $_SESSION['haveSMS'] . "</haveSMS> <!-- linknx peux gérer les SMS -->
+  <haveEmail>" . $_SESSION['haveEmail'] . "</haveEmail> <!-- linknx peux gérer les Email -->
+  <haveLua>" . $_SESSION['haveLua'] . "</haveLua> <!-- linknx peux gérer les LUA -->
+  <haveLog4cpp>" . $_SESSION['haveLog4cpp'] . "</haveLog4cpp> <!-- linknx est compilé avec Log4cpp -->
+  <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql> <!-- linknx est compilé avec Mysql -->
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
 		if ($res!==false)

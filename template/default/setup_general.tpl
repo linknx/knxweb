@@ -37,7 +37,7 @@
 					<option value="unix">unix</option>
 				</select>
 				: <input type="text" class="required" name="setupgeneral-xmlserver-port" id="setupgeneral-xmlserver-port">
-				<span style="color: #F00;">(si vous modifiez cette valeur, vous ne pourrez plus accéder à linknx via knxweb sans une adaptation de votre configuration)</span>
+				<span style="color: #F00;">(If you change this value, you can not access linknx with knxweb without adapting your configuration in the Admin section)</span>
 			</td>
 		</tr>
 		<tr>

@@ -1,6 +1,5 @@
 <?php
 
-
 //*****************************************************************************************************
 //										 Fonction Reseau Configuration								*
 //*****************************************************************************************************
@@ -57,113 +56,21 @@ if (isset($_POST['saveNetworkConfig'])){
 	setNetworkConfig($config);
 }
 
-
-//*****************************************************************************************************
-//										 Fonction EIB Configuration									 *
-//*****************************************************************************************************
-/*
-function getEibConfig()
-{
-	global $Fconfeibd;
-	$config=array();
-	if (file_exists($Fconfeibd)){
-		$config['Eibsetting']= true;
-		$s=file_get_contents($Fconfeibd);
-		if (!preg_match("~.*INTERFACE=['](.*?):(.*)[']~",$s,$r)) preg_match("~.*INTERFACE=['](usb)[']~",$s,$r);
-		if ($r[1]=='ft12'){
-			$config['type']=0;
-			$config['eib_com']=$r[2];
-		}
-		elseif ($r[1]=='ipt'){
-			$config['type']=1;
-			$config['ip']=$r[2];
-		}
-		elseif ($r[1]=='usb'){
-			$config['type']=2;
-		}
-	}
-	else{
-		$config['Eibsetting']= false;
-	}
-	return $config;
-}
-
-
-function setEibConfig($config)
-{
-	global $Fconfeibd;
-	if ($config['type']==0) $s="INTERFACE='ft12:".$config['com']."'\n";
-	elseif ($config['type']==1) $s="INTERFACE='ipt:".$config['ip']."'\n";
-	elseif ($config['type']==2) $s="INTERFACE='usb'\n";
-	file_put_contents($Fconfeibd,$s);
-	`sudo /usr/local/knxweb/restarteibservices.sh`;
-}
-
-if (isset($_POST['saveEIBConfig']))
-{
-	$config=array();
-	$config['type']=$_POST['eib_type'];
-	$config['com']=$_POST['eib_com'];
-	$config['ip']=$_POST['eib_ip'];
-	setEibConfig($config);
-}
-*/
-
-/* géré par le menu configuration
-if (isset($_POST['savelinknxConfig']))
-{
-	file_put_contents($Fxmllinknx,stripslashes($_POST['linknx-config']));
-	`sudo /usr/local/knxweb/restarteibservices.sh`;
-}
-*/
-
-
-if (isset($_POST['saveKnxWebConfig']))
-{
-	//file_put_contents($Fxmllinknx,stripslashes($_POST['linknx-config']));
-}
-
-
 if (isset($_GET['restarteib']))
 {
 	`sudo /usr/local/knxweb/restarteibservices.sh`;
 }
 
 $network=getNetworkConfig();
-//$eib=getEibConfig();
 
-//$serials=array();
-//for($i=0;$i<8;$i++) $serials["/dev/ttyS$i"]="/dev/ttyS$i (COM".($i+1).")";
-
-//ant $linknxLog=str_replace("\n","<br />",`tail -n 40 /var/lib/linknx/linknx.log`);
 $linknxLog=str_replace("\n","<br />",`tail -n 20 $log_Linknx`);
 
-//ant $eibd_running=`ps ax | grep /usr/sbin/eibd | grep -v grep`;
 $eibd_running=`ps ax | grep eibd | grep -v grep`;
 $eibd_running_param=explode("eibd ",$eibd_running);
 $eibd_running_param=$eibd_running_param[1];
 
-/*
-$config=array();
-$config['Eibsetting']= true;
-//$s=file_get_contents($Fconfeibd);
-$s=$eibd_running_param;
-if (!preg_match("~.*INTERFACE=['](.*?):(.*)[']~",$s,$r)) preg_match("~.*INTERFACE=['](usb)[']~",$s,$r);
-if ($r[1]=='ft12'){
-	$config['type']=0;
-	$config['eib_com']=$r[2];
-}elseif ($r[1]=='ipt'){
-	$config['type']=1;
-	$config['ip']=$r[2];
-}elseif ($r[1]=='usb'){
-	$config['type']=2;
-}
-$eib=$config;
-*/
-
 $linknx_running=`ps aux | grep linknx | grep -v grep`;
 $linknx_running_param=explode("linknx ",$linknx_running);
 $linknx_running_param=$linknx_running_param[1];
-
 
 ?>

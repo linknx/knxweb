@@ -18,6 +18,7 @@ if (isset($_GET['typelog']))
   $_config['loglinknx'] = $_GET['typelog'];
 
 
+
 if ($_config['loglinknx'] == "mysql") {
   //nom du serveur serveur:
   $serveur       = "localhost";
@@ -79,7 +80,9 @@ if ($_config['loglinknx'] == "mysql") {
   print($result);
   
 } else if ($_config['loglinknx'] == "file") {
-  $log_Linknx = $_GET['pathlogfile'];
+  //$log_Linknx = $_GET['pathlogfile'];
+  $pathlogfile = preg_split('/_type_/', $_GET['pathlogfile']); // $_GET['pathlogfile'] = pathlogfile . '_type_' . type exemple : /var/lib/linknx/log/lampe_cuisine.log_type_1.001 
+  $log_Linknx = $pathlogfile[0];
   if (isset($_GET['nbenreg']))
     $log_nbenreg = $_GET['nbenreg'];
   else
