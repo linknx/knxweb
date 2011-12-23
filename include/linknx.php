@@ -79,14 +79,13 @@ class Linknx {
 		$info=array();
 		if ($this->query("<read><config><services></services></config></read>", $xml)) 
 		{
-      $info['smsgateway']=$xml->config->services->smsgateway->attributes();
-      $info['ioports']=$xml->config->services->ioports->attributes();
-      $info['knxconnection']=$xml->config->services->knxconnection->attributes();
-      $info['xmlserver']=$xml->config->services->xmlserver->attributes();
-      $info['persistence']=$xml->config->services->persistence->attributes();
-      $info['location']=$xml->config->services->location->attributes();
-      //$info['exceptiondays']=(string)$xml->config->services->exceptiondays->date; // TODO a gÃ©rer dans une fonction Ã  part ...
-      $info['knxconnection']=$xml->config->services->smsgateway->attributes();
+      foreach($xml->config->services->smsgateway->attributes() as $var => $value) { $info['smsgateway'][$var] = (string)$value; }
+      //$info['ioports']=$xml->config->services->ioports->attributes(); // TODO a gérer dans une fonction à part ...
+      foreach($xml->config->services->knxconnection->attributes() as $var => $value) { $info['knxconnection'][$var] = (string)$value; }
+      foreach($xml->config->services->xmlserver->attributes() as $var => $value) { $info['xmlserver'][$var] = (string)$value; }
+      foreach($xml->config->services->persistence->attributes() as $var => $value) { $info['persistence'][$var] = (string)$value; }
+      foreach($xml->config->services->location->attributes() as $var => $value) { $info['location'][$var] = (string)$value; }
+      //$info['exceptiondays']=(string)$xml->config->services->exceptiondays->date; // TODO a gérer dans une fonction à part ...
 		} else return false;
 		return $info;
 	}
