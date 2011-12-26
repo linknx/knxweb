@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>camera</name>
+	<label>Camera</label>
+	<description>IP Camera stream</description>
+	<version>1.0</version>
+	<category>Basic widgets</category>
+	<settings>
+		<setting id="url" label="URL" type="text" />
+	</settings>
+</widget>
