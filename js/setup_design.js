@@ -222,12 +222,14 @@ var design = {
 		if (design.currentZone==null) return false;
 
 		callbackInput=$('<input>');
+		callbackInput.val($('zone[id=' + design.currentZone + ']', design.config).attr('img'));
 		
 		openImagesManager(callbackInput);
 		
 		callbackInput.change(function() {
 			$('zone[id=' + design.currentZone + ']', design.config).attr('img', $(this).val());
 			design.drawZoneBackground();
+			$("#tab-design-zone-background").val($(this).val());
 		});
 	},
 
@@ -236,7 +238,7 @@ var design = {
 		var bg=$('zone[id=' + design.currentZone + ']', design.config).attr('img');
 		if (bg != null && bg != "")
 		{
-			$('#bgImage').attr('src', tab_config.imageDir + bg);
+			$('#bgImage').attr('src', getImageUrl(bg));
 			$('#bgImage').show();
 		} else $('#bgImage').hide();
 		
@@ -359,7 +361,7 @@ var design = {
 				properties.push(p);
 			});
 		}
-		
+
 		$.each(properties, function() {
 	
 			if (this.type=="comment")
@@ -411,7 +413,7 @@ var design = {
 		    // Picture setting
 		    if (this.type=="picture") 
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + o.conf.getAttribute(this.id) + '">'));
+					var input=($('<input type="text" name="' + this.id + '" value="' + value + '">'));
 					input.click(function() {
 						openImagesManager($(this));
 					});			

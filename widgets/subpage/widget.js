@@ -36,8 +36,18 @@ CSubPage.prototype.refreshHTML = function() {
 	div.width(subpage.attr('width'));
 	div.height(subpage.attr('height'));
 	if ((subpage.attr('bgcolor')!=null)&&(subpage.attr('bgcolor')!="")) div.css("background-color", subpage.attr('bgcolor')); else div.css("background-color", "transparent");
-	
+
 	var page=this;
+	
+	var bgimage=subpage.attr('bgimage');
+	if ((bgimage!=null)&&(bgimage!=""))
+	{
+		if (bgimage.substr(0,1)=="_")
+			div.css("background-image", "url(" + getImageUrl(page.conf.getAttribute(bgimage.substr(1,bgimage.length))) + ")"); 
+		else
+			div.css("background-image", "url(" + getImageUrl(bgimage) + ")"); 
+	} else div.css("background-image", "none");
+	
 	subpage.children('controls').children('control').each(function() {
 		var obj = null;
 		var type = this.getAttribute('type');

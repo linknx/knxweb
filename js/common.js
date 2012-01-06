@@ -311,6 +311,18 @@ function lz(i) {
 	if (i<10) return '0'+i; else return i;
 }
 
+function getImageUrl(image)
+{
+	if ((image!=null) && (image!=""))
+	{
+		if (image.match(/^http:\/\//))
+			return image;
+		else
+			return tab_config.imageDir + image;
+	} else return "";
+}
+
+
 $.fn.widgetMovable = function(method) {
 	
 	function select(widget) {
@@ -405,5 +417,5 @@ $.fn.widgetMovable = function(method) {
 	} else {
 		$.error( 'Method ' +  method + ' does not exists.' );
 	}    
-  
+
 };

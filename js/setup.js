@@ -19,6 +19,17 @@ jQuery(document).ready(function(){
 		modal: true,
 		buttons: [
 	    {
+	        text: "Set no image",
+	        click: function() { 
+						if (imagesInput!=null)
+						{
+	        		imagesInput.val('');
+							imagesInput.trigger('change');
+						}
+						$(this).dialog("close");
+	        }
+	    },
+	    {
 	        text: "Create folder",
 	        click: function() { createImageFolder(); }
 	    },
@@ -27,6 +38,16 @@ jQuery(document).ready(function(){
 	        click: function() { $(this).dialog("close"); }
 	    }
 		]
+	});
+	
+	$("#images-manager-dialog-url-set").button();
+	$("#images-manager-dialog-url-set").click(function() {
+		if (imagesInput!=null)
+		{
+			imagesInput.val($("#images-manager-dialog-url").val());
+			imagesInput.trigger('change');
+		}
+		$("#images-manager-dialog").dialog("close");
 	});
 
 	// Create colorpicker dialog
@@ -252,6 +273,11 @@ function openImagesManager(input) {
 	if (typeof(input)!='undefined') imagesInput=input;
 
 	$("#images-manager-dialog").dialog("open");
+	
+	if (imagesInput.val().match(/^http:\/\//)) 
+		$("#images-manager-dialog-url").val(imagesInput.val());
+	else
+		$("#images-manager-dialog-url").val('');
 
 	$("#images-manager-dialog .info").html("Current path : <strong>" + ((imagesDir=="")?"root":imagesDir.replace(/\//g,' / ')) + "</strong>" );
 

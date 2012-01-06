@@ -24,7 +24,6 @@ var design_view = {
 		var obj = null;
 		var type = conf.getAttribute('type');
 		var cls = UIController.widgetList[type];
-
 		if (cls)
 		{
 			obj = new cls(conf);
@@ -74,7 +73,7 @@ var design_view = {
 				design_view.addWidget(this, e);
 			});
 
-			e.css('background-image', 'url(' + tab_config.imageDir + this.getAttribute('img') + ')');
+			e.css('background-image', 'url(' + getImageUrl(this.getAttribute('img')) + ')');
 	
 			container.append(e);
 		});
@@ -156,6 +155,6 @@ jQuery(function($) {
 			EIBCommunicator.updateAll();
 	  } else EIBCommunicator.periodicUpdate();
 	} else EIBCommunicator.periodicUpdate();
-		
+
 	loading.hide();
 });

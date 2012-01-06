@@ -14,8 +14,8 @@
 	require_once('lang/lang.php');
 
   // Convert to a Javascript array
-	$json_config = json_encode($_config);
-	tpl()->assign_by_ref("json_config",$json_config);
+//	$json_config = json_encode($_config);
+//	tpl()->assign_by_ref("json_config",$json_config);
 	//echo '<script type="text/javascript" >var tab_config = '.$json_config.';</script>';
 
 	$_objectTypes = array(

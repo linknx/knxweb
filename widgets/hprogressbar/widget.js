@@ -13,7 +13,7 @@ CHProgressBar.prototype = new CWidget();
 
 // Refresh HTML from config
 CHProgressBar.prototype.refreshHTML = function() {
-//	$(".image", this.div).attr('src' , tab_config.imageDir + this.conf.getAttribute("picture") );
+//	$(".image", this.div).attr('src' , getImageUrl(this.conf.getAttribute("picture")) );
 
 	if (this.conf.getAttribute("border")=='true') 
 		this.div.css('border', "1px solid " + this.conf.getAttribute("border-color")); 
@@ -22,7 +22,7 @@ CHProgressBar.prototype.refreshHTML = function() {
 		
 	if (this.conf.getAttribute("progress-picture")!="")
 	{
-		$('.bar', this.div).css('background-image', 'url(' + tab_config.imageDir + this.conf.getAttribute("progress-picture") + ')');
+		$('.bar', this.div).css('background-image', 'url(' + getImageUrl(this.conf.getAttribute("progress-picture")) + ')');
 		$('.bar', this.div).css('background-color', '');
 	} else 
 	{

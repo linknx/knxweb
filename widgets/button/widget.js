@@ -38,7 +38,7 @@ CButton.prototype = new CWidget();
 
 // Refresh HTML from config
 CButton.prototype.refreshHTML = function() {
-	$(".buttonContent", this.div).css('background-image', 'url(' + tab_config.imageDir + this.conf.getAttribute("picture") + ')');
+	$(".buttonContent", this.div).css('background-image', 'url(' + getImageUrl(this.conf.getAttribute("picture")) + ')');
 	
 	$(".buttonContent", this.div).text(this.conf.getAttribute("text"));
 	if (this.conf.getAttribute("size")!="") $('.buttonContent', this.div).css('font-size', this.conf.getAttribute("size") + "px"); else $('.buttonContent', this.div).css('size', '');
@@ -77,7 +77,7 @@ CButton.prototype.updateObject = function(obj,value) {
 		}
 
 		var picture=((this.active)?this.conf.getAttribute("picture-active"):this.conf.getAttribute("picture"));
-		if (picture!="") $(".buttonContent", this.div).css('background-image','url(' + tab_config.imageDir + picture + ')');
+		if (picture!="") $(".buttonContent", this.div).css('background-image','url(' + getImageUrl(picture) + ')');
 			
 	}
 };

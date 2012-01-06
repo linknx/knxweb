@@ -426,6 +426,11 @@ table.form td {
   margin: 0 auto;
 }
 
+#images-manager-dialog .url {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
 #images-manager-dialog .info {
 	padding-top: 10px;
 }
@@ -460,6 +465,7 @@ div.widget {
 	position: absolute;
 /*	width: 30px;
 	height: 30px; */
+	background-repeat: no-repeat;
 } 
 
 div.subpage {

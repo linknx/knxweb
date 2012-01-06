@@ -10,15 +10,17 @@ CWidget.prototype = {
 	getListeningObject: function() {
 		var a=[];
 		
-		var feedbacks = eval( "_widgets." + this.conf.getAttribute("type") + ".feedbacks" );
+		var widget = eval( "_widgets." + this.conf.getAttribute("type"));
 		
 		var w=this;
-		$.each(feedbacks, function(index, value) {
-			var o=w.conf.getAttribute(value);
-			if ((o!="") && (o!=null)) a.push(o);
-		});
+		if (widget.feedbacks!=undefined)
+		{
+			$.each(widget.feedbacks, function(index, value) {
+				var o=w.conf.getAttribute(value);
+				if ((o!="") && (o!=null)) a.push(o);
+			});
+		}
 		return a;
-		
 	},
 	
 	// Called by eibcommunicator when a feedback object value has changed

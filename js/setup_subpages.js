@@ -111,6 +111,43 @@ var subpages = {
 			$("#tab-subpages-width").val(subpage[0].getAttribute('width'));
 			$("#tab-subpages-height").val(subpage[0].getAttribute('height'));
 			$("#tab-subpages-color").val(subpage[0].getAttribute('bgcolor'));
+
+			var value=subpage[0].getAttribute('bgimage');
+			if (value!=null)
+			{
+		   	var isSubPageParameter=((value.substring(0,1)=="_")?true:false);
+		   	var subPageParameterValue=value.substring(1,value.length);
+				
+		   	var select=$('#tab-subpages-background-list');
+					$('subpage[name=' + subpages.currentSubPage + '] parameters parameter', subpages.config).each(function() {
+						if (this.getAttribute('type')=='picture') {
+			    		var option=($('<option value="' + this.getAttribute('id') + '">' + this.getAttribute('label') + '</option>'));
+			    		if (this.getAttribute('id')==subPageParameterValue) option.attr('selected','1');
+			    		select.append(option);
+			    	}
+				});
+						
+				if (isSubPageParameter) 
+				{
+					$('#tab-subpages-background-toggle').attr('checked', true);
+					$('#tab-subpages-background').css("display","none");
+					select.css("display","block");
+					$('#widgetsubpagediv').css("background-image", "none");
+				} else {
+					$('#tab-subpages-background-toggle').attr('checked', false);
+					$("#tab-subpages-background").val(value);
+					select.css("display","none");
+					$('#tab-subpages-background').css("display","block");
+
+					$('#widgetsubpagediv').css("background-image", "url(" + getImageUrl(value) + ")");
+				}
+			} else {
+				$("#tab-subpages-background").val('');
+				$('#tab-subpages-background-list').css("display","none");
+				$('#tab-subpages-background').css("display","block");
+			}
+
+
 	
 			subpage.children('controls').children('control').each(function() {
 				subpages.addWidget(this);
@@ -178,6 +215,7 @@ var subpages = {
 		$('#tab-subpages-properties div:first-child').html('Sub-page properties');
 		$('#tab-subpages-widget-buttons').hide();
 		$("#tab-subpages-widget-properties tbody").empty();
+
 		$('#tab-subpages-subpage-properties').show();
 	},
 
@@ -242,7 +280,7 @@ var subpages = {
 	    	var subPageParameterValue=value.substring(1,value.length);
 
 		    // Add checkbox to use a sub-page parameter
-		    if ((this.type=="text") || (this.type=="object"))
+		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture"))
 		    {
 			    var input=$('<input type="checkbox">');
 			    input.get(0).paramId=this.id;
@@ -266,7 +304,7 @@ var subpages = {
 				// Add parameter				
 		    var td=$('<td>');
 	    
-		    if ((this.type=="text") || (this.type=="object")) {
+		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture")) {
 					// Select for selecting sub-page parameter
 		    	var select=$('<select>');
 		    	if (!isSubPageParameter) select.css('display','none');
@@ -281,7 +319,6 @@ var subpages = {
 					});
 		    	td.append(select);
 		    }
-	    	
 
 		    // Text setting
 		    if (this.type=="text") 
@@ -325,10 +362,11 @@ var subpages = {
 		    // Picture setting
 		    if (this.type=="picture") 
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + value + '">'));
+					var input=($('<input type="text" name="' + this.id + '" value="' + ((!isSubPageParameter)?o.conf.getAttribute(this.id):"") + '">'));
 					input.click(function() {
 						openImagesManager($(this));
 					});			
+	    		if (isSubPageParameter) input.css('display','none');
 		    	td.append(input);
 		  	}
 
@@ -445,6 +483,7 @@ var subpages = {
 		var select=$("<select class='type'>");
 		select.append($("<option value='text'>Text</option>"));
 		select.append($("<option value='object'>Object</option>"));
+		select.append($("<option value='picture'>Picture</option>"));
 		select.val(type);
 		td.append(select);
 		tr.append(td);
@@ -587,11 +626,27 @@ jQuery(function($) {
 	$("#tab-subpages-color").click(function() {
 		openColorPicker($(this));
 	});			
-
+	
 	$("#tab-subpages-color").change(function() {
 		var subpage = $('subpage[name=' + subpages.currentSubPage + ']', subpages.config)[0];
 		subpage.setAttribute('bgcolor', $(this).val());
 		$('#widgetsubpagediv').css("background-color", $(this).val());
+	});
+
+	$("#tab-subpages-background").click(function() {
+		openImagesManager($(this));
+	});
+
+	$("#tab-subpages-background").change(function() {
+		var subpage = $('subpage[name=' + subpages.currentSubPage + ']', subpages.config)[0];
+		subpage.setAttribute('bgimage', $(this).val());
+		$('#widgetsubpagediv').css("background-image", "url(" + getImageUrl($(this).val()) + ")");
+	});
+
+	$("#tab-subpages-background-list").change(function() {
+		var subpage = $('subpage[name=' + subpages.currentSubPage + ']', subpages.config)[0];
+		subpage.setAttribute('bgimage', "_" + $(this).val());
+		$('#widgetsubpagediv').css("background-image", "none");
 	});
 	
 	$("#button-save-subpage").click(function() {
@@ -609,6 +664,21 @@ jQuery(function($) {
 	$("#button-subpage-parameters").click(function() {
 		$('#tab-subpages-parameters').dialog('open');
 	});
+
+	
+	$("#tab-subpages-background-toggle").click(function() {
+  	if ($(this).is(':checked'))
+  	{
+			$('#tab-subpages-background').css("display","none");
+			$('#tab-subpages-background-list').css("display","block");
+			$('#tab-subpages-background-list').trigger('change');
+  	} else
+		{
+			$('#tab-subpages-background-list').css("display","none");
+			$('#tab-subpages-background').css("display","block");
+			$('#tab-subpages-background').trigger('change');
+		}
+  });
 
 	subpages.load();
 	subpages.draw($('#tab-subpages-list').val());

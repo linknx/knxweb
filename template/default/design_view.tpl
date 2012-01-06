@@ -10,7 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="{$css}" />
 		{/foreach}
 		<script type="text/javascript" >
-		var tab_config = {$json_config};
+		var tab_config = {$_config|json_encode};
 		var _widgets = {$widgets|json_encode};
 		</script>
 		{foreach from=$jsList item=js}
@@ -18,6 +18,13 @@
 		{/foreach}
 </head>
 <body>
+
+{if $_config.useJavaIfAvailable=='true'}
+<applet code="org.knxweb.objectupdater.objectUpdater.class" archive="objectUpdater.jar" width="1" height="1">
+    <param name="linknxHost" value="{$_config.linknx_host}">
+    <param name="linknxPort" value="{$_config.linknx_port}">
+</applet>
+{/if}
 
 <div id="widgetsTemplate" style="display: none;">
 

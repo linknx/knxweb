@@ -10,7 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="{$css}" />
 		{/foreach}
 		<script type="text/javascript" >
-		var tab_config = {$json_config};
+		var tab_config = {$_config|json_encode};
 		var _widgets = {$widgets|json_encode};
 		</script>
 		{foreach from=$jsList item=js}
@@ -35,6 +35,10 @@
 </div>
 
 <div id="images-manager-dialog">
+	<div class="url">
+		Use external URL : <input name="url" id="images-manager-dialog-url" type="text" size="50">
+		<input type="button" id="images-manager-dialog-url-set" value="Set" onclick=""> (ex.: http://www.abc.com/123.jpg)
+	</div>
 	<div class="upload">
 		Send a new file : <input name="file" id="images-manager-dialog-file" type="file">
 	</div>
@@ -97,7 +101,7 @@
 				<div class="subItem" id="button-refresh-event" onclick="events.loadEventsStatusList();"><img src="images/refresh.gif" />Reload events</div>
 			</div>
 						
-			<h3 tab_id="designedit" tab_label="Edition Design" tab_url="setup_design.php"><a href="#"><img src="images/setup.png"> Edition Design</a></h3>
+			<h3 tab_id="designedit" tab_label="Edit design" tab_url="setup_design.php"><a href="#"><img src="images/setup.png"> Edit design</a></h3>
 			<div>
         <div class="subItem" id="button-add-design"><img src="images/add.png" />New design</div>
         <div class="subItem" id="button-add-new-zone"><img src="images/add.png" />New zone</div>

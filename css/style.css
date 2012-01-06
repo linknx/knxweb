@@ -20,6 +20,7 @@ body {
 
 #zoneContainer > div {
 	position: relative;
+	background-repeat: no-repeat;
 }
 
 #zoneContainer li {
@@ -149,6 +150,7 @@ div.notification {
 div.widget {
 	display: none;
 	position: absolute;
+	background-repeat: no-repeat;
 }
 
 tr.editWidget {
