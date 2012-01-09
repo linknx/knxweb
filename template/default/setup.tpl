@@ -4,6 +4,7 @@
 		
 		<meta http-equiv="pragma" content="no-cache" />
 		<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
+		<link rel="shortcut icon" type="image/png" href="favicon.png" />
 		
 		<title>{$_config.title}</title>
 		{foreach from=$cssList item=css}
@@ -109,7 +110,7 @@
 
         <div class="subItem"><img src="images/add.png" />
         
-        	<select onchange="design.newWidget($(this).val()); $(this).val('')">
+        	<select onchange="design.newWidget($(this).val()); $(this).val('')" style="width:145px;height: 16px;">
 						<option value="">Insert widget</option>
 						{foreach from=$widgetsCategorized key=cat item=widgetsArray}
 							<optgroup label="{$cat}">
@@ -133,7 +134,7 @@
 
         <div class="subItem"><img src="images/add.png" />
         
-        	<select onchange="subpages.newWidget($(this).val()); $(this).val('')">
+        	<select onchange="subpages.newWidget($(this).val()); $(this).val('')" style="width:145px;height: 16px;">
 						<option value="">Insert widget</option>
 						{foreach from=$widgetsCategorized key=cat item=widgetsArray}
 							<optgroup label="{$cat}">

@@ -123,6 +123,9 @@
     #event-action-dialog-select {
       margin: 5px;
     }
+    #tab-event-properties:hover {
+      min-width: 750px;
+    }
 
   </style>
 
@@ -161,7 +164,7 @@
               		<tbody>
               		  <tr><td>
                       <div class="ui-state-active ui-corner-top header">Timer</div>
-                      <div id="tab-events-event-timer-dialog" style="width: 750px;">
+                      <div id="tab-events-event-timer-dialog">
                       <form id="tab-events-event-timer-form">
                       	<div id="tab-events-event-timer-tabs">
                       		<ul>
