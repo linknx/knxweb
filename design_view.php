@@ -22,6 +22,8 @@ addWidgetsJsCssToTpl(false);
 
 //foreach($widgets as $name => $info) tpl()->display('./widgets/' . $name . '/widget.html');
 
+if (file_exists('widgets/widgets.css')) tpl()->addCss('widgets/widgets.css');
+
 tpl()->display('design_view.tpl');
 
 ?>

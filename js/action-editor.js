@@ -222,12 +222,12 @@ var actionEditor = {
 	    	break;
 	    case 'send-sms':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());
-	    	conf.setAttribute('value', $("[name=value]", dialog).val());
+	    	conf.setAttribute('value', '<![CDATA[' + $("[name=value]", dialog).val() + ']]>');
 	    	break;
 	    case 'send-email':
 	    	conf.setAttribute('to', $("[name=to]", dialog).val());
 	    	conf.setAttribute('subject', $("[name=subject]", dialog).val());
-	    	conf.textContent=$("[name=message]", dialog).val();
+	    	conf.textContent='<![CDATA[' + $("[name=message]", dialog).val() + ']]>';
 	    	break;
 	    case 'dim-up':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());
@@ -236,14 +236,14 @@ var actionEditor = {
 	    	conf.setAttribute('duration', $("[name=duration]", dialog).val());
 	    	break;
 	    case 'shell-cmd':
-	    	conf.setAttribute('cmd', $("[name=cmd]", dialog).val());
+	    	conf.setAttribute('cmd', '<![CDATA[' + $("[name=cmd]", dialog).val() + ']]>');
 	    	break;
 	    case 'ioport-tx':
 	    	conf.setAttribute('ioport', $("[name=ioport]", dialog).val());
 	    	conf.setAttribute('data', $("[name=data]", dialog).val());
 	    	break;
 	    case 'script':
-	    	conf.textContent=$("[name=script]", dialog).val();
+	    	conf.textContent='<![CDATA[' + $("[name=script]", dialog).val() + ']]>';
 	    	break;
 	    case 'formula':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());

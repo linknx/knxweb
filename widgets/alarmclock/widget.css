@@ -1,0 +1,127 @@
+.noTitleStuff .ui-dialog-titlebar {display:none}
+
+.alarmclock {
+  font-family: arial, verdana, sans-serif;
+  display: block;
+  overflow: hidden;
+  font-size: 16px;
+  width: 168px;
+  height: 66px;
+}
+/* Datewheel overlay */
+.dw {
+    padding: 0 10px;
+    position: absolute;
+    top: 5%;
+    left: 0;
+    z-index: 1001;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: #fff;
+    color: #000;
+    border: 1px solid black;
+}
+/* Datewheel value */
+.dwv {
+    padding: 10px 0;
+    border-bottom: 1px solid #000;
+  background: none repeat scroll 0 0 #FFFFFF;
+}
+/* Datewheel button container */
+.dwbc {
+    /*margin-top: 5px;*/
+    padding: 5px 0;
+    text-align: center;
+}
+/* Datewheel button wrapper */
+.dwbw {
+    display: inline-block;
+    width: 50%;
+}
+/* Datewheel button */
+.dwb {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+    margin: 0 2px;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow:0 -1px 1px #000;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.5);
+    -moz-box-shadow:0 1px 3px rgba(0,0,0,0.5);
+    -webkit-box-shadow:0 1px 3px rgba(0,0,0,0.5);
+    color: #fff;
+    background:#000;
+    background:-webkit-gradient(linear,left bottom,left top,color-stop(0.5, #000),color-stop(0.5, #6e6e6e));
+    background:-moz-linear-gradient(#6e6e6e 50%,#000 50%);
+    background:-ms-linear-gradient(#6e6e6e 50%,#000 50%);
+    background:-o-linear-gradient(#6e6e6e 50%,#000 50%);
+}
+
+.trimpair {
+background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bdbdbd),color-stop(1, #f7f7f7));
+    background: -moz-linear-gradient(#f7f7f7,#bdbdbd);
+    background: -ms-linear-gradient(#f7f7f7,#bdbdbd);
+    background: -o-linear-gradient(#f7f7f7,#bdbdbd);
+}
+.trpair {
+}
+.hour {/*width:50px;text-align:center;*/}
+.minute {/*width:50px;text-align:center;*/}
+
+.reveil {
+  padding: 0 15px 0 10px;
+  width: 140px;  
+  height: 64px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-border-radius: 32px;
+  -moz-border-radius: 32px;
+  border-radius: 32px;
+  background: #000;
+  color: #fff;
+  border: 1px solid black;
+  font-size: 40px;
+}
+.reveil div {
+  float: left;
+  font-size: 35px;
+}
+.reveil .icoreveil {
+  width: 50px;
+  height: 50px;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: cover;
+}
+.reveil .date {
+  position: absolute;
+  left: 60px;
+  bottom: 5px;
+  font-size: 13px;
+}
+.reveil .status.active {
+  background-color: green;
+}
+.reveil .status.notactive {
+  background-color: red;
+}
+.reveil .status {
+  position: absolute;
+  height: 6px;
+  width: 30px;
+  bottom: 10px;
+  left: 20px;
+  background-color: white;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}

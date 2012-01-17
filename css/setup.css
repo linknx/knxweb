@@ -691,3 +691,13 @@ div.subpage {
     font-weight: bold;
 }
 /***************** /Admin ********************/
+
+html.knm {
+  -moz-transition: all 5000ms ease-in-out;
+  -o-transition: all 5000ms ease-in-out;
+  -webkit-transition: all 5000ms ease-in-out;
+  transition: all 5000ms ease-in-out;
+  transform:rotate(180deg);
+  -webkit-transform:rotate(180deg);
+  -moz-transform:rotate(180deg);
+}

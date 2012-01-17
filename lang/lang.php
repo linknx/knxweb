@@ -1,7 +1,7 @@
 <?php
-    $lang['fr'] = "Francais";  // default
+    $lang['en'] = "English";  // default
     /*
-    $lang['en'] = "English";
+    $lang['fr'] = "Francais";
     $lang['de'] = "Deutsch";
     $lang['nl'] = "Nederlands";
     $lang['pl'] = "Polski";

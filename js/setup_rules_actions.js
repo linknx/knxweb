@@ -108,7 +108,7 @@ $.extend(rules, {
         div.css("width","140px");
         break;
       case 'script' :
-        div[0].script=action.getAttribute('script');
+        div[0].script=action.textContent;
         break;
       case 'cancel' :
         div[0].cancel_rule=action.getAttribute('rule-id');
@@ -348,7 +348,7 @@ $.extend(rules, {
         $('#tab-rules-ioport-tx-action-var').val(div.ioportvar);
         break;
       case 'script' :
-        $('#tab-rules-script-action-value').val(div.script);
+        $('#tab-rules-script-action-script').val(div.script);
         break;
       case 'cancel' :
         $('#tab-rules-cancel-action-value').val(div.cancel_rule);
@@ -451,7 +451,7 @@ $.extend(rules, {
         html = '<br />'+div.ioport;
         break;
       case 'script' :
-        div.script = $('#tab-rules-script-action-value').val();
+        div.script = $('#tab-rules-script-action-script').val();
         html = '';
         break;
       case 'cancel' :
@@ -528,14 +528,14 @@ $.extend(rules, {
         break;
       case 'send-sms' : // < type="" id="" value="" var="true/false" />
         xml.attr('id',action[0].objid);
-        xml.attr('value',action[0].objvalue);
+        xml.attr('value','<![CDATA[' + action[0].objvalue + ']]>');
         xml.attr('var',action[0].smsvar);
         break;
       case 'send-email' : // <action type="" to="" subject="" var="true/false" >text<action/>
         xml.attr('to',action[0].objto);
         xml.attr('subject',action[0].subject);
         xml.attr('var',action[0].emailvar);
-        xml.text(action[0].objtext);
+        xml.text('<![CDATA[' + action[0].objtext + ']]>');
         break;
       case 'dim-up' : // < type="" id="" start="" stop="" duration="" />
         xml.attr('id',action[0].objid);
@@ -544,12 +544,12 @@ $.extend(rules, {
         xml.attr('duration',action[0].duration);
         break;
       case 'shell-cmd' : // < type="" cmd="" var="true/false" />
-        xml.attr('cmd',action[0].cmd);
+        xml.attr('cmd','<![CDATA[' + action[0].cmd + ']]>');
         xml.attr('var',action[0].cmdvar);
         break;
       case 'ioport-tx' : // < type="" hex="true/false" data="" ioport="" var="true/false" />
         xml.attr('hex',action[0].hex);
-        xml.attr('data',action[0].data);
+        xml.attr('data','<![CDATA[' + action[0].data + ']]>');
         xml.attr('ioport',action[0].ioport);
         xml.attr('var',action[0].ioportvar);
         break;
@@ -560,7 +560,7 @@ $.extend(rules, {
         xml.attr('value',action[0].object_value);
         if (action[0].object_trigger) xml.attr('trigger','true');
         */
-        xml.text(action[0].script);
+        xml.text('<![CDATA[' + action[0].script + ']]>');
         break;
       case 'cancel' : // < type="" rule-id="" />
         xml.attr('rule-id',action[0].rule_id);

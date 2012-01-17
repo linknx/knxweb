@@ -175,7 +175,7 @@ if (isset($_GET["ajax"])) {
   <linknx_host>" . $_SESSION['linknx_host'] . "</linknx_host> <!-- ip du serveur linknx -->
   <linknx_port>" . $_SESSION['linknx_port'] . "</linknx_port> <!-- port connexion avec serveur linknx -->
   <template>default</template> <!-- template utiliser images, css, code html tpl -->
-  <lang>fr</lang> <!-- langue -->
+  <lang>en</lang> <!-- langue -->
   <version>0.9</version> <!-- version de KnxWeb -->
   <title>KnxWeb - Ma maison en un clic</title> <!-- Titre des pages Web -->
   <Path_Image_Background>images/</Path_Image_Background> <!-- emplancement des images de fond d'écran -->

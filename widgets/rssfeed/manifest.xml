@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>rssfeed</name>
+	<label>RssFeed</label>
+	<description>RssFeed</description>
+	<version>1.0</version>
+	<category>Basic widgets</category>
+	<settings>
+		<setting label="RssFeed" type="comment" />
+    <setting id="adress" label="Url RssFeed" type="text" default="http://feeds.reuters.com/reuters/oddlyEnoughNews" />
+    <setting id="nbitem" label="Number of item" type="text" default="10" />
+    <setting id="delay" label="Delay refresh (min)" type="text" default="15" />
+  </settings>
+	<feedbacks></feedbacks>
+</widget>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>ephemeris</name>
+	<label>Ephemeris</label>
+	<description>Ephemeris</description>
+	<version>1.0</version>
+	<category>Basic widgets</category>
+	<settings>
+    <setting label="Setting" type="comment" />
+    <setting id="sunrise-picture" label="Sunrise Picture" type="picture" default="sunrise.png"/>
+    <setting id="sunrise" label="Sunrise" type="list" default="true" >
+			<option key="true" value="True" />
+			<option key="false" value="False" />
+		</setting>
+    <setting id="sunset-picture" label="Sunset Picture" type="picture" default="sunset.png"/>
+    <setting id="sunset" label="Sunset" type="list" default="true" >
+			<option key="true" value="True" />
+			<option key="false" value="False" />
+		</setting>
+    <setting id="noon-picture" label="Noon Picture" type="picture" default="noon.png"/>
+    <setting id="noon" label="Noon" type="list" default="true" >
+			<option key="true" value="True" />
+			<option key="false" value="False" />
+		</setting>
+    <setting id="exception-day" label="Exception-day" type="list" default="true" >
+			<option key="true" value="True" />
+			<option key="false" value="False" />
+		</setting>
+	</settings>
+	<feedbacks/>
+</widget>
