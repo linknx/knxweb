@@ -10,7 +10,7 @@ CText.prototype = new CWidget();
 
 // Refresh HTML from config
 CText.prototype.refreshHTML = function() {
-  $('div:first-child', this.div).addClass(this.conf.getAttribute("class"));
+  $(".text", this.div).addClass(this.conf.getAttribute("class"));
 	$("div:first-child", this.div).text(this.conf.getAttribute("text"));
 	$("div:first-child", this.div).attr('style',this.conf.getAttribute("style"));
 	if (this.conf.getAttribute("size")!="") $('div:first-child', this.div).css('font-size', this.conf.getAttribute("size") + "px"); else $('div:first-child', this.div).css('size', '');

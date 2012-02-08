@@ -88,14 +88,15 @@ function isObjectUsed(id)
 			if ((this.getAttribute('type')=='object')&&(this.getAttribute('id')==id))
 			{
 				used=true;
-				return false; // ?? à tester ...
+				//return false; // ?? à tester ...
+				return used;
 			}
 		});
 		$('action', responseXML).each(function() {
 			if ((this.getAttribute('type')=='set-value')&&(this.getAttribute('id')==id))
 			{
 				used=true;
-				return false;
+				return used;
 			}
 		});
 	}
@@ -113,14 +114,14 @@ function isIOportUsed(id)
 			if ((this.getAttribute('type')=='ioport-rx')&&(this.getAttribute('id')==id))
 			{
 				used=true;
-				return false;
+				return used;
 			}
 		});
 		$('action', responseXML).each(function() {
 			if ((this.getAttribute('type')=='ioport-tx')&&(this.getAttribute('id')==id))
 			{
 				used=true;
-				return false;
+				return used;
 			}
 		});
 	}

@@ -332,6 +332,11 @@ var design = {
 				o.setSetting("height", $(this).val());
 			});
 		}
+		
+		if (_widgetscssexist) {
+      var tr=$('<tr><th>Class CSS</th><td><input id="tab-design-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
+			$("#tab-design-widget-properties tbody").append(tr);
+    }
 	   
 		$("#tab-design-properties-x").change(function() {
 			o.setSetting("x", $(this).val());

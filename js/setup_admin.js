@@ -106,6 +106,16 @@ function sendAction(actiontype)
 	} else alert("Pas d'action à lancer");
 };
 
+function updateWidgetsCss(val)
+{
+	alert("update file widgets.css");
+  /*
+  queryKnxweb(action, type, message, callasync)
+=>jQuery.ajax({ type: 'post', url: 'design_technique.php?action='+action, data: message, processData: false, dataType: type,async: callasync,
+  */
+  queryKnxweb('updatewidgetscss', 'html', val, false);
+};
+
 
 var _log_Linknx ='/tmp/linknx.log'; /* TODO à récupérer de linknx l'info de log type file ou mysl ou stdout */
 
@@ -130,6 +140,8 @@ jQuery(document).ready(function(){
 	$("#selectLogObjectCount").change( function() {$("#selectLogObject").change();})
 	
 	$("#selectLinknxLogFileCount").change( function() { readFile(_log_Linknx, this.value, "divLinknxLog" ); } );
-  $( "input:button, input:submit").button();	 
+  $( "input:button, input:submit").button();
+  
+  $("input[name=updatewidgetscss]").click( function() { updateWidgetsCss($("#contentwidgetscss").val()); } );	 
 	loading.hide();
 });

@@ -1,0 +1,29 @@
+.ephemeris {
+  vertical-align: middle;
+  text-align: center;
+}
+.ephemeris div {
+  float: left;
+}
+.ephemeris .sunrise, .ephemeris .sunset, .ephemeris .noon {
+  font-size: 32px; 
+  padding: 3px 15px;
+  border: 1px solid black;
+  font-weight: bold;
+  text-decoration: none;
+  border-radius: 8px;
+  margin: 5px;
+}
+.ephemeris-icon {
+  display: block;
+  height: 32px;
+  width: 32px;
+  margin-top: -16px;
+  position: absolute;
+  top: 50%;
+}
+.ephemeris-text {
+  font-size: 32px !important; 
+  padding-left: 37px;
+  display: block;
+}

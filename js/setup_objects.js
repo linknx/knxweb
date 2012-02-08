@@ -87,7 +87,8 @@ var objects = {
 			var responseXML=queryLinknx(body);
 			if (responseXML!=false)	objects.refreshObjectList();
 			loading.hide();
-		} else messageBox('Vous ne pouvez pas supprimer cet objet car il est utilisé dans une règle.','Erreur','error');
+		} else messageBox("You cannot delete this Object because it's used in a rule.", 'Error','error'); 
+    //messageBox('Vous ne pouvez pas supprimer cet objet car il est utilisé dans une règle.','Erreur','error');
 	},
 	
 	// Process add/edit object

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+  <name>charts</name>
+  <label>Charts</label>
+  <description>Charts with Highcharts</description>
+  <version>1.0</version>
+  <category>Basic widgets</category>
+  <settings>
+    <setting id="picture" label="Picture" type="picture" default="32x32_graph.png" />
+    <setting id="legend" label="Legend" type="list" default="true">
+			<option key="true" value="Yes" />
+			<option key="false" value="No" />
+		</setting>
+    <setting id="title" label="Title" type="text" default="Graph" />
+
+    <setting label="Curves" type="comment" />
+    <setting id="id" label="Object" type="object" />
+    <setting id="nbenreg" label="Nb Enreg" type="text" default="1000" />
+    <setting id="typeid" label="Type of the object" type="list" default="temperature">
+			<option key="temperature" value="Temperature" />
+			<option key="swicth" value="Swicth" />
+			<option key="blind" value="Blind" />
+			<option key="water" value="Water" />
+			<option key="gaz" value="Gaz" />
+			<option key="electricity" value="Electricity" />
+		</setting>
+    <setting label="" type="separator" />
+    <setting id="id1" label="Object" type="object" />
+    <setting id="nbenreg1" label="Nb Enreg" type="text" default="1000" />
+    <setting id="typeid1" label="Type of the object" type="list" default="temperature">
+			<option key="temperature" value="Temperature" />
+			<option key="swicth" value="Swicth" />
+			<option key="blind" value="Blind" />
+			<option key="water" value="Water" />
+			<option key="gaz" value="Gaz" />
+			<option key="electricity" value="Electricity" />
+		</setting>
+    <setting label="" type="separator" />
+    <setting id="id2" label="Object" type="object" />
+    <setting id="nbenreg2" label="Nb Enreg" type="text" default="1000" />
+    <setting id="typeid2" label="Type of the object" type="list" default="temperature">
+			<option key="temperature" value="Temperature" />
+			<option key="swicth" value="Swicth" />
+			<option key="blind" value="Blind" />
+			<option key="water" value="Water" />
+			<option key="gaz" value="Gaz" />
+			<option key="electricity" value="Electricity" />
+		</setting>
+    <setting label="" type="separator" />
+    <setting id="id3" label="Object" type="object" />
+    <setting id="nbenreg3" label="Nb Enreg" type="text" default="1000" />
+    <setting id="typeid3" label="Type of the object" type="list" default="temperature">
+			<option key="temperature" value="Temperature" />
+			<option key="swicth" value="Swicth" />
+			<option key="blind" value="Blind" />
+			<option key="water" value="Water" />
+			<option key="gaz" value="Gaz" />
+			<option key="electricity" value="Electricity" />
+		</setting>
+    <setting label="" type="separator" />
+    <setting id="id4" label="Object" type="object" />
+    <setting id="nbenreg4" label="Nb Enreg" type="text" default="1000" />
+    <setting id="typeid4" label="Type of the object" type="list" default="temperature">
+			<option key="temperature" value="Temperature" />
+			<option key="swicth" value="Swicth" />
+			<option key="blind" value="Blind" />
+			<option key="water" value="Water" />
+			<option key="gaz" value="Gaz" />
+			<option key="electricity" value="Electricity" />
+		</setting>
+
+  </settings>
+  <feedbacks>
+  </feedbacks>
+</widget>

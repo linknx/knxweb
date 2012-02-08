@@ -50,3 +50,14 @@
 	padding: 0.5em;
 	font-size: 1em;
 }
+
+li .rssRow {
+  float: none;
+  border-radius: 5px;
+  height: 60px;
+}
+.rssRow .rssMedia {
+    position: absolute;
+    right: 0;
+    top: 0;
+}

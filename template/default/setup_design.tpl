@@ -9,6 +9,24 @@
 
 <div id="tab-design-fluxxml" title="Flux Xml"></div>
 
+<div id="tab-design-list-widgets">
+  <div class="ui-state-active ui-corner-top header">
+    Widgets List
+  </div>
+
+  <table cellpadding="0" cellspacing="0" id="tab-design-widgets-list">
+    <thead>
+      <tr>
+         <th>Widget type</th>
+         <th>Description</th>
+      </tr>
+   </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+</div>
+
 <div id="tab-design-properties">
 	<div class="ui-state-active ui-corner-top header">
 		Widget information

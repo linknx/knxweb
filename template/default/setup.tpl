@@ -13,6 +13,7 @@
 		<script type="text/javascript" >
 		var tab_config = {$_config|json_encode};
 		var _widgets = {$widgets|json_encode};
+		var _widgetscssexist = {$widgetscssexist};
 		</script>
 		{foreach from=$jsList item=js}
 		<script type="text/javascript" src="{$js}"></script>
@@ -138,6 +139,7 @@
 
         <div class="subItem" id="button-try-design"><img src="images/display.png" />Try design</div>
         <div class="subItem" id="button-save-design"><img src="images/fetch.png" />Save</div>
+        <div class="subItem" id="button-widgets-list"><input type="checkbox" onchange="$('#tab-design-list-widgets').toggle();" value="1" checked="1" > Widgets List</div>
       </div>
 
 			<h3 tab_id="subpageedit" tab_label="Sub-pages" tab_url="setup_subpages.php"><a href="#"><img src="images/setup.png"> Sub-pages</a></h3>

@@ -36,9 +36,32 @@ if ($logType == 'file') {
   } 
 }
 if ($logType == 'mysql') {
-  // TODO ...
   // requete sur la base mysql $info['persistence'][] host/user/pass/db/table/logtable
-  // $listobjectlog[$object] = $object 
+  // $listobjectlog[$object] = $object
+  $serveur       = $info['persistence']['host'];
+  $login          = $info['persistence']['user'];
+  $password       = $info['persistence']['pass'];
+  $base  = $info['persistence']['db']; //"linknx"; 
+  $table = $info['persistence']['logtable']; //"log";
+  // structure de la table logtable
+  $ts = "ts";
+  $object = "object";
+  $value = "value";
+  // On ouvre la connexion à Mysql
+  $db = mysql_connect($serveur, $login, $password) or die('<h1>Connexion au serveur impossible !</h1>'); 
+  mysql_select_db($base,$db) or die('<h1>Connexion impossible à la base</h1>');
+  $sql = "SELECT DISTINCT ".$object." AS obj FROM ".$table;
+  $req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
+  $nbenreg = mysql_num_rows($req);
+  $nbenreg--;
+  while ($nbenreg > 0 ){
+    // récupérer prochaine occurence de la table
+    $data = mysql_fetch_array($req);
+    $type = $objects[$data["obj"]]["type"];
+    $listobjectlog[$data["obj"]] =  $data["obj"] . '_type_' . $type;
+    $nbenreg--;
+  }
+  mysql_close();
 }
 tpl()->assignByRef('logFile', $listobjectlog );
 tpl()->assignByRef('logType',$logType);
@@ -54,6 +77,9 @@ tpl()->assignByRef('linknx_running_param', $linknx_running_param);
 tpl()->assignByRef('network', $network);
 tpl()->assignByRef('linknxLog', $linknxLog);
 
+tpl()->assignByRef('widgetscss', $widgetscss);
+tpl()->assignByRef('widgetscssiswritable', $widgetscssiswritable);
+tpl()->assignByRef('contentwidgetscss', $contentwidgetscss);
 
 /* gestions des pgm supplémentaire utilisateurs */
 require_once("include/pgmrunning.php");

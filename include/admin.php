@@ -73,4 +73,19 @@ $linknx_running=`ps aux | grep linknx | grep -v grep`;
 $linknx_running_param=explode("linknx ",$linknx_running);
 $linknx_running_param=$linknx_running_param[1];
 
+$widgetscss = "widgets/widgets.css";
+$widgetscssexist = false;
+$widgetscssiswritable = false;
+if ( file_exists($widgetscss) ) {
+  $widgetscssexist = true;
+  $widgetscssiswritable = is_writable( $widgetscss );
+  $contentwidgetscss = '';
+  if ( !$error && filesize($widgetscss) > 0 ) {
+    $f = fopen($widgetscss, 'r');
+    $contentwidgetscss = fread($f, filesize($widgetscss));
+  }
+} else {
+  $widgetscss = "";
+}
+
 ?>

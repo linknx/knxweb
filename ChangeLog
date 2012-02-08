@@ -1,3 +1,10 @@
+2012-02-08 Anthony Penhard
+	* Add first version of charts widgets with Highcharts 
+	(highsoft software product is not free for commercial use lock at http://shop.highsoft.com/)
+	* Add widgets/widgets.css "editor" in Admin section if file exist then we can use CSS Class in widgets Editor
+	* Support mysql log in Admin section 
+	* minor bugs fixed
+
 2012-01-17 Anthony Penhard
 	* Add first version of new widgets for testing (alarmclock, ephemeris, rssfeed)
 

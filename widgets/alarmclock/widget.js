@@ -9,6 +9,7 @@ function CAlarmClock(conf) {
   this.nextexec='';
   this.ruleactive=false;
   this.rule='';
+  this.reload = false;
   
   $("#alarmclock").dialog({
       autoOpen: false,
@@ -58,6 +59,7 @@ function CAlarmClock(conf) {
       queryLinknx('<write><config><rules>' + xml + '</rules></config></write>');
     }
     $("#alarmclock").dialog( "close" );
+    _alarmclock.reload = true;
     _alarmclock.refreshHTML();
   });
   $("#dw_cancel").click(function() {
@@ -78,7 +80,10 @@ CAlarmClock.prototype.refreshHTML = function() {
   $(".status", this.div).removeClass('active');
   $(".status", this.div).removeClass('notactive');
   
-  if (idrulesv != this.idrule && this.idrule != '') loadRuleStatusAlarmClock(this.idrule, this );
+  if (idrulesv != this.idrule && this.idrule != '' || this.reload) {
+    this.reload = false;
+    loadRuleStatusAlarmClock(this.idrule, this );
+  }
   if (this.nextexec) { //"2012-1-16 8:30:0"
     $(this.div).attr("title","Next execution : "+this.nextexec);
     var elem = this.nextexec.split(' ');

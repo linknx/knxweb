@@ -162,6 +162,20 @@ if (isset($_GET['action'])) {
 			echo "</savesubpages>\n";
 	    break;
 
+		case 'updatewidgetscss':
+			if ($fp = fopen("widgets/widgets.css", 'w')) {
+				$conf = file_get_contents("php://input");
+				fwrite($fp, $conf);
+				fclose($fp);
+				print("<updatewidgetscss status='success'>");
+			}
+			elseif (!is_writable("widgets/widgets.css"))
+				print("<updatewidgetscss status='error'>widgets/widgets.css has no write permission on server");
+			else
+				print("<updatewidgetscss status='error'>Unable to create widgets/widgets.css file");
+			print("</updatewidgetscss>\n");
+	    break;
+
 		default:
 			print("<response status='error'>Unknown action</response>\n");
 	    break;

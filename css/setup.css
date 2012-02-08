@@ -512,6 +512,12 @@ div.subpage {
 	height: 20px;
 }
 
+#tab-design-properties table th.separator {
+    background-color: #808080;
+    height: 5px;
+    text-align: center;
+}
+
 #tab-design-properties table tbody td {
 	height: 20px;
 	width: 60%;
@@ -542,6 +548,54 @@ div.subpage {
   width: 100%;
   height: 1280px;
 }
+
+/* tab-design-list-widgets : list Widgets*/
+
+#tab-design-list-widgets {
+	background-color: #F2F5F7;
+	font-size: 10px;
+	width: 250px;
+	top: 20px;
+	left: 600px;
+	position: absolute;
+	border: 1px #DDDDDD solid;
+}
+
+#tab-design-list-widgets .header {
+	line-height: 21px;
+	font-size: 11px;
+	padding-top: 3px;
+	padding-left: 6px;
+}
+
+#tab-design-widget-buttons {
+	padding: 5px;
+}
+
+#tab-design-list-widgets table {
+	width: 100%;
+}
+
+#tab-design-list-widgets table tbody th {
+	height: 20px;
+	width: 40%;
+	text-align: left;
+}
+
+#tab-design-list-widgets table tbody td {
+	height: 20px;
+	width: 60%;
+}
+
+#tab-design-list-widgets table tbody td input {
+	border: 0;
+	width: 100%;
+}
+
+#tab-design-list-widgets table tbody td:last {
+	background-color: #F00;
+}
+
 
 /***************** /Design ********************/
 

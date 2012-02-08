@@ -61,7 +61,8 @@
 <select id="selectLogObject">
 <option value="">Choose an Object</option>
 {foreach from=$logFile key=k item=lf} 
-  <option value="{$lf}">{$k}</option>
+  <!-- <option value="{$lf}">{$k}</option> -->
+  <option value="{$k}">{$k}</option>
 {/foreach}
 </select>
 <select id="selectLogObjectCount">
@@ -118,6 +119,18 @@
 	</tr>
 </table>
 
+{if ($widgetscss != "")}
+<div class="titleadmin2">Edit widgets.css</div>
+<textarea cols="70" rows="25" style="width:100%;" name="contentwidgetscss" id="contentwidgetscss" >{$contentwidgetscss}</textarea>
+<div>
+{if ($widgetscssiswritable)}
+<input type="button" name="updatewidgetscss" value="Update File" />
+{else}
+<p><em>You need to make the file widgets/widgets.css writable before you can save your changes.</em></p>
+{/if}
+</div>
+{/if}
+
 <div class="titleadmin2">linknx log files (last 
   <select id="selectLinknxLogFileCount">
     <option value="1" >1</option>
@@ -139,7 +152,6 @@
 <div id="divLinknxLog" class="codeadmin">
 	{$linknxLog}
 </div>
-
 
 <div class="titleadmin2">Network setup</div>
 {if ($network['Networksetting'])}
@@ -187,6 +199,4 @@
 	</tr>		
 </table>	
 {/if}
-
-
-                                                                                                              
+                                                                                                       

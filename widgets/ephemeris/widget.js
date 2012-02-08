@@ -32,27 +32,30 @@ CEphemeris.prototype.refreshHTML = function() {
   {
     var html = "";
 
-    if (this.conf.getAttribute("exception-day")) html += "<div class='exception-day'> exception-day : " + $("exception-day",responseXML)[0].textContent + "</div>";
+    if (this.conf.getAttribute("exception-day")!="false" ) html += "<div class='exception-day'><span class='ephemeris-text'> exception-day : " + $("exception-day",responseXML)[0].textContent + "</span></div>";
 
     var sunrise = $("sunrise",responseXML)[0];
-    if (sunrise && this.conf.getAttribute("sunrise")) {
-      html += "<div class='sunrise' > ";
-      if (this.conf.getAttribute("sunrise-picture")!="") html += "<img src='" + getImageUrl(this.conf.getAttribute("sunrise-picture")) + "' alt='sunrise'> ";
-      html += sunrise.getAttribute("hour") + ":" + sunrise.getAttribute("min") + "</div>";
+    if (sunrise && this.conf.getAttribute("sunrise")!="false" ) {
+      html += "<div class='sunrise' >";
+      if (this.conf.getAttribute("sunrise-picture")!="") //html += "<img src='" + getImageUrl(this.conf.getAttribute("sunrise-picture")) + "' alt='sunrise'> ";
+        html += "<span class='ephemeris-icon' style='background-image:url(\"" + getImageUrl(this.conf.getAttribute("sunrise-picture")) + "\");'  /> ";
+      html += "<span class='ephemeris-text'>" + sunrise.getAttribute("hour") + ":" + ((sunrise.getAttribute("min") < 10)?("0"+sunrise.getAttribute("min")):sunrise.getAttribute("min")) + "</span></div>";
     }
 
     var sunset = $("sunset",responseXML)[0];
-    if (sunset && this.conf.getAttribute("sunset")) {
+    if (sunset && this.conf.getAttribute("sunset")!="false" ) {
       html += "<div class='sunset' > ";
-      if (this.conf.getAttribute("sunset-picture")!="") html += "<img src='" + getImageUrl(this.conf.getAttribute("sunset-picture")) + "' alt='sunset'> ";
-      html += sunset.getAttribute("hour") + ":" + sunset.getAttribute("min") + "</div>";
+      if (this.conf.getAttribute("sunset-picture")!="") //html += "<img src='" + getImageUrl(this.conf.getAttribute("sunset-picture")) + "' alt='sunset'> ";
+        html += "<spann class='ephemeris-icon'  style='background-image:url(\"" + getImageUrl(this.conf.getAttribute("sunset-picture")) + "\");'  /> ";
+      html += "<span class='ephemeris-text'>" + sunset.getAttribute("hour") + ":" + ((sunset.getAttribute("min") < 10)?("0"+sunset.getAttribute("min")):sunset.getAttribute("min")) + "</span></div>";
     }
 
     var noon = $("noon",responseXML)[0];
-    if (noon && this.conf.getAttribute("noon")) {
+    if (noon && this.conf.getAttribute("noon")!="false" ) {
       html += "<div class='noon' > ";
-      if (this.conf.getAttribute("noon-picture")!="") html += "<img src='" + getImageUrl(this.conf.getAttribute("noon-picture")) + "' alt='noon'> ";
-      html += noon.getAttribute("hour") + ":" + noon.getAttribute("min") + "</div>";
+      if (this.conf.getAttribute("noon-picture")!="") //html += "<img src='" + getImageUrl(this.conf.getAttribute("noon-picture")) + "' alt='noon'> ";
+        html += "<spann class='ephemeris-icon'  style='background-image:url(\"" + getImageUrl(this.conf.getAttribute("noon-picture")) + "\");'  /> ";
+      html += "<span class='ephemeris-text'>" + noon.getAttribute("hour") + ":" + ((noon.getAttribute("min") < 10)?("0"+noon.getAttribute("min")):noon.getAttribute("min")) + "</span></div>";
     }
    
     $("div:first-child", this.div).html(html);
