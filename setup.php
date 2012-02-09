@@ -85,10 +85,10 @@ tpl()->assign_by_ref("widgetsCategorized",$widgetsCategorized);
 
 addWidgetsJsCssToTpl(true);
 
-$widgetscssexist = false;
+$widgetscssexist = "false";
 if (file_exists('widgets/widgets.css')) { 
   tpl()->addCss('widgets/widgets.css');
-  $widgetscssexist = true;
+  $widgetscssexist = "true";
 }
 tpl()->assign_by_ref("widgetscssexist",$widgetscssexist);
 
