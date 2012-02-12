@@ -138,7 +138,7 @@ if ($typelog == "mysql") {
     
     // Format de sortie "json"
     // convertir les dates en timestamps pour le format json (pour highcharts notament) 
-    $ts = strtotime($row["ts"]) * 1000;
+    $ts = strtotime($data["ts"]) * 1000;
     //array_push ( $result_tab , array($data["ts"], $data["value"] ) ); 
     array_push ( $result_tab , array($ts, $float_value ) );
 
