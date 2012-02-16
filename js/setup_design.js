@@ -141,6 +141,7 @@ var design = {
 			if (obj!=null) {
 				$('#widgetdiv').append(obj.div);
 				obj.edit(design.onWidgetSelect, design.onWidgetMove, design.onWidgetResize);
+        design.addWidgetsList(obj);
 				return obj;
 			} 
 			return false;
@@ -149,6 +150,7 @@ var design = {
 	
 	// Delete a widget
 	deleteWidget: function(o) {
+    design.removeWidgetsList(o);
 		// Remove div
 		o.div.remove();
 		// Remove from xml
@@ -214,6 +216,7 @@ var design = {
 			$(this).remove();
 			$('#bgImage').hide();
 		});
+    design.refreshWidgetsList();
 		design.currentZone=null;
 	},
 	
@@ -309,7 +312,7 @@ var design = {
 		
 		$("#tab-design-widget-properties tbody").empty();
 	
-	  // Setup standard fields x,y,width,height
+	  // Setup standard fields x,y,width,height,desc
 	  var tr=$('<tr><th>Type</th><td><input type="text" disabled="1" value="' + o.conf.getAttribute("type") + '"></td></tr>');
 	   $("#tab-design-widget-properties tbody").append(tr);
 
@@ -318,7 +321,13 @@ var design = {
 	 
 	  var tr=$('<tr><th>Y</th><td><input id="tab-design-properties-y" type="text" value="' + o.conf.getAttribute("y") + '"></td></tr>');
 	   $("#tab-design-widget-properties tbody").append(tr);
-	
+
+    var tr=$('<tr><th>Description</th><td><input id="tab-design-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
+    $("#tab-design-widget-properties tbody").append(tr);
+    $("#tab-design-properties-desc").change(function() {
+      o.setSetting("name", $(this).val());
+    });
+
 		if (o.isResizable) {
 			var tr=$('<tr><th>Width</th><td><input id="tab-design-properties-width" type="text" value="' + o.conf.getAttribute("width") + '"></td></tr>');
 			$("#tab-design-widget-properties tbody").append(tr);
@@ -369,10 +378,10 @@ var design = {
 
 		$.each(properties, function() {
 	
-			if (this.type=="comment")
+			if (this.type=="comment" || this.type=="separator")
 			{
 		    var tr=$('<tr>');
-		    tr.append($('<th colspan="2" class="comment">' + this.label + '</th>'));
+		    tr.append($('<th colspan="2" class="' + this.type + '">' + this.label + '</th>'));
 			} else
 			{
 		    var tr=$('<tr>');
@@ -505,6 +514,66 @@ var design = {
 		
 		$("#tab-design-widget-properties input, #tab-design-widget-properties select").focusout(function() { $(this).trigger('change'); });
 	},
+
+  // Show design list widgets off the page
+  displayDesignListWidgets: function() {
+    $("#tab-design-widgets-list").show();
+  },
+
+  // add widget to the WidgetsList
+  addWidgetsList: function(o) {
+    var type=o.conf.getAttribute('type');
+    var desc=o.conf.getAttribute('desc');
+    if (!desc) desc = type;
+
+    var tr=$('<tr/>');
+    tr.get(0).obj = o;
+
+    var th=$('<th>' + type + '</th>');
+    tr.append(th);
+    /*
+    th.click(function() {
+      this.parentNode.obj.div.widgetMovable("select");
+    });
+    */
+    tr.click(function() {
+      this.obj.div.widgetMovable("select");
+    });
+
+    var td=$('<td><span>' + desc + '</span></td>');
+    tr.append(td);
+    var bpviewxml =$('<td><button>Xml</button></td>');
+    //td.append(bpviewxml);
+    tr.append(bpviewxml);
+
+    //td.click(function() {
+    bpviewxml.click(function() {
+      //$('#tab-design-fluxxml').html("<textarea rows=30 cols=125>" + serializeXmlToString(this.parentNode.parentNode.obj.conf) + "</textarea>");
+      $('#tab-design-fluxxml').html("<textarea rows=30 cols=125>" + serializeXmlToString(this.parentNode.obj.conf) + "</textarea>");
+      $('#tab-design-fluxxml').dialog({ 
+        width: 812,
+        modal: true,
+        buttons: {
+          Close: function() {
+            $( this ).dialog( "close" );
+          }
+        },
+      });
+    });
+
+    $("#tab-design-widgets-list tbody").append(tr);
+  },
+  // Refresh Widgets List	
+	refreshWidgetsList: function() {
+		$("#tab-design-widgets-list tbody").empty();
+	},
+  // remove widget from the WidgetsList
+  removeWidgetsList: function(o) {
+    $("tr", "#tab-design-widgets-list").each(function() {
+      if (this.obj == o) $(this).remove();
+    });
+  },
+
 	
 	// Add a new design
 	addDesign: function()
@@ -554,6 +623,11 @@ jQuery(function($) {
 	design.loadDesignList();
 	
 	$("#tab-design-properties").draggable({ 
+  	containment: "parent" ,
+  	scroll: false
+  });
+
+	$("#tab-design-list-widgets").draggable({ 
   	containment: "parent" ,
   	scroll: false
   });
@@ -645,6 +719,7 @@ jQuery(function($) {
 	design.load($('#tab-design-design-list').val(), tab_config['defaultVersion']);
 	design.draw($('#tab-design-zone-list').val());
 	design.displayDesignProperties();
+	design.displayDesignListWidgets();
 	
 	loading.hide();
 });

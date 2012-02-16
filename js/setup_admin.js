@@ -1,43 +1,3 @@
-/*
-var admin = {
-
-	refreshData: function() {
-		var body = '<read><config><services></services></config></read>';
-		var responseXML=queryLinknx(body);
-		if (responseXML!=false)	{
-			var data=$('admin',responseXML)[0];
-			if (data.getAttribute('type')) {
-				$('#admin-enable').attr('checked','true');
-				$('#admin-type').val(data.getAttribute('type'));
-				$('#admin-username').val(data.getAttribute('user'));
-				$('#admin-password').val(data.getAttribute('pass'));
-				$('#admin-apiid').val(data.getAttribute('api_id'));
-			} else $('#admin-enable').removeAttr('checked');
-			$('#admin-enable').trigger('change');
-		}
-	},
-	
-	saveData: function() {
-
-		if ($("#admin-form").valid())
-		{
-			if ($('#admin-enable').attr("checked"))
-			{
-				var body = '<write><config><services><admin ' + 
-										'type="' + $('#admin-type').val() + '" ' +
-										'user="' + $('#admin-username').val() + '" ' +
-										'pass="' + $('#admin-password').val() + '" ' +
-										'api_id="' + $('#admin-apiid').val() + '" ' +
-										'/></services></config></write>';
-			} else var body = '<write><config><services><admin/></services></config></write>';
-			loading.show();
-			var responseXML=queryLinknx(body);
-			loading.hide();
-		  if (responseXML!=false) maintab.tabs('remove', '#tab-admin');
-		}	
-	}
-}
-*/
 function saveConfigKnxWeb()
 {
   var string = '<?xml version="1.0" encoding="utf-8" standalone="no"?>\n<param>\n';
@@ -60,7 +20,7 @@ function saveConfigKnxWeb()
 function readFile(pathlogfile, nbenreg, dest)
 {
 	if (pathlogfile !="") {
-    var url = 'readfile.php?action=readfilehtml&pathlogfile='+pathlogfile+'&nbenreg='+nbenreg;
+    var url = 'readfile.php?objectlog=' + pathlogfile + '&nbenreg=' + nbenreg + '&output=html';
   	req = jQuery.ajax({ type: 'post', url: url, dataType: 'html', 
   			success: function(responseHTML, status) 
   			{
@@ -73,6 +33,20 @@ function readFile(pathlogfile, nbenreg, dest)
 	} else alert("Pas de fichier à afficher");
 };
 
+function readLinknxLogFile(nbenreg, dest)
+{
+  var url = 'readfile.php?LogLinknx=true&nbenreg=' + nbenreg + '&output=html';
+	req = jQuery.ajax({ type: 'post', url: url, dataType: 'html', 
+			success: function(responseHTML, status) 
+			{
+				$("#"+dest).html(responseHTML);
+			},
+			error: function (XMLHttpRequest, textStatus, errorThrown) {
+				messageBox(tr("Error Unable to load: ")+textStatus, 'Erreur', 'alert');
+			}
+	});
+};
+
 function endUpload(success){
   if (success == 1){
     messageBox('Upload OK', 'Info', 'info');
@@ -83,11 +57,11 @@ function endUpload(success){
 };
 
 function reloadLogObject() {
-  readFile($("#selectLogObject").val(), $('#selectLogObjectCount').val(), "divLogObject" );
+  readFile($("#selectLogObject").val(), $('#selectLogObjectCount').val(), "divLogObject");
 };
 
 function reloadLogLinknx() {
-  readFile(_log_Linknx, $('#selectLinknxLogFileCount').val(), "divLinknxLog" );
+  readLinknxLogFile($('#selectLinknxLogFileCount').val(), "divLinknxLog");
 };
 
 function sendAction(actiontype)
@@ -117,29 +91,12 @@ function updateWidgetsCss(val)
 };
 
 
-var _log_Linknx ='/tmp/linknx.log'; /* TODO à récupérer de linknx l'info de log type file ou mysl ou stdout */
-
 jQuery(document).ready(function(){
-  /*
-	$("#admin-tab-table").tableize({
-		sortable: false,
-		selectable: false
-	});
-	
-	$("#admin-enable").change(function() {
-		$("#admin-tab-table input,select").attr('disabled',!($("#admin-enable").attr('checked')));
-	});
-	
-	$("#admin-button-save").button();
-	$("#admin-button-save").click(admin.saveData);
-	
-	admin.refreshData();
-	*/
 	$("input[name=saveKnxWebConfig]").click( function() { saveConfigKnxWeb(); } );
-	$("#selectLogObject").change( function() { readFile(this.value, $('#selectLogObjectCount').val(), "divLogObject" ); } );
+	$("#selectLogObject").change( function() { readFile(this.value, $('#selectLogObjectCount').val(), "divLogObject"); } );
 	$("#selectLogObjectCount").change( function() {$("#selectLogObject").change();})
 	
-	$("#selectLinknxLogFileCount").change( function() { readFile(_log_Linknx, this.value, "divLinknxLog" ); } );
+	$("#selectLinknxLogFileCount").change( function() { readLinknxLogFile(this.value, "divLinknxLog"); } );
   $( "input:button, input:submit").button();
   
   $("input[name=updatewidgetscss]").click( function() { updateWidgetsCss($("#contentwidgetscss").val()); } );	 
