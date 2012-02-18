@@ -1,3 +1,13 @@
+function cdataTextcontent(data) {
+  var pos = data.indexOf('<![CDATA['); //'<![CDATA[' + action[0].objvalue + ']]>'
+  //'&lt;![CDATA[' ']]&gt;'
+  if (pos != "-1") {
+    var pos2 = data.lastIndexOf(']]>');
+    data = data.substring(pos + 9 ,pos2);
+  } 
+  return data;
+}
+
 $.extend(rules, {
 
   // ******************** Action ************************
@@ -528,14 +538,17 @@ $.extend(rules, {
         break;
       case 'send-sms' : // < type="" id="" value="" var="true/false" />
         xml.attr('id',action[0].objid);
-        xml.attr('value','<![CDATA[' + action[0].objvalue + ']]>');
+        //xml.attr('value','<![CDATA[' + action[0].objvalue + ']]>');
+        //xml.attr('value',cdataTextcontent(action[0].objvalue));
+        xml.attr('value',action[0].objvalue);
         xml.attr('var',action[0].smsvar);
         break;
       case 'send-email' : // <action type="" to="" subject="" var="true/false" >text<action/>
         xml.attr('to',action[0].objto);
         xml.attr('subject',action[0].subject);
         xml.attr('var',action[0].emailvar);
-        xml.text('<![CDATA[' + action[0].objtext + ']]>');
+        //xml.text('<![CDATA[' + action[0].objtext + ']]>');
+        xml.text(cdataTextcontent(action[0].objtext));
         break;
       case 'dim-up' : // < type="" id="" start="" stop="" duration="" />
         xml.attr('id',action[0].objid);
@@ -544,12 +557,16 @@ $.extend(rules, {
         xml.attr('duration',action[0].duration);
         break;
       case 'shell-cmd' : // < type="" cmd="" var="true/false" />
-        xml.attr('cmd','<![CDATA[' + action[0].cmd + ']]>');
+        //xml.attr('cmd','<![CDATA[' + action[0].cmd + ']]>');
+        //xml.attr('cmd',cdataTextcontent(action[0].cmd));
+        xml.attr('cmd',action[0].cmd);
         xml.attr('var',action[0].cmdvar);
         break;
       case 'ioport-tx' : // < type="" hex="true/false" data="" ioport="" var="true/false" />
         xml.attr('hex',action[0].hex);
-        xml.attr('data','<![CDATA[' + action[0].data + ']]>');
+        //xml.attr('data','<![CDATA[' + action[0].data + ']]>');
+        //xml.attr('data',cdataTextcontent(action[0].data));
+        xml.attr('data',action[0].data);
         xml.attr('ioport',action[0].ioport);
         xml.attr('var',action[0].ioportvar);
         break;
@@ -560,7 +577,8 @@ $.extend(rules, {
         xml.attr('value',action[0].object_value);
         if (action[0].object_trigger) xml.attr('trigger','true');
         */
-        xml.text('<![CDATA[' + action[0].script + ']]>');
+        //xml.text('<![CDATA[' + action[0].script + ']]>');
+        xml.text(cdataTextcontent(action[0].script));
         break;
       case 'cancel' : // < type="" rule-id="" />
         xml.attr('rule-id',action[0].rule_id);
