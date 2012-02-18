@@ -5,7 +5,7 @@ function cdataTextcontent(data) {
     var pos2 = data.lastIndexOf(']]>');
     data = data.substring(pos + 9 ,pos2);
   } 
-  return data;
+  return '<![CDATA[' + data + ']]>';
 }
 
 $.extend(rules, {
