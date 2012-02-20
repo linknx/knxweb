@@ -22,6 +22,7 @@ var setupgeneral = {
 			}
 
 			var data=$('persistence',responseXML)[0];
+			$('#setupgeneral-persistence-type').val('');
 			if (data) {
 					$('#setupgeneral-persistence-type').val(data.getAttribute('type'));
 					$('#setupgeneral-persistence-path').val(data.getAttribute('path'));
@@ -29,6 +30,7 @@ var setupgeneral = {
 					$('#setupgeneral-persistence-host').val(data.getAttribute('host'));
 					$('#setupgeneral-persistence-user').val(data.getAttribute('user'));
 					$('#setupgeneral-persistence-password').val(data.getAttribute('pass'));
+					$('#setupgeneral-persistence-password-confirm').val(data.getAttribute('pass'));
 					$('#setupgeneral-persistence-db').val(data.getAttribute('db'));
 					$('#setupgeneral-persistence-table').val(data.getAttribute('table'));
 					$('#setupgeneral-persistence-logtable').val(data.getAttribute('logtable'));

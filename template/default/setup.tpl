@@ -80,7 +80,7 @@
 		<div id="leftMenu" class="ui-helper-reset">
 			<h3 tab_id="setup" tab_label="Configuration"><a href="#"><img src="images/setup.png"> Configuration</a></h3>
 			<div>
-				<div class="subItem" tab_id="general" tab_label="Général" tab_url="setup_general.php"><img src="images/home.png" /> General</div>
+				<div class="subItem" tab_id="general" tab_label="General" tab_url="setup_general.php"><img src="images/home.png" /> General</div>
 				<div class="subItem" tab_id="smsgateway" tab_label="Gateway SMS" tab_url="setup_smsgateway.php"><img src="images/phone.png" /> SMS gateway</div>
 				<div class="subItem" tab_id="emailserver" tab_label="Serveur SMTP" tab_url="setup_emailserver.php"><img src="images/mail.png" /> SMTP</div>
 				<div class="subItem" tab_id="logging" tab_label="Logging" tab_url="setup_logging.php"><img src="images/logging.png" /> Logging</div>

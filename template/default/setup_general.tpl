@@ -44,7 +44,7 @@
 			<th>Persistance type</th>
 			<td>
 				<select id="setupgeneral-persistence-type">
-					<option value="disabled">disabled</option>
+					<option value="">disabled</option>
 					<option value="file">file</option>
 					<option value="mysql">Mysql</option>
 				</select>			

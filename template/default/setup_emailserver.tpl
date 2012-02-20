@@ -38,4 +38,4 @@
 	</tbody>
 </table>
 </form>
-<input type="button" value="Enregistrer" id="emailserver-button-save">
+<input type="button" value="Save" id="emailserver-button-save">

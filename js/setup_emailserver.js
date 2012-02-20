@@ -58,7 +58,7 @@ jQuery(document).ready(function(){
 		if ($(this).attr('checked') == "checked" && tab_config['haveEmail'] != "true")
       messageBox("We can't use this fonction your compiled version of linknx does not support Email", 'Error', 'alert');
     else
-      $("#emailserver-tab-table input,select").attr('disabled',!($("#emailserver-enable").attr('checked')));
+      $("#emailserver-tab-table input,#emailserver-tab-table select").attr('disabled',!($("#emailserver-enable").attr('checked')));
 	});
 
 	$('#emailserver-pass-confirm').change(function() {

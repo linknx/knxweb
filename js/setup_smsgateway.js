@@ -56,7 +56,7 @@ jQuery(document).ready(function(){
     if ($(this).attr('checked') == "checked" && tab_config['haveSMS'] != "true")
       messageBox("We can't use this fonction your compiled version of linknx does not support SMS", 'Error', 'alert');
     else 
-		  $("#smsgateway-tab-table input,select").attr('disabled',!($("#smsgateway-enable").attr('checked')));
+		  $("#smsgateway-tab-table input,#smsgateway-tab-table select").attr('disabled',!($("#smsgateway-enable").attr('checked')));
 	});
 
 	$('#smsgateway-password-confirm').change(function() {
