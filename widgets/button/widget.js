@@ -53,24 +53,34 @@ CButton.prototype.updateObject = function(obj,value) {
 
 	if (obj==this.conf.getAttribute("feedback-object"))
 	{
+	    var val = value;
+	    if (parseFloat(val)) val = parseFloat(value);
+	    var feedback_val = this.conf.getAttribute("feedback-value");
+	    if (parseFloat(feedback_val)) feedback_val = parseFloat(this.conf.getAttribute("feedback-value"));
 		switch (this.conf.getAttribute("feedback-compare")) {
 			case 'eq':
-				this.active=(value==this.conf.getAttribute("feedback-value"));
+				//this.active=(value==this.conf.getAttribute("feedback-value"));
+				this.active=(val==feedback_val);
 				break;
 			case 'neq':
-				this.active=(value!=this.conf.getAttribute("feedback-value"));
+				//this.active=(value!=this.conf.getAttribute("feedback-value"));
+				this.active=(val!=feedback_val);
 				break;
 			case 'gt':
-				this.active=(value>this.conf.getAttribute("feedback-value"));
+				//this.active=(value>this.conf.getAttribute("feedback-value"));
+				this.active=(val>feedback_val);
 				break;
 			case 'lt':
-				this.active=(value<this.conf.getAttribute("feedback-value"));
+				//this.active=(value<this.conf.getAttribute("feedback-value"));
+				this.active=(val<feedback_val);
 				break;
 			case 'gte':
-				this.active=(value>=this.conf.getAttribute("feedback-value"));
+				//this.active=(value>=this.conf.getAttribute("feedback-value"));
+				this.active=(val>=feedback_val);
 				break;
 			case 'lte':
-				this.active=(value<=this.conf.getAttribute("feedback-value"));
+				//this.active=(value<=this.conf.getAttribute("feedback-value"));
+				this.active=(val<=feedback_val);
 				break;
 			default:
 				this.active=false;
