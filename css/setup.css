@@ -510,6 +510,11 @@ div.subpage {
 	position: absolute;
 	width: 100px;
 	height: 100px;
+}
+
+div.subpagedialog {
+  display: block;
+  position: relative;
 } 
 
 #tab-design-properties {
