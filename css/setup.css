@@ -853,3 +853,6 @@ html.knm {
   -webkit-transform:rotate(180deg);
   -moz-transform:rotate(180deg);
 }
+
+/* for hide title of Dialog add attribute like : .dialog({ ..., dialogClass: 'notitledialog' }) */
+.notitledialog .ui-dialog-titlebar {display:none}
