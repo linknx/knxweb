@@ -152,8 +152,8 @@
               	
               	<div id="tab-event-widget-buttons" class="ui-state-default" >
               		<!--<button id="button-new-widget">New</button>-->
-              		<button id="button-valid-widget" onclick="events.validEvent();" >Valid</button>
-              		<button id="button-delete-widget" onclick="events.deleteEvent($('#tab-event-id').val());" >Delete</button>
+              		<button id="button-valid-event" onclick="events.validEvent();" >Valid</button>
+              		<button id="button-delete-event" onclick="events.deleteEvent($('#tab-event-id').val());" >Delete</button>
               		<!--<button id="button-clone-widget">Clone</button>-->
               		<br />
                   <strong><span> Id : </span><input type="text" id="tab-event-id" size="40"></strong>
