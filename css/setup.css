@@ -510,11 +510,6 @@ div.subpage {
 	position: absolute;
 	width: 100px;
 	height: 100px;
-}
-
-div.subpagedialog {
-  display: block;
-  position: relative;
 } 
 
 #tab-design-properties {
@@ -853,6 +848,3 @@ html.knm {
   -webkit-transform:rotate(180deg);
   -moz-transform:rotate(180deg);
 }
-
-/* for hide title of Dialog add attribute like : .dialog({ ..., dialogClass: 'notitledialog' }) */
-.notitledialog .ui-dialog-titlebar {display:none}

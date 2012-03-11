@@ -313,3 +313,11 @@ table.list td {
   height: 15px;
   background-color: black;
 }
+
+div.subpagedialog {
+  display: block;
+  position: relative;
+}
+
+/* for hide title of Dialog add attribute like : .dialog({ ..., dialogClass: 'notitledialog' }) */
+.notitledialog .ui-dialog-titlebar {display:none}
