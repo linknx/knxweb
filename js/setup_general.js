@@ -31,6 +31,7 @@ var setupgeneral = {
 					$('#setupgeneral-persistence-user').val(data.getAttribute('user'));
 					$('#setupgeneral-persistence-password').val(data.getAttribute('pass'));
 					$('#setupgeneral-persistence-password-confirm').val(data.getAttribute('pass'));
+					$('#setupgeneral-persistence-password-confirm').val(data.getAttribute('pass'));
 					$('#setupgeneral-persistence-db').val(data.getAttribute('db'));
 					$('#setupgeneral-persistence-table').val(data.getAttribute('table'));
 					$('#setupgeneral-persistence-logtable').val(data.getAttribute('logtable'));

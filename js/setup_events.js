@@ -29,7 +29,8 @@ var events = {
     this.config = '';
     if (responseXML!=false)
     {
-      this.config = $('rules', responseXML)[0];
+      //this.config = $('rules', responseXML)[0];
+      this.config = responseXML;
     };
   },
   loadEventsStatusList: function() {
@@ -156,6 +157,7 @@ var events = {
     
     $('#tab-event-id').val(eventid); // Id de la rule/event
     $('#tab-event-next-exec').html(convertDate(events.arrayEventsTimer[eventid])); // Date prochaine exceution de la rule/event
+    $('#tab-event-description').val(eventid);
 
   },
   deleteEvent: function(eventid) {
@@ -201,7 +203,9 @@ var events = {
         events.currentAction = events.currentAction.cloneNode(true); // duplique les actions car cela pointe sur la rules édité prcédement
       } else events.currentAction = event.ownerDocument.createElement('actionlist');
       event.appendChild(events.currentAction);
-    } 
+    }
+    var eventdescription = $('#tab-event-description').val();
+    event.setAttribute('description',eventdescription); 
     
     // mise à jour du flux xml de la condition  
     events.generateXmlCondition(events.currentCondition);
@@ -229,7 +233,6 @@ var events = {
     $('action', actions).each(function() {
       actionsText = actionsText + serializeXmlToString(this);
 		});
-    alert("actions :" + actionsText + "");
     if (confirm(tr('Really execute actions of the event : '+eventid+' ?'))) {
       var responseXML=queryLinknx('<execute>'+actionsText+'</execute>');
       if (responseXML!=false)
@@ -648,6 +651,9 @@ jQuery(document).ready(function(){
   $('#event-action-dialog-select').change(function(e){
   	if (this.value!="")
   	{
+      if (!events.currentAction) {
+				events.currentAction = events.config.createElement("actionlist");
+      }
 	    var type = this.value;
 	    actionEditor.config = events.currentAction;
       actionEditor.prefix = 'event-';

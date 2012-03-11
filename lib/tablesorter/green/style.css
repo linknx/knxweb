@@ -1,0 +1,77 @@
+/* green theme */
+table.tablesorter {
+	font-family: arial;
+	background-color: #cdcdcd;
+	margin: 10px 0pt 15px;
+	font-size: 12px;
+	width: 100%;
+	text-align: left;
+}
+table.tablesorter thead tr th, tr.stickyHeader th, table.tablesorter tfoot tr th {
+	border-collapse: collapse;
+	font-size: 12px;
+	padding: 5px;
+}
+table.tablesorter td {
+	color: #3d3d3d;
+	padding: 5px;
+}
+table.tablesorter thead tr, table.tablesorter tfoot tr {
+	background: url(bkgd.png) center center repeat-x;
+}
+table.tablesorter .header {
+	background: transparent;
+	border-right: #cdcdcd 1px solid;
+	padding: 9px;
+	height: auto;
+	cursor: pointer;
+}
+table.tablesorter .header span:first-child, .stickyHeader .header span:first-child {
+	background: url(none.png) no-repeat;
+	padding: 2px 0 2px 25px;
+}
+table.tablesorter .headerSortUp span:first-child {
+	background: url(asc.png) no-repeat;
+}
+table.tablesorter .headerSortDown span:first-child {
+	background: url(desc.png) no-repeat;
+}
+
+/* Zebra Widget - row alternating colors */
+table.tablesorter tr.odd td {
+	background-color: #f0f6f0;
+}
+table.tablesorter tr.even td {
+	background-color: #fff;
+}
+
+/* Column Widget - column sort colors */
+table.tablesorter tbody td.primary, table.tablesorter tbody tr.odd td.primary {
+	background-color: #c0ffc0;
+}
+table.tablesorter tbody tr.even td.primary {
+	background-color: #e8ffe8;
+}
+
+table.tablesorter tbody td.secondary, table.tablesorter tbody tr.odd td.secondary {
+	background-color: #d6ffd6;
+}
+table.tablesorter tbody tr.even td.secondary {
+	background-color: #e8ffe8;
+}
+
+table.tablesorter tbody td.tertiary, table.tablesorter tbody tr.odd td.tertiary {
+	background-color: #eaffea;
+}
+table.tablesorter tbody tr.even td.tertiary {
+	background-color: #f8fff8;
+}
+
+/* filter widget */
+table.tablesorter thead input.filter {
+	width: 90%;
+}
+table.tablesorter thead tr.filters, table.tablesorter thead tr.filters td {
+	text-align: center;
+	background: #fff;
+}

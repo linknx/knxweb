@@ -4,7 +4,7 @@
   <label>Slider</label>
   <description>Slider</description>
   <version>1.0</version>
-  <category>Basic widgets</category>
+  <category>Advanced widgets</category>
   <settings>
     <setting id="slider-color" label="Slider color" type="color" default="#FF0000" />
     <setting id="slider-picture" label="Slider picture" type="picture" />
@@ -12,6 +12,7 @@
       <option key="true" value="Yes" />
       <option key="false" value="No" />
     </setting>
+    <setting id="background-picture" label="Background picture" type="picture" default=""/>
     <setting id="border" label="Border" type="list" default="true">
       <option key="true" value="Yes" />
       <option key="false" value="No" />
@@ -21,7 +22,7 @@
       <option key="horizontal" value="horizontal"/>
       <option key="vertical" value="Vertical"/>
     </setting>
-    <setting id="position" label="Position" type="list" default="percent">
+    <setting id="position" label="Position" type="list" default="right_bottom">
       <option key="left_top" value="left or top"/>
       <option key="right_bottom" value="right or bottom"/>
     </setting>
@@ -29,6 +30,8 @@
     <setting id="max" label="Maximum value" type="text" default="100" />
     <setting label="Feedback object" type="comment" default="" />
     <setting id="feedback-object" label="Feedback object" type="object" />
+    <setting label="Command object" type="comment" default="" />
+    <setting id="command-object" label="Command object" type="object" />
     <setting label="Actions when slide stop" type="comment" />
     <setting id="slidestop-action" label="Action" type="action" />
     <setting label="Actions when slide" type="comment" />

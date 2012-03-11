@@ -59,6 +59,56 @@ var subpages = {
 			} else messageBox("Another sub-page with the same name already exists", "Error", "alert");
 		}
 	},
+  
+  // Clone a subpage
+  clone: function()	{ 
+    var name=prompt(tr('Enter name for new subpage cloned'),'');
+    if (name!=null)	{
+      $('subpage', subpages.config).each(function() {
+  			if (this.getAttribute('name') == name) {
+  				//found=true;
+          var subpage = subpages.config.createElement('subpage');
+          this.attributes(function(attr){
+            subpage.setAttribute(attr.name, attr.value);
+          });
+          subpage.setAttribute('name', name);
+          
+          $('subpages', subpages.config).append(subpage);
+          
+          //var param = subpages.config.createElement('parameters');
+          //$('parameters', this).append(subpage);
+          var parameters = $('parameters', this).clone();
+          //param = parameters[0]; 
+          //subpage.appendChild(param);
+          subpage.appendChild(parameters[0]);
+          
+          //var controls = subpages.config.createElement('controls');
+          var controlsold = $('controls', this).clone();
+          //controls = controlsold[0];
+          //subpage.appendChild(controls);
+          subpage.appendChild(controlsold[0]);
+          
+          subpages.draw(name);
+          subpages.refreshSubPagesList();
+          return;
+  			}
+  		});
+      /* pour le clone d'un widget :
+      $("#tab-subpages-clone-widget").click(function() {
+    		if ($("div .selected").length>0)	
+    		{
+    			var conf=$("div .selected").get(0).owner.conf;
+    			var newConf=conf.cloneNode(true);
+    			newConf.setAttribute('x',20);
+    			newConf.setAttribute('y',20);
+    			$('subpage[name=' + subpages.currentSubPage + ']', subpages.config).children('controls')[0].appendChild(newConf);
+    			var obj=subpages.addWidget(newConf);
+    			obj.div.widgetMovable("select");
+    		}
+    	});
+      */
+    }
+  },
 
 	// Delete a subpage
 	delete: function(name)	{
@@ -168,6 +218,7 @@ var subpages = {
 			if (obj!=null) {
 				$('#widgetsubpagediv').append(obj.div);
 				obj.edit(subpages.onWidgetSelect, subpages.onWidgetMove, subpages.onWidgetResize);
+        subpages.addWidgetsList(obj);
 				return obj;
 			}
 			return false;
@@ -192,6 +243,7 @@ var subpages = {
 	
 	// Delete a widget
 	deleteWidget: function(o) {
+    subpages.removeWidgetsList(o);
 		// Remove div
 		o.div.remove();
 		// Remove from xml
@@ -203,6 +255,7 @@ var subpages = {
 		$("#widgetsubpagediv .widget").each(function() {
 			$(this).remove();
 		});
+    subpages.refreshWidgetsList();
 		subpages.currentSubPage=null;
 	},
 
@@ -219,6 +272,75 @@ var subpages = {
 		$('#tab-subpages-subpage-properties').show();
 	},
 
+  // Show design list widgets off the page
+  displayListWidgets: function() {
+    $("#tab-subpages-widgets-list").show();
+  },
+  // add widget to the WidgetsList
+  addWidgetsList: function(o) {
+    var type=o.conf.getAttribute('type');
+    var desc=o.conf.getAttribute('desc');
+    if (!desc) desc = type;
+
+    var tr=$('<tr/>');
+    tr.get(0).obj = o;
+
+    var th=$('<th>' + type + '</th>');
+    tr.append(th);
+    tr.click(function() {
+      this.obj.div.widgetMovable("select");
+    });
+
+    var td=$('<td><span>' + desc + '</span></td>');
+    tr.append(td);
+    var bpviewxml =$('<td><button>Xml</button></td>');
+    //tr.append(bpviewxml);
+
+    bpviewxml.click(function() {
+      $('#tab-design-fluxxml').html("<textarea rows=30 cols=125>" + serializeXmlToString(this.parentNode.obj.conf) + "</textarea>");
+      $('#tab-design-fluxxml').dialog({ 
+        width: 812,
+        modal: true,
+        buttons: {
+          Close: function() {
+            $( this ).dialog( "close" );
+          }
+        },
+      });
+    });
+
+    $("#tab-subpages-widgets-list tbody").append(tr);
+  },
+  // Refresh Widgets List	
+	refreshWidgetsList: function() {
+		$("#tab-subpages-widgets-list tbody").empty();
+    var tr=$('<tr><th>subpage</th><td><span>'+$("#tab-subpages-list").val()+'</span></td></tr>');
+    tr.click(function() {
+  		$(".active", "#tab-subpages-widgets-list").removeClass("active");
+      $(this).addClass("active")
+      $('div').removeClass("selected");
+  		// Hide resizer
+  		$(".resizeSE").hide();
+  		$("#widgetsubpagediv").addClass("selected");
+  		subpages.displaySubpageProperties();
+    });
+    $("#tab-subpages-widgets-list tbody").append(tr);
+	},
+  // remove widget from the WidgetsList
+  removeWidgetsList: function(o) {
+    $("tr", "#tab-subpages-widgets-list").each(function() {
+      if (this.obj == o) $(this).remove();
+    });
+  },
+  // selected a widget from the function onWidgetSelect()
+  selectWidgetsList: function(o) {
+    $(".active", "#tab-subpages-widgets-list").removeClass("active");
+    $("tr", "#tab-subpages-widgets-list").each(function() {
+      if (this.obj == o) $(this).addClass("active");
+    });
+  },
+  
+  
 	// Fill properties table when selecting a widget
 	displayProperties: function(o) {
 		var type=o.conf.getAttribute('type');
@@ -323,7 +445,8 @@ var subpages = {
 		    // Text setting
 		    if (this.type=="text") 
 		    {
-		    	var input=$('<input type="text" name="' + this.id + '" value="' + ((!isSubPageParameter)?o.conf.getAttribute(this.id):"") + '">');
+          var input=$('<input type="text" name="' + this.id + '" value="">');
+          if (!isSubPageParameter) input.val(o.conf.getAttribute(this.id));
 	    		if (isSubPageParameter) input.css('display','none');
 		    	td.append(input);
 		    }
@@ -450,7 +573,8 @@ var subpages = {
 	
 	// Callback when a widget is selected
 	onWidgetSelect: function(widget) {
-		// Display properties corresponding to widget type
+		subpages.selectWidgetsList(widget.owner);
+    // Display properties corresponding to widget type
 		subpages.displayProperties(widget.owner);
 	},
 	
@@ -542,6 +666,11 @@ jQuery(function($) {
   	containment: "parent" ,
   	scroll: false
   });
+
+	$("#tab-subpages-list-widgets").draggable({ 
+  	containment: "parent" ,
+  	scroll: false
+  });
 	
 	$("#tab-subpages-delete-widget").button({
 		icons: {
@@ -618,6 +747,10 @@ jQuery(function($) {
 	$("#button-add-subpage").click(function() {
 		subpages.new();
 	});
+  
+  $("#button-clone-subpage").click(function() {
+		subpages.clone();
+	});
 
 	$("#button-remove-subpage").click(function() {
 		subpages.delete($('#tab-subpages-list').val());
@@ -683,6 +816,7 @@ jQuery(function($) {
 	subpages.load();
 	subpages.draw($('#tab-subpages-list').val());
 	subpages.displaySubpageProperties();
-	
+  subpages.displayListWidgets();
+  	
 	loading.hide();
 });

@@ -24,7 +24,7 @@
 	</tr>
 	<tr>
 		<th>Name</th>
-		<td><input id="edit-object-label" name="edit-object-label" size="30" type="text"></td>
+		<td><input id="edit-object-label" name="edit-object-label" size="50" type="text"></td>
 	</tr>
 	<tr>
 		<th>Type</th>
@@ -94,22 +94,27 @@
 </table>
 </form>
 </div>
+<div id="objects-tab-table-div">
+  <table id="objects-tab-table">
+  	<thead>
+  		<tr>
+  			<th width="30%">Object</th>
+  			<th width="30%">Description</th>
+  			<th width="10%">GAD</th>
+  			<th width="30%">Type</th>
+  		</tr>
+  	</thead>
+  	<tbody>
+  		<tr>
+  			<td></td>
+  			<td></td>
+  			<td></td>
+  			<td></td>
+  		</tr>
+  	</tbody>
+  </table>
+</div>
 
-<table id="objects-tab-table">
-	<thead>
-		<tr>
-			<th width="30%">Object</th>
-			<th width="30%">Description</th>
-			<th width="10%">GAD</th>
-			<th width="30%">Type</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-	</tbody>
-</table>
+{if ($fileETSexist)}
+{include file='setup_objects_ets.tpl'}
+{/if}

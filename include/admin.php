@@ -36,31 +36,6 @@ function getNetworkConfig()
 	return $config;
 }
 
-function setNetworkConfig($config)
-{
-	$cmd=sprintf('/usr/local/knxweb/setnetconfig.sh %s %s %s %s %s %s',(($config['dhcp'])?'dhcp':'static'),$config['ip'],$config['netmask'],$config['gateway'],$config['dns1'],$config['dns2']);
-	`sudo $cmd`;
-}
-
-if (isset($_POST['saveNetworkConfig'])){
-	$config=array();
-	$config['dhcp']=($_POST['dhcp']==1);
-	if (!$config['dhcp'])
-	{
-		$config['ip']=$_POST['ip'];
-		$config['netmask']=$_POST['netmask'];
-		$config['gateway']=$_POST['gateway'];
-		$config['dns1']=$_POST['dns1'];
-		$config['dns2']=$_POST['dns2'];
-	}
-	setNetworkConfig($config);
-}
-
-if (isset($_GET['restarteib']))
-{
-	`sudo /usr/local/knxweb/restarteibservices.sh`;
-}
-
 $network=getNetworkConfig();
 
 $linknxLog=str_replace("\n","<br />",`tail -n 20 $log_Linknx`);

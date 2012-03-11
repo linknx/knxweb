@@ -139,6 +139,11 @@ $.extend(rules, {
         div[0].list=action.getAttribute('list');
         div.css("width","160px");
         break;
+      case 'set-rule-active' : // only since version 0.0.1.29
+          div[0].rule_id=action.getAttribute('rule-id');
+          div[0].active=action.getAttribute('active');
+          div.css("width","160px");
+          break;
     }; 
 
     //div.css("top",pos_top+numaction*50);
@@ -273,6 +278,11 @@ $.extend(rules, {
         div[0].list=true;
         div.css("width","160px");
         break;
+      case 'set-rule-active' : // only since version 0.0.1.29
+          div[0].rule_id='';
+          div[0].active=false;
+          div.css("width","160px");
+          break;
     }; 
 
     jsPlumb.draggable(div);
@@ -376,6 +386,10 @@ $.extend(rules, {
         $('#tab-rules-start-actionlist-action-rule-id').val(div.rule_id);
         $('#tab-rules-start-actionlist-action-list').attr('checked',div.list);
         break;
+      case 'set-rule-active' : // only since version 0.0.1.29
+          $('#tab-rules-set-rule-active-action-rule-id').val(div.rule_id);
+          $('#tab-rules-set-rule-active-action-active').attr('checked',div.active);
+          break;
     };
 
     if (openDialog)
@@ -484,8 +498,13 @@ $.extend(rules, {
         div.rule_id = $('#tab-rules-start-actionlist-action-rule-id').val();
         //div.list = $('#tab-rules-start-actionlist-action-list').val();
         div.list = $('#tab-rules-start-actionlist-action-list').attr('checked');
-        html = '<br />rule : '+div.rule_id+'<br />actionlist : '+div.list;
+        html = '<br />rule : '+div.rule_id+'<br />actionlist : '+((div.list)?"true":"false"));
         break;
+      case 'set-rule-active' : // only since version 0.0.1.29
+          div.rule_id = $('#tab-rules-set-rule-active-action-rule-id').val();
+          div.active = $('#tab-rules-set-rule-active-action-active').attr('checked');
+          html = '<br />rule : '+div.rule_id+'<br />active : '+((div.active)?"yes":"no"));
+          break;
     };
 
     $(div).html('<strong>'+actionsList[type]+'</strong>'+html);
@@ -594,8 +613,12 @@ $.extend(rules, {
         break;
       case 'start-actionlist' : // only since version 0.0.1.29 < type="" rule-id="" list="true/false" /> 
         xml.attr('rule-id',action[0].rule_id);
-        xml.attr('list',action[0].list);
+        xml.attr('list',((action[0].list)?"true":"false"));
         break;
+      case 'set-rule-active' : // only since version 0.0.1.29 < type="" rule-id="" active="yes/no" /> 
+          xml.attr('rule-id',action[0].rule_id);
+          xml.attr('active',((action[0].active)?"yes":"no"));
+          break;
     }
 
     var c = jsPlumb.getConnections({source:action.attr('id')});
@@ -813,6 +836,18 @@ $.extend(rules, {
               .append($('<td>').append('<input type="checkbox" id="tab-rules-start-actionlist-action-list" >'))
               );
             break;
+          case 'set-rule-active' : // only since version 0.0.1.29
+              var listrules = $('#listRules').clone();
+              listrules.attr("id","tab-rules-set-rule-active-action-rule-id");
+              tbody.append(
+                $('<tr>').append('<th width="150">Rule</th>')
+                .append($('<td>').append(listrules))
+                );
+              tbody.append(
+                $('<tr>').append('<th width="150">Set rule active</th>')
+                .append($('<td>').append('<input type="checkbox" id="tab-rules-set-rule-active-action-active" >'))
+                );
+              break;
         };
         tbody.append(
           $('<tr>').append('<th>Delay</th>')

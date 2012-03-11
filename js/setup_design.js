@@ -392,7 +392,12 @@ var design = {
 		    
 		    var td=$('<td>');
 		    // Text setting
-		    if (this.type=="text") td.append($('<input type="text" name="' + this.id + '" value="' + value + '">'));
+		    //if (this.type=="text") td.append($('<input type="text" name="' + this.id + '" value="' + value + '">'));
+        if (this.type=="text") {
+          var textproperties = $('<input type="text" name="' + this.id + '" value="">');
+          textproperties.val(value);
+          td.append(textproperties);
+        };
 		
 		    // List setting
 		    if (this.type=="list") 
@@ -472,8 +477,19 @@ var design = {
 							var actions=design.config.createElement("actionlist");
 							actions.setAttribute("id", propId);
 							o.conf.appendChild(actions);
-						}						
-						actionEditor.open(actions);
+						}
+            var widgetObjects=[];
+            $.each(o.conf.attributes, function(i, attr){
+						  if (attr.name.substr(0,1)=="_") {
+								widgetObjects.push({
+									id: attr.name.substr(1,attr.name.length),
+									value: attr.value
+								});
+				    	}
+						});
+            //console.log("click action", o , o.conf, propId, actions, widgetObjects);
+						actionEditor.open(actions, widgetObjects);
+						//actionEditor.open(actions);
 					});			
 		    	td.append(input);
 		  	}
@@ -573,6 +589,13 @@ var design = {
       if (this.obj == o) $(this).remove();
     });
   },
+  // selected a widget from the function onWidgetSelect()
+  selectWidgetsList: function(o) {
+    $(".active", "#tab-design-widgets-list").removeClass("active");
+    $("tr", "#tab-design-widgets-list").each(function() {
+      if (this.obj == o) $(this).addClass("active");
+    });
+  },
 
 	
 	// Add a new design
@@ -600,6 +623,7 @@ var design = {
 
 	// Callback when a widget is selected
 	onWidgetSelect: function(widget) {
+		design.selectWidgetsList(widget.owner);
 		// Display properties corresponding to widget type
 		design.displayProperties(widget.owner);
 	},

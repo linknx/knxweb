@@ -222,3 +222,16 @@
 		</tr>
 	</table>
 </div>
+
+<div id="action-dialog-set-rule-active-dialog" style="display:none;" >
+	<table>
+		<tr>
+			<th width="150">Rule</th>
+			<td><input type="text" name="rule-id" size="10"></td>
+		</tr>
+		<tr>
+			<th width="150">Active</th>
+			<td><input type="checkbox" name="active" value="1"></td>
+		</tr>
+	</table>
+</div>

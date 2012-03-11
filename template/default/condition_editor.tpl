@@ -165,8 +165,8 @@
 <form id="tab-rules-timer-condition-form">
   <div id="tab-rules-timer-condition-tabs">
     <ul>
-        <li><a href="#tab-rules-timer-condition-start"><span>Début</span></a></li>
-        <li><a href="#tab-rules-timer-condition-end"><span>Fin</span></a></li>
+        <li><a href="#tab-rules-timer-condition-start"><span>Start</span></a></li>
+        <li><a href="#tab-rules-timer-condition-end"><span>End</span></a></li>
     </ul>
     <div id="tab-rules-timer-condition-start">
       <table class="form">

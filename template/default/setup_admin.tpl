@@ -155,47 +155,45 @@
 
 <div class="titleadmin2">Network setup</div>
 {if ($network['Networksetting'])}
-<form method="post">
 	<table width="400">
 	<tr>
 	<td>Type</td>
 	<td>
-		<input type="radio" name="dhcp" value="1" {if ($network['dhcp'])} checked="true" {/if}> DHCP 
-		<input type="radio" name="dhcp" value="0" {if (!$network['dhcp'])}checked="true" {/if}> Static </td>
+		<input type="radio" name="dhcp" value="1" {if ($network['dhcp'])} checked="true" {/if} disabled="1"> DHCP 
+		<input type="radio" name="dhcp" value="0" {if (!$network['dhcp'])}checked="true" {/if} disabled="1"> Static </td>
 	</tr>
 	<tr>
 	<td>IP address</td>
 	<td>
-		<input type="text" name="ip" value="{$network['ip']}"></td>
+		<input type="text" name="ip" value="{$network['ip']}" disabled="1"></td>
 	</tr>
 	<tr>
 	<td>Netmask</td>
 	<td>
-		<input type="text" name="netmask" value="{$network['netmask']}"></td>
+		<input type="text" name="netmask" value="{$network['netmask']}" disabled="1"></td>
 	</tr>
 	<tr>
 	<td>Gateway</td>
 	<td>
-		<input type="text" name="gateway" value="{$network['gateway']}"></td>
+		<input type="text" name="gateway" value="{$network['gateway']}" disabled="1"></td>
 	</tr>
 	<tr>
 		<td>DNS1 / DNS2</td>
 		<td>
-			<input type="text" name="dns1" value="{$network['dns1']}"> / 
-			<input type="text" name="dns2" value="{$network['dns2']}">
+			<input type="text" name="dns1" value="{$network['dns1']}" disabled="1"> / 
+			<input type="text" name="dns2" value="{$network['dns2']}" disabled="1">
 		</td>
-	</tr>
+	</tr><!--
 	<tr>
 		<td colspan="2" style="text-align:center;">
 		<input type="submit" name="saveNetworkConfig" value="Apply"></td>
-	</tr>
+	</tr> -->
 	</table>
-</form>
 {else}
 <table width="100%">
 	<tr>
 	<td width="100">
-		<img src="images/ko.png" alt="ko">Probleme de conexion aux informations Reseau</td>
+		<img src="images/ko.png" alt="ko">Problem connecting to network information</td>
 	</tr>		
 </table>	
 {/if}

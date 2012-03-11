@@ -1,5 +1,10 @@
-2012-03-06 Anthony Penhard
-	* Add new widget slider
+2012-03-11 Anthony Penhard
+	* Add new Advanced widget slider
+	* Add new widget vprogressbar (credit: Frederic G)
+	* Add new parameters to sub-page widget for display in standard/dialog/hide-show "mode"
+	* Add description to rules
+	* Add Widgets List in "Edit design" and "Sub-pages"
+	* Add ETS3 import if file's exist in ./ETS.xml display it in a tabs in "Objects"
 
 2012-02-08 Anthony Penhard
 	* Add first version of charts widgets with Highcharts 

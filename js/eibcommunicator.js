@@ -82,15 +82,16 @@ var EIBCommunicator = {
 		    completeCallBack();
 	},
 	executeActionList: function(actionsList) {
-		var actions=actionsList.get(0).childNodes;
-		if (actions.length>0) {
+		//var actions=actionsList.get(0).childNodes;
+    var actions=actionsList.get(0);
+		if (actions.childNodes.length>0) {
   		var xml='<execute>';
-  		for(i=0; i<actions.length; i++)
+  		for(i=0; i<actions.childNodes.length; i++)
   		{
-  			var action=actions[i];
+  			var action=actions.childNodes[i]; //var action=actions[i];
   			// Already dispatch new value if type == set-value
   			if (action.getAttribute('type')=='set-value') EIBCommunicator.sendUpdate(action.getAttribute('id'), action.getAttribute('value'));
-  			xml+=serializeXmlToString(actions[i]);
+  			xml+=serializeXmlToString(actions.childNodes.item(i));//xml+=serializeXmlToString(actions[i]);
   		}
   		xml+='</execute>';
   		EIBCommunicator.query(xml);

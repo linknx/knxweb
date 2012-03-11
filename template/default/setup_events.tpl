@@ -159,6 +159,8 @@
                   <strong><span> Id : </span><input type="text" id="tab-event-id" size="40"></strong>
                   <button onclick="events.displayXML();">View Xml</button>
                   <span id="tab-event-next-exec"></span>
+                  <br />
+                  <strong><span>Description : </span><input type="text" id="tab-event-description" size="100"></strong>
               	</div>
               	<table cellpadding="0" cellspacing="0" id="tab-event-widget-properties"  class="ui-state-default" style="width:100%;" >
               		<tbody>
@@ -168,8 +170,8 @@
                       <form id="tab-events-event-timer-form">
                       	<div id="tab-events-event-timer-tabs">
                       		<ul>
-                              <li><a href="#tab-events-event-timer-start"><span>Début</span></a></li>
-                              <li><a href="#tab-events-event-timer-end"><span>Fin</span></a></li>
+                              <li><a href="#tab-events-event-timer-start"><span>Start</span></a></li>
+                              <li><a href="#tab-events-event-timer-end"><span>End</span></a></li>
                       		</ul>
                       		<div id="tab-events-event-timer-start">
                       			<table class="form">

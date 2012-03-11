@@ -51,8 +51,9 @@ var actionsList = {
     'ioport-tx' : 'Ioport Tx', // < type="" hex="true/false" data="" ioport="" var="true/false" />
     'script' : 'Script', // TODO conditionner si linknx est compilé avec lua // < type="" >script <... />
     'cancel' : 'Cancel', // < type="" rule-id="" />
-    'formula' : 'Formula', // TODO conditionner only since version 0.0.1.29 : a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
-    'start-actionlist' : 'Start-actionlist' // TODO conditionner only since version 0.0.1.29 < type="" rule-id="" list="true/false" /> 
+    'formula' : 'Formula', // only since version 0.0.1.29 : a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
+    'start-actionlist' : 'Start actionlist', // only since version 0.0.1.29 < type="" rule-id="" list="true/false" />
+    'set-rule-active' : 'Set rule active' // only since version 0.0.1.29 < type="" rule-id="" active="yes/no" /> 
 };
 
 var rules = {
@@ -182,6 +183,7 @@ var rules = {
     var xmlactionlist, xml;
     var rule=$('<rule>');
     rule.attr("id", $('#id-current-rule').val());
+    rule.attr("description", $('#description-current-rule').val());
     
     $('#actionlist')[0].condition = true;
 
@@ -238,7 +240,7 @@ var rules = {
     }
     rule.append(xmlactionlist);
     
-    $("#tab-rules-property").text('<rule id="'+$('#id-current-rule').val()+'" >'+rule.html()+'</rule>').html();
+    $("#tab-rules-property").text('<rule id="'+$('#id-current-rule').val()+'" description="' + $('#description-current-rule').val() + '" >'+rule.html()+'</rule>').html();
   },
   
   handleDialogCancel: function(dialog) {
@@ -285,6 +287,7 @@ var rules = {
     };
     
     $('#id-current-rule').val('');
+    $('#description-current-rule').val('');
   },
   
   addconditionCurrent: function (div) {
@@ -312,6 +315,7 @@ function loadRule(xml)
   rules.deleteAllCurrentRule();
   nbrAction = 0;
   nbrCondition = 0;
+  $('#description-current-rule').val($(xml).attr('description'));
 
   var k = 0;
   $(xml).children("condition").each(function () {
@@ -368,8 +372,6 @@ function loadRulesList()
   } else $('#listRules').append('<option value="">' + tr("No definite rule") + '</option>');
   
   $('#listRules').change(function(){
-    //messageBox(" Selection rule :"+this.value,"Rule","info");
-    //$('#id-current-rule').val(this.value);
     $("#tab-rules-property").text(serializeToString(arrayRules[this.value]));
     loadRule(arrayRules[this.value]);
     $('#id-current-rule').val(this.value);

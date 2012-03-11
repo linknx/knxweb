@@ -4,6 +4,22 @@
 
 <div id="widgetsubpagediv"></div>
 
+<div id="tab-subpages-list-widgets">
+  <div class="ui-state-active ui-corner-top header">
+    Widgets List
+  </div>
+  <table cellpadding="0" cellspacing="0" id="tab-subpages-widgets-list">
+    <thead>
+      <tr>
+         <th>Widget type</th>
+         <th>Description</th>
+      </tr>
+   </thead>
+    <tbody>
+    </tbody>
+  </table>
+</div>
+
 <div id="tab-subpages-properties" title="Widget information">
 	<div class="ui-state-active ui-corner-top header">
 		Widget information
@@ -44,7 +60,7 @@
 				<th style="width: 15px;"><input type="checkbox" id="tab-subpages-background-toggle"></th>
 				<td>
 					<input type="text" id="tab-subpages-background">
-					<select id="tab-subpages-background-list">
+					<select id="tab-subpages-background-list" style="display:none;">
 				</td>
 			</tr>
 		</tbody>

@@ -20,8 +20,9 @@ var actionEditor = {
 	    'ioport-tx' : 'Ioport Tx', // < type="" hex="true/false" data="" ioport="" var="true/false" />
 	    'script' : 'Script', // TODO conditionner si linknx est compiler avec lua // < type="" >script <... />
 //	    'cancel' : 'Cancel', // < type="" rule-id="" />
-	    'formula' : 'Formula', // TODO conditionner only since version 0.0.1.29 : a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
-	    'start-actionlist' : 'Start-actionlist' // TODO conditionner only since version 0.0.1.29 < type="" rule-id="" list="true/false" /> 
+	    'formula' : 'Formula', // id = a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
+	    'start-actionlist' : 'Start actionlist', // < type="" rule-id="" list="true/false" />
+      'set-rule-active' : 'Set rule active' // < type="" rule-id="" active="yes/no" /> 
 	},
 	
 	new: function(type) {
@@ -95,6 +96,8 @@ var actionEditor = {
       case 'formula':
       	return "object: " + conf.getAttribute('id') + ", x=" + conf.getAttribute('x') + ", y=" + conf.getAttribute('y') + ", a=" + conf.getAttribute('a') + ", b=" + conf.getAttribute('b') + ", c=" + conf.getAttribute('c') + ", m=" + conf.getAttribute('m') + ", n=" + conf.getAttribute('n');
       case 'start-actionlist':
+      	return "rule: " + conf.getAttribute('rule-id');
+      case 'set-rule-active':
       	return "rule: " + conf.getAttribute('rule-id');
     }
 	},
@@ -187,6 +190,10 @@ var actionEditor = {
         $("[name=rule-id]", dialog).val(tr.conf.getAttribute('rule-id'));
 				if (tr.conf.getAttribute('list')=="true") $("[name=list]", dialog).attr('checked', '1'); else $("[name=list]", dialog).removeAttr('checked');
         break;
+      case 'set-rule-active' : // only since version 0.0.1.29
+        $("[name=rule-id]", dialog).val(tr.conf.getAttribute('rule-id'));
+				if (tr.conf.getAttribute('active')=="yes") $("[name=active]", dialog).attr('checked', '1'); else $("[name=active]", dialog).removeAttr('checked');
+        break;
     };
     
     dialog.dialog('open');
@@ -258,6 +265,10 @@ var actionEditor = {
 	    case 'start-actionlist':
 	    	conf.setAttribute('rule-id', $("[name=rule-id]", dialog).val());
 	    	conf.setAttribute('list', (($("[name=list]", dialog).is(':checked'))?'true':'false') );
+	    	break;
+	    case 'set-rule-active':
+	    	conf.setAttribute('rule-id', $("[name=rule-id]", dialog).val());
+	    	conf.setAttribute('active', (($("[name=active]", dialog).is(':checked'))?'yes':'no') );
 	    	break;
 		}
 		

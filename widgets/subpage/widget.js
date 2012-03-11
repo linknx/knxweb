@@ -3,6 +3,7 @@ function CSubPage(conf) {
   this.init(conf);
   
   this.active=false;
+  this.dialogdiv = '';
   
   this.refreshHTML();
 }
@@ -22,6 +23,14 @@ CSubPage.prototype.getListeningObject = function() {
 			if ($.inArray(value, a)==-1) a.push(value);
 		});
 	});
+  if (this.dialogdiv != '') {
+    $(".widget", this.dialogdiv).each(function() {
+  		var l=this.owner.getListeningObject();
+  		$.each(l, function(key, value) {
+  			if ($.inArray(value, a)==-1) a.push(value);
+  		});
+  	});
+  }
 
 	return a;
 }
@@ -31,7 +40,14 @@ CSubPage.prototype.refreshHTML = function() {
 
 	var subpage= $('subpage[name=' + this.conf.getAttribute("subpage") + ']', _subpages);
 
-	var div=this.div;
+	this.div.empty();
+  if (this.conf.getAttribute("view_mode")!="") { 
+    //$(".widget", div).hide();
+    var div=$("<div class='subpagedialog' style='position:relative;' />");
+  } else {
+    //$(".widget", div).show();
+    var div=this.div;
+  }  
 	div.empty();
 	div.width(subpage.attr('width'));
 	div.height(subpage.attr('height'));
@@ -82,7 +98,50 @@ CSubPage.prototype.refreshHTML = function() {
 		}	else return false;
 	});
 	
-//	this.div.append(div);
+//	this.div.append(div); 
+  if (this.conf.getAttribute("view_mode")!="") { 
+    this.dialogdiv = div;
+    
+    this.opensubpage = $("<img src='" + getImageUrl(this.conf.getAttribute("picture-dialog")) + "' alt='click'/>"); 
+    this.opensubpage[0].owner = this;
+    
+    this.div.append(this.opensubpage);
+    div.hide();
+    this.div.append(div);
+    
+    if (this.conf.getAttribute("view_mode") == "dialog" || this.conf.getAttribute("view_mode") == "dialogmodal" ) {
+      this.opensubpage.click(function() {
+        this.owner.dialogdiv.dialog('open');
+      });
+      this.div.width('auto');
+      this.div.height('auto');
+      var modal = false;
+      if (this.conf.getAttribute("view_mode") == "dialogmodal" ) modal = true;
+      var dialogClass = '';
+      var heighttitle = 26;
+      if (this.conf.getAttribute("hidetitledialog") == "true" ) {
+        dialogClass = 'notitledialog';
+        heighttitle = 0;
+      }
+      div.dialog({
+        autoOpen: false,
+        title: '',
+        resizable: false,
+        width: parseInt(subpage.attr('width')),
+        minWidth: parseInt(subpage.attr('width')),
+        height: parseInt(subpage.attr('height')) + heighttitle,
+        minHeight: parseInt(subpage.attr('height')),
+        modal: modal,
+        dialogClass: dialogClass
+      });
+    } else {
+      this.div.width('auto');
+      this.div.height('auto');
+      this.opensubpage.click(function() {
+        this.owner.dialogdiv.toggle();
+      });
+    }
+  }
 
 }
 
@@ -92,5 +151,9 @@ CSubPage.prototype.updateObject = function(obj,value) {
 	$(".widget", this.div).each(function() {
 		this.owner.updateObject(obj, value);
 	});
-	
+  if (this.dialogdiv != '') {
+  	$(".widget", this.dialogdiv).each(function() {
+  		this.owner.updateObject(obj, value);
+  	});
+  }	
 };

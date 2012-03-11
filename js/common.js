@@ -156,6 +156,7 @@ jQuery.fn.disableTextSelect = function() {
 
 jQuery.fn.tableize = function(option) {
 	if (!option) option=[];
+  if (!option.id) option.id = "objects-tab-table";
 	this[0].tableizeOption=option;
 	
 	this.addClass("tableize");
@@ -165,15 +166,28 @@ jQuery.fn.tableize = function(option) {
 	{
 		$('tbody tr', this).click( function() {
 				var checked=$(this).hasClass('row_selected');
-				$('#objects-tab-table tr').removeClass('row_selected');
+        $('#'+ option.id +' tr').removeClass('row_selected');
 				if (!checked) $(this).addClass('row_selected');
 		});
 	}
 	
-	if (option.sortable!=false) this.tablesorter({
-		widgets: ['zebra'],
-		sortList: [[0,0]]
-	}); else
+	if (option.sortable!=false) {
+    if (!option.tablesorterOption) {
+      this.tablesorter({
+    		widgets: ['zebra'],
+    		sortList: [[0,0]]
+    	});
+    } else {
+      this.tablesorter(option.tablesorterOption);
+    }
+    if (option.pager) {
+      this.tablesorterPager({
+        size: option.pagersize,
+        container: $("#" + option.pager), 
+        positionFixed: false 
+      });
+    }
+  } else
 	{
 		$('tbody tr:odd', this).addClass('odd');
 	  $('tbody tr:even', this).addClass('even');
@@ -189,7 +203,7 @@ jQuery.fn.tableize = function(option) {
 			{
 				$('tbody tr', this).click( function() {
 						var checked=$(this).hasClass('row_selected');
-						$('#objects-tab-table tr').removeClass('row_selected');
+            $('#'+ option.id +' tr').removeClass('row_selected');
 						if (!checked) $(this).addClass('row_selected');
 				});
 			}

@@ -41,7 +41,7 @@ var objects = {
 				// Gad listener
 				var atrlistener = $("<tr>");
 				var id = $("#edit-object-id").val();
-				atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="' + this.getAttribute('gad') + '" size="10" > <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" ' + (this.getAttribute('read')?'checked="true"':'') + '> ' + tr("Lecture") + ' </td>'));
+				atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="' + this.getAttribute('gad') + '" size="10" > <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" ' + (this.getAttribute('read')?'checked="true"':'') + '> ' + tr("Read") + ' </td>'));
 				atrlistener.appendTo($('#edit-object-td-listener'));
 				listener = true;
 			});
@@ -179,7 +179,7 @@ var objects = {
 					$("#objects-tab-table").trigger("refresh");
 				}
 				else
-					messageBox(tr("Error: ")+responseXML.textContent, 'Erreur', 'alert');
+					messageBox(tr("Error: ")+responseXML.textContent, 'Error', 'alert');
 				loading.hide();
 			}
 		});
@@ -194,11 +194,11 @@ jQuery(document).ready(function(){
 	$('#button-add-object').bind('click', objects.newObject);
 	$('#button-edit-object').bind('click', function() {
 		var selected=$('.row_selected:first','#objects-tab-table')[0];
-		if (selected) objects.editObject(selected.data.getAttribute('id')); else messageBox('Veuillez choisir un objet dans la liste','Attention','alert');
+		if (selected) objects.editObject(selected.data.getAttribute('id')); else messageBox('Please select an objet','Attention','alert');//messageBox('Veuillez choisir un objet dans la liste','Attention','alert');
 	});
 	$('#button-remove-object').bind('click', function() {
 		var selected=$('.row_selected:first','#objects-tab-table')[0];
-		if (selected) objects.deleteObject(selected.data.getAttribute('id')); else messageBox('Veuillez choisir un objet dans la liste','Attention','alert');
+		if (selected) objects.deleteObject(selected.data.getAttribute('id')); else messageBox('Please select an objet','Attention','alert');//messageBox('Veuillez choisir un objet dans la liste','Attention','alert');
 	});
 	$('#button-read-object').bind('click', objects.readwriteObject);
 	
@@ -209,19 +209,19 @@ jQuery(document).ready(function(){
 	$('#edit-object-dialog').dialog({ 
 		autoOpen: false,
 		buttons: {
-				"Ajout d'un listener": function() { 
+				"Add a listener": function() { 
 					var atrlistener = $("<tr>");
 					var id = $("#edit-object-id").val();
-					atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="" size="10" >  <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" > ' + tr("Lecture") + ' </td>'));
+					atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="" size="10" >  <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" > ' + tr("Read") + ' </td>'));
 					atrlistener.appendTo($('#edit-object-td-listener'));
 					$(this).dialog('option','width',650); 
 					$('#edit-object-td-listener').show();
 				}, 
-				"Annuler": function() { $(this).dialog("close"); $('#edit-object-td-listener').hide(); $(this).dialog('option','width',430);},
-				"Sauver": function() { if (objects.processAddEdit()) { $(this).dialog("close"); $('#edit-object-td-listener').hide(); $(this).dialog('option','width',430); } }
+				"Cancel": function() { $(this).dialog("close"); $('#edit-object-td-listener').hide(); $(this).dialog('option','width',430);},
+				"Save": function() { if (objects.processAddEdit()) { $(this).dialog("close"); $('#edit-object-td-listener').hide(); $(this).dialog('option','width',430); } }
 		},
 		resizable: false,
-		title: "Ajouter/Editer un objet",
+		title: "Add/Edit an objet", //"Ajouter/Editer un objet",
 		width: "430px",
 		modal: true
 	});
@@ -231,26 +231,27 @@ jQuery(document).ready(function(){
 	$('#readwrite-object-dialog').dialog({ 
 		autoOpen: false,
 		buttons: { 
-				"Lire": function() {
+				"Read": function() {
 					var value=readObjectValue($("#readwrite-object-id").val());
 					if (value!==false) 
 						$("#readwrite-object-recv").val(value);
 					else
-						messageBox("Erreur lors de la lecture de l'object","Erreur","error");
+            messageBox("Error when we read the object","Error","error");
+						//messageBox("Erreur lors de la lecture de l'object","Erreur","error");
 				},
-				"Ecrire": function() {
+				"Write": function() {
 					if ($("#readwrite-object-val-select").css('display')!='none')
 						var value=$("#readwrite-object-val-select").val();
 					else
 						var value=$("#readwrite-object-val-input").val();
 	
 					var result=writeObjectValue($("#readwrite-object-id").val(),value);
-					if (!result) messageBox("Erreur lors de l'écriture de l'object","Erreur","error");
+					if (!result) messageBox("Error when we read the object","Error","error"); //messageBox("Erreur lors de l'écriture de l'object","Erreur","error");
 				},
-				"Fermer": function() { $(this).dialog("close"); }
+				"Close": function() { $(this).dialog("close"); }
 		},
 		resizable: false,
-		title: "Lire/Envoyer la valeur d'un objet",
+		title: "Read/Write value of an objet",//"Lire/Envoyer la valeur d'un objet",
 		width: "430px",
 		modal: true
 	});
@@ -302,9 +303,150 @@ jQuery(document).ready(function(){
 	$('#objects-tab-table').show();
 	$('#objects-tab-table').tableize({
 		selectable: true,
-		disableTextSelect: true
+		//disableTextSelect: true,
+    //pager: 'objects-tab-pager',
+    //pagersize: 10,
 	});
 	// Clean dummy tr
 	$('#objects-tab-table tbody').empty();
+
+
+/* test ETS.xml */
+  // Move tab-objects-propertybottom DOM to #OptionContainer on the bottom of the page
+  var etstab = $('#tab-objects-propertybottom').clone();
+  $('#tab-objects-propertybottom').remove();
+  $('#OptionContainer').append(etstab);
+
+  
+  $("#objects-tab-table-ets").show();
+  $("#objects-tab-table-ets").tableize({
+		selectable: true,
+    id: 'objects-tab-table-ets',
+    pager: 'objects-ets-pager',
+    pagersize: 10,
+    tablesorterOption: {
+    		widgets: ['zebra', "filter"],
+        sortList:[[0,0],[1,0]],
+        headers: { 7:{sorter: false}, 8:{sorter: false}, 9:{sorter: false}, 10:{sorter: false}, 11:{sorter: false}}    
+    	}
+	});
+  //$("#objects-ets-pager").css("position","relative");
+  $("#objects-ets-pager").css("position","static");
+  $("#objects-ets-pager").show();
+
+  etstab.show();
+  $("#OptionContainer").show();
+  $("#openOptionContainer").show();
+  
+  $("#objects-tab-table-ets tbody tr").dblclick(function(){
+    msg = "";
+    i = 0;
+    tab_data = [];
+    $("td", this).each(function(){
+      i++
+      msg = msg + i + " : " + this.textContent + " / ";
+      tab_data[i] = this.textContent;
+    });
+    console.log(msg);
+    //objects.newObject();
+    var listener = false;
+
+    $("#edit-object-label").val('');
+    $("#edit-object-id").val('');
+    $("#edit-object-id").removeAttr('readonly');
+    $("#edit-object-type").val('1.001');
+    $("#edit-object-type").removeAttr('disabled');
+    $("#edit-object-gad").val('');
+    $("input[id^='edit-object-flag-']").attr('checked',false);
+    
+    $("#edit-object-init").val('request');
+    $('#edit-object-init').trigger('change');
+    
+    $("#edit-object-form")[0].validator.resetForm();
+    $('#edit-object-td-listener').empty();
+    
+    $("#edit-object-label").val(tab_data[1] + ' ' + tab_data[4]);
+    
+    if (tab_data[7] == "1 bit") $("#edit-object-type").val('1.001');
+    if (tab_data[7] == "4 bit") $("#edit-object-type").val('3.007');
+    if (tab_data[7] == "1 Byte") $("#edit-object-type").val('5.xxx');
+    if (tab_data[7] == "2 Byte") $("#edit-object-type").val('9.001');
+    if (tab_data[7] == "3 Byte") $("#edit-object-type").val('11.001');
+    
+    /* flags K(=C) L E T M */
+    if (tab_data[8]  == "K") $("#edit-object-flag-c").attr('checked',true);
+    if (tab_data[9]  == "L") $("#edit-object-flag-r").attr('checked',true);
+    if (tab_data[10] == "E") $("#edit-object-flag-w").attr('checked',true);
+    if (tab_data[11] == "T") $("#edit-object-flag-t").attr('checked',true);
+    if (tab_data[12] == "Act") $("#edit-object-flag-u").attr('checked',true);
+    
+    // $("#edit-object-gad").val(tab_data[6]);  // TODO gérer le listener si plusieurs GA ...
+    var list_gad = tab_data[6].split(', ');
+
+    $("#edit-object-gad").val(list_gad[0]);
+    if (list_gad.length > 1 ) listener = true;
+
+    for( i = 1; i < list_gad.length; i++)
+    {
+      var atrlistener = $("<tr>");
+      //var id = $("#edit-object-id").val();
+      var id = '';
+      atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="' + list_gad[i] + '" size="10" > <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" > ' + tr("Read") + ' </td>'));
+      atrlistener.appendTo($('#edit-object-td-listener'));
+    }
+
+    if (listener) {
+      $('#edit-object-dialog').dialog('option','width',650);
+      $('#edit-object-td-listener').show();
+    } else {
+      $('#edit-object-dialog').dialog('option','width',430);
+      $('#edit-object-td-listener').hide();
+    }
+    $('#edit-object-dialog').dialog('open');
+    // fin function newObject TODO gérer ouverture avec des listener
+
+  });
+
+/*
+
+Flags bit Signification
+C(=K) = communication
+0-La valeur du point de donnée n'est pas transmise.
+1-Le point de donnée est connecté au bus et la valeur du point de donnée
+est transmise. C = 1, valeur par défaut pour leseentrées et sorties
+
+L = Lecture
+0-La valeur du point de donnée ne peut pas être lue.
+1-L'appareil émet la valeur de son point de donnée à la réception d'un ordre
+de lecture
+
+E = Écriture
+0-La valeur du point de donnée ne peut pas être écrite.
+1-L'appareil reçoit et écrase sa valeur de point de donnée
+E = 1, réglage par défaut pour les entrées
+
+T = Transmission
+0-La valeur du point de donnée n'est pas transmise
+1-L'appareil émet la valeur de son point de donnée en cas de changement
+de valeur, d'événement, d’intervalle de transmission
+T = 1, réglage par défaut pour sorties
+
+M = Mise à jour
+0-La valeur du point de donnée n'est pas mise à jour
+1-La valeur du point de donnée est mise à jour si le Flag S = 1 (et/ou L = 1)
+M =1, réglage par défaut pour les entrées
+
+Flags pour entrées, Réception de valeurs
+C L E T M
+1 0 1 0 1
+
+Flags pour sorties, Transmission de valeurs
+C L E T M
+1 0 0 1 0
+
+*/
+
+  
+/* /test ETS.xml */
 	
 });	

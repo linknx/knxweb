@@ -56,7 +56,6 @@ function CCharts(conf) {
   this.init(conf);
 
   $(this.div).click(function() {
-    console.log("click graph : ",this.owner);
     if (!this.owner.editMode)
     {
         if (this.owner.curves[0].id == '' ) {
@@ -310,13 +309,11 @@ function creategraph(curves, title, type_graph, displaylegend) {
     series2.data = [];
 
     series2.data = getdatajson(curves[i].id, curves[i].nbenreg);
-    console.log("series2", series2);
     
     series2.yAxis = 0; // premier axe yAxis
     options_chart.series.push(series2);
   };
 
-  console.log("options_chart", options_chart);
   // création du graph
   _chart = new Highcharts.StockChart( options_chart,
     function(c) {

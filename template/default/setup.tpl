@@ -139,12 +139,13 @@
 
         <div class="subItem" id="button-try-design"><img src="images/display.png" />Try design</div>
         <div class="subItem" id="button-save-design"><img src="images/fetch.png" />Save</div>
-        <div class="subItem" id="button-widgets-list"><input type="checkbox" onchange="$('#tab-design-list-widgets').toggle();" value="1" checked="1" > Widgets List</div>
+        <div class="subItem" ><input type="checkbox" onchange="$('#tab-design-list-widgets').toggle();" value="1" checked="1" > Widgets List</div>
       </div>
 
 			<h3 tab_id="subpageedit" tab_label="Sub-pages" tab_url="setup_subpages.php"><a href="#"><img src="images/setup.png"> Sub-pages</a></h3>
 			<div>
         <div class="subItem" id="button-add-subpage"><img src="images/add.png" />New sub-page</div>
+        <!-- <div class="subItem" id="button-clone-subpage"><img src="images/add.png" />Clone sub-page</div> -->
         <div class="subItem" id="button-remove-subpage"><img src="images/remove.png" />Remove sub-page</div>
         <div class="subItem" id="button-subpage-parameters"><img src="images/edit.png" />Sub-page parameters</div>
 
@@ -163,7 +164,7 @@
 				</div>
 
         <div class="subItem" id="button-save-subpage"><img src="images/fetch.png" />Save</div>
-
+        <div class="subItem" ><input type="checkbox" onchange="$('#tab-subpages-list-widgets').toggle();" value="1" checked="1" > Widgets List</div>
       </div>
 			
 			<h3 tab_id="admin" tab_label="Administer" tab_url="setup_admin.php"><a href="#"><img src="images/construct.png"> Admin</a></h3>
@@ -188,8 +189,16 @@
 			<div id="tab-setup">
 				<h3 style="color: #F00; font-weight: bold;">Please select a section to configure in the left menu.</h3>
 			</div>
+      
+  	</div>
+    
 		</div>
-	</div>
+    
+    <div id="OptionContainer" class="ui-widget-content" style="#height:40px;display:none;">
+      <div id="openOptionContainer" class="ui-button ui-state-default ui-button-icon-only ui-corner-top" >
+        <span class="ui-icon ui-icon-circle-triangle-s"></span>
+      </div>
+  	</div>
 </div>
 
 </body>

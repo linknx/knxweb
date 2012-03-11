@@ -6,6 +6,19 @@
 	<version>1.0</version>
 	<category>Advanced widgets</category>
 	<settings>
+    <setting label="" type="separator" />
+    <setting id="view_mode" label="View Mode" type="list" default="">
+      <option key="" value="Standard" />
+      <option key="dialog" value="Dialog" />
+      <option key="dialogmodal" value="Dialog Modal" />
+      <option key="hideshow" value="Hide / Show" />
+    </setting>
+    <setting id="hidetitledialog" label="Hide title dialog" type="list" default="false">
+      <option key="true" value="Yes" />
+      <option key="false" value="No" />
+    </setting>
+    <setting id="picture-dialog" label="Picture show dialog" type="picture" />
+    <setting label="" type="separator" />
 		<setting id="subpage" label="Sub-page" type="subpage" />
 	</settings>
 	<feedbacks>
