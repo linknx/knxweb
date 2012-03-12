@@ -734,7 +734,7 @@ $.extend(rules, {
             break;
           case 'send-sms' :
             tbody.append(
-              $('<tr>').append('<th width="150">Numéro de Téléphone</th>')
+              $('<tr>').append('<th width="150">Phone Number</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-send-sms-action-id" size="15">'))
               ).append(
               $('<tr>').append('<th width="150">Value</th>')
