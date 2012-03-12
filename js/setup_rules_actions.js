@@ -498,12 +498,12 @@ $.extend(rules, {
         div.rule_id = $('#tab-rules-start-actionlist-action-rule-id').val();
         //div.list = $('#tab-rules-start-actionlist-action-list').val();
         div.list = $('#tab-rules-start-actionlist-action-list').attr('checked');
-        html = '<br />rule : '+div.rule_id+'<br />actionlist : '+((div.list)?"true":"false"));
+        html = '<br />rule : '+div.rule_id+'<br />actionlist : '+((div.list)?"true":"false");
         break;
       case 'set-rule-active' : // only since version 0.0.1.29
           div.rule_id = $('#tab-rules-set-rule-active-action-rule-id').val();
           div.active = $('#tab-rules-set-rule-active-action-active').attr('checked');
-          html = '<br />rule : '+div.rule_id+'<br />active : '+((div.active)?"yes":"no"));
+          html = '<br />rule : '+div.rule_id+'<br />active : '+((div.active)?"yes":"no");
           break;
     };
 
