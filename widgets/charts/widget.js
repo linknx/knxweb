@@ -332,8 +332,12 @@ function getdatajson(id, nbenreg) {
 
   jQuery.ajax({ type: "GET", url: url, dataType: "json", async : false, 
 			success: function(data) {
+        var prev_val_0 = 0;
         $.each(data, function(key, val) {
-          data_json.push([ val[0], parseFloat(val[1])]);
+          if (val[0] != prev_val_0) {
+            data_json.push([ val[0], parseFloat(val[1])]);
+          }
+          prev_val_0 = val[0];
         });
       }
   });
