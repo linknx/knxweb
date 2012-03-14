@@ -30,11 +30,11 @@ if ($eibd_running!="") {
   $eibd_running_param = $_config["eibd"];
 }
 
-$linknx_running = `ps aux | grep linknx | grep -v grep`;
+$linknx_running = `ps ax | grep linknx | grep -v grep`;
 if ($linknx_running!="") {
   $linknx_running_param = explode("linknx ",$linknx_running);
   $linknx_running_param = $linknx_running_param[1];
-  $linknx_param_pos_w = strpos($linknx_running_param, "-w") >= 0;
+  $linknx_param_pos_w = (strpos($linknx_running_param, "-w") >= 0);
 } else {
   $linknx_running_param = $_config["linknx"];
   $linknx_param_pos_w = false;
@@ -118,7 +118,7 @@ if (isset($_GET["ajax"])) {
         if ($linknx_running!="") echo '<span style="color: #00FF00">ok</span>'; 
 				else {
 					echo "<span style='color: #FF0000'>no</span> => for start exemple : <i>linknx -d --config=/etc/linknx.xml --write=/etc/linknx.xml</i> ";
-					$error=true;
+					//$error=true;
 				} ?>
 			</li>
 		</ul>
