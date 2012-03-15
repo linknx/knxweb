@@ -6,17 +6,29 @@ var design_view = {
 	currentVersion: null,
 	currentZone: null,
 
-	load: function(designName, version)	{
+	load: function(designName, version, callback)	{
 		var url = 'design/' + designName + '/' + version + '.xml';
 	
 		design_view.currentDesign=designName;
 		design_view.currentVersion=version;
 		
-		req = jQuery.ajax({ url: url, dataType: 'xml', async:false, cache: false,
+		req = jQuery.ajax({ url: url, dataType: 'xml', async: true, cache: false,
 			success: function(responseXML, status) {
 				design_view.config=responseXML;
+				callback();
 			}
 		});
+	},
+	
+	loadSubPages: function(callback) {
+	    var url = 'design/subpages.xml';
+
+	    var req = jQuery.ajax({ url: url, dataType: 'xml', async: true, cache: false,
+		success: function(responseXML, status) {
+		    _subpages=responseXML
+		    callback();
+		}
+	    });	
 	},
 
 	// Add existing widget
@@ -130,31 +142,33 @@ jQuery(function($) {
 	if (matched = location.search.match(/version=([^&]+)/))
 		version = matched[1];
 
-	loadSubPages();
-
-	design_view.load(design, version);
-	design_view.draw();
-
-	if ($("config",design_view.config)[0].getAttribute('enableSlider')=='true') {
-		$('#screen').serialScroll({
-			target:'#zoneContainer',
-			items:'li',
-			prev:'img.prev',
-			next:'img.next',
-			axis:'x',
-			duration:1000,
-			force:true
+	design_view.loadSubPages(function() {
+		design_view.load(design, version, function() {
+			
+			design_view.draw();
+			
+			if ($("config",design_view.config)[0].getAttribute('enableSlider')=='true') {
+				$('#screen').serialScroll({
+					target:'#zoneContainer',
+					items:'li',
+					prev:'img.prev',
+					next:'img.next',
+					axis:'x',
+					duration:1000,
+					force:true
+				});
+			}
+			 
+			if (tab_config.useJavaIfAvailable=='true')
+			{
+				if (navigator.javaEnabled())
+				{
+					// Update all object
+					EIBCommunicator.updateAll();
+				} else EIBCommunicator.periodicUpdate();
+			} else EIBCommunicator.periodicUpdate();
+			
+			loading.hide();
 		});
-	}
- 
-  if (tab_config.useJavaIfAvailable=='true')
-  {
-	  if (navigator.javaEnabled())
-	  {
-	  	// Update all object
-			EIBCommunicator.updateAll();
-	  } else EIBCommunicator.periodicUpdate();
-	} else EIBCommunicator.periodicUpdate();
-
-	loading.hide();
+	});
 });
