@@ -107,8 +107,11 @@ if ($typelog == "mysql") {
   mysql_select_db($base,$db) or die('<h1>Connexion impossible à la base</h1>');
   mysql_query("SET NAMES 'utf8'");
    
-  //$sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." DESC LIMIT 0 , ".$log_nbenreg;
-  $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' LIMIT 0 , ".$log_nbenreg;
+  if ($_GET['output'] == "json") {
+    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' LIMIT 0 , ".$log_nbenreg;
+  } else {
+    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." DESC LIMIT 0 , ".$log_nbenreg;
+  }
   $req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
 
   $nbenreg = mysql_num_rows($req);
