@@ -422,7 +422,7 @@ var design = {
 	    		select.append(option);
 	
 					$('object', _objects).each(function() {
-		    		var option=($('<option value="' + this.getAttribute('id') + '">' + this.textContent + '</option>'));
+		    		var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) + '</option>'));
 		    		if (this.getAttribute('id')==value) option.attr('selected','1');
 		    		select.append(option);
 					});

@@ -49,7 +49,7 @@
 
 </div>
 
-<div id="images-manager-dialog">
+<div id="images-manager-dialog" style="display:none;">
 	<div class="url">
 		Use external URL : <input name="url" id="images-manager-dialog-url" type="text" size="50">
 		<input type="button" id="images-manager-dialog-url-set" value="Set" onclick=""> (ex.: http://www.abc.com/123.jpg)
@@ -62,7 +62,7 @@
 	</div>
 </div>
 
-<div id="colorpicker-dialog">
+<div id="colorpicker-dialog" style="display:none;">
 	<div id="colorpicker-dialog-picker"></div> 
 	<div>
 		<label for="colorpicker-dialog-input">Color: </label>

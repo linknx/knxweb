@@ -84,6 +84,18 @@ if ($typelog == 'mysql') {
   $value = "value";
 }
 
+if ($objectlog == 'test') {
+  $typelog = 'mysql';
+  $serveur       = "localhost";
+  $login          = "maison";
+  $password       = "energy";
+  $base  = "linknx"; 
+  $table = "log";
+  $ts = "ts";
+  $object = "object";
+  $value = "value";
+}
+
 setlocale(LC_ALL , "fr_FR" );
 date_default_timezone_set("Europe/Paris");
 
@@ -108,7 +120,16 @@ if ($typelog == "mysql") {
   mysql_query("SET NAMES 'utf8'");
    
   if ($_GET['output'] == "json") {
-    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' LIMIT 0 , ".$log_nbenreg;
+    $sql = "SELECT COUNT(".$ts.")-".$log_nbenreg." AS lowlimit FROM ".$table." WHERE ".$object." = '".$objectlog."'";
+    $req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
+    if (mysql_num_rows($req)) {
+      $data=mysql_fetch_array($req);
+      $lowlimit=$data["lowlimit"];
+    } else {
+      $lowlimit=0;
+    }
+    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' LIMIT ".$lowlimit." , ".$log_nbenreg;
+    //$sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' LIMIT 0 , ".$log_nbenreg;
   } else {
     $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." DESC LIMIT 0 , ".$log_nbenreg;
   }

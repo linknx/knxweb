@@ -244,7 +244,7 @@ $.extend(rules, {
         break;
       case 'shell-cmd' :
         div[0].cmd='';
-        div[0].cmdvar='';
+        div[0].cmdvar=false;
         div.css("width","140px");
         break;
       case 'ioport-tx' :
@@ -359,7 +359,7 @@ $.extend(rules, {
         break;
       case 'shell-cmd' :
         $('#tab-rules-shell-cmd-action-value').val(div.cmd);
-        $('#tab-rules-shell-cmd-action-var').val(div.cmdvar);
+        $('#tab-rules-shell-cmd-action-var').attr("checked",div.cmdvar);
         break;
       case 'ioport-tx' :
         $('#tab-rules-send-ioport-tx-hex').val(div.hex);
@@ -464,7 +464,7 @@ $.extend(rules, {
         break;
       case 'shell-cmd' :
         div.cmd = $('#tab-rules-shell-cmd-action-value').val();
-        div.cmdvar = $('#tab-rules-shell-cmd-action-var').val();
+        div.cmdvar = $('#tab-rules-shell-cmd-action-var').attr("checked");
         html = '<br />'+div.cmd;
         break;
       case 'ioport-tx' :
@@ -567,7 +567,8 @@ $.extend(rules, {
         xml.attr('subject',action[0].subject);
         xml.attr('var',action[0].emailvar);
         //xml.text('<![CDATA[' + action[0].objtext + ']]>');
-        xml.text(cdataTextcontent(action[0].objtext));
+        //xml.text(cdataTextcontent(action[0].objtext));
+        xml.text(action[0].objtext);
         break;
       case 'dim-up' : // < type="" id="" start="" stop="" duration="" />
         xml.attr('id',action[0].objid);
