@@ -116,7 +116,7 @@ CSlider.prototype.refreshHTML = function() {
         actions.append($("<action type='set-value' id='" + this.owner.conf.getAttribute("command-object") + "' value='" + value + "'></action>")[0]);
         if (actions.length>0) EIBCommunicator.executeActionList(actions);
       }
-      //test $(".value",this.owner.div).hide();
+      $(".value",this.owner.div).hide();
     });
     $( '.sliderdiv', this.div ).bind( "slide", function(event, ui) {
       var value = this.owner.convertFromUiValue(ui.value);
