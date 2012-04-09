@@ -6,8 +6,8 @@ $.extend(rules, {
     'or':'Or',
     'not':'Not',
     'object' : 'Object',
-    'objectsrc' : 'Object Src',
-    'objectcompare' : 'Object Compare',
+    'object-src' : 'Object Src',
+    'object-compare' : 'Object Compare',
     'timer':'Timer',
     'time-counter':'Time Counter',
     'ioport-rx':'Ioport Rx',
@@ -39,14 +39,14 @@ $.extend(rules, {
         div[0].object_value=condition.getAttribute('value');
         div[0].object_trigger=condition.getAttribute('trigger');
         break;
-      case "objectsrc":
+      case "object-src":
         div[0].objectsrc_id=condition.getAttribute('id');
         div[0].objectsrc_operation=condition.getAttribute('op');
         div[0].objectsrc_value=condition.getAttribute('value');
         div[0].objectsrc_trigger=condition.getAttribute('trigger');
         div[0].objectsrc_src=condition.getAttribute('src');
         break;
-      case "objectcompare":
+      case "object-compare":
         div[0].object_id=condition.getAttribute('id');
         div[0].object_operation=condition.getAttribute('op');
         div[0].object_id2=condition.getAttribute('id2');
@@ -289,14 +289,14 @@ $.extend(rules, {
         div[0].object_value='';
         div[0].object_trigger=false;
         break;
-      case "objectsrc":
+      case "object-src":
         div[0].objectsrc_id='';
         div[0].objectsrc_operation='eq';
         div[0].objectsrc_value='';
         div[0].objectsrc_trigger=false;
         div[0].objectsrc_src='';
         break;
-      case "objectcompare":
+      case "object-compare":
         div[0].object_id='';
         div[0].object_operation='eq';
         div[0].object_id2='';
@@ -392,7 +392,7 @@ $.extend(rules, {
         if (div.object_trigger==true) $('#tab-rules-object-condition-trigger').attr('checked','1'); 
         else $('#tab-rules-object-condition-trigger').removeAttr('checked');
         break;
-      case "objectsrc":
+      case "object-src":
         $('#tab-rules-objectsrc-condition-operation').val(div.objectsrc_operation);
         $('#tab-rules-objectsrc-condition-value').val(div.objectsrc_value);
         $('#tab-rules-objectsrc-condition-src').val(div.objectsrc_src);
@@ -400,7 +400,7 @@ $.extend(rules, {
         else $('#tab-rules-objectsrc-condition-trigger').removeAttr('checked');
         //$("#tab-rules-objectsrc-condition-form")[0].validator.resetForm();
         break;
-      case "objectcompare":
+      case "object-compare":
         $('#tab-rules-objectcompare-condition-dialog')[0].editing=div;
         $('#tab-rules-objectcompare-condition-object').val(div.object_id);
         $('#tab-rules-objectcompare-condition-operation').val(div.object_operation);
@@ -543,14 +543,14 @@ $.extend(rules, {
         if ($('#tab-rules-object-condition-trigger').attr('checked')) div.object_trigger=true; else div.object_trigger=false;
         html = '<br />' + div.object_id+'<br />'+div.object_operation+'<br />'+div.object_value;
         break;
-      case "objectsrc": // TODO gérer : if ($("#tab-rules-objectsrc-condition-form").valid())
+      case "object-src": // TODO gérer : if ($("#tab-rules-objectsrc-condition-form").valid())
         div.objectsrc_operation=$('#tab-rules-objectsrc-condition-operation').val();
         div.objectsrc_value=$('#tab-rules-objectsrc-condition-value').val();
         if ($('#tab-rules-objectsrc-condition-trigger').attr('checked')) div.objectsrc_trigger=true; else div.objectsrc_trigger=false;
         div.objectsrc_src=$('#tab-rules-objectsrc-condition-src').val();
         html = '<br />Src = '+div.objectsrc_src+'<br />'+div.objectsrc_operation+'<br />'+div.objectsrc_value;
         break;
-      case "objectcompare":
+      case "object-compare":
         div.object_id=$('#tab-rules-objectcompare-condition-object').val();
         div.object_operation=$('#tab-rules-objectcompare-condition-operation').val();
         div.object_id2=$('#tab-rules-objectcompare-condition-object2').val();
@@ -684,7 +684,7 @@ $.extend(rules, {
         xml.attr('src',condition[0].objectsrc_src);
         if (condition[0].objectsrc_trigger) xml.attr('trigger','true');
         break;
-      case 'objectcompare':
+      case 'object-compare':
         xml.attr('id',condition[0].objectcompare_id);
         xml.attr('op',condition[0].objectcompare_operation);
         xml.attr('id2',condition[0].objectcompare_id2);
@@ -848,7 +848,7 @@ $.extend(rules, {
             $("#tab-rules-objectsrc-condition-form")[0].validator=$("#tab-rules-objectsrc-condition-form").validate();
             $("#tab-rules-objectsrc-condition-form")[0].validator.resetForm();
             break;
-          case "objectcompare":
+          case "object-compare":
             break;
           case "time-counter":
             $("#tab-rules-time-counter-condition-form")[0].validator=$("#tab-rules-time-counter-condition-form").validate();
