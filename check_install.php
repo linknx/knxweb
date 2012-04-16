@@ -7,7 +7,7 @@ require_once("include/linknx.php");
 require_once("lang/lang.php");
 
 $_config = array();
-if (file_get_contents( 'include/config.xml' ) != '') {
+if (file_exists('include/config.xml') && file_get_contents( 'include/config.xml' ) != '') {
   $_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
   unset($_config['comment']); // enleve les commentaires
   //$_config["imageDir"]
@@ -93,11 +93,19 @@ if (isset($_GET["ajax"])) {
 			<li>
 				Is <strong>include/config.xml</strong> file writable? 
 				<?php 
-					if (is_writable('include/config.xml')) echo '<span style="color: #00FF00">ok</span>'; 
+					if (file_exists('include/config.xml') ) {
+          if (is_writable('include/config.xml')) echo '<span style="color: #00FF00">ok</span>'; 
 					else {
 						echo "<span style='color: #FF0000'>no</span> => chown -R $apache_user $pwd/include/config.xml";
 						$error=true;
 					}
+          } else {
+          if (is_writable('include/')) echo '<span style="color: #00FF00">ok</span>'; 
+					else {
+						echo "<span style='color: #FF0000'>no</span> => chown -R $apache_user $pwd/include/";
+						$error=true;
+					}
+          }
 				?>
 			</li>
     </ul>
@@ -321,7 +329,11 @@ if (isset($_GET["ajax"])) {
   <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql> <!-- linknx est compilé avec Mysql -->
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
-		if ($res!==false)
+$subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<subpages></subpages>";
+    $res2 = true;
+    if (!is_file('design/subpages.xml')) $res2=file_put_contents('design/subpages.xml', $subpages); 
+		if ($res!==false && $res2!==false)
 		{
 ?>
 		Configuration file written.<br />

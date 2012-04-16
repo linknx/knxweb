@@ -1,6 +1,6 @@
 <?
 
-	if (file_get_contents( 'include/config.xml' ) == '')
+	if (!file_exists('include/config.xml') || file_get_contents( 'include/config.xml' ) == '')
 	{
 		header('Location: check_install.php');
 		die;
