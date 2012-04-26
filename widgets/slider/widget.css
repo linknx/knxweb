@@ -2,7 +2,18 @@
   height:100%;
   width:100%;
 }
-
 .slider .value {
   display:none;
+}
+.ui-slider .slidera {
+  background:none;
+  border:none;
+}
+.ui-slider-vertical .slidera {
+  left: 0;
+  width: 100%;
+}
+.ui-slider-horizontal .slidera {
+  top: 0;
+  height: 100%;
 }

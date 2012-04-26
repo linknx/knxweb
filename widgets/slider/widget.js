@@ -60,10 +60,9 @@ CSlider.prototype.refreshHTML = function() {
     max: delta,
     value: parseInt( delta / 2), 
     step: step,
-    disabled: disabled,
-    //animate: true
+    disabled: disabled
   });
-  $( '.ui-slider-handle', this.div ).hide();
+  $( '.ui-slider-handle', this.div ).addClass("slidera"); // met "transparent" le "boutton" pour le slide
   $( '.sliderdiv', this.div ).removeClass('ui-widget-content');
 
   if (this.conf.getAttribute("slider-picture")!= "")
@@ -89,7 +88,7 @@ CSlider.prototype.refreshHTML = function() {
     $( '.sliderdiv', this.div ).slider( "option", "orientation", 'vertical' );
   } else {
     $( '.ui-slider-range', this.div ).css('height', '');
-    $( '.sliderdiv', this.div ).slider( "option", "orientation", 'horizontal' ); 
+    $( '.sliderdiv', this.div ).slider( "option", "orientation", 'horizontal' );
   }
   
   if (this.editMode) // en mode édition affichage à "50%" pour voir les 2 "couleurs"
@@ -137,11 +136,10 @@ CSlider.prototype.convertFromUiValue = function(valueui) {
 }
 
 CSlider.prototype.convertToUiValue = function(value) {
-  //value = parseInt(value);
   if (value < this.min ) value = this.min;
   else if (value > this.max ) value = this.max;
   if (this.reversevalue) value =  this.max + this.min -  value;
-  var valueui = parseInt(value + this.min);
+  var valueui = parseInt(value) + parseInt(this.min);
   return valueui;  
 }
 
@@ -149,11 +147,11 @@ CSlider.prototype.convertToUiValue = function(value) {
 CSlider.prototype.updateObject = function(obj,value) {
   if (obj==this.conf.getAttribute("feedback-object"))
   {
-    var valueui = this.convertToUiValue(value);
     if (this.oldvalue != value ) {
+      var valueui = this.convertToUiValue(value);
       $( '.sliderdiv', this.div ).slider( "value" , valueui );
-      this.oldvalue = value; 
+      this.oldvalue = value;
+      $(this.div).attr( "title", this.conf.getAttribute("feedback-object") + " value : " + value); // + " convert in " + valueui 
     }
-    $(this.div).attr( "title", this.conf.getAttribute("feedback-object") + " value : " + value); // + " convert in " + valueui
   }
 };
