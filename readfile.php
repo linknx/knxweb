@@ -57,6 +57,7 @@ if (isset($_GET['LogLinknx'])) { // log linknx
     $typelog = $info['persistence']['type'];
     if ($typelog == 'file') {
       $pathlogfile = $info['persistence']['logpath'];
+      if ($pathlogfile == "") $pathlogfile = $info['persistence']['path'];
       // reconstitution du path complet + extension 
       $filelog = $pathlogfile . $objectlog . ".log";
     }
@@ -79,18 +80,6 @@ if ($typelog == 'mysql') {
   $base  = $info['persistence']['db']; //"linknx"; 
   $table = $info['persistence']['logtable']; //"log";
   // structure de la table logtable
-  $ts = "ts";
-  $object = "object";
-  $value = "value";
-}
-
-if ($objectlog == 'test') {
-  $typelog = 'mysql';
-  $serveur       = "localhost";
-  $login          = "maison";
-  $password       = "energy";
-  $base  = "linknx"; 
-  $table = "log";
   $ts = "ts";
   $object = "object";
   $value = "value";
