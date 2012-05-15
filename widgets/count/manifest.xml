@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+  <name>count</name>
+  <label>Count</label>
+  <description>Count Object</description>
+  <version>1.0</version>
+  <category>Various widgets</category>
+  <settings>
+		<setting label="Style" type="comment" />
+		<setting id="size" label="Font size" type="text" default="12" />
+		<setting id="color" label="Color" type="color" default="#000000" />
+		<setting id="bgcolor" label="Background color" type="color" default="" />
+		<setting id="align" label="Text align" type="list" default="default" >
+			<option key="" value="Default" />
+			<option key="left" value="Left" />
+			<option key="center" value="Center" />
+			<option key="right" value="Right" />
+		</setting>
+    <setting id="opacity" label="Background opacity" type="text" default="1"/>
+    <setting id="border" label="Border" type="list" default="true">
+      <option key="true" value="Yes" />
+      <option key="false" value="No" />
+    </setting>
+    <setting id="border-color" label="Border color" type="color" default="#000000" />
+    <setting id="border-radius" label="Border radius" type="text" default="6px" />
+    <setting label="Feedback objects" type="comment" />
+    <setting id="feedback-object-list" label="Feedback object list" type="multipleObject" />
+		<setting id="feedback-compare" label="Operator" type="list" default="eq">
+			<option key="eq" value="Equal to" />
+			<option key="neq" value="Not equal to" />
+			<option key="gt" value="Greater than" />
+			<option key="lt" value="Less than" />
+			<option key="gte" value="Greater or equal to" />
+			<option key="lte" value="Less or equal to" />
+		</setting>
+    <setting id="feedback-value" label="Value count" type="text" />
+  </settings>
+  <feedbacks>
+    <feedback id="feedback-object-list" />
+  </feedbacks>
+</widget>

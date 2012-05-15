@@ -98,6 +98,7 @@ var design = {
 			$("#tab-design-height").val( ((height!=null)?height:1024) );
 			
 			$("#tab-design-zone-background").val(zone.attr('img'));
+      $("#tab-design-zone-globalcontrol").attr("checked", ((zone.attr('globalcontrol')!="false")?true:false));
 
 			if ($("config",design.config)[0].getAttribute('enableSlider')=='true') $("#tab-design-slider").attr('checked', true); else $("#tab-design-slider").attr('checked', false);
 
@@ -109,6 +110,14 @@ var design = {
 	 		zone.children('control').each(function() {
 				design.addWidget(this);
 			});
+
+      // charger également les "control" lié au design lui-même, soit des controls/widget lié au design et pas à une zone précise
+      // TODO a gérer avec paramètre de la zone si celle-ci ne veux pas afficher les control/widgets "globaux" on aura globalcontrol="false" par défaut on affiche
+      if (zone[0].getAttribute('globalcontrol')!='false') {
+        $('zones', design.config).children('control').each(function() {
+          design.addWidget(this, true);
+        });
+      }
 		}
 	},
 	
@@ -130,7 +139,7 @@ var design = {
 	},
 
 	// Add widget from conf
-	addWidget: function(conf) {
+	addWidget: function(conf, globalcontrol) { /* globalcontrol=true => widget on design not in a zone */
 		var obj = null;
 		var type = conf.getAttribute('type');
 		var cls = UIController.widgetList[type];
@@ -141,7 +150,33 @@ var design = {
 			if (obj!=null) {
 				$('#widgetdiv').append(obj.div);
 				obj.edit(design.onWidgetSelect, design.onWidgetMove, design.onWidgetResize);
-        design.addWidgetsList(obj);
+        design.addWidgetsList(obj, globalcontrol);
+        // If the widget had Children 
+  	 		/*conf.children('control')*/
+        //$(conf).children('control').each(function() {... });
+        $('control', conf).each(function() {
+  				design.addWidgetChildren(this, obj.content, globalcontrol);
+  			});
+				return obj;
+			} 
+			return false;
+		}	else return false;
+	},
+
+	// Add widget from conf and to a parent
+	addWidgetChildren: function(conf, parent, globalcontrol) {
+		var obj = null;
+		var type = conf.getAttribute('type');
+		var cls = UIController.widgetList[type];
+
+		if (cls)
+		{
+			obj = new cls(conf);
+			if (obj!=null) {
+				//$('#widgetdiv').append(obj.div);
+        parent.append(obj.div);
+				obj.edit(design.onWidgetSelect, design.onWidgetMove, design.onWidgetResize);
+        design.addWidgetsList(obj, globalcontrol, true);
 				return obj;
 			} 
 			return false;
@@ -150,11 +185,18 @@ var design = {
 	
 	// Delete a widget
 	deleteWidget: function(o) {
-    design.removeWidgetsList(o);
+    var ow = o.get(0).owner;
+    //$(o.conf).children('control').each(function() {
+    $(".widget", o).each(function() {
+      //design.deleteWidget($(this).get(0).owner);
+      console.log(this, this.owner);
+      design.deleteWidget($(this));
+    });
+    design.removeWidgetsList(ow);
 		// Remove div
-		o.div.remove();
+		ow.div.remove();
 		// Remove from xml
-		$(o.conf).remove();
+		$(ow.conf).remove();
 	},
 
 	// Add a new subpage in the zone
@@ -283,11 +325,33 @@ var design = {
 
 	// Remove current zone
 	removeCurrentZone: function() {
+		if (design.currentZone==null) return false;
 		if (confirm(tr('Really delete zone?'))) {
 			$('zone[id=' + design.currentZone + ']', design.config).each(function() { this.parentNode.removeChild( this ); });
 			design.refreshZoneList();
-			var firstZone=$("#selectedZone option:first-child").val();
+      var firstZone=$("#tab-design-zone-list option:first-child").val();
+      design.clear();
 			if (firstZone) design.draw(firstZone);
+		}
+	},
+
+	// Clone current zone and all controls in 
+	cloneCurrentZone: function() {
+		var zoneID=prompt(tr('Enter ID for new zone'),'');
+		if (zoneID!=null) {
+			var zoneName=prompt(tr('Enter name for new zone'),'');
+			if (zoneName!=null)	{
+        var newzone = $('zone[id=' + design.currentZone + ']', design.config).get(0).cloneNode(true);
+
+				newzone.setAttribute('id', zoneID);
+				newzone.setAttribute('name', zoneName);
+				$('zones', design.config).append(newzone);
+
+				design.refreshZoneList();
+				design.draw(zoneID);
+
+				setTimeout('$("#tab-design-zone-list").val("' + zoneID + '")', 100); // workaround for IE bug
+			}
 		}
 	},
 	
@@ -316,11 +380,13 @@ var design = {
 	  var tr=$('<tr><th>Type</th><td><input type="text" disabled="1" value="' + o.conf.getAttribute("type") + '"></td></tr>');
 	   $("#tab-design-widget-properties tbody").append(tr);
 
-	  var tr=$('<tr><th>X</th><td><input id="tab-design-properties-x" type="text" value="' + o.conf.getAttribute("x") + '"></td></tr>');
-	   $("#tab-design-widget-properties tbody").append(tr);
-	 
-	  var tr=$('<tr><th>Y</th><td><input id="tab-design-properties-y" type="text" value="' + o.conf.getAttribute("y") + '"></td></tr>');
-	   $("#tab-design-widget-properties tbody").append(tr);
+		if (o.isDraggable) {
+  	  var tr=$('<tr><th>X</th><td><input id="tab-design-properties-x" type="text" value="' + o.conf.getAttribute("x") + '"></td></tr>');
+  	   $("#tab-design-widget-properties tbody").append(tr);
+  	 
+  	  var tr=$('<tr><th>Y</th><td><input id="tab-design-properties-y" type="text" value="' + o.conf.getAttribute("y") + '"></td></tr>');
+  	   $("#tab-design-widget-properties tbody").append(tr);
+    }
 
     var tr=$('<tr><th>Description</th><td><input id="tab-design-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
     $("#tab-design-widget-properties tbody").append(tr);
@@ -346,7 +412,13 @@ var design = {
       var tr=$('<tr><th>Class CSS</th><td><input id="tab-design-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
 			$("#tab-design-widget-properties tbody").append(tr);
     }
-	   
+	  
+    var tr=$('<tr><th>Global Widget</th><td><input id="tab-design-properties-global-control" type="checkbox" name="global-control" checked="' + ((o.conf.getAttribute("globalcontrol")!="true")?'':'checked') + '"></td></tr>');
+    $("#tab-design-widget-properties tbody").append(tr);
+    $("#tab-design-properties-global-control").change(function() {
+      o.setSetting("globalcontrol", $(this).is(':checked') );
+    });
+ 
 		$("#tab-design-properties-x").change(function() {
 			o.setSetting("x", $(this).val());
 		});
@@ -388,7 +460,7 @@ var design = {
 		    tr.append($('<th>' + this.label + '</th>'));
 
 	    	var value=o.conf.getAttribute(this.id);
-	    	if (value==null) value="";
+	    	if (value=="undefined" || value==null) value="";
 		    
 		    var td=$('<td>');
 		    // Text setting
@@ -397,6 +469,13 @@ var design = {
           var textproperties = $('<input type="text" name="' + this.id + '" value="">');
           textproperties.val(value);
           td.append(textproperties);
+        };
+
+		    // TextArea setting
+        if (this.type=="textarea") {
+          var textareaproperties = $('<textarea name="' + this.id + '" rows="4" />');
+          textareaproperties.text(value);
+          td.append(textareaproperties);
         };
 		
 		    // List setting
@@ -421,12 +500,112 @@ var design = {
 	    		var option=($('<option value=""></option>'));
 	    		select.append(option);
 	
+          var exlude_type = [];
+          if (this.exlude_type) {
+            exlude_type = this.exlude_type.split(',');
+            console.log("exlude_type : ",exlude_type);
+          }
+          var only_type = [];
+          if (this.only_type) {
+            only_type = this.only_type.split(',');
+            exlude_type = [];
+            console.log("only_type : ",only_type);
+          }
+          console.log(this,"exlude_type : ",exlude_type,"only_type : ",only_type);
+
+          if (only_type.length > 0) {
 					$('object', _objects).each(function() {
-		    		var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) + '</option>'));
+            if (array_search( this.getAttribute('type'), only_type )!=-1 ){
+		    		var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) +' (' + this.getAttribute('type') + ')</option>'));
 		    		if (this.getAttribute('id')==value) option.attr('selected','1');
 		    		select.append(option);
+            }
 					});
+          } else {
+					$('object', _objects).each(function() {
+            if (array_search( this.getAttribute('type'), exlude_type )==-1 ){
+		    		var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) +' (' + this.getAttribute('type') + ')</option>'));
+		    		if (this.getAttribute('id')==value) option.attr('selected','1');
+		    		select.append(option);
+            }//if (exlude_type.length > 0){}
+					});
+          }
 		    	td.append(select);
+		  	}
+
+		    // multipleObject setting
+		    if (this.type=="multipleObject") 
+		    {
+					var tabobject = new Array;
+          $('object', _objects).each(function() {
+            var label_obj = ((this.textContent=="")?this.getAttribute('id'):this.textContent);
+            var value_obj = this.getAttribute('id');        
+            var tab = [];
+            tab["label"] = label_obj;
+            tab["value"] = value_obj;
+            tabobject.push(tab);
+					});
+
+          /* use autocomplete jquery-ui cf. http://jqueryui.com/demos/autocomplete/#combobox and http://jqueryui.com/demos/autocomplete/#multiple */
+          wrapper = $( "<span>" )
+            .addClass( "ui-combobox" );
+          input = $("<input>")
+            .appendTo( wrapper )
+            .val( value )
+            .attr("id", this.id)
+            .attr("name", this.id)
+            // don't navigate away from the field on tab when selecting an item
+            .bind( "keydown", function( event ) {
+              if ( event.keyCode === $.ui.keyCode.TAB &&
+                  $( this ).data( "autocomplete" ).menu.active ) {
+                event.preventDefault();
+              }
+            })
+            .autocomplete({
+              minLength: 0,
+              delay: 0,
+              source: function( request, response ) {
+                // delegate back to autocomplete, but extract the last term
+                response( $.ui.autocomplete.filter(
+                  tabobject, extractLast( request.term ) ) );
+              },
+              focus: function() {
+                // prevent value inserted on focus
+                return false;
+              },
+              select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                this.value = terms.join( ", " );
+                //this.value = terms.join( "|" ); // le séparateur doit être en lien avec la fonction "split( val )" définie plus bas 
+                return false;
+              }
+            });
+
+          $( "<span>" )
+            .attr( "tabIndex", -1 )
+            .attr( "title", "Show All Items" )
+            .appendTo( wrapper )
+            .append('<span class="ui-button-icon-primary ui-icon ui-icon-triangle-1-s"></span>')
+            .addClass( "ui-button ui-state-default ui-button-icon-only" )
+            .click(function() {
+              // close if already visible
+              if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+                input.autocomplete( "close" );
+                return;
+              }
+              // work around a bug (likely same cause as #5265)
+              $( this ).blur();
+              // pass empty string as value to search for, displaying all results
+              input.autocomplete( "search", "" );
+              input.focus();
+            });
+		    	td.append(wrapper);
 		  	}
 		
 		    // Picture setting
@@ -517,11 +696,14 @@ var design = {
 	    $("#tab-design-widget-properties tbody").append(tr);
 		});
 		
-		$("#tab-design-properties input,select").change( function() {
+		$("#tab-design-properties input,select,textarea").change( function() {
 			// Update conf on selected object when a property change
-			if ($("#widgetdiv .selected").length>0)
+			if ($("#widgetdiv .selected").length>0 && $(this).attr('name') != "undefined")
 			{
 				var selectedWidget=$("#widgetdiv .selected").get(0);
+        console.log($(this).attr('name'), $(this).val(), selectedWidget.owner.conf.getAttribute('type'));
+				// if widget is a html2 :
+				if ((selectedWidget.owner.conf.getAttribute('type')=='html2') && ($(this).attr('name')=="html")) $(selectedWidget.owner.conf).empty().append(selectedWidget.owner.conf.ownerDocument.createCDATASection($(this).val()));
 				selectedWidget.owner.setSetting($(this).attr('name'), $(this).val());
 				// if widget is a subpage and subpage name modified
 				if ((selectedWidget.owner.conf.getAttribute('type')=='subpage') && ($(this).attr('name')=="subpage")) design.displayProperties(selectedWidget.owner);
@@ -537,13 +719,15 @@ var design = {
   },
 
   // add widget to the WidgetsList
-  addWidgetsList: function(o) {
+  addWidgetsList: function(o, globalcontrol, child) {
     var type=o.conf.getAttribute('type');
     var desc=o.conf.getAttribute('desc');
     if (!desc) desc = type;
 
     var tr=$('<tr/>');
     tr.get(0).obj = o;
+    if (globalcontrol) tr.css("color", "#FF0000"); // si globalcontrol == "true" c'est que le control/widget est lié au design et pas a la zone elle même
+    if (child) tr.css("color", "#0000FF"); // si child == "true" c'est que le control/widget est lié a un widget "content"
 
     var th=$('<th>' + type + '</th>');
     tr.append(th);
@@ -597,7 +781,6 @@ var design = {
     });
   },
 
-	
 	// Add a new design
 	addDesign: function()
 	{
@@ -616,6 +799,27 @@ var design = {
 				},
 				error: function (XMLHttpRequest, textStatus, errorThrown) {
 					messageBox(tr("Unable to create design: ")+textStatus, "Error", "alert");
+				}
+			});
+		}
+	},
+
+	// remove current design
+	removeDesign: function()
+	{
+    if (confirm(tr('Really remove current design ') + design.currentDesign + "?")) {
+			req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action=removedesign&name=' + design.currentDesign, dataType: 'xml',
+				success: function(responseXML, status) {
+					var xmlResponse = responseXML.documentElement;
+					if (xmlResponse.getAttribute('status') != 'error') {
+						messageBox(tr("Design removed successfully"), "Info", "check"); 
+					}
+					else {
+						messageBox(tr("Unable to remove design: ")+xmlResponse.textContent, "Error", "alert");
+					}
+				},
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					messageBox(tr("Unable to remove design: ")+textStatus, "Error", "alert");
 				}
 			});
 		}
@@ -642,10 +846,30 @@ var design = {
 
 }
 
+/* functions for multipleObject */
+function split( val ) {
+  return val.split( /,\s*/ );
+}
+function extractLast( term ) {
+  return split( term ).pop();
+}
+
+function array_search(what, where) {
+  var index_du_tableau=-1
+  for(elt in where) {
+    index_du_tableau++;
+    if (where[elt]==what) { return index_du_tableau }
+  }
+  index_du_tableau=-1;
+  return index_du_tableau
+}
+
 jQuery(function($) {
 	
 	design.loadDesignList();
-	
+
+	$("button").button();
+
 	$("#tab-design-properties").draggable({ 
   	containment: "parent" ,
   	scroll: false
@@ -672,6 +896,14 @@ jQuery(function($) {
 		else
 				$("config",design.config)[0].setAttribute('enableSlider', 'false');
 	});
+
+  $("#tab-design-zone-globalcontrol").click(function() {
+    if (design.currentZone==null) return false;
+    if ($(this).is(':checked'))
+      $('zone[id=' + design.currentZone + ']', design.config)[0].setAttribute('globalcontrol', 'true' );
+    else
+      $('zone[id=' + design.currentZone + ']', design.config)[0].setAttribute('globalcontrol', 'false' );
+  });
   
 	$("#button-delete-widget").button({
 		icons: {
@@ -681,7 +913,8 @@ jQuery(function($) {
 	$("#button-delete-widget").click(function() {
 		if ($("#widgetdiv .selected").length>0)	
 		{
-			design.deleteWidget($("#widgetdiv .selected").get(0).owner); 
+			//design.deleteWidget($("#widgetdiv .selected").get(0).owner); 
+      design.deleteWidget($("#widgetdiv .selected"));
 			// Show design properties
 			$("#widgetdiv").trigger("click");
 		}
@@ -705,11 +938,54 @@ jQuery(function($) {
 		}
 	});
 
+	$("#button-locked-widget").button({
+		icons: {
+			primary: "ui-icon-unlocked"
+		},
+    text: false
+	}).removeClass('ui-button-text-icon-primary');
+	$("#button-locked-widget").click(function() {
+		var obj = $("#widgetdiv .selected");
+    if (obj.length>0)	
+		{
+			if (!obj.draggable( "option", "disabled")) {
+        $(this).button( "option", "icons", {primary:'ui-icon-locked'}).removeClass('ui-button-text-icon-primary').addClass("ui-state-highlight");
+        $("#widgetdiv .selected").draggable( "disable" );
+      } else {
+        $(this).button( "option", "icons", {primary:'ui-icon-unlocked'}).removeClass('ui-button-text-icon-primary').removeClass("ui-state-highlight");
+        $("#widgetdiv .selected").draggable( "enable" );
+      }
+		}
+	});
+
+	$("#button-attach-widget").button({
+		icons: {
+			primary: "ui-icon-pin-w"
+		},
+    text: false
+	}).removeClass('ui-button-text-icon-primary');
+	$("#button-attach-widget").click(function() {
+		var obj = $("#widgetdiv .selected");
+    if (obj.length>0)	
+		{
+			$(this).button( "option", "icons", {primary:'ui-icon-pin-s'}).removeClass('ui-button-text-icon-primary').addClass("ui-state-error");
+      //alert("TODO a implémenter ...");
+      //var newzone = $('zone[id=' + design.currentZone + ']', design.config).get(0).cloneNode(true);
+			//$('zones', design.config).append(newzone);
+
+      var conf=obj.get(0).owner.conf.cloneNode(true);
+      $(obj.get(0).owner.conf).remove();
+      //this.owner.conf.appendChild(conf);
+      $('zones', design.config).append(conf);
+
+		}
+	});
+
 	$("#button-add-new-zone").click(function() {
 		design.addZone();
 	});
 
-	$("#button-add-remove-zone").click(function() {
+	$("#button-remove-zone").click(function() {
 		design.removeCurrentZone();
 	});
 	
@@ -721,6 +997,10 @@ jQuery(function($) {
 		design.addDesign();
 	});
 
+	$("#button-remove-design").click(function() {
+		design.removeDesign();
+	});
+  
 	$("#button-try-design").click(function() {
 		design.save();
 		window.open("design_view.php?design=" + design.currentDesign + "&version=" + design.currentVersion + "&zone=" + design.currentZone, "KNXWeb - Try design", 'width=' + $("#tab-design-width").val() + ',height=' + $("#tab-design-height").val());

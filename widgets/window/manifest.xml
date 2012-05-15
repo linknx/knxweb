@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+  <name>window</name>
+  <label>Window</label>
+  <description>Window</description>
+  <version>1.0</version>
+  <category>Various widgets</category>
+  <settings>
+    <setting label="" type="separator" />
+    <setting id="position" label="Position" type="list" default="left">
+      <option key="left" value="Left" />
+      <option key="right" value="Right" />
+      <option key="top" value="Top" />
+      <option key="bottom" value="Bottom" />
+    </setting>
+    <setting id="shift" label="Shift Top or Left" type="text" default="0"/>
+    <setting label="" type="separator" />
+    <setting id="background-color" label="Background Color" type="color" default="" />
+    <setting id="opacity" label="Background opacity" type="text" default="1"/>
+		<setting id="border" label="Border" type="list" default="true">
+			<option key="true" value="Yes" />
+			<option key="false" value="No" />
+		</setting>
+    <setting id="border-color" label="Border color" type="color" default="#000000" />
+    <setting label="" type="separator" />
+    <setting id="feedback-object" label="Feedback object" type="object" />
+    <setting id="feedback-value" label="Show when value" type="text" />
+  </settings>
+  <feedbacks>
+    <feedback id="feedback-object" />
+  </feedbacks>
+</widget>

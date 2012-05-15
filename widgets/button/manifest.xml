@@ -8,18 +8,29 @@
 	<settings>
 		<setting id="picture" label="Picture" type="picture" />
 		<setting id="picture-active" label="Active picture" type="picture" />
+    <setting label="Only on Edit Mode" type="comment" />
+		<setting id="display-picture" label="Display active picture" type="list" default="no">
+			<option key="no" value="No" />
+			<option key="yes" value="Yes" />
+		</setting>
 
 		<setting label="Label" type="comment" />
 		<setting id="text" label="Text" type="text" default="My button" />
 		<setting id="size" label="Font size" type="text" default="12" />
 		<setting id="color" label="Color" type="color" default="#000000" />
-		<setting id="align" label="Text align" type="list" default="default" >
+		<setting id="align" label="Text align" type="list" default="" >
 			<option key="" value="Default" />
 			<option key="left" value="Left" />
 			<option key="center" value="Center" />
 			<option key="right" value="Right" />
 		</setting>
 		<setting id="text-padding" label="Top padding" type="text" default="0" />
+		
+    <setting label="Button mode" type="comment" />
+    <setting id="confirm" label="Confirm command" type="list" default="no" >
+			<option key="no" value="No" />
+			<option key="yes" value="Yes" />
+		</setting>
 
 		<setting label="State object" type="comment" />
 		<setting id="feedback-object" label="Feedback object" type="object" />

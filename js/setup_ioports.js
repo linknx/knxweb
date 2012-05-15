@@ -1,4 +1,4 @@
-﻿var ioports = {
+var ioports = {
 	
 	// Open edit dialog for ioport 'id'
 	editIOport: function (id) {
@@ -93,7 +93,8 @@
 				body+='port="' + $("#edit-ioport-udp-port").val() + '" ';
 				body+='rxport="' + $("#edit-ioport-udp-rxport").val() + '" ';
 			}	else {
-				body+='dev="' + $("#edit-ioport-serial-dev").val() + '" ';
+				body+='type="serial" ';
+        body+='dev="' + $("#edit-ioport-serial-dev").val() + '" ';
 				body+='speed="' + $("#edit-ioport-serial-speed").val() + '" ';
 				body+='framing="' + $("#edit-ioport-serial-framing").val() + '" ';
 				body+='flow="' + $("#edit-ioport-serial-flow").val() + '" ';

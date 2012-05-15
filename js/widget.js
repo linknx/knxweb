@@ -3,6 +3,7 @@ function CWidget(conf) {
 
 CWidget.prototype = {
 	isResizable: false,	// TODO : put this variable in plugin's manifest.xml
+  isDraggable: true, // TODO : put this variable in plugin's manifest.xml
 	editMode: false,
 	enabled: true,		// enabled = false = no commands are send to the bus (during setup)
 	
@@ -17,7 +18,7 @@ CWidget.prototype = {
 		{
 			$.each(widget.feedbacks, function(index, value) {
 				var o=w.conf.getAttribute(value);
-				if ((o!="") && (o!=null)) a.push(o);
+				if ((o!="") && (o!=null) && ($.inArray(o, a)==-1)) a.push(o);
 			});
 		}
 		return a;
@@ -101,6 +102,7 @@ CWidget.prototype = {
 	
 		$(this.div).widgetMovable({
 			resizable: this.isResizable,
+			draggable: this.isDraggable,
 			onMove: function(widget, left, top) {
 				widget.owner.conf.setAttribute('x', Math.round(left) );
 				widget.owner.conf.setAttribute('y', Math.round(top) );

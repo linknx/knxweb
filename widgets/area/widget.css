@@ -1,0 +1,24 @@
+.area {
+  z-index: 500;  
+}
+.area div {
+  z-index: 500;
+}
+.area .view {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  float: left;
+  display: block;
+  position: absolute;
+}
+.area .content, .area .back {
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  float: left;
+  display: block;
+}
+.redBorder {
+	border: 2px solid #F00;
+}

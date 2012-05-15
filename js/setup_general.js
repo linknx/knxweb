@@ -74,13 +74,14 @@ var setupgeneral = {
 			
 			body += '<exceptiondays clear="true">';
 			$("#setupgeneral-exceptiondays option").each(function () {
-				var matches=$(this).val().match('^([0-9]){1,2}\/([0-9]){1,2}(\/([0-9]{4})){0,1}$');
+				//var matches=$(this).val().match('^([0-9]){1,2}\/([0-9]){1,2}(\/([0-9]{4})){0,1}$');
+        var matches = $(this).val().split('/');
 				if (matches)
 				{
-					if (matches[4])
-						body += '<date day="' + matches[1] + '" month="' + matches[2] + '" year="' + matches[4] + '" />';
+					if (matches[2])
+						body += '<date day="' + matches[0] + '" month="' + matches[1] + '" year="' + matches[2] + '" />';
 					else
-						body += '<date day="' + matches[1] + '" month="' + matches[2] + '" />';
+						body += '<date day="' + matches[0] + '" month="' + matches[1] + '" />';
 				}					
 			});
 			body += '</exceptiondays>';

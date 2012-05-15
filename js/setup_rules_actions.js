@@ -1,3 +1,7 @@
+/*
+ * TODO : Allow to insert object values in some actions (shell, e-mail, SMS, io-port, set-string)
+ */ 
+
 function cdataTextcontent(data) {
   var pos = data.indexOf('<![CDATA['); //'<![CDATA[' + action[0].objvalue + ']]>'
   //'&lt;![CDATA[' ']]&gt;'
@@ -27,8 +31,8 @@ $.extend(rules, {
     'ioport-tx' : 'Ioport Tx',
     'script' : 'Script',
     'cancel' : 'Cancel',
-    'formula' : 'Formula', // only since version 0.0.1.29
-    'start-actionlist' : 'Start-actionlist' // only since version 0.0.1.29
+    'formula' : 'Formula',
+    'start-actionlist' : 'Start-actionlist'
 */
   addActionRule: function(type, action, numaction) {
     nbrAction++;
@@ -311,6 +315,7 @@ $.extend(rules, {
       case 'set-value' :
         $('#tab-rules-set-value-action-object').val(div.objid);
         $('#tab-rules-set-value-action-value').val(div.objvalue);
+        $('#tab-rules-set-value-action-value-select').val(div.objvalue);
         break;
       case 'copy-value' :
         $('#tab-rules-copy-value-action-object-from').val(div.objfrom);
@@ -343,12 +348,12 @@ $.extend(rules, {
       case 'send-sms' :
         $('#tab-rules-send-sms-action-id').val(div.objid);
         $('#tab-rules-send-sms-action-value').val(div.objvalue);
-        $('#tab-rules-send-sms-action-var').val(div.smsvar);
+        $('#tab-rules-send-sms-action-var').attr("checked",div.smsvar);
         break;
       case 'send-email' :
         $('#tab-rules-send-email-action-to').val(div.objto);
         $('#tab-rules-send-email-action-subject').val(div.subject);
-        $('#tab-rules-send-email-action-var').val(div.emailvar);
+        $('#tab-rules-send-email-action-var').attr("checked",div.emailvar);
         $('#tab-rules-send-email-action-text').val(div.objtext);
         break;
       case 'dim-up' :
@@ -362,10 +367,10 @@ $.extend(rules, {
         $('#tab-rules-shell-cmd-action-var').attr("checked",div.cmdvar);
         break;
       case 'ioport-tx' :
-        $('#tab-rules-send-ioport-tx-hex').val(div.hex);
+        $('#tab-rules-send-ioport-tx-hex').attr("checked",div.hex);
         $('#tab-rules-send-ioport-tx-data').val(div.data);
         $('#tab-rules-ioport-tx-action-ioport').val(div.ioport);
-        $('#tab-rules-ioport-tx-action-var').val(div.ioportvar);
+        $('#tab-rules-ioport-tx-action-var').attr("checked",div.ioportvar);
         break;
       case 'script' :
         $('#tab-rules-script-action-script').val(div.script);
@@ -407,7 +412,11 @@ $.extend(rules, {
     switch (type) {
       case 'set-value' :
         div.objid=$('#tab-rules-set-value-action-object').val();
-        div.objvalue=$('#tab-rules-set-value-action-value').val();
+        //div.objvalue=$('#tab-rules-set-value-action-value').val();
+        if ($('#tab-rules-set-value-action-value-select').css('display')!='none')
+          div.objvalue=$('#tab-rules-set-value-action-value-select').val();
+        else
+          div.objvalue=$('#tab-rules-set-value-action-value').val();
         html = '<br />'+div.objid+'<br />'+div.objvalue;
         break;
       case 'copy-value' :
@@ -445,13 +454,15 @@ $.extend(rules, {
       case 'send-sms' :
         div.objid=$('#tab-rules-send-sms-action-id').val();
         div.objvalue=$('#tab-rules-send-sms-action-value').val();
-        div.smsvar=$('#tab-rules-send-sms-action-var').val();
+        //div.smsvar=$('#tab-rules-send-sms-action-var').val();
+        div.smsvar=$('#tab-rules-send-sms-action-var').attr("checked");
         html = '<br />'+div.objid+'<br />'+div.objvalue;
         break;
       case 'send-email' :
         div.objto=$('#tab-rules-send-email-action-to').val();
         div.subject=$('#tab-rules-send-email-action-subject').val();
-        div.emailvar=$('#tab-rules-send-email-action-var').val();
+        //div.emailvar=$('#tab-rules-send-email-action-var').val();
+        div.emailvar=$('#tab-rules-send-email-action-var').attr("checked");
         div.objtext=$('#tab-rules-send-email-action-text').val();
         html = '<br />'+div.objto+'<br />'+div.subject;
         break;
@@ -468,10 +479,10 @@ $.extend(rules, {
         html = '<br />'+div.cmd;
         break;
       case 'ioport-tx' :
-        div.hex=$('#tab-rules-send-ioport-tx-hex').val();
+        div.hex=$('#tab-rules-send-ioport-tx-hex').attr("checked");
         div.data=$('#tab-rules-send-ioport-tx-data').val();
         div.ioport=$('#tab-rules-send-ioport-tx-ioport').val();
-        div.ioportvar=$('#tab-rules-ioport-tx-action-var').val();
+        div.ioportvar=$('#tab-rules-ioport-tx-action-var').attr("checked");
         html = '<br />'+div.ioport;
         break;
       case 'script' :
@@ -577,14 +588,12 @@ $.extend(rules, {
         xml.attr('duration',action[0].duration);
         break;
       case 'shell-cmd' : // < type="" cmd="" var="true/false" />
-        //xml.attr('cmd','<![CDATA[' + action[0].cmd + ']]>');
         //xml.attr('cmd',cdataTextcontent(action[0].cmd));
         xml.attr('cmd',action[0].cmd);
         xml.attr('var',action[0].cmdvar);
         break;
       case 'ioport-tx' : // < type="" hex="true/false" data="" ioport="" var="true/false" />
         xml.attr('hex',action[0].hex);
-        //xml.attr('data','<![CDATA[' + action[0].data + ']]>');
         //xml.attr('data',cdataTextcontent(action[0].data));
         xml.attr('data',action[0].data);
         xml.attr('ioport',action[0].ioport);
@@ -656,8 +665,22 @@ $.extend(rules, {
               .append($('<td>').append(listobjectsetvalue))
               ).append(
               $('<tr>').append('<th width="150">Value</th>')
-              .append($('<td>').append('<input type="text" id="tab-rules-set-value-action-value" size="50">'))
+              .append($('<td>').append('<input type="text" id="tab-rules-set-value-action-value" size="50">').append('<select id="tab-rules-set-value-action-value-select"></select>'))
               );
+            $("#tab-rules-set-value-action-object").bind('change', function() {
+              if (_objectTypesValues[$("#tab-rules-set-value-action-object option:selected")[0].type])
+              {
+                values=_objectTypesValues[$("#tab-rules-set-value-action-value-select option:selected")[0].type];
+                $("#tab-rules-set-value-action-value-select").empty();
+                $(values).each(function() { $("#tab-rules-set-value-action-value-select").append('<option value="' + this + '">' + this + '</option>'); });
+                $("#tab-rules-set-value-action-value-select").show();
+                $("#tab-rules-set-value-action-value").hide();
+              } else
+              {
+                $("#tab-rules-set-value-action-value-select").hide();
+                $("#tab-rules-object-condition-value").show();
+              }
+            });
             break;
           case 'copy-value' :
             var listobjectcopyvaluefrom = listobject.clone();
@@ -787,12 +810,15 @@ $.extend(rules, {
               );
             break;
           case 'ioport-tx' :
+            var ioport_tx_select = _ioport_select.clone();
+            ioport_tx_select.attr("id","tab-rules-send-ioport-tx-ioport");
             tbody.append(
               $('<tr>').append('<th width="150">Io-Port</th>')
-              .append($('<td>').append('<input type="text" id="tab-rules-ioport-tx-action-ioport" size="10">'))
+              //.append($('<td>').append('<input type="text" id="tab-rules-ioport-tx-action-ioport" size="10">'))
+              .append($('<td>').append(ioport_tx_select))
               ).append(
               $('<tr>').append('<th width="150">Data</th>')
-              .append($('<td>').append('<input type="text" id="tab-rules-send-ioport-tx-data" size="150">'))
+              .append($('<td>').append('<input type="text" id="tab-rules-send-ioport-tx-data" size="90" >'))
               ).append(
               $('<tr>').append('<th width="150">Hex</th>')
               .append($('<td>').append('<input type="checkbox" id="tab-rules-ioport-tx-action-hex" >'))

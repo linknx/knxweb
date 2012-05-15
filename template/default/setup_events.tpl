@@ -148,9 +148,12 @@
 						<td id="list-events-container" style="width:50%;vertical-align: top;"></td>  
 						<td style="vertical-align:top;">
               <div id="tab-event-properties">
-              	<div id="tab-event-properties-title" class="ui-state-active ui-corner-top header">Event properties</div>
+              	<div id="tab-event-properties-title" class="ui-state-active ui-corner-top header">
+                  <span id="tab-event-properties-fixed" onclick="$(this).toggleClass('ui-icon-pin-s').toggleClass('ui-icon-pin-w');if($(this).hasClass('ui-icon-pin-s')) $('#tab-event-properties').css('min-width','750px'); else $('#tab-event-properties').css('min-width','');" class="ui-icon ui-state-inactive ui-icon-pin-w" style="cursor: pointer;float: left;list-style: none outside none;padding: 2px;" ></span>
+                  Event properties
+                </div>
               	
-              	<div id="tab-event-widget-buttons" class="ui-state-default" >
+              	<div id="tab-event-widget-buttons" class="ui-state-default" style="display:none;">
               		<!--<button id="button-new-widget">New</button>-->
               		<button id="button-valid-event" onclick="events.validEvent();" >Valid</button>
               		<button id="button-delete-event" onclick="events.deleteEvent($('#tab-event-id').val());" >Delete</button>
@@ -162,7 +165,7 @@
                   <br />
                   <strong><span>Description : </span><input type="text" id="tab-event-description" size="100"></strong>
               	</div>
-              	<table cellpadding="0" cellspacing="0" id="tab-event-widget-properties"  class="ui-state-default" style="width:100%;" >
+              	<table cellpadding="0" cellspacing="0" id="tab-event-widget-properties"  class="ui-state-default" style="width:100%;display:none;" >
               		<tbody>
               		  <tr><td>
                       <div class="ui-state-active ui-corner-top header">Timer</div>

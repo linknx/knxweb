@@ -32,7 +32,7 @@
     </script>
 		
 </head>
-<body>
+<body style="cursor:progress;">
 
 <div id="loaderModal">
 	<div id="loaderContent">
@@ -111,15 +111,16 @@
 			
 			<h3 tab_id="events" tab_label="Events" tab_url="setup_events.php"><a href="#"><img src="images/rules.png"> Events</a></h3>
 			<div>
-				<div class="subItem" id="button-add-event"><img src="images/add.png" />Add new event</div>
+				<!-- <div class="subItem" id="button-add-event"><img src="images/add.png" />Add new event</div>
 				<div class="subItem" id="button-remove-event"><img src="images/remove.png" />Delete event</div>
-				<div class="subItem" id="button-edit-event"><img src="images/edit.png" />Edit event</div>
+				<div class="subItem" id="button-edit-event"><img src="images/edit.png" />Edit event</div> -->
 				<div class="subItem" id="button-refresh-event" onclick="events.loadEventsStatusList();"><img src="images/refresh.gif" />Reload events</div>
 			</div>
 						
 			<h3 tab_id="designedit" tab_label="Edit design" tab_url="setup_design.php"><a href="#"><img src="images/setup.png"> Edit design</a></h3>
 			<div>
         <div class="subItem" id="button-add-design"><img src="images/add.png" />New design</div>
+        <div class="subItem" id="button-remove-design"><img src="images/remove.png" />Remove design</div>
         <div class="subItem" id="button-add-new-zone"><img src="images/add.png" />New zone</div>
         <div class="subItem" id="button-remove-zone"><img src="images/remove.png" />Remove zone</div>
 
@@ -130,7 +131,7 @@
 						{foreach from=$widgetsCategorized key=cat item=widgetsArray}
 							<optgroup label="{$cat}">
 								{foreach from=$widgetsArray item=w}
-								<option value="{$w.name}">{$w.label}</option>
+								<option value="{$w.name}">{$w.label} v{$w.version}</option>
 								{/foreach}
 							</optgroup>
 						{/foreach}
@@ -166,7 +167,31 @@
         <div class="subItem" id="button-save-subpage"><img src="images/fetch.png" />Save</div>
         <div class="subItem" ><input type="checkbox" onchange="$('#tab-subpages-list-widgets').toggle();" value="1" checked="1" > Widgets List</div>
       </div>
-			
+
+			<!-- <h3 tab_id="designeditmobile" tab_label="Edit design mobile" tab_url="setup_design_mobile.php"><a href="#"><img src="images/setup.png"> Edit design mobile</a></h3>
+			<div>
+        <div class="subItem" id="button-add-design-mobile"><img src="images/add.png" />New design</div>
+        <div class="subItem">
+  				List design
+          <select id="tab-design-mobile-design-list"></select>
+  			</div>
+        <div class="subItem" id="button-add-new-zone-mobile"><img src="images/add.png" />New zone</div>
+        <div class="subItem" id="button-remove-zon-mobilee"><img src="images/remove.png" />Remove zone</div>
+        <div class="subItem"><img src="images/add.png" />
+        	<select onchange="designmobile.newWidget($(this).val()); $(this).val('')" style="width:145px;height: 16px;">
+						<option value="">Insert widget</option>
+						{foreach from=$widgetsCategorized key=cat item=widgetsArray}
+							<optgroup label="{$cat}">
+								{foreach from=$widgetsArray item=w}
+								<option value="{$w.name}">{$w.label}</option>
+								{/foreach}
+							</optgroup>
+						{/foreach}
+					</select>
+				</div>
+        <div class="subItem" id="button-save-design"><img src="images/fetch.png" />Save</div>
+        <div class="subItem" ><input type="checkbox" onchange="$('#tab-design-mobile-list-widgets').toggle();" > Widgets List</div>
+      </div> -->			
 			<h3 tab_id="admin" tab_label="Administer" tab_url="setup_admin.php"><a href="#"><img src="images/construct.png"> Admin</a></h3>
 			<div>
 			  <!-- <div class="subItem" tab_id="admin-config-knxweb" tab_label="Config KnxWeb" tab_url="setup_admin.php?configknxweb"><img src="images/fetch.png" /> Config KnxWeb</div>

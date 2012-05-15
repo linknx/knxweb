@@ -14,7 +14,7 @@
 		</setting>
 		<setting id="border-color" label="Border color" type="color" default="#000000" />
 
-		<setting id="feedback-object" label="Feedback object" type="object" />
+		<setting id="feedback-object" label="Feedback object" type="object" only_type="5.xxx" />
 </settings>
 	<feedbacks>
 		<feedback id="feedback-object" />

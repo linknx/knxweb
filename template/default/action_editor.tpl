@@ -20,7 +20,7 @@
 		</tr>
 		<tr>
 			<th width="150">Value</th>
-			<td><input type="text" name="value" size="40"></td>
+			<td><input type="text" name="value" size="40"><select name="values"></select></td>
 		</tr>
 	</table>
 </div>

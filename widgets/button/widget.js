@@ -7,26 +7,30 @@ function CButton(conf) {
   $(this.div).click(function() {
   	if (!this.owner.editMode)
   	{
-	  	if (this.owner.active)
-	  	{
-	  		if (this.owner.conf.getAttribute('active-goto')!="")
-	  		{
-	  			gotoZone(this.owner.conf.getAttribute('active-goto'));
-	  			return;
-	  		}
-	  		var actions=$("actionlist[id=active-action]", this.owner.conf);
-	  	} else
-	  	{
-	  		if (this.owner.conf.getAttribute('inactive-goto')!="")
-	  		{
-	  			gotoZone(this.owner.conf.getAttribute('inactive-goto'));
-	  			return;
-	  		}
-	  		var actions=$("actionlist[id=inactive-action]", this.owner.conf);
-	  	}
-
-	  	if (actions.length>0) EIBCommunicator.executeActionList(actions);
-		}
+	  	var answer = true
+      if (this.owner.conf.getAttribute('confirm') == "yes") answer = confirm(tr("confirm the command"));
+    	if (answer) {
+        if (this.owner.active)
+  	  	{
+  	  		if (this.owner.conf.getAttribute('active-goto')!="")
+  	  		{
+  	  			gotoZone(this.owner.conf.getAttribute('active-goto'));
+  	  			return;
+  	  		}
+  	  		var actions=$("actionlist[id=active-action]", this.owner.conf);
+  	  	} else
+  	  	{
+  	  		if (this.owner.conf.getAttribute('inactive-goto')!="")
+  	  		{
+  	  			gotoZone(this.owner.conf.getAttribute('inactive-goto'));
+  	  			return;
+  	  		}
+  	  		var actions=$("actionlist[id=inactive-action]", this.owner.conf);
+  	  	}
+  
+  	  	if (actions.length>0) EIBCommunicator.executeActionList(actions);
+  		}
+    }
   });
   
   this.refreshHTML();
@@ -38,6 +42,10 @@ CButton.prototype = new CWidget();
 
 // Refresh HTML from config
 CButton.prototype.refreshHTML = function() {
+  var displaypicture = this.conf.getAttribute("display-picture");
+  if (this.editMode && displaypicture == "yes")
+    $(".buttonContent", this.div).css('background-image', 'url(' + getImageUrl(this.conf.getAttribute("picture-active")) + ')');
+  else
 	$(".buttonContent", this.div).css('background-image', 'url(' + getImageUrl(this.conf.getAttribute("picture")) + ')');
 	
 	$(".buttonContent", this.div).text(this.conf.getAttribute("text"));

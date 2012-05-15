@@ -3,6 +3,24 @@ jQuery(document).ready(function(){
 
   $( "input:button","#tab-rules").button();
   
+  _ioport_select = $('<select>/');
+  var body = '<read><config><services><ioports /></services></config></read>';
+  var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
+    success: function(responseXML, status) {
+      var xmlResponse = responseXML.documentElement;
+      if (xmlResponse.getAttribute('status') != 'error') {
+        $('ioport', responseXML).each(function() {
+          var ioport=this.getAttribute('id');
+          //var option=($('<option value="' + ioport + '">' + ioport + '</option>'));
+          var option='<option value="' + ioport + '">' + ioport + '</option>';
+          $('#tab-rules-ioport-rx-condition-ioport').append(option);
+          _ioport_select.append(option);
+        });
+      }
+      else
+        messageBox(tr("Error: ")+responseXML.textContent, 'Erreur', 'alert');
+    }
+  });
   
   $('#addcondition').append('<option value="">' + tr("Add a condition") + '</option>');
   

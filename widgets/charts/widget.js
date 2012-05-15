@@ -62,7 +62,7 @@ function CCharts(conf) {
           alert("pas de courbes à afficher");
           return false;
         }
-        $("*").css("cursor", "progress");
+        $("body").css("cursor", "progress");
     
         this.owner.chart = creategraph(this.owner.curves, this.owner.title, this.owner.curves[0].type_curve, this.owner.legend);
         $( "#containerhighstock" ).show();
@@ -70,7 +70,7 @@ function CCharts(conf) {
         $( "#containerhighstockdialog" ).dialog({ title: this.owner.title });
         $( "#containerhighstockdialog" ).dialog("open");
     
-        $("*").css("cursor", "auto");
+        $("body").css("cursor", "auto");
     }
   });
   
@@ -208,7 +208,8 @@ function creategraph(curves, title, type_graph, displaylegend) {
         text: 'Construit en...'
       },
       xAxis: {
-        //3type: 'datetime' 
+        //3type: 'datetime'
+        ordinal: true 
       },
       title: {
         text: title

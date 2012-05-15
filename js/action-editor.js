@@ -118,7 +118,22 @@ var actionEditor = {
     switch (tr.conf.getAttribute('type')) {
       case 'set-value' :
         $("[name=id]", dialog).val(tr.conf.getAttribute('id'));
+        $("[name=id]", dialog).bind('change', function() {
+          if (_objectTypesValues[$("option:selected", this)[0].type])
+          {
+            values=_objectTypesValues[$("option:selected", this)[0].type];
+            $("[name=values]", dialog).empty();
+            $(values).each(function() { $("[name=values]", dialog).append('<option value="' + this + '">' + this + '</option>'); });
+            $("[name=values]", dialog).show();
+            $("[name=value]", dialog).hide();
+          } else
+          {
+            $("[name=values]", dialog).hide();
+            $("[name=value]", dialog).show();
+          }
+        }).trigger('change');
         $("[name=value]", dialog).val(tr.conf.getAttribute('value'));
+        $("[name=values]", dialog).val(tr.conf.getAttribute('value'));
         break;
       case 'copy-value' :
         $("[name=from]", dialog).val(tr.conf.getAttribute('from'));
@@ -206,6 +221,10 @@ var actionEditor = {
 	    case 'set-value':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());
 	    	conf.setAttribute('value', $("[name=value]", dialog).val());
+        if ($("[name=values]", dialog).css('display')!='none')
+          conf.setAttribute('value', $("[name=values]", dialog).val());
+        else
+          conf.setAttribute('value', $("[name=value]", dialog).val());
 	    	break;
 	    case 'copy-value':
 	    	conf.setAttribute('from', $("[name=from]", dialog).val());
@@ -229,12 +248,14 @@ var actionEditor = {
 	    	break;
 	    case 'send-sms':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());
-	    	conf.setAttribute('value', '<![CDATA[' + $("[name=value]", dialog).val() + ']]>');
+	    	//conf.setAttribute('value', '<![CDATA[' + $("[name=value]", dialog).val() + ']]>');
+	    	conf.setAttribute('value', $("[name=value]", dialog).val());
 	    	break;
 	    case 'send-email':
 	    	conf.setAttribute('to', $("[name=to]", dialog).val());
 	    	conf.setAttribute('subject', $("[name=subject]", dialog).val());
-	    	conf.textContent='<![CDATA[' + $("[name=message]", dialog).val() + ']]>';
+	    	//conf.textContent='<![CDATA[' + $("[name=message]", dialog).val() + ']]>';
+	    	conf.textContent= $("[name=message]", dialog).val();
 	    	break;
 	    case 'dim-up':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());
@@ -243,7 +264,8 @@ var actionEditor = {
 	    	conf.setAttribute('duration', $("[name=duration]", dialog).val());
 	    	break;
 	    case 'shell-cmd':
-	    	conf.setAttribute('cmd', '<![CDATA[' + $("[name=cmd]", dialog).val() + ']]>');
+	    	//conf.setAttribute('cmd', '<![CDATA[' + $("[name=cmd]", dialog).val() + ']]>');
+	    	conf.setAttribute('cmd', $("[name=cmd]", dialog).val() );
 	    	break;
 	    case 'ioport-tx':
 	    	conf.setAttribute('ioport', $("[name=ioport]", dialog).val());
@@ -298,7 +320,8 @@ var actionEditor = {
 			select.append(option);
 			var optgroup=$("<optgroup label='Objects'>");
 			$('object', _objects).each(function() {
-				var option=($('<option value="' + this.getAttribute('id') + '">' + this.textContent + '</option>'));
+				var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent!="")?this.textContent:this.getAttribute('id')) + ' (' + this.getAttribute('type') + ')</option>'));
+				option[0].type = this.getAttribute('type');
 				optgroup.append(option);
 			});
 			select.append(optgroup);

@@ -175,6 +175,7 @@ jQuery(document).ready(function(){
   });
   
 	loadSubPages();
+  $("body").css("cursor", "auto");
 });
 
 function switchTab(tab) {

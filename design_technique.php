@@ -75,7 +75,28 @@ if (isset($_GET['action'])) {
 				print("<createdesign status='error'>No design name specified");
 			print("</createdesign>\n");
 	    break;
-	    
+      
+	  case 'removedesign':
+	    if (isset($_GET['name'])) {
+        $name = $_GET['name'];
+				if (!file_exists("design/".$name))
+					print("<removedesign status='error'>Design not exists");
+				else {
+          $delfile = unlink("design/".$name."/design.xml");
+          $deldir = rmdir("design/".$name);
+          if ($delfile == "false")
+					  print("<removedesign status='error'>Unable to remove design file");
+          elseif ( $deldir == "false" )
+					  print("<removedesign status='error'>Unable to remove design folder");
+          else
+					  print("<removedesign status='success'>");
+        }
+			}
+			else
+				print("<removedesign status='error'>No design name specified");
+			print("</removedesign>\n");
+	    break;
+      
 		case 'savefile':
 			print("<savefile status='error'>File save is not possible, please put the file manually in design folder on server</savefile>\n");
 	    break;

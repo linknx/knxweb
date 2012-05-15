@@ -54,7 +54,7 @@
 </form>
 </div>
 
-<div id="tab-rules-objectsrc-condition-dialog" style="display: none;">
+<div id="tab-rules-object-src-condition-dialog" style="display: none;">
 <form id="tab-rules-objectsrc-condition-form">
 <table class="form">
   <tbody>
@@ -101,7 +101,7 @@
 </form>
 </div>
 
-<div id="tab-rules-objectcompare-condition-dialog" style="display: none;">
+<div id="tab-rules-object-compare-condition-dialog" style="display: none;">
 <form id="tab-rules-objectcompare-condition-form">
 <table class="form">
   <tbody>
@@ -337,5 +337,33 @@
   <br />
   <input type="checkbox" id="tab-rules-timer-condition-trigger"> Trigger
 
+</form>
+</div>
+
+<div id="tab-rules-ioport-rx-condition-dialog" style="display: none;">
+<form id="tab-rules-ioport-rx-condition-form">
+<table class="form">
+  <tbody>
+    <tr>
+      <th>Io Port</th>
+      <td>
+        <!-- <input type="text" class="required" id="tab-rules-ioport-rx-condition-ioport"> -->
+        <select id="tab-rules-ioport-rx-condition-ioport"></select>
+      </td>
+    </tr>
+    <tr>
+      <th>Expected</th>
+      <td>
+        <input type="text" id="tab-rules-ioport-rx-condition-expected">
+      </td>
+    </tr>
+    <tr>
+      <th>Trigger</th>
+      <td>
+        <input type="checkbox" id="tab-rules-ioport-rx-condition-trigger">
+      </td>
+    </tr>
+  </tbody>
+</table>
 </form>
 </div>

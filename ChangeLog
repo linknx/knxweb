@@ -1,3 +1,8 @@
+2012-05-08 Anthony Penhard v0.9.1
+	* Add new widget area, window, count
+	* Add ioport in rules
+	* Add version file
+	
 2012-03-11 Anthony Penhard
 	* Add new Advanced widget slider
 	* Add new widget vprogressbar (credit: Frederic G)

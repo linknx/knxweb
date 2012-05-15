@@ -43,11 +43,34 @@ var design_view = {
 
 //				obj.edit(design.onWidgetSelect, design.onWidgetMove, design.onWidgetResize);
 				div.append(obj.div);
+        // If the widget had Children 
+        //$('control', conf).each(function() {
+        $(conf).children('control').each(function() {
+  				design_view.addWidgetChildren(this, obj.content);
+  			});
 
 //				UIController.objects.push(obj);
 				EIBCommunicator.add(obj);
 				return true;
 			}
+			return false;
+		}	else return false;
+	},
+
+	// Add widget from conf and to a parent
+	addWidgetChildren: function(conf, parent) {
+		var obj = null;
+		var type = conf.getAttribute('type');
+		var cls = UIController.widgetList[type];
+
+		if (cls)
+		{
+			obj = new cls(conf);
+			if (obj!=null) {
+        parent.append(obj.div);
+				EIBCommunicator.add(obj);
+				return true;
+			} 
 			return false;
 		}	else return false;
 	},
@@ -81,9 +104,22 @@ var design_view = {
 			e.width(width);
 			e.height(height);
 
-	 		$('control', this).each(function() {
+	 		 /*
+       $('control', this).each(function() {
 				design_view.addWidget(this, e);
 			});
+      */
+	 		$(this).children('control').each(function() {
+				design_view.addWidget(this, e);
+			})
+
+      // charger également les "control" lié au design lui-même, soit des controls/widget lié au design et pas à une zone précise
+      // TODO a gérer avec paramètre de la zone si celle-ci ne veux pas afficher les control/widgets "globaux" on aura globalcontrol="false" par défaut on affiche sinon
+      if (this.getAttribute('globalcontrol')!='false') {
+        $('zones', design_view.config).children('control').each(function() {
+          design_view.addWidget(this, e);
+        });
+      }
 
 			e.css('background-image', 'url(' + getImageUrl(this.getAttribute('img')) + ')');
 	

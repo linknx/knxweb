@@ -20,7 +20,8 @@ pos_top_condition[0] = 0;
 pos_top_condition[1] = 0;
 pos_right_condition[0] = 0;
 pos_right_condition[1] = 0;
-var conditionsCurrent = new Array(), actionsCurrent = new Array(); 
+var conditionsCurrent = new Array(), actionsCurrent = new Array();
+var _ioport_select; 
 
 var conditionsList = {
     'and':'And',
@@ -180,7 +181,7 @@ var rules = {
   generateXML: function() {
     if (!generateXmlFlag) return 0;
 
-    var xmlactionlist, xml;
+    var xmlactionlist, xml, xmlactionlist2;
     var rule=$('<rule>');
     rule.attr("id", $('#id-current-rule').val());
     rule.attr("description", $('#description-current-rule').val());
@@ -217,11 +218,11 @@ var rules = {
 
     var c = jsPlumb.getConnections({source:'actionlistOnFalse'});
     
-    if (c.lenght > 0) {    
+    if (c.length > 0) {    
       if ($("span", '#actionlistOnFalse').text() == 'On-False') {
-        xmlactionlist = $('<actionlist type="on-false" >');
+        xmlactionlist2 = $('<actionlist type="on-false" >');
       } else {
-        xmlactionlist = $('<actionlist type="if-false" >');
+        xmlactionlist2 = $('<actionlist type="if-false" >');
       }
     }
 
@@ -229,16 +230,16 @@ var rules = {
       var l = c[i];
       if (l && l.length > 0) {
         for (var j = 0; j < l.length; j++) {
-          xmlactionlist.append(this.generateNodeXML($('#'+l[j].targetId)));
+          xmlactionlist2.append(this.generateNodeXML($('#'+l[j].targetId)));
         }
       } else if (l) {
         var action = $('#'+l.targetId);
         if (!action[0].condition) {
-          xmlactionlist.append(this.generateNodeXML($('#'+l.targetId)));
+          xmlactionlist2.append(this.generateNodeXML($('#'+l.targetId)));
         }
       }
     }
-    rule.append(xmlactionlist);
+    rule.append(xmlactionlist2);
     
     $("#tab-rules-property").text('<rule id="'+$('#id-current-rule').val()+'" description="' + $('#description-current-rule').val() + '" >'+rule.html()+'</rule>').html();
   },
@@ -269,6 +270,8 @@ var rules = {
   },
   
   deleteAllCurrentRule: function () {
+    $('#id-current-rule').val('');
+    $('#description-current-rule').val('');
     //conditionsCurrent[]
     for (var i in conditionsCurrent) {
       var l = conditionsCurrent[i];
@@ -285,9 +288,6 @@ var rules = {
         $(l).remove();
       }
     };
-    
-    $('#id-current-rule').val('');
-    $('#description-current-rule').val('');
   },
   
   addconditionCurrent: function (div) {

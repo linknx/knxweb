@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+  <name>area</name>
+  <label>Area</label>
+  <description>Area</description>
+  <version>1.0</version>
+  <category>Various widgets</category>
+  <settings>
+    <setting label="" type="separator" />
+    <setting id="background-color" label="Background Color" type="color" default="" />
+    <setting id="opacity" label="Background opacity" type="text" default="1"/>
+    <setting id="border" label="Border" type="list" default="true">
+      <option key="true" value="Yes" />
+      <option key="false" value="No" />
+    </setting>
+    <setting id="border-color" label="Border color" type="color" default="#000000" />
+    <setting label="" type="separator" />
+    <setting id="feedback-object" label="Feedback object" type="object" />
+    <setting id="feedback-value" label="Show when value" type="text" />
+  </settings>
+  <feedbacks>
+    <feedback id="feedback-object" />
+  </feedbacks>
+</widget>

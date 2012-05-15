@@ -133,7 +133,8 @@ var events = {
     events.loadEventsStatusList(); // recharge la liste des events avec leur état
   },
   editEvent: function(eventid) {
-    
+    $("#tab-event-widget-properties").show();
+    $("#tab-event-widget-buttons").show();
     events.currentRule=$('rule[id="' + eventid + '"]',events.config)[0]; 
 
     //events.currentCondition = $("condition", events.currentRule)[0];
@@ -170,6 +171,8 @@ var events = {
         events.currentCondition = null;
         events.currentAction = null;
       }
+      $("#tab-event-widget-properties").hide();
+      $("#tab-event-widget-buttons").hide();
 		}    
     events.loadEventsStatusList(); // recharge la liste des events avec leur état 
   },

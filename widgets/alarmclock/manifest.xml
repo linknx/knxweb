@@ -4,7 +4,7 @@
   <label>Alarm Clock</label>
   <description>Alarm Clock</description>
   <version>1.0</version>
-  <category>Basic widgets</category>
+  <category>Various widgets</category>
   <settings>
     <setting id="user" label="Alarmclock User" type="text" />
     <setting id="bgcolor" label="Background color" type="color" default="#000000" />
@@ -13,11 +13,9 @@
 			<option key="White" value="White" />
       <option key="Black" value="Black" />
 		</setting>
-    		
     <setting label="Action Alarm Clock" type="comment" />
 		<setting id="idrule" label="Id Alarm Rule" type="text" />
 		<setting id="active-action" label="Action" type="action" />
-
   </settings>
   <feedbacks></feedbacks>
 </widget>

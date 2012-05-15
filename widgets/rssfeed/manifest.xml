@@ -4,7 +4,7 @@
 	<label>RssFeed</label>
 	<description>RssFeed</description>
 	<version>1.0</version>
-	<category>Basic widgets</category>
+	<category>Various widgets</category>
 	<settings>
 		<setting label="RssFeed" type="comment" />
     <setting id="adress" label="Url RssFeed" type="text" default="http://feeds.reuters.com/reuters/oddlyEnoughNews" />

@@ -227,13 +227,14 @@ var loading = {
                 loaderContent.css("left", ($(window).width() - loaderContent.width()) / 2);
         
                 if (($.browser.msie) && ($.browser.version<7)) $("select").hide();
-                
+                $("body").css("cursor", "progress");
 								$("#loaderModal").fadeIn();
         },
         hide: function()
         {
 								$("#loaderModal").fadeOut();
                 if (($.browser.msie) && ($.browser.version<7)) $("select").show();
+                $("body").css("cursor", "auto");
         }                                                                 
                 
 };
@@ -349,7 +350,8 @@ $.fn.widgetMovable = function(method) {
 			$(widget).addClass("selected");
 			
 			$(".resizeSE").hide();
-			$(".resizeSE", widget).show();
+			//$(".resizeSE", widget).show();
+			$(widget).children(".resizeSE").show();
 		
 			if (options.onSelect!=null) 
 			{
@@ -365,6 +367,7 @@ $.fn.widgetMovable = function(method) {
 
 				options = $.extend({
 					resizable: true,
+					draggable: true,
 					onSelect: null,
 					onMove: null,
 					onResize: null
@@ -396,19 +399,21 @@ $.fn.widgetMovable = function(method) {
 					});
 				}
 
-				$this.draggable({
-					containment: 'parent',
-					delay: 50,
-					stop: function(event, ui) {
-						var left=Math.round($(this).css('left').replace(/px$/,"")) + widgetContainer.offset().left;
-						var top=Math.round($(this).css('top').replace(/px$/,"")) + widgetContainer.offset().top;
-						$('.resizeSE', this).draggable( "option", "containment", [left,top,9999,9999] );
-						if (options.onMove!=null) options.onMove(this, ui.position.left, ui.position.top);
-					},
-					start: function(event, ui) {
-						select(this);
-					}
-				});
+				if (options.draggable) {
+  				$this.draggable({
+  					containment: 'parent',
+  					delay: 50,
+  					stop: function(event, ui) {
+  						var left=Math.round($(this).css('left').replace(/px$/,"")) + widgetContainer.offset().left;
+  						var top=Math.round($(this).css('top').replace(/px$/,"")) + widgetContainer.offset().top;
+  						$('.resizeSE', this).draggable( "option", "containment", [left,top,9999,9999] );
+  						if (options.onMove!=null) options.onMove(this, ui.position.left, ui.position.top);
+  					},
+  					start: function(event, ui) {
+  						select(this);
+  					}
+  				});
+				}
 				
 				$this.click(function() {
 						select(this);

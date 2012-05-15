@@ -4,7 +4,7 @@
 	<label>Ephemeris</label>
 	<description>Ephemeris</description>
 	<version>1.0</version>
-	<category>Basic widgets</category>
+	<category>Various widgets</category>
 	<settings>
     <setting label="Setting" type="comment" />
     <setting id="sunrise-picture" label="Sunrise Picture" type="picture" default="sunrise.png"/>

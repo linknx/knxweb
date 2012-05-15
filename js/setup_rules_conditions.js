@@ -40,7 +40,6 @@ $.extend(rules, {
         div[0].object_trigger=condition.getAttribute('trigger');
         break;
       case "object-src":
-        div[0].objectsrc_id=condition.getAttribute('id');
         div[0].objectsrc_operation=condition.getAttribute('op');
         div[0].objectsrc_value=condition.getAttribute('value');
         div[0].objectsrc_trigger=condition.getAttribute('trigger');
@@ -159,8 +158,11 @@ $.extend(rules, {
         rulestab=$("#tab-rules-timer-condition-tabs").tabs();
         rulestab.tabs('select', '#tab-rules-timer-condition-start');
         break;
-      case "ioport-rx":
-        messageBox("a implémenter ...","TODO","alert");
+      case "ioport-rx": // <condition type="" expected="" ioport="" trigger="true"/>
+        //messageBox("a implémenter ...","TODO","alert");
+        div[0].ioport_expected=condition.getAttribute('expected');
+        div[0].ioport_ioport=condition.getAttribute('ioport');
+        div[0].ioport_trigger=condition.getAttribute('trigger');
         break;
       case "script":
         div[0].script=condition.getAttribute('script');
@@ -290,7 +292,6 @@ $.extend(rules, {
         div[0].object_trigger=false;
         break;
       case "object-src":
-        div[0].objectsrc_id='';
         div[0].objectsrc_operation='eq';
         div[0].objectsrc_value='';
         div[0].objectsrc_trigger=false;
@@ -354,7 +355,10 @@ $.extend(rules, {
         var div = this.addNot();
         break;
       case "ioport-rx":
-        messageBox("a implémenter ...","TODO","alert");
+        //messageBox("a implémenter ...","TODO","alert");
+        div[0].ioport_expected='';
+        div[0].ioport_ioport='';
+        div[0].ioport_trigger='';
         break;
       case "script":
         div[0].script='';
@@ -401,7 +405,6 @@ $.extend(rules, {
         //$("#tab-rules-objectsrc-condition-form")[0].validator.resetForm();
         break;
       case "object-compare":
-        $('#tab-rules-objectcompare-condition-dialog')[0].editing=div;
         $('#tab-rules-objectcompare-condition-object').val(div.object_id);
         $('#tab-rules-objectcompare-condition-operation').val(div.object_operation);
         $('#tab-rules-objectcompare-condition-object2').val(div.object_id2);
@@ -515,7 +518,11 @@ $.extend(rules, {
         this.addNot();
         break;*/
       case "ioport-rx":
-        messageBox("a implémenter ...","TODO","alert");
+        //messageBox("a implémenter ...","TODO","alert");
+        $('#tab-rules-ioport-rx-condition-expected').val(div.ioport_expected);
+        $('#tab-rules-ioport-rx-condition-ioport').val(div.ioport_ioport);
+        if (div.ioport_trigger==true) $('#tab-rules-ioport-rx-condition-trigger').attr('checked','1'); 
+        else $('#tab-rules-ioport-rx-condition-trigger').removeAttr('checked');
         break;
       case "script":
         $('#tab-rules-script-condition-script').text(div.script);
@@ -654,7 +661,10 @@ $.extend(rules, {
         this.addNot()
         break;*/
       case "ioport-rx":
-        messageBox("a implémenter ...","TODO","alert");
+        div.ioport_expected=$('#tab-rules-ioport-rx-condition-expected').val();
+        div.ioport_ioport=$('#tab-rules-ioport-rx-condition-ioport').val();
+        if ($('#tab-rules-ioport-rx-condition-trigger').attr('checked')) div.ioport_trigger=true; else div.ioport_trigger=false;
+        html = '<br />' + div.ioport_ioport +'<br />'+ div.ioport_expected;
         break;
       case "script":
         div.script=$('#tab-rules-script-condition-script').val();
@@ -678,16 +688,16 @@ $.extend(rules, {
         xml.attr('value',condition[0].object_value);
         if (condition[0].object_trigger) xml.attr('trigger','true');
         break;
-      case 'objectsrc':
+      case 'object-src':
         xml.attr('op',condition[0].objectsrc_operation);
         xml.attr('value',condition[0].objectsrc_value);
         xml.attr('src',condition[0].objectsrc_src);
         if (condition[0].objectsrc_trigger) xml.attr('trigger','true');
         break;
       case 'object-compare':
-        xml.attr('id',condition[0].objectcompare_id);
-        xml.attr('op',condition[0].objectcompare_operation);
-        xml.attr('id2',condition[0].objectcompare_id2);
+        xml.attr('id',condition[0].object_id);
+        xml.attr('op',condition[0].object_operation);
+        xml.attr('id2',condition[0].object_id2);
         break;
       case 'time-counter':
         xml.attr('threshold',condition[0].timecounter_threshold);
@@ -775,9 +785,9 @@ $.extend(rules, {
 
         break;
       case 'ioport-rx':
-        xml.attr('id',condition[0].ioport_id);
-        xml.attr('value',condition[0].ioport_value);
-        //TODO a finir ...
+        xml.attr('ioport',condition[0].ioport_ioport);
+        xml.attr('expected',condition[0].ioport_expected);
+        if (condition[0].ioport_trigger) xml.attr('trigger','true');
         break;
       case 'script':
         xml.text(condition[0].script);
@@ -849,6 +859,8 @@ $.extend(rules, {
             $("#tab-rules-objectsrc-condition-form")[0].validator.resetForm();
             break;
           case "object-compare":
+            $("#tab-rules-objectcompare-condition-form")[0].validator=$("#tab-rules-objectcompare-condition-form").validate();
+            $("#tab-rules-objectcompare-condition-form")[0].validator.resetForm();
             break;
           case "time-counter":
             $("#tab-rules-time-counter-condition-form")[0].validator=$("#tab-rules-time-counter-condition-form").validate();
@@ -1009,7 +1021,9 @@ $.extend(rules, {
           case "not":
             break;
           case "ioport-rx":
-            messageBox("a implémenter ...","TODO","alert");
+            //messageBox("a implémenter ...","TODO","alert");
+            $("#tab-rules-ioport-rx-condition-form")[0].validator=$("#tab-rules-ioport-rx-condition-form").validate();
+            $("#tab-rules-ioport-rx-condition-form")[0].validator.resetForm();
             break;
           case "script":
             break;
