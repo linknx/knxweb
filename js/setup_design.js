@@ -877,7 +877,8 @@ jQuery(function($) {
 
 	$("#tab-design-list-widgets").draggable({ 
   	containment: "parent" ,
-  	scroll: false
+  	scroll: false,
+  	handle: "div:first"
   });
 
 	$("#tab-design-width").change(function() {

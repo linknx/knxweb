@@ -316,6 +316,7 @@ $.extend(rules, {
         $('#tab-rules-set-value-action-object').val(div.objid);
         $('#tab-rules-set-value-action-value').val(div.objvalue);
         $('#tab-rules-set-value-action-value-select').val(div.objvalue);
+        $("#tab-rules-set-value-action-object").trigger('change');
         break;
       case 'copy-value' :
         $('#tab-rules-copy-value-action-object-from').val(div.objfrom);
@@ -680,7 +681,7 @@ $.extend(rules, {
                 $("#tab-rules-set-value-action-value-select").hide();
                 $("#tab-rules-object-condition-value").show();
               }
-            });
+            }).trigger('change');
             break;
           case 'copy-value' :
             var listobjectcopyvaluefrom = listobject.clone();

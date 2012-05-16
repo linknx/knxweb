@@ -36,11 +36,13 @@ $.extend(rules, {
       case "object":
         div[0].object_id=condition.getAttribute('id');
         div[0].object_operation=condition.getAttribute('op');
+        if(!div[0].object_operation) div[0].object_operation='eq';
         div[0].object_value=condition.getAttribute('value');
         div[0].object_trigger=condition.getAttribute('trigger');
         break;
       case "object-src":
         div[0].objectsrc_operation=condition.getAttribute('op');
+        if(!div[0].objectsrc_operation) div[0].objectsrc_operation='eq';
         div[0].objectsrc_value=condition.getAttribute('value');
         div[0].objectsrc_trigger=condition.getAttribute('trigger');
         div[0].objectsrc_src=condition.getAttribute('src');
@@ -48,6 +50,7 @@ $.extend(rules, {
       case "object-compare":
         div[0].object_id=condition.getAttribute('id');
         div[0].object_operation=condition.getAttribute('op');
+        if(!div[0].object_operation) div[0].object_operation='eq';
         div[0].object_id2=condition.getAttribute('id2');
         break;
       case "time-counter":
@@ -393,6 +396,7 @@ $.extend(rules, {
         $('#tab-rules-object-condition-operation').val(div.object_operation);
         $('#tab-rules-object-condition-values').val(div.object_value);
         $('#tab-rules-object-condition-value').val(div.object_value);
+        $("#tab-rules-object-condition-object").trigger('change');
         if (div.object_trigger==true) $('#tab-rules-object-condition-trigger').attr('checked','1'); 
         else $('#tab-rules-object-condition-trigger').removeAttr('checked');
         break;
@@ -852,9 +856,8 @@ $.extend(rules, {
                 $("#tab-rules-object-condition-value").show();
               }
             });
-            $("#tab-rules-object-condition-object").trigger('change');
             break;
-          case "objectsrc":
+          case "object-src":
             $("#tab-rules-objectsrc-condition-form")[0].validator=$("#tab-rules-objectsrc-condition-form").validate();
             $("#tab-rules-objectsrc-condition-form")[0].validator.resetForm();
             break;

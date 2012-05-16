@@ -192,6 +192,7 @@ var subpages = {
 					$('#widgetsubpagediv').css("background-image", "url(" + getImageUrl(value) + ")");
 				}
 			} else {
+				$('#widgetsubpagediv').css("background-image", '');
 				$("#tab-subpages-background").val('');
 				$('#tab-subpages-background-list').css("display","none");
 				$('#tab-subpages-background').css("display","block");
