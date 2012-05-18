@@ -188,8 +188,6 @@ var design = {
     var ow = o.get(0).owner;
     //$(o.conf).children('control').each(function() {
     $(".widget", o).each(function() {
-      //design.deleteWidget($(this).get(0).owner);
-      console.log(this, this.owner);
       design.deleteWidget($(this));
     });
     design.removeWidgetsList(ow);
@@ -412,12 +410,6 @@ var design = {
       var tr=$('<tr><th>Class CSS</th><td><input id="tab-design-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
 			$("#tab-design-widget-properties tbody").append(tr);
     }
-	  
-    var tr=$('<tr><th>Global Widget</th><td><input id="tab-design-properties-global-control" type="checkbox" name="global-control" checked="' + ((o.conf.getAttribute("globalcontrol")!="true")?'':'checked') + '"></td></tr>');
-    $("#tab-design-widget-properties tbody").append(tr);
-    $("#tab-design-properties-global-control").change(function() {
-      o.setSetting("globalcontrol", $(this).is(':checked') );
-    });
  
 		$("#tab-design-properties-x").change(function() {
 			o.setSetting("x", $(this).val());
@@ -503,15 +495,12 @@ var design = {
           var exlude_type = [];
           if (this.exlude_type) {
             exlude_type = this.exlude_type.split(',');
-            console.log("exlude_type : ",exlude_type);
           }
           var only_type = [];
           if (this.only_type) {
             only_type = this.only_type.split(',');
             exlude_type = [];
-            console.log("only_type : ",only_type);
           }
-          console.log(this,"exlude_type : ",exlude_type,"only_type : ",only_type);
 
           if (only_type.length > 0) {
 					$('object', _objects).each(function() {
@@ -666,7 +655,6 @@ var design = {
 								});
 				    	}
 						});
-            //console.log("click action", o , o.conf, propId, actions, widgetObjects);
 						actionEditor.open(actions, widgetObjects);
 						//actionEditor.open(actions);
 					});			
@@ -701,7 +689,6 @@ var design = {
 			if ($("#widgetdiv .selected").length>0 && $(this).attr('name') != "undefined")
 			{
 				var selectedWidget=$("#widgetdiv .selected").get(0);
-        console.log($(this).attr('name'), $(this).val(), selectedWidget.owner.conf.getAttribute('type'));
 				// if widget is a html2 :
 				if ((selectedWidget.owner.conf.getAttribute('type')=='html2') && ($(this).attr('name')=="html")) $(selectedWidget.owner.conf).empty().append(selectedWidget.owner.conf.ownerDocument.createCDATASection($(this).val()));
 				selectedWidget.owner.setSetting($(this).attr('name'), $(this).val());
