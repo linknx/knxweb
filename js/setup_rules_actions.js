@@ -666,9 +666,12 @@ $.extend(rules, {
               .append($('<td>').append(listobjectsetvalue))
               ).append(
               $('<tr>').append('<th width="150">Value</th>')
-              .append($('<td>').append('<input type="text" id="tab-rules-set-value-action-value" size="50">').append('<select id="tab-rules-set-value-action-value-select"></select>'))
+              .append($('<td>').append('<input type="text" id="tab-rules-set-value-action-value" size="50">').append('<select id="tab-rules-set-value-action-value-select" style="display:none;" ></select>'))
               );
-            $("#tab-rules-set-value-action-object").bind('change', function() {
+            //$("#tab-rules-set-value-action-object").bind('change', function() {
+            listobjectsetvalue.bind('change', function() {
+              //console.log("change object", $("#tab-rules-set-value-action-object option:selected"), $("#tab-rules-set-value-action-object option:selected")[0].type);
+              console.log("change object", $("option:selected" , this), $("option:selected" , this)[0].type);
               if (_objectTypesValues[$("#tab-rules-set-value-action-object option:selected")[0].type])
               {
                 values=_objectTypesValues[$("#tab-rules-set-value-action-value-select option:selected")[0].type];
@@ -681,7 +684,7 @@ $.extend(rules, {
                 $("#tab-rules-set-value-action-value-select").hide();
                 $("#tab-rules-object-condition-value").show();
               }
-            }).trigger('change');
+            });//.trigger('change');
             break;
           case 'copy-value' :
             var listobjectcopyvaluefrom = listobject.clone();

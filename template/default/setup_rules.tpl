@@ -17,7 +17,7 @@
     <span>Rules : </span> <select id="listRules" name="listRules"></select> <!-- Liste des rules -->
   </div>
   <strong><span>Id rule : </span><input type="text" id="id-current-rule" size="50"></strong>
-  <input type="button" id="button-save-rule" value="Save" onclick="validRule()">
+  <input type="button" id="button-save-rule" value="Valid" onclick="validRule()">
   <input type="button" id="button-reload-rule" value="Reload XML" onclick="rules.generateXML()">
   <input type="button" id="button-init-rule" value="Clear" onclick="rules.deleteAllCurrentRule()">
   <br /><strong><span>Description : </span><input type="text" id="description-current-rule" size="100"></strong>

@@ -156,7 +156,8 @@ $.extend(rules, {
           div[0].timer_during=this.textContent;
         });
         
-        div[0].timer_trigger=false;
+        //div[0].timer_trigger=false;
+        div[0].timer_trigger=condition.getAttribute('trigger');
         
         rulestab=$("#tab-rules-timer-condition-tabs").tabs();
         rulestab.tabs('select', '#tab-rules-timer-condition-start');
@@ -361,7 +362,7 @@ $.extend(rules, {
         //messageBox("a implémenter ...","TODO","alert");
         div[0].ioport_expected='';
         div[0].ioport_ioport='';
-        div[0].ioport_trigger='';
+        div[0].ioport_trigger=false;
         break;
       case "script":
         div[0].script='';
@@ -397,15 +398,15 @@ $.extend(rules, {
         $('#tab-rules-object-condition-values').val(div.object_value);
         $('#tab-rules-object-condition-value').val(div.object_value);
         $("#tab-rules-object-condition-object").trigger('change');
-        if (div.object_trigger==true) $('#tab-rules-object-condition-trigger').attr('checked','1'); 
-        else $('#tab-rules-object-condition-trigger').removeAttr('checked');
+        if (div.object_trigger) $('#tab-rules-object-condition-trigger').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-object-condition-trigger').removeAttr('checked').trigger('change');
         break;
       case "object-src":
         $('#tab-rules-objectsrc-condition-operation').val(div.objectsrc_operation);
         $('#tab-rules-objectsrc-condition-value').val(div.objectsrc_value);
         $('#tab-rules-objectsrc-condition-src').val(div.objectsrc_src);
-        if (div.objectsrc_trigger==true) $('#tab-rules-objectsrc-condition-trigger').attr('checked','1'); 
-        else $('#tab-rules-objectsrc-condition-trigger').removeAttr('checked');
+        if (div.objectsrc_trigger) $('#tab-rules-objectsrc-condition-trigger').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-objectsrc-condition-trigger').removeAttr('checked').trigger('change');
         //$("#tab-rules-objectsrc-condition-form")[0].validator.resetForm();
         break;
       case "object-compare":
@@ -505,7 +506,7 @@ $.extend(rules, {
         }
         $("#timer-condition-during").trigger('change');
     
-        if (div.timer_trigger) $('#tab-rules-timer-condition-trigger').attr('checked','1'); else $('#tab-rules-timer-condition-trigger').removeAttr('checked');
+        if (div.timer_trigger) $('#tab-rules-timer-condition-trigger').attr('checked','1').trigger('change'); else $('#tab-rules-timer-condition-trigger').removeAttr('checked').trigger('change');
         
         $('#tab-rules-timer-condition-threshold').val(div.timecounter_threshold);
         $('#tab-rules-timer-condition-reset-delay').val(div.timecounter_resetdelay);
@@ -525,8 +526,8 @@ $.extend(rules, {
         //messageBox("a implémenter ...","TODO","alert");
         $('#tab-rules-ioport-rx-condition-expected').val(div.ioport_expected);
         $('#tab-rules-ioport-rx-condition-ioport').val(div.ioport_ioport);
-        if (div.ioport_trigger==true) $('#tab-rules-ioport-rx-condition-trigger').attr('checked','1'); 
-        else $('#tab-rules-ioport-rx-condition-trigger').removeAttr('checked');
+        if (div.ioport_trigger) $('#tab-rules-ioport-rx-condition-trigger').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-ioport-rx-condition-trigger').removeAttr('checked').trigger('change');
         break;
       case "script":
         $('#tab-rules-script-condition-script').text(div.script);
@@ -551,13 +552,15 @@ $.extend(rules, {
           div.object_value=$('#tab-rules-object-condition-values').val();
         else
           div.object_value=$('#tab-rules-object-condition-value').val();
-        if ($('#tab-rules-object-condition-trigger').attr('checked')) div.object_trigger=true; else div.object_trigger=false;
+        //if ($('#tab-rules-object-condition-trigger').is(':checked')) div.object_trigger=true; else div.object_trigger=false;
+        div.object_trigger=$('#tab-rules-object-condition-trigger').is(':checked');
         html = '<br />' + div.object_id+'<br />'+div.object_operation+'<br />'+div.object_value;
         break;
       case "object-src": // TODO gérer : if ($("#tab-rules-objectsrc-condition-form").valid())
         div.objectsrc_operation=$('#tab-rules-objectsrc-condition-operation').val();
         div.objectsrc_value=$('#tab-rules-objectsrc-condition-value').val();
-        if ($('#tab-rules-objectsrc-condition-trigger').attr('checked')) div.objectsrc_trigger=true; else div.objectsrc_trigger=false;
+        //if ($('#tab-rules-objectsrc-condition-trigger').is(':checked')) div.objectsrc_trigger=true; else div.objectsrc_trigger=false;
+        div.objectsrc_trigger=$('#tab-rules-objectsrc-condition-trigger').is(':checked');
         div.objectsrc_src=$('#tab-rules-objectsrc-condition-src').val();
         html = '<br />Src = '+div.objectsrc_src+'<br />'+div.objectsrc_operation+'<br />'+div.objectsrc_value;
         break;
@@ -652,7 +655,7 @@ $.extend(rules, {
   
         div.timer_during=$('#timer-condition-during-text').val();
   
-        div.timer_trigger=($('#tab-rules-timer-condition-trigger').attr('checked')!='');
+        div.timer_trigger=$('#tab-rules-timer-condition-trigger').is(':checked');
         html = '';
         break;/*
       case "and":
@@ -667,7 +670,8 @@ $.extend(rules, {
       case "ioport-rx":
         div.ioport_expected=$('#tab-rules-ioport-rx-condition-expected').val();
         div.ioport_ioport=$('#tab-rules-ioport-rx-condition-ioport').val();
-        if ($('#tab-rules-ioport-rx-condition-trigger').attr('checked')) div.ioport_trigger=true; else div.ioport_trigger=false;
+        //if ($('#tab-rules-ioport-rx-condition-trigger').attr('checked')!='') div.ioport_trigger=true; else div.ioport_trigger=false;
+        div.ioport_trigger=$('#tab-rules-ioport-rx-condition-trigger').is(':checked');
         html = '<br />' + div.ioport_ioport +'<br />'+ div.ioport_expected;
         break;
       case "script":
