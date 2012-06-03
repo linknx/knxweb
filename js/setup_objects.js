@@ -113,10 +113,12 @@ var objects = {
 						'>' +	$("#edit-object-label").val() + '';
 			
 			//Listener
-			$('input',$('#edit-object-td-listener')).each( function() {
-				body+='<listener gad="' + $(this).val() + '"';
-				if ($(".flag_listener",$(this).parent()).attr('checked')) body+= ' read="true"';
-				body+=' />';
+			$('input:text',$('#edit-object-td-listener')).each( function() {
+				if ($(this).val() != "") {
+          body+='<listener gad="' + $(this).val() + '"';
+  				if ($(".flag_listener",$(this).parent()).attr('checked')) body+= ' read="true"';
+  				body+=' />';
+        }
 			});
 			
 			body+='</object></objects></config></write>';
