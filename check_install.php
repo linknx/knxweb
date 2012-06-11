@@ -1,8 +1,4 @@
 <?php
-/*
- * TODO : gérer le subpages.xml comme config.xml, le créer vide si existe pas si existe ne rien faire, 
- * dans le cas de réinstall dans le même répertoire on perd les subpages si il en avait de définis !!
- */ 
 require_once("include/linknx.php");
 require_once("lang/lang.php");
 
@@ -21,6 +17,7 @@ function _get($key, $default='') {
 
 $pwd=getcwd(); // Retourne le dossier de travail courant
 $apache_user=exec('whoami');
+$version_knxweb2 = exec('cat version');
 
 $eibd_running = `ps ax | grep eibd | grep -v grep`;
 if ($eibd_running!="") {
@@ -174,22 +171,22 @@ if (isset($_GET["ajax"])) {
 		<table> <!-- width="400" -->
 			<tr>
 				<td>Linknx host</td>
-				<td><input type="text" name="linknx_host" value="<?=_get('linknx_host','127.0.0.1')?>" size="15"></td>
+				<td><input type="text" name="linknx_host" value="<?php echo _get('linknx_host','127.0.0.1'); ?>" size="15"></td>
 			</tr>
 			<tr>
 				<td>Linknx port</td>
-				<td><input type="text" name="linknx_port" value="<?=_get('linknx_port',1028)?>" size="4"></td>
+				<td><input type="text" name="linknx_port" value="<?php echo _get('linknx_port',1028); ?>" size="4"></td>
 			</tr>
       <tr><td colspan="2"><br /> </td></tr>
       <tr>
 				<td>Title of HTML page of Knxweb</td>
 				<td>
-          <input type="text" name="title_knxweb" value="<?=_get('title_knxweb',$title_knxweb)?>" size="50">
+          <input type="text" name="title_knxweb" value="<?php echo _get('title_knxweb',$title_knxweb); ?>" size="50">
         </td>
 			</tr>
       <tr>
 				<td>Use by default applet Java if available</td><!-- Use java applet to update objects value on display design if Java is installed on client -->
-				<td><input type="checkbox" name="useJavaIfAvailable" <?=((_get('useJavaIfAvailable',$useJavaIfAvailable)=="on")?'checked="1"':"")?>" > if supported by the navigator</td>
+				<td><input type="checkbox" name="useJavaIfAvailable" <?php echo ((_get('useJavaIfAvailable',$useJavaIfAvailable)=="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
 			</tr> 
       <tr>
 				<td>Language</td>
@@ -197,7 +194,7 @@ if (isset($_GET["ajax"])) {
           <select name="lang" id="lang" >
             <?php if (!$_config["lang"]) $default_lang = _get('lang','en'); else $default_lang = $_config["lang"];
             foreach ($lang as $key => $value) { ?>
-                <option value="<?=$key?>" <?=(($default_lang == $key )?'checked="1"':"")?> ><?=$value?></option>
+                <option value="<?php echo $key; ?>" <?php echo (($default_lang == $key )?'checked="1"':""); ?> ><?php echo $value; ?></option>
             <?php } ?>
           </select>
         </td>
@@ -294,7 +291,7 @@ if (isset($_GET["ajax"])) {
 					$("#step2NextButton").button();
 				</script>
 <?php
-				} else echo "Cannot determine linknx version, you probably have an old version of linknx. You must upgrade to the version 0.0.1.30 of linknx to use with this version of knxweb.";
+				} else echo "Cannot determine linknx version, you probably have an old version of linknx. You must upgrade to the version >= 0.0.1.30 of linknx to use with this version of knxweb.";
 			} catch (Exception $e) {
 				echo $e->getMessage();
 			}
@@ -302,24 +299,29 @@ if (isset($_GET["ajax"])) {
 	}
 	// Write config
 	elseif (isset($_GET["writeconfig"])) {
+    if (!$_config["Path_Image_Background"]) $_config["Path_Image_Background"] = "images/";
+    if (!$_config["defaultDesign"]) $_config["defaultDesign"] = "default";
+    if (!$_config["defaultVersion"]) $_config["defaultVersion"] = "design";
+    if (!$_config["imageDir"]) $_config["imageDir"] = "pictures/";
+
 		$config="<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>
 <param>
   <linknx_host>" . $_SESSION['linknx_host'] . "</linknx_host> <!-- ip du serveur linknx -->
   <linknx_port>" . $_SESSION['linknx_port'] . "</linknx_port> <!-- port connexion avec serveur linknx -->
   <template>default</template> <!-- template utiliser images, css, code html tpl -->
   <lang>" . $_SESSION['lang'] . "</lang> <!-- langue -->
-  <version>0.9</version> <!-- version de KnxWeb -->
+  <version>" . $version_knxweb2 . "</version> <!-- version de KnxWeb -->
   <title>" . $_SESSION['title_knxweb'] . "</title> <!-- Titre des pages Web : KnxWeb - Ma maison en un clic -->
-  <Path_Image_Background>images/</Path_Image_Background> <!-- emplancement des images de fond d'écran -->
-  <defaultDesign>default</defaultDesign> <!-- version et design par défaut => design/version.xml par défaut default/design.xml -->
-  <defaultVersion>design</defaultVersion> <!-- fichier xml de description -->
+  <Path_Image_Background>" . $_config["Path_Image_Background"] . "</Path_Image_Background> <!-- emplancement des images de fond d'écran -->
+  <defaultDesign>" . $_config["defaultDesign"] . "</defaultDesign> <!-- version et design par défaut => design/version.xml par défaut default/design.xml -->
+  <defaultVersion>" . $_config["defaultVersion"] . "</defaultVersion> <!-- fichier xml de description -->
   <startMobileView>false</startMobileView> <!-- démarrage par défaut de la vue \"Mobile\" -->
   <defaultMobileDesign>default</defaultMobileDesign> <!-- version et design par défaut de la visu \"Mobile\" -->
   <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu \"Mobile\" -->
   <eibd>" . $_SESSION['eibd_param'] . "</eibd> <!-- paramètres d'appel de eibd exemple : ft12:/dev/ttyS0 ou -d -D -S -T -i ipt:192.168.1.10:3671 -->
   <linknx>" . $_SESSION['linknx_param'] . "</linknx> <!-- paramètres d'appel de linknx -->
   <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx> <!-- type de log de linknx file/mysql/null -->
-  <imageDir>pictures/</imageDir> <!-- chemin d'accès aux images -->
+  <imageDir>" . $_config["imageDir"] . "</imageDir> <!-- chemin d'accès aux images -->
   <useJavaIfAvailable>" . $_SESSION['useJavaIfAvailable'] . "</useJavaIfAvailable> <!-- Use java applet to update objects value on display design if Java is installed on client -->
   <versionLinknx>" . $_SESSION['version'] . "</versionLinknx> <!-- linknx peux gérer les SMS -->
   <haveSMS>" . $_SESSION['haveSMS'] . "</haveSMS> <!-- linknx peux gérer les SMS -->
@@ -338,7 +340,7 @@ $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 ?>
 		Configuration file written.<br />
 		<br />
-		<!--You must now delete the file check_install.php (rm <?=$pwd?>/check_install.php) to finish knxweb setup.<br />
+		<!--You must now delete the file check_install.php (rm <?php echo $pwd;?>/check_install.php) to finish knxweb setup.<br />
 		<br />
 		When done, --><a href="setup.php">click here</a> to configure knxweb.
 <?php
@@ -387,7 +389,7 @@ $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 		
 </head>
 <body>
-	<div class="ui-state-default welcome">Knxweb Setup</div>
+	<div class="ui-state-default welcome">Knxweb <?php echo $version_knxweb2; ?> Setup</div>
 	
 	<div id="tabs">
 		<ul>

@@ -10,6 +10,13 @@
   $_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
   unset($_config['comment']); // enleve les commentaires
 
+
+  $version_knxweb2 = exec('cat version');
+  if ($_config["version"] != $version_knxweb2) {
+		header('Location: check_install.php');
+		die;
+  }
+
 	require_once('include/tpl.php');
 	require_once('lang/lang.php');
 
