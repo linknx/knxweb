@@ -2,40 +2,40 @@
 <script type="text/javascript" src="{$js}"></script>
 {/foreach}
 				
-<input type="checkbox" id="emailserver-enable" value="1">Enable<br />
+<input type="checkbox" id="emailserver-enable" value="1">{l lang='en'}Enable{/l}<br />
 <br />
 <form id="emailserver-form">
 <table id="emailserver-tab-table">
 	<tbody>
 		<tr>
-			<th>Type</th>
+			<th>{l lang='en'}Type{/l}</th>
 			<td>
 				<select id="emailserver-type">
-					<option value="smtp">smtp</option>
+					<option value="smtp">{l lang='en'}smtp{/l}</option>
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<th>Serveur(:port)</th>
+			<th>{l lang='en'}Serveur(:port){/l}</th>
 			<td><input type="text" class="required" name="emailserver-host" id="emailserver-host"></td>
 		</tr>
 		<tr>
-			<th>Username</th>
+			<th>{l lang='en'}Username{/l}</th>
 			<td><input type="text" id="emailserver-login" size="40"></td>
 		</tr>
 		<tr>
-			<th>Password</th>
+			<th>{l lang='en'}Password{/l}</th>
 			<td><input type="password" id="emailserver-pass"></td>
 		</tr>
 		<tr>
-			<th>Password confirmation</th>
-			<td><input type="password" id="emailserver-pass-confirm"><span class="error" style="color: #F00;display: none;"> Mot de passe différent</span></td>
+			<th>{l lang='en'}Password confirmation{/l}</th>
+			<td><input type="password" id="emailserver-pass-confirm"><span class="error" style="color: #F00;display: none;"> {l lang='en'}Password doesn't match{/l}</span></td>
 		</tr>
 		<tr>
-			<th>From</th>
+			<th>{l lang='en'}From{/l}</th>
 			<td><input type="text" class="required" name="emailserver-from" id="emailserver-from" size="40"></td>
 		</tr>
 	</tbody>
 </table>
 </form>
-<input type="button" value="Save" id="emailserver-button-save">
+<input type="button" value="{l lang='en'}Save{/l}" id="emailserver-button-save">

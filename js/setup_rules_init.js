@@ -8,6 +8,8 @@ var xmlRules = null;
 var listobject = $('<select/>');
 var listobject_1_001 = $('<select/>');
 var arrayRules = new Array();
+var arrayRulesTimer = new Array();
+var arrayStatusRules = new Array();
 var myDropOptions = null, inputColor = null, outputColor = null, outputColorFalse = null;
 var actionlist = null;
 var nbrAction = 0;
@@ -33,7 +35,7 @@ var conditionsList = {
     'timer':'Timer',
     'time-counter':'Time Counter',
     'ioport-rx':'Ioport Rx',
-    'script':'Script' // TODO conditionner si linknx est compilé avec lua
+    'script':'Script'
 };
 
 var actionsList = {
@@ -45,16 +47,16 @@ var actionsList = {
     'cycle-on-off' : 'Cycle On Off', // < type="" id="" on="" off="" count="" ><stopcondition ... />
     'repeat' : 'Repeat', // < type="" period="" count="" ><action ... />
     'conditional' : 'Conditional', // < type="" ><condition ...
-    'send-sms' : 'Send Sms', // TODO conditionner si linknx est compilé avec curl < type="" id="" value="" var="true/false" />
-    'send-email' : 'Send Email', // TODO conditionner si linknx est compilé avec smtp <action type="" to="" subject="" var="true/false" >text<action/>
+    'send-sms' : 'Send Sms', // < type="" id="" value="" var="true/false" />
+    'send-email' : 'Send Email', // <action type="" to="" subject="" var="true/false" >text<action/>
     'dim-up' : 'Dim Up', // < type="" id="" start="" stop="" duration="" />
     'shell-cmd' : 'Shell Cmd', // < type="" cmd="" var="true/false" />
     'ioport-tx' : 'Ioport Tx', // < type="" hex="true/false" data="" ioport="" var="true/false" />
-    'script' : 'Script', // TODO conditionner si linknx est compilé avec lua // < type="" >script <... />
+    'script' : 'Script', // < type="" >script <... />
     'cancel' : 'Cancel', // < type="" rule-id="" />
-    'formula' : 'Formula', // only since version 0.0.1.29 : a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
-    'start-actionlist' : 'Start actionlist', // only since version 0.0.1.29 < type="" rule-id="" list="true/false" />
-    'set-rule-active' : 'Set rule active' // only since version 0.0.1.29 < type="" rule-id="" active="yes/no" /> 
+    'formula' : 'Formula', // a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
+    'start-actionlist' : 'Start actionlist', // < type="" rule-id="" list="true/false" />
+    'set-rule-active' : 'Set rule active' // < type="" rule-id="" active="yes/no" /> 
 };
 
 var rules = {
@@ -161,7 +163,8 @@ var rules = {
     
     jsPlumb.draggable(div);
         
-    div[0].endpointin = jsPlumb.addEndpoint(div, $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
+    div[0].endpoint = [];
+    div[0].endpoint[1] = jsPlumb.addEndpoint(div, $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
 
     div[0].endpointout = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint));
 
@@ -185,6 +188,7 @@ var rules = {
     var rule=$('<rule>');
     rule.attr("id", $('#id-current-rule').val());
     rule.attr("description", $('#description-current-rule').val());
+    rule.attr("init", $('#init-current-rule').val());
     
     $('#actionlist')[0].condition = true;
 
@@ -241,7 +245,7 @@ var rules = {
     }
     rule.append(xmlactionlist2);
     
-    $("#tab-rules-property").text('<rule id="'+$('#id-current-rule').val()+'" description="' + $('#description-current-rule').val() + '" >'+rule.html()+'</rule>').html();
+    $("#tab-rules-property").text('<rule id="'+$('#id-current-rule').val()+'" description="' + $('#description-current-rule').val() + '" init="' + $('#init-current-rule').val() + '" >'+rule.html()+'</rule>').html();
   },
   
   handleDialogCancel: function(dialog) {
@@ -272,6 +276,7 @@ var rules = {
   deleteAllCurrentRule: function () {
     $('#id-current-rule').val('');
     $('#description-current-rule').val('');
+    $('#init-current-rule').val('false');
     //conditionsCurrent[]
     for (var i in conditionsCurrent) {
       var l = conditionsCurrent[i];
@@ -288,6 +293,18 @@ var rules = {
         $(l).remove();
       }
     };
+  },
+  
+  autoManuRule: function(ruleid, active) {
+    if (!active || active == "off" || active == "false" || active == "no") active = false; else active = true; 
+    var responseXML=queryLinknx('<write><config><rules><rule id="'+ruleid+'" active="'+active+'" /></rules></config></write>');
+    if (responseXML!=false)
+    {
+      if ( active == true ) messageBox(tr("Rule active successfully"),"Active Rule","");
+      else messageBox(tr("Rule inactive successfully"),"Active Rule","");
+      return true;
+    }
+    return false;
   },
   
   addconditionCurrent: function (div) {
@@ -316,6 +333,17 @@ function loadRule(xml)
   nbrAction = 0;
   nbrCondition = 0;
   $('#description-current-rule').val($(xml).attr('description'));
+  if ($(xml).attr('init')) $('#init-current-rule').val($(xml).attr('init')); else $('#init-current-rule').val('false');
+  
+  if (arrayStatusRules[$(xml).attr('id')] == "false") { 
+    $('.checkbox', '.slidermanuelautorule').removeAttr("checked"); // => mode Manuel
+    $('.slidermanuelautorule').removeClass('sliderauto');
+    $('.slidermanuelautorule').addClass('slidermanuel');
+  } else {
+    $('.checkbox', '.slidermanuelautorule').attr("checked","checked"); // => mode Automatique
+    $('.slidermanuelautorule').addClass('sliderauto');
+    $('.slidermanuelautorule').removeClass('slidermanuel');
+  }
 
   var k = 0;
   $(xml).children("condition").each(function () {
@@ -327,7 +355,7 @@ function loadRule(xml)
     } else jsPlumb.connect({source:condition[0].endpointout, target:actionlist[0].endpoint[0]}); 
   });
 
-  $('actionlist', xml).each(function() { // TODO gérér les if/on true et false, les stopcondition ...
+  $('actionlist', xml).each(function() { // TODO gérér les stopcondition ...
     var i = 0;
     var typeactionlist = this.getAttribute('type');
     if (!typeactionlist || typeactionlist == "on-true" || typeactionlist == "on-false") {
@@ -378,40 +406,54 @@ function loadRulesList()
     
     this.value = "";
   });
+  loadStatusRulesList();
+};
+function loadStatusRulesList()
+{
+  var responseXML=queryLinknx('<read><status></status></read>');
+  if (responseXML!=false)
+  {
+    $('task', responseXML).each(function() {
+      arrayRulesTimer[this.getAttribute("owner")] = this.getAttribute("next-exec"); 
+    })
+    
+    $('rule', responseXML).each(function() {
+      arrayStatusRules[this.getAttribute('id')] = this.getAttribute("active"); 
+    });
+  }
+};
+
+function reloadloadRulesList()
+{
+  $('#listRules').empty();
+  arrayRules = new Array();
+  arrayRulesTimer = new Array();
+  arrayStatusRules = new Array();
+  loadRulesList();
 };
 function validRule()
 {
   rules.generateXML();
   var rule = $("#tab-rules-property").text();
   var body = '<write><config><rules>'+rule+'</rules></config></write>';
-  // TODO à remplacer par le querylinknx
-/*
   var responseXML=queryLinknx(body);
   if (responseXML!=false)
   {
-    messageBox(tr("Error while saving rules: ")+textStatus,"Error Saving Rule","alert");
-  } else {
-    messageBox(tr("Registration rule successfully")+responseXML.textContent,"Save Rule","");
+    messageBox(tr("Registration rule successfully"),"Save Rule","");
   }
-*/
-
-  req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
-    success: function(responseXML, status) {
-      var xmlResponse = responseXML.documentElement;
-      if (xmlResponse.getAttribute('status') != 'error') {
-        messageBox(tr("Registration rule successfully")+xmlResponse.textContent,"Save Rule","");
-      }
-      else
-        messageBox(tr("Error: ")+xmlResponse.textContent,"Error Saving Rule","alert");
-    },
-    error: function (XMLHttpRequest, textStatus, errorThrown) {
-      messageBox(tr("Error while saving rule: ")+textStatus,"Error Saving Rule","alert");
-    }
-  });
+  reloadloadRulesList();
 };
 
 
 function deleteRule()
 {
-  messageBox(tr("Not yet implemented"),"TODO","alert");
+  var body = '<write><config><rules><rule id="'+$('#id-current-rule').val()+'" delete="true" /></rules></config></write>';
+  
+  var responseXML=queryLinknx(body);
+  if (responseXML!=false)
+  {
+    messageBox(tr("Delete successfully the rule"),"Delete Rule","");
+  }
+  rules.deleteAllCurrentRule();
+  reloadloadRulesList();  
 };

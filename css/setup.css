@@ -358,7 +358,7 @@ table.form td {
     height:52px;
 }
 
-.timecounter {
+.time-counter {
     width: 120px;
     height:42px;
 }
@@ -415,9 +415,147 @@ table.form td {
 .dropHover { border:1px dotted red; }
 .dragActive { border:2px dotted orange; }
 .cmdLink { font-size:0.80em;}
- 
+
+.hide{ display: none; }
+.slidermanuelautorule {
+  background: url("../images/manuAuto.png") no-repeat scroll 0 0 transparent;
+  border: 1px solid black;
+  border-radius: 6px 6px 6px 6px;
+  cursor: pointer;
+  height: 32px;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  width: 64px;
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}
 
 /***************** /Rules ********************/
+/***************** Events ********************/
+
+.event {
+  margin: 10px;
+  height: 40px;
+  text-align: left;
+  border-radius: 1em;
+  position: relative;
+}
+.event:hover {
+  border: 1px solid #0070A3;
+}
+.play {
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  left: 10px;
+  width: 32px;
+  height: 32px;
+  text-align: right;
+  background: url('../images/play.png') no-repeat scroll 0pt 0pt transparent;
+  background-position: 0px 0px ;
+  padding: 0;
+  margin: 0;
+  text-align:center;
+  vertical-align:middle;
+}
+.play:hover {
+  -moz-box-sizing: border-box;
+  -moz-outline-radius: 6px;
+  -moz-user-select: none;
+  cursor: pointer;
+  outline: 2px solid #0070A3;
+}
+.play:active {
+  outline: 2px solid red;
+}  
+.idevent {
+  cursor: default;
+  position: absolute;
+  top: 20px;
+  margin-top: -0.7em;
+  left: 45px;
+  height: 1em;
+  text-align: left;
+}
+.commandevent {
+  position: absolute;
+  top: 10px;
+  right: 84px;
+  width: 60px;
+  height: 20px;
+  text-align: right;
+}
+.commandevent img {
+  width: 20px;
+  height: 20px;
+  margin-left: 2px;
+}
+.slidermanuelautoevent {
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 6px;
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  width: 64px;
+  height: 32px;
+  text-align: right;
+  background: url('../images/manuAuto.png') no-repeat scroll 0pt 0pt transparent;
+  background-position: 0px 0px ;
+  padding: 0;
+  margin: 0;
+  text-align:center;
+  vertical-align:middle;
+}
+.slidermanuel {
+  background-position: -32px 0px;
+  padding: 0; 
+}
+.sliderauto {
+  background-position: 0px 0px ;
+  padding: 0; 
+}
+
+.commandevent img:hover {
+  -moz-box-sizing: border-box;
+  -moz-outline-radius: 6px;
+  -moz-user-select: none;
+  cursor: pointer;
+  outline: 2px solid #0070A3;
+}
+
+#tab-event-properties div {
+  padding: 3px;
+}
+#tab-events-container {
+  border: 1px dotted red;
+  min-height: 650px;
+  position: relative;
+  width: 100%;
+}
+#event-action-dialog {
+  min-height: 300px;
+  position: relative;
+  width: 100%;
+}
+
+#event-action-dialog-list tr:hover {
+  -moz-box-sizing: border-box;
+  -moz-outline-radius: 6px;
+  -moz-user-select: none;
+  cursor: pointer;
+  outline: 1px solid #0070A3;
+}
+#event-action-dialog-select {
+  margin: 5px;
+}
+#tab-event-properties:hover {
+  min-width: 750px;
+}
+/***************** /Events ********************/
 
 /************ Images Manager ****************/
 
@@ -975,6 +1113,33 @@ html.knm {
   transform:rotate(180deg);
   -webkit-transform:rotate(180deg);
   -moz-transform:rotate(180deg);
+}
+
+#creditsContent.knm {
+  -moz-transition: all 5000ms ease-in-out;
+  -o-transition: all 5000ms ease-in-out;
+  -webkit-transition: all 5000ms ease-in-out;
+  transition: all 5000ms ease-in-out;
+  transform:rotate(-180deg);
+  -webkit-transform:rotate(-180deg);
+  -moz-transform:rotate(-180deg);
+}
+#creditsContent {
+  background-color: #F5F5F5;
+  border: 3px solid #000000;
+  color: #000000;
+  font-size: 14px;
+  font-weight: bold;
+  height: 80px;
+  left: 0;
+  padding-top: 15px;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 300px;
+  display: none;
+  vertical-align: middle;
+  z-index: 999;
 }
 
 /* for hide title of Dialog add attribute like : .dialog({ ..., dialogClass: 'notitledialog' }) */

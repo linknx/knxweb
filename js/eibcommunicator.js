@@ -112,7 +112,7 @@ var EIBCommunicator = {
 	},
 	periodicUpdate: function() {
 		EIBCommunicator.updateAll(function(XMLHttpRequest, textStatus) {
-				setTimeout('EIBCommunicator.periodicUpdate()', 1000); // TODO : mettre en paramètre le délais par "thème" exemple peut être défiiérent pour un "mobile"
+				setTimeout('EIBCommunicator.periodicUpdate()', 1000);
 			});
 	},
 	removeAll: function() {

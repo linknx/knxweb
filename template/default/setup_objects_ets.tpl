@@ -1,5 +1,5 @@
 
-<div id="tab-objects-propertybottom" style="margin: 4px;position:relative;#height:100%; #overflow-y: scroll; /* test force scroll bar */">
+<div id="tab-objects-propertybottom" style="margin: 4px;position:relative;#height:100%; #overflow-y: scroll;">
   <table id="objects-tab-table-ets" style="width:100%;position:relative;" >
   	<thead>
     	<tr>
@@ -32,7 +32,7 @@
         <option value="40">40</option>
         <option value="50">50</option>
         <option value="100">100</option>
-        <option value="{$nbligne}">All</option>
+        <option value="{$nbligne}">{l lang='en'}All{/l}</option>
       </select>
     </form>
   </div>

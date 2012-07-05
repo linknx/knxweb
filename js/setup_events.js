@@ -16,12 +16,12 @@ var events = {
   eventsactionsList: {
     'set-value' : 'Set Value', // < type="" id="" value="" />
     'set-string' : 'Set String', // < type="" id="" value="" />
-    'send-sms' : 'Send Sms', // TODO conditionner si linknx est compiler avec curl < type="" id="" value="" var="true/false" />
-    'send-email' : 'Send Email', // TODO conditionner si linknx est compiler avec smtp <action type="" to="" subject="" var="true/false" >text<action/>
+    'send-sms' : 'Send Sms', // < type="" id="" value="" var="true/false" />
+    'send-email' : 'Send Email', //  <action type="" to="" subject="" var="true/false" >text<action/>
     'dim-up' : 'Dim Up', // < type="" id="" start="" stop="" duration="" />
     'shell-cmd' : 'Shell Cmd', // < type="" cmd="" var="true/false" />
     'ioport-tx' : 'Ioport Tx', // < type="" hex="true/false" data="" ioport="" var="true/false" />
-    'script' : 'Script' // TODO conditionner si linknx est compiler avec lua // < type="" >script <... />
+    'script' : 'Script' // < type="" >script <... />
   },
   loadEventsList: function() {
   
@@ -29,7 +29,6 @@ var events = {
     this.config = '';
     if (responseXML!=false)
     {
-      //this.config = $('rules', responseXML)[0];
       this.config = responseXML;
     };
   },
@@ -95,12 +94,6 @@ var events = {
   
   	});
   	
-    /*
-    $(".event").click(function(){
-      //$(this).toggleClass("eventselected");
-      $(this).toggleClass("ui-state-active");
-  	});
-    */
   	$(".commandevent .edit").click(function(){
       var event = $(this).parent().parent().parent();
       $(".ui-state-active", "#list-events-container").each(function(){
@@ -148,7 +141,6 @@ var events = {
     }
     
     // charge la liste des actions de la rule
-    //var actions=$('rule[id="' + eventid + '"] actionlist',events.config)[0];
     events.currentAction=$('rule[id="' + eventid + '"] actionlist',events.config)[0];
      
     actionEditor.prefix = 'event-';
@@ -181,7 +173,7 @@ var events = {
     var responseXML=queryLinknx('<write><config><rules><rule id="'+eventid+'" active="'+active+'" /></rules></config></write>');
     if (responseXML!=false)
     {
-      messageBox(tr("Event active successfully"),"Active Event",""); // TODO modifier les libellés pas parlant !!
+      messageBox(tr("Event active successfully"),"Active Event","");
       return true;
     }
     return false;
@@ -190,9 +182,7 @@ var events = {
     var eventid = $('#tab-event-id').val();
     var event = $('rule[id="' + eventid + '"]',events.config)[0];
     if (event){
-      //events.currentCondition = $('rule[id="' + eventid + '"] condition',events.config)[0];
       events.currentCondition = $('condition',event)[0];
-      //var actions = $('actionlist',event)[0];
       events.currentAction = $('actionlist',event)[0];
     } else {
       event = events.config.ownerDocument.createElement('rule');
@@ -200,8 +190,6 @@ var events = {
       event.setAttribute('id',eventid);
       events.currentCondition = event.ownerDocument.createElement('condition');
       event.appendChild(events.currentCondition);
-      //var actions = event.ownerDocument.createElement('actionlist');
-      //event.appendChild(actions);
       if (events.currentAction) {
         events.currentAction = events.currentAction.cloneNode(true); // duplique les actions car cela pointe sur la rules édité prcédement
       } else events.currentAction = event.ownerDocument.createElement('actionlist');

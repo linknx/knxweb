@@ -5,7 +5,7 @@ CWidget.prototype = {
 	isResizable: false,	// TODO : put this variable in plugin's manifest.xml
   isDraggable: true, // TODO : put this variable in plugin's manifest.xml
 	editMode: false,
-	enabled: true,		// enabled = false = no commands are send to the bus (during setup)
+	enabled: true,		// enabled = false => no commands are send to the bus (during setup)
 	
 	// Return needed feedback object
 	getListeningObject: function() {
@@ -32,63 +32,48 @@ CWidget.prototype = {
 	init: function(conf) {
 		this.conf=conf;
 
-    if (_visuMobile) {
-    	// Cyrille - A refaire car plus bon
-      if (this.type=="goto"){
-        div = $("<li/>");
-      } else {		
-        div = $("<div/>");
-      }
-  
-  		this.div = div.get(0);
-  		this.div.owner=this;
-      return div;
-    
-    } else {
-  
-			var x = conf.getAttribute("x");
-	  	var y = conf.getAttribute("y");
-	  	if (!x) 
-	  	{
-	  		x = 20;
-	  		conf.setAttribute("x", x);
-	  	}
-	  	if (!y)
-	  	{
-	  		y = 20;
-	  		conf.setAttribute("y", y);
-	  	}
-  		
-  		if (UIController.leftOffset)
-  		    x = parseInt(x) + UIController.leftOffset;
-  		if (UIController.topOffset)
-  		    y = parseInt(y) + UIController.topOffset;
-  
-			this.div=$("#widgetsTemplate ." + this.conf.getAttribute("type")).clone()
-  		
-  		var a=this.div.get(0);
-  		a.owner=this;
-  		
-  		this.div.css('left', x+"px");
-  		this.div.css('top', y+"px");
-  		
-  		var width = conf.getAttribute("width");
-  		var height = conf.getAttribute("height");
+		var x = conf.getAttribute("x");
+  	var y = conf.getAttribute("y");
+  	if (!x) 
+  	{
+  		x = 20;
+  		conf.setAttribute("x", x);
+  	}
+  	if (!y)
+  	{
+  		y = 20;
+  		conf.setAttribute("y", y);
+  	}
+		
+		if (UIController.leftOffset)
+		    x = parseInt(x) + UIController.leftOffset;
+		if (UIController.topOffset)
+		    y = parseInt(y) + UIController.topOffset;
 
-  		if ((!width) && (this.isResizable))
-  		{
-	  		conf.setAttribute("width", 32);
- 				this.div.css('width', 32);
-  		} else if (this.isResizable) this.div.css('width', width);
+		this.div=$("#widgetsTemplate ." + this.conf.getAttribute("type")).clone()
+		
+		var a=this.div.get(0);
+		a.owner=this;
+		
+		this.div.css('left', x+"px");
+		this.div.css('top', y+"px");
+		
+		var width = conf.getAttribute("width");
+		var height = conf.getAttribute("height");
 
-  		if ((!height) && (this.isResizable))
-  		{
-	  		conf.setAttribute("height", 32);
-  			this.div.css('height', 32);
-  		} else if (this.isResizable) this.div.css('height', height);
-  		
-  		this.div.css('display', 'block');
-		}
+		if ((!width) && (this.isResizable))
+		{
+  		conf.setAttribute("width", 32);
+			this.div.css('width', 32);
+		} else if (this.isResizable) this.div.css('width', width);
+
+		if ((!height) && (this.isResizable))
+		{
+  		conf.setAttribute("height", 32);
+			this.div.css('height', 32);
+		} else if (this.isResizable) this.div.css('height', height);
+		
+		this.div.css('display', 'block');
 	},
 	
 	// Refresh HTML from config

@@ -52,13 +52,27 @@ $.extend(rules, {
         div[0].object_operation=condition.getAttribute('op');
         if(!div[0].object_operation) div[0].object_operation='eq';
         div[0].object_id2=condition.getAttribute('id2');
+        div[0].object_trigger=condition.getAttribute('trigger');
         break;
       case "time-counter":
-        div[0].endpointin = jsPlumb.addEndpoint(div, $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
+        div[0].endpoint = [];
+        div[0].endpoint[1] = jsPlumb.addEndpoint(div, $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
         div[0].timecounter_threshold=condition.getAttribute('id');
         div[0].timecounter_resetdelay=condition.getAttribute('id');
+        rules.positionCondition(type, condition, numcondition, div);
+        var k = 1;
+        collonne_condition++;
+        pos_top_condition[collonne_condition] = 0;
+        $(condition).children("condition").each(function () {
+          var condition2 = rules.addConditionRule(this.getAttribute('type'), this, numcondition);
+          jsPlumb.connect({source:condition2[0].endpointout, target:div[0].endpoint[k]});
+          k++;
+          if (k > 1) messageBox("Maximum number of condition for reaching this time-counter ","Condition time-counter","alert");
+        });
+        if (collonne_condition>1) collonne_condition--;
         break;
-      case "timer":   // TODO : récupérer les valeur du flux xml en entré condition.getAttribute('id')
+        break;
+      case "timer":
       //<condition type="timer" trigger="true"> <at hour="9" min="0" wdays="12345"/> <until hour="18" min="0"/> </condition>
         $(condition).children("at").each(function () {
           div[0].timer_atevery='at'; // 'at' ou 'every'
@@ -186,7 +200,7 @@ $.extend(rules, {
             jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[k]});
           }
           k++;
-          if (k > 11) messageBox("Nombre maximum de condition atteint pour ce AND ","Condition And","alert");
+          if (k > 11) messageBox("Maximum number of condition for reaching this AND ","Condition And","alert");
         });
         if (collonne_condition>1) collonne_condition--;
         break;
@@ -204,7 +218,7 @@ $.extend(rules, {
             jsPlumb.connect({source:temp_conditionor[0].endpointout, target:div[0].endpoint[k]});
           }
           k++;
-          if (k > 11) messageBox("Nombre maximum de condition atteint pour ce OR ","Condition Or","alert");
+          if (k > 11) messageBox("Maximum number of condition for reaching this OR ","Condition Or","alert");
         });
         if (collonne_condition>1) collonne_condition--;
         break;
@@ -217,9 +231,9 @@ $.extend(rules, {
         //pos_right_condition[collonne_condition] = 0;
         $(condition).children("condition").each(function () {
           var condition2 = rules.addConditionRule(this.getAttribute('type'), this, numcondition);
-          jsPlumb.connect({source:condition2[0].endpointout, target:div[0].endpointin});
+          jsPlumb.connect({source:condition2[0].endpointout, target:div[0].endpoint[k]});
           k++;
-          if (k > 1) messageBox("Nombre maximum de condition atteint pour ce NOT ","Condition Not","alert");
+          if (k > 1) messageBox("Maximum number of condition for reaching this NOT ","Condition Not","alert");
         });
         if (collonne_condition>1) collonne_condition--;
         break;
@@ -230,9 +244,7 @@ $.extend(rules, {
       rules.positionCondition(type, condition, numcondition, div);
       jsPlumb.draggable(div);
   
-      div[0].endpointout = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[1, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, outputEndpoint));  
-  
-      //console.log("condition", numcondition , div);
+      div[0].endpointout = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[1, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, outputEndpoint));
           
       this.editCondition(type, div[0], false, false);
       this.saveCondition(type);
@@ -243,7 +255,6 @@ $.extend(rules, {
   },
 
   positionCondition: function(type, condition, numcondition, div) {
-//console.log("type",type,"collonne_condition",collonne_condition,"pos_top_condition[collonne_condition]",pos_top_condition[collonne_condition],"numcondition",numcondition,"pos_right_condition[collonne_condition]",pos_right_condition[collonne_condition]);
 
     if (!pos_right_condition[collonne_condition]) 
       pos_right_condition[collonne_condition] = pos_right_condition[collonne_condition-1]; 
@@ -305,9 +316,11 @@ $.extend(rules, {
         div[0].object_id='';
         div[0].object_operation='eq';
         div[0].object_id2='';
+        div[0].object_trigger=false;
         break;
       case "time-counter":
-        div[0].endpointin = jsPlumb.addEndpoint(div, $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
+        div[0].endpoint = [];
+        div[0].endpoint[1] = jsPlumb.addEndpoint(div, $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
         div[0].timecounter_threshold='';
         div[0].timecounter_resetdelay='';
         break;
@@ -413,8 +426,10 @@ $.extend(rules, {
         $('#tab-rules-objectcompare-condition-object').val(div.object_id);
         $('#tab-rules-objectcompare-condition-operation').val(div.object_operation);
         $('#tab-rules-objectcompare-condition-object2').val(div.object_id2);
+        if (div.object_trigger) $('#tab-rules-objectcompare-condition-trigger').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-objectcompare-condition-trigger').removeAttr('checked').trigger('change');
         break;
-      case "time-counter": // time-counter TODO modifier dans setup.tpl les id des balise de timecounter en time-counter ...
+      case "time-counter":
         $('#tab-rules-time-counter-condition-threshold').val(div.timecounter_threshold);
         $('#tab-rules-time-counter-condition-reset-delay').val(div.timecounter_resetdelay);    
         //$("#tab-rules-time-counter-condition-form")[0].validator.resetForm();
@@ -568,6 +583,7 @@ $.extend(rules, {
         div.object_id=$('#tab-rules-objectcompare-condition-object').val();
         div.object_operation=$('#tab-rules-objectcompare-condition-operation').val();
         div.object_id2=$('#tab-rules-objectcompare-condition-object2').val();
+        div.object_trigger=$('#tab-rules-objectcompare-condition-trigger').is(':checked');
         html = '<br />' + div.object_id+'<br />'+div.object_operation+'<br />'+div.object_id2;
         break;
       case "time-counter":   //TODO gérer : if ($("#tab-rules-time-counter-condition-form").valid())
@@ -706,6 +722,7 @@ $.extend(rules, {
         xml.attr('id',condition[0].object_id);
         xml.attr('op',condition[0].object_operation);
         xml.attr('id2',condition[0].object_id2);
+        if (condition[0].object_trigger) xml.attr('trigger','true');
         break;
       case 'time-counter':
         xml.attr('threshold',condition[0].timecounter_threshold);
@@ -802,32 +819,19 @@ $.extend(rules, {
         break;
     }
 
-
-
-    //var c = jsPlumb.getConnections({target:condition.attr('id')});
-    //var c = jsPlumb.getConnections({target:condition[0].endpointin.getId});
-    //var c = jsPlumb.getConnections({target:condition[0].endpointout.getId});
-    //var c = new Array();
     if (condition[0].endpoint) {
       var c = jsPlumb.getConnections({target:condition[0].endpoint[1]});
-    
-//console.log("recherche lien :", condition, c, condition.attr("id"));
       
       for (var i in c) {
         var l = c[i];
         if (l && l.length > 0) {
           for (var j = 0; j < l.length; j++) {
-            //console.log("cond 1",$('#'+l[j].sourceId)[0].condition,$('#'+l[j].sourceId)[0].type);
             xml.append(this.generateNodeXML($('#'+l[j].sourceId)));
           }
         } else if (l) {
           var condition2 = $('#'+l.sourceId);
-          //console.log("cond 02",$('#'+l.sourceId)[0].condition,l,l.sourceId,l.targetId,condition.attr("id"));
-          //if (condition2[0].condition && l.sourceId != condition.attr("id") && l.targetId != condition.attr("id")) {
           if (condition2[0].condition && l.targetId == condition.attr("id")) {
-            //console.log("cond 3",$('#'+l.sourceId)[0].condition,l,l.sourceId,l.targetId,condition.attr("id"));
             xml.append(this.generateNodeXML($('#'+l.sourceId)));
-            //xml.append(this.generateNodeXML(l.source);
           }
         }
       }
@@ -835,14 +839,10 @@ $.extend(rules, {
     return xml;
   },
   createDialogCondition: function(id, title, width, action, type) {
-    // rules.createDialog("tab-rules-script-condition-dialog", "Editer un script", "540px" , false)
-    // rules.createDialog("tab-rules-script-action-dialog", "Editer un script", "540px" , true, "script")
     if (width=='')
       width = "540px";
     if (action=='')
       action = false;
-    //if (!document.getElementById(id)) {
-      //$('body').append($('<div id="'+id+'">'));
       if (action == false) { // Action => TODO createDialogAction ??
         switch (type) {
           case "object":
@@ -876,8 +876,6 @@ $.extend(rules, {
           case "timer":
             $("#tab-rules-timer-condition-form")[0].validator=$("#tab-rules-timer-condition-form").validate();
             $("#tab-rules-timer-condition-form")[0].validator.resetForm();
-            //rulestab=$("#tab-rules-timer-condition-tabs").tabs();
-            //rulestab.tabs('select', '#tab-rules-timer-condition-start');
             // Handle at/every radio
             $("input[name='timer-condition-atevery']").change(function() {
               if ($('#timer-condition-at').attr('checked')) 

@@ -245,6 +245,23 @@ jQuery(document).ready(function(){
       
     });
   }
+
+  $(".slidermanuelautorule").click(function(){
+    var ruleid = $("#id-current-rule").val();
+    if ($('.checkbox',this).attr('checked')) { // désactive la rule
+      if (rules.autoManuRule(ruleid,false)) {
+        $(this).removeClass('sliderauto');
+        $(this).addClass('slidermanuel');
+        $('.checkbox',this).attr('checked', false);
+      }
+    } else { // active la rule
+      if (rules.autoManuRule(ruleid,true)) {
+        $(this).removeClass('slidermanuel');
+        $(this).addClass('sliderauto');
+        $('.checkbox',this).attr('checked', true);
+      }
+    }
+  });
   
   loading.hide();
 

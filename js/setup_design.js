@@ -28,7 +28,6 @@ var design = {
 	// Save design
 	save: function() {
 		
-		//var version=prompt(tr('Enter version name'), design.currentVersion);		// Version vraiment utile?
 		var version=tab_config['defaultVersion'];
 		if (version!=null)
 		{
@@ -112,7 +111,7 @@ var design = {
 			});
 
       // charger également les "control" lié au design lui-même, soit des controls/widget lié au design et pas à une zone précise
-      // TODO a gérer avec paramètre de la zone si celle-ci ne veux pas afficher les control/widgets "globaux" on aura globalcontrol="false" par défaut on affiche
+      // géré avec paramètre de la zone si celle-ci ne veux pas afficher les control/widgets "globaux" on aura globalcontrol="false" par défaut on affiche
       if (zone[0].getAttribute('globalcontrol')!='false') {
         $('zones', design.config).children('control').each(function() {
           design.addWidget(this, true);
@@ -151,6 +150,7 @@ var design = {
 				$('#widgetdiv').append(obj.div);
 				obj.edit(design.onWidgetSelect, design.onWidgetMove, design.onWidgetResize);
         design.addWidgetsList(obj, globalcontrol);
+        obj.globalcontrol = globalcontrol;
         // If the widget had Children 
   	 		/*conf.children('control')*/
         //$(conf).children('control').each(function() {... });
@@ -173,10 +173,10 @@ var design = {
 		{
 			obj = new cls(conf);
 			if (obj!=null) {
-				//$('#widgetdiv').append(obj.div);
         parent.append(obj.div);
 				obj.edit(design.onWidgetSelect, design.onWidgetMove, design.onWidgetResize);
         design.addWidgetsList(obj, globalcontrol, true);
+        obj.globalcontrol = globalcontrol;
 				return obj;
 			} 
 			return false;
@@ -373,6 +373,20 @@ var design = {
 		$("#tab-design-widget-buttons").show();
 		
 		$("#tab-design-widget-properties tbody").empty();
+
+    if (o.globalcontrol)
+      $('#button-attach-widget').button( "option", "icons", {primary:'ui-icon-pin-s'}).removeClass('ui-button-text-icon-primary').addClass("ui-state-error");
+    else
+      $('#button-attach-widget').button( "option", "icons", {primary:'ui-icon-pin-w'}).removeClass('ui-button-text-icon-primary').removeClass("ui-state-error");
+      
+    design.updateglobalcontrolWidgetsList(o, o.globalcontrol);
+
+    if (o.disable)	
+		{
+			$("#button-locked-widget").button( "option", "icons", {primary:'ui-icon-locked'}).removeClass('ui-button-text-icon-primary').addClass("ui-state-highlight");
+    } else {
+      $("#button-locked-widget").button( "option", "icons", {primary:'ui-icon-unlocked'}).removeClass('ui-button-text-icon-primary').removeClass("ui-state-highlight");
+    }
 	
 	  // Setup standard fields x,y,width,height,desc
 	  var tr=$('<tr><th>Type</th><td><input type="text" disabled="1" value="' + o.conf.getAttribute("type") + '"></td></tr>');
@@ -410,7 +424,7 @@ var design = {
       var tr=$('<tr><th>Class CSS</th><td><input id="tab-design-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
 			$("#tab-design-widget-properties tbody").append(tr);
     }
- 
+	  
 		$("#tab-design-properties-x").change(function() {
 			o.setSetting("x", $(this).val());
 		});
@@ -718,11 +732,6 @@ var design = {
 
     var th=$('<th>' + type + '</th>');
     tr.append(th);
-    /*
-    th.click(function() {
-      this.parentNode.obj.div.widgetMovable("select");
-    });
-    */
     tr.click(function() {
       this.obj.div.widgetMovable("select");
     });
@@ -730,12 +739,9 @@ var design = {
     var td=$('<td><span>' + desc + '</span></td>');
     tr.append(td);
     var bpviewxml =$('<td><button>Xml</button></td>');
-    //td.append(bpviewxml);
-    tr.append(bpviewxml);
+    if (_superuser) tr.append(bpviewxml);
 
-    //td.click(function() {
     bpviewxml.click(function() {
-      //$('#tab-design-fluxxml').html("<textarea rows=30 cols=125>" + serializeXmlToString(this.parentNode.parentNode.obj.conf) + "</textarea>");
       $('#tab-design-fluxxml').html("<textarea rows=30 cols=125>" + serializeXmlToString(this.parentNode.obj.conf) + "</textarea>");
       $('#tab-design-fluxxml').dialog({ 
         width: 812,
@@ -760,6 +766,15 @@ var design = {
       if (this.obj == o) $(this).remove();
     });
   },
+  // chang widget global or not
+  updateglobalcontrolWidgetsList: function(o, globalcontrol) {
+    $("tr", "#tab-design-widgets-list").each(function() {
+      if (this.obj == o) {
+        if (globalcontrol) $(this).css("color", "#FF0000"); 
+        else $(this).css("color", "");
+      }
+    });
+  },
   // selected a widget from the function onWidgetSelect()
   selectWidgetsList: function(o) {
     $(".active", "#tab-design-widgets-list").removeClass("active");
@@ -771,7 +786,7 @@ var design = {
 	// Add a new design
 	addDesign: function()
 	{
-		var name=prompt(tr('Enter name for new design'),'');
+		var name=prompt(tr('Enter name for new design'),'default');
 		if (name!=null) {
 			req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action=createdesign&name='+name, dataType: 'xml',
 				success: function(responseXML, status) {
@@ -936,14 +951,25 @@ jQuery(function($) {
 		var obj = $("#widgetdiv .selected");
     if (obj.length>0)	
 		{
-			if (!obj.draggable( "option", "disabled")) {
+			//if (!obj.draggable( "option", "disabled")) {
+      if (!obj.get(0).owner.disable) {
         $(this).button( "option", "icons", {primary:'ui-icon-locked'}).removeClass('ui-button-text-icon-primary').addClass("ui-state-highlight");
-        $("#widgetdiv .selected").draggable( "disable" );
+        $("#widgetdiv .selected").draggable( "disable" ).removeClass("ui-state-disabled");
+        $("#widgetdiv .selected").get(0).owner.disable = true;
       } else {
         $(this).button( "option", "icons", {primary:'ui-icon-unlocked'}).removeClass('ui-button-text-icon-primary').removeClass("ui-state-highlight");
         $("#widgetdiv .selected").draggable( "enable" );
+        $("#widgetdiv .selected").get(0).owner.disable = false;
       }
 		}
+	});
+	$("#button-locked-widget").change(function() {
+    if ($("#widgetdiv .selected").get(0).owner.disable)	
+		{
+			$(this).button( "option", "icons", {primary:'ui-icon-locked'}).removeClass('ui-button-text-icon-primary').addClass("ui-state-highlight");
+    } else {
+      $(this).button( "option", "icons", {primary:'ui-icon-unlocked'}).removeClass('ui-button-text-icon-primary').removeClass("ui-state-highlight");
+    }
 	});
 
 	$("#button-attach-widget").button({
@@ -952,20 +978,19 @@ jQuery(function($) {
 		},
     text: false
 	}).removeClass('ui-button-text-icon-primary');
+  
 	$("#button-attach-widget").click(function() {
 		var obj = $("#widgetdiv .selected");
     if (obj.length>0)	
 		{
-			$(this).button( "option", "icons", {primary:'ui-icon-pin-s'}).removeClass('ui-button-text-icon-primary').addClass("ui-state-error");
-      //alert("TODO a implémenter ...");
-      //var newzone = $('zone[id=' + design.currentZone + ']', design.config).get(0).cloneNode(true);
-			//$('zones', design.config).append(newzone);
-
-      var conf=obj.get(0).owner.conf.cloneNode(true);
-      $(obj.get(0).owner.conf).remove();
-      //this.owner.conf.appendChild(conf);
-      $('zones', design.config).append(conf);
-
+			if (!obj.get(0).owner.globalcontrol) {
+        $(this).button( "option", "icons", {primary:'ui-icon-pin-s'}).removeClass('ui-button-text-icon-primary').addClass("ui-state-error");
+        var conf=obj.get(0).owner.conf.cloneNode(true);
+        $(obj.get(0).owner.conf).remove();
+        $('zones', design.config).append(conf);
+        obj.get(0).owner.globalcontrol = true;
+        design.updateglobalcontrolWidgetsList(obj.get(0).owner, obj.get(0).owner.globalcontrol);
+      }
 		}
 	});
 
@@ -987,6 +1012,23 @@ jQuery(function($) {
 
 	$("#button-remove-design").click(function() {
 		design.removeDesign();
+	});
+
+  $("#show-list-widgets-design-checkbox").change(function() {
+		$('#tab-design-list-widgets').toggle();
+    if( $('#tab-design-list-widgets').is(':visible') )
+      $('#show-list-widgets-design-checkbox').attr('checked','1');
+    else
+      $('#show-list-widgets-design-checkbox').removeAttr('checked');
+	});
+  $("#show-list-widgets-design-checkbox").click(function() {
+		$('#show-list-widgets-design-checkbox').change();
+	});
+	$("#show-list-widgets-design").click(function() {
+		$('#show-list-widgets-design-checkbox').change();
+	});
+  $("#tab-design-list-widgets .minus").click(function() {
+		$('#show-list-widgets-design-checkbox').change();
 	});
   
 	$("#button-try-design").click(function() {

@@ -113,7 +113,12 @@ if ($typelog == "mysql") {
     $req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
     if (mysql_num_rows($req)) {
       $data=mysql_fetch_array($req);
-      $lowlimit=$data["lowlimit"];
+      if ( $data["lowlimit"] >= 0 ) {
+        $lowlimit=$data["lowlimit"];
+      } else { // si $data["lowlimit"] est négatif c'est qu'il y a moins d'enreg en base que ce que l'on souahite afficher ...
+        $log_nbenreg = $data["lowlimit"] + $log_nbenreg;
+        $lowlimit = 0;
+      }
     } else {
       $lowlimit=0;
     }
@@ -127,7 +132,7 @@ if ($typelog == "mysql") {
   $nbenreg = mysql_num_rows($req);
   $nbenreg--;
   
-  while ($nbenreg > 0 ){
+  while ($nbenreg >= 0 ){
     /*
      $data["ts"] : est de la forme 2011-9-18 19:21:32
      $data["value"] : peut être valorisé par un float (teméprature, %, °, ... avec comme spéparateur de décimal une "," ), int (0 à 255), string "on/off/up/down/stop ..."

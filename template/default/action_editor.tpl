@@ -2,9 +2,9 @@
 	<select id="action-dialog-select"></select>
 	<table id="action-dialog-list">
 		<thead>
-			<th>Type</th>
-			<th>Description</th>
-			<th>Delay</th>
+			<th>{l lang='en'}Type{/l}</th>
+			<th>{l lang='en'}Description{/l}</th>
+			<th>{l lang='en'}Delay{/l}</th>
 			<th width="16"></th>
 		</thead>
 		<tbody>
@@ -15,11 +15,11 @@
 <div id="action-dialog-set-value-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Object</th>
+			<th width="150">{l lang='en'}Object{/l}</th>
 			<td><select name="id" class="object-select"></td>
 		</tr>
 		<tr>
-			<th width="150">Value</th>
+			<th width="150">{l lang='en'}Value{/l}</th>
 			<td><input type="text" name="value" size="40"><select name="values"></select></td>
 		</tr>
 	</table>
@@ -28,11 +28,11 @@
 <div id="action-dialog-copy-value-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">From object</th>
+			<th width="150">{l lang='en'}From object{/l}</th>
 			<td><select name="from" class="object-select" /></td>
 		</tr>
 		<tr>
-			<th width="150">To object</th>
+			<th width="150">{l lang='en'}To object{/l}</th>
 			<td><select name="to" class="object-select" /></td>
 		</tr>
 	</table>
@@ -41,7 +41,7 @@
 <div id="action-dialog-toggle-value-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Object</th>
+			<th width="150">{l lang='en'}Object{/l}</th>
 			<td><select name="id" class="object-select" /></td>
 		</tr>
 	</table>
@@ -50,11 +50,11 @@
 <div id="action-dialog-set-string-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Object</th>
+			<th width="150">{l lang='en'}Object{/l}</th>
 			<td><select name="id" class="object-select"></td>
 		</tr>
 		<tr>
-			<th width="150">Value</th>
+			<th width="150">{l lang='en'}Value{/l}</th>
 			<td><input type="text" name="value" size="40"></td>
 		</tr>
 	</table>
@@ -63,7 +63,7 @@
 <div id="action-dialog-send-read-request-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Object</th>
+			<th width="150">{l lang='en'}Object{/l}</th>
 			<td><select name="id" class="object-select" /></td>
 		</tr>
 	</table>
@@ -72,19 +72,19 @@
 <div id="action-dialog-cycle-on-off-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Object</th>
+			<th width="150">{l lang='en'}Object{/l}</th>
 			<td><select name="id" class="object-select" /></td>
 		</tr>
 		<tr>
-			<th width="150">On value</th>
+			<th width="150">{l lang='en'}On value{/l}</th>
 			<td><input type="text" name="on" size="5"></td>
 		</tr>
 		<tr>
-			<th width="150">Off value</th>
+			<th width="150">{l lang='en'}Off value{/l}</th>
 			<td><input type="text" name="off" size="5"></td>
 		</tr>
 		<tr>
-			<th width="150">Count</th>
+			<th width="150">{l lang='en'}Count{/l}</th>
 			<td><input type="text" name="count" size="4"></td>
 		</tr>
 	</table>
@@ -93,11 +93,11 @@
 <div id="action-dialog-send-sms-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Number</th>
+			<th width="150">{l lang='en'}Number{/l}</th>
 			<td><input type="text" name="id" size="20"></td>
 		</tr>
 		<tr>
-			<th width="150">Message</th>
+			<th width="150">{l lang='en'}Message{/l}</th>
 			<td><input type="text" name="value" size="50"></td>
 		</tr>
 	</table>
@@ -106,15 +106,19 @@
 <div id="action-dialog-send-email-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">To</th>
+			<th width="150">{l lang='en'}To{/l}</th>
 			<td><input type="text" name="to" size="20"></td>
 		</tr>
 		<tr>
-			<th width="150">Subject</th>
+			<th width="150">{l lang='en'}Subject{/l}</th>
 			<td><input type="text" name="subject" size="50"></td>
 		</tr>
 		<tr>
-			<th width="150">Message</th>
+			<th width="150">{l lang='en'}Var{/l}</th>
+			<td><input type="checkbox" name="var" value="1"> ex. $ { id_objet } </td>
+		</tr>
+		<tr>
+			<th width="150">{l lang='en'}Message{/l}</th>
 			<td><input type="text" name="message" size="50"></td>
 		</tr>
 	</table>
@@ -123,19 +127,19 @@
 <div id="action-dialog-dim-up-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Object</th>
+			<th width="150">{l lang='en'}Object{/l}</th>
 			<td><select name="id" class="object-select" /></td>
 		</tr>
 		<tr>
-			<th width="150">Start</th>
+			<th width="150">{l lang='en'}Start{/l}</th>
 			<td><input type="text" name="start" size="4"></td>
 		</tr>
 		<tr>
-			<th width="150">Stop</th>
+			<th width="150">{l lang='en'}Stop{/l}</th>
 			<td><input type="text" name="stop" size="4"></td>
 		</tr>
 		<tr>
-			<th width="150">Duration</th>
+			<th width="150">{l lang='en'}Duration{/l}</th>
 			<td><input type="text" name="duration" size="4"></td>
 		</tr>
 	</table>
@@ -144,7 +148,7 @@
 <div id="action-dialog-shell-cmd-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Command</th>
+			<th width="150">{l lang='en'}Command{/l}</th>
 			<td><input type="text" name="cmd" size="50"></td>
 		</tr>
 	</table>
@@ -153,11 +157,11 @@
 <div id="action-dialog-ioport-tx-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">IO Port</th>
+			<th width="150">{l lang='en'}IO Port{/l}</th>
 			<td><select name="ioport" class="ioport-select" /></td>
 		</tr>
 		<tr>
-			<th width="150">Data</th>
+			<th width="150">{l lang='en'}Data{/l}</th>
 			<td><input type="text" name="data" size="40"></td>
 		</tr>
 	</table>
@@ -166,17 +170,17 @@
 <div id="action-dialog-script-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Script</th>
+			<th width="150">{l lang='en'}Script{/l}</th>
 			<td><textarea name="script" cols="40" rows="10"></textarea></td>
 		</tr>
 	</table>
 </div>
 
 <div id="action-dialog-formula-dialog" style="display:none;" >
-	<br />Formula : object = a*x^m+b*y^n+c<br /><br />
+	<br />{l lang='en'}Formula : object{/l} = a*x^m+b*y^n+c<br /><br />
 	<table>
 		<tr>
-			<th width="150">Object</th>
+			<th width="150">{l lang='en'}Object{/l}</th>
 			<td><select name="id" class="object-select" /></td>
 		</tr>
 		<tr>
@@ -213,11 +217,11 @@
 <div id="action-dialog-start-actionlist-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Rule</th>
+			<th width="150">{l lang='en'}Rule{/l}</th>
 			<td><input type="text" name="rule-id" size="10"></td>
 		</tr>
 		<tr>
-			<th width="150">List</th>
+			<th width="150">{l lang='en'}List{/l}</th>
 			<td><input type="checkbox" name="list" value="1"></td>
 		</tr>
 	</table>
@@ -226,11 +230,11 @@
 <div id="action-dialog-set-rule-active-dialog" style="display:none;" >
 	<table>
 		<tr>
-			<th width="150">Rule</th>
+			<th width="150">{l lang='en'}Rule{/l}</th>
 			<td><input type="text" name="rule-id" size="10"></td>
 		</tr>
 		<tr>
-			<th width="150">Active</th>
+			<th width="150">{l lang='en'}Active{/l}</th>
 			<td><input type="checkbox" name="active" value="1"></td>
 		</tr>
 	</table>

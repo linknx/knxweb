@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once("include/common.php");
 
@@ -93,6 +93,7 @@ if (file_exists('widgets/widgets.css')) {
   $widgetscssexist = "true";
 }
 tpl()->assign_by_ref("widgetscssexist",$widgetscssexist);
+tpl()->assign_by_ref("MAJ_knxweb2",$MAJ_knxweb2);
 
 tpl()->addCss('css/setup.css');
 

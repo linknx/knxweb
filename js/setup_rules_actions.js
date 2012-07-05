@@ -1,6 +1,3 @@
-/*
- * TODO : Allow to insert object values in some actions (shell, e-mail, SMS, io-port, set-string)
- */ 
 
 function cdataTextcontent(data) {
   var pos = data.indexOf('<![CDATA['); //'<![CDATA[' + action[0].objvalue + ']]>'
@@ -111,7 +108,7 @@ $.extend(rules, {
         break;
       case 'shell-cmd' :
         div[0].cmd=action.getAttribute('cmd');
-        div[0].cmdvar=action.getAttribute('var'); // TODO à gérer partout cmdvar ...
+        div[0].cmdvar=action.getAttribute('var');
         div.css("width","140px");
         break;
       case 'ioport-tx' :
@@ -128,7 +125,7 @@ $.extend(rules, {
         div[0].cancel_rule=action.getAttribute('rule-id');
         div.css("width","140px");
         break;
-      case 'formula' :  // only since version 0.0.1.29
+      case 'formula' :
         div[0].formula_x=action.getAttribute('x');
         div[0].formula_y=action.getAttribute('y');
         div[0].formula_a=action.getAttribute('a');
@@ -138,12 +135,12 @@ $.extend(rules, {
         div[0].formula_n=action.getAttribute('n');
         div.css("width","140px");
         break;
-      case 'start-actionlist' : // only since version 0.0.1.29
+      case 'start-actionlist' :
         div[0].rule_id=action.getAttribute('rule-id');
         div[0].list=action.getAttribute('list');
         div.css("width","160px");
         break;
-      case 'set-rule-active' : // only since version 0.0.1.29
+      case 'set-rule-active' :
           div[0].rule_id=action.getAttribute('rule-id');
           div[0].active=action.getAttribute('active');
           div.css("width","160px");
@@ -183,9 +180,6 @@ $.extend(rules, {
     
     div[0].endpointin = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[0, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, inputEndpoint));
 
-    //div.addEndpoint($.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint)); // pour les conditions
-    
-    // TODO gérer le "Delay" pour chaque action
     div[0].delay='';
     
     switch (type) {
@@ -229,13 +223,13 @@ $.extend(rules, {
       case 'send-sms' :
         div[0].objid='';
         div[0].objvalue='';
-        div[0].smsvar='';
+        div[0].smsvar=false;
         div.css("width","140px");
         break;
       case 'send-email' :
         div[0].objto='';
         div[0].subject='';
-        div[0].emailvar='';
+        div[0].emailvar=false;
         div[0].objtext='';
         div.css("width","140px");
         break;
@@ -252,10 +246,10 @@ $.extend(rules, {
         div.css("width","140px");
         break;
       case 'ioport-tx' :
-        div[0].hex='';
+        div[0].hex=false;
         div[0].data='';
         div[0].ioport='';
-        div[0].ioportvar='';
+        div[0].ioportvar=false;
         div.css("width","140px");
         break;
       case 'script' :
@@ -267,7 +261,7 @@ $.extend(rules, {
         div[0].cancel_rule='';
         div.css("width","140px");
         break;
-      case 'formula' :  // only since version 0.0.1.29
+      case 'formula' : 
         div[0].formula_x='';
         div[0].formula_y='';
         div[0].formula_a='1.0';
@@ -277,12 +271,12 @@ $.extend(rules, {
         div[0].formula_n='1.0';
         div.css("width","140px");
         break;
-      case 'start-actionlist' : // only since version 0.0.1.29
+      case 'start-actionlist' :
         div[0].rule_id='';
         div[0].list=true;
         div.css("width","160px");
         break;
-      case 'set-rule-active' : // only since version 0.0.1.29
+      case 'set-rule-active' :
           div[0].rule_id='';
           div[0].active=false;
           div.css("width","160px");
@@ -349,12 +343,14 @@ $.extend(rules, {
       case 'send-sms' :
         $('#tab-rules-send-sms-action-id').val(div.objid);
         $('#tab-rules-send-sms-action-value').val(div.objvalue);
-        $('#tab-rules-send-sms-action-var').attr("checked",div.smsvar);
+        if (div.smsvar) $('#tab-rules-send-sms-action-var').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-send-sms-action-var').removeAttr('checked').trigger('change');
         break;
       case 'send-email' :
         $('#tab-rules-send-email-action-to').val(div.objto);
         $('#tab-rules-send-email-action-subject').val(div.subject);
-        $('#tab-rules-send-email-action-var').attr("checked",div.emailvar);
+        if (div.emailvar) $('#tab-rules-send-email-action-var').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-send-email-action-var').removeAttr('checked').trigger('change');
         $('#tab-rules-send-email-action-text').val(div.objtext);
         break;
       case 'dim-up' :
@@ -365,13 +361,16 @@ $.extend(rules, {
         break;
       case 'shell-cmd' :
         $('#tab-rules-shell-cmd-action-value').val(div.cmd);
-        $('#tab-rules-shell-cmd-action-var').attr("checked",div.cmdvar);
+        if (div.cmdvar) $('#tab-rules-shell-cmd-action-var').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-shell-cmd-action-var').removeAttr('checked').trigger('change');
         break;
       case 'ioport-tx' :
-        $('#tab-rules-send-ioport-tx-hex').attr("checked",div.hex);
+        if (div.hex) $('#tab-rules-send-ioport-tx-hex').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-send-ioport-tx-hex').removeAttr('checked').trigger('change');
         $('#tab-rules-send-ioport-tx-data').val(div.data);
         $('#tab-rules-ioport-tx-action-ioport').val(div.ioport);
-        $('#tab-rules-ioport-tx-action-var').attr("checked",div.ioportvar);
+        if (div.ioportvar) $('#tab-rules-ioport-tx-action-var').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-ioport-tx-action-var').removeAttr('checked').trigger('change');
         break;
       case 'script' :
         $('#tab-rules-script-action-script').val(div.script);
@@ -379,7 +378,7 @@ $.extend(rules, {
       case 'cancel' :
         $('#tab-rules-cancel-action-value').val(div.cancel_rule);
         break;
-      case 'formula' :  // only since version 0.0.1.29
+      case 'formula' :
         $('#tab-rules-formula-x-action-value').val(div.formula_x);
         $('#tab-rules-formula-y-action-value').val(div.formula_y);
         $('#tab-rules-formula-a-action-value').val(div.formula_a);
@@ -388,11 +387,11 @@ $.extend(rules, {
         $('#tab-rules-formula-m-action-value').val(div.formula_m);
         $('#tab-rules-formula-n-action-value').val(div.formula_n);
         break;
-      case 'start-actionlist' : // only since version 0.0.1.29
+      case 'start-actionlist' :
         $('#tab-rules-start-actionlist-action-rule-id').val(div.rule_id);
         $('#tab-rules-start-actionlist-action-list').attr('checked',div.list);
         break;
-      case 'set-rule-active' : // only since version 0.0.1.29
+      case 'set-rule-active' :
           $('#tab-rules-set-rule-active-action-rule-id').val(div.rule_id);
           $('#tab-rules-set-rule-active-action-active').attr('checked',div.active);
           break;
@@ -456,14 +455,14 @@ $.extend(rules, {
         div.objid=$('#tab-rules-send-sms-action-id').val();
         div.objvalue=$('#tab-rules-send-sms-action-value').val();
         //div.smsvar=$('#tab-rules-send-sms-action-var').val();
-        div.smsvar=$('#tab-rules-send-sms-action-var').attr("checked");
+        div.smsvar=$('#tab-rules-send-sms-action-var').is(':checked');
         html = '<br />'+div.objid+'<br />'+div.objvalue;
         break;
       case 'send-email' :
         div.objto=$('#tab-rules-send-email-action-to').val();
         div.subject=$('#tab-rules-send-email-action-subject').val();
         //div.emailvar=$('#tab-rules-send-email-action-var').val();
-        div.emailvar=$('#tab-rules-send-email-action-var').attr("checked");
+        div.emailvar=$('#tab-rules-send-email-action-var').is(':checked');
         div.objtext=$('#tab-rules-send-email-action-text').val();
         html = '<br />'+div.objto+'<br />'+div.subject;
         break;
@@ -476,14 +475,14 @@ $.extend(rules, {
         break;
       case 'shell-cmd' :
         div.cmd = $('#tab-rules-shell-cmd-action-value').val();
-        div.cmdvar = $('#tab-rules-shell-cmd-action-var').attr("checked");
+        div.cmdvar = $('#tab-rules-shell-cmd-action-var').is(':checked');
         html = '<br />'+div.cmd;
         break;
       case 'ioport-tx' :
-        div.hex=$('#tab-rules-send-ioport-tx-hex').attr("checked");
+        div.hex=$('#tab-rules-send-ioport-tx-hex').is(':checked');
         div.data=$('#tab-rules-send-ioport-tx-data').val();
         div.ioport=$('#tab-rules-send-ioport-tx-ioport').val();
-        div.ioportvar=$('#tab-rules-ioport-tx-action-var').attr("checked");
+        div.ioportvar=$('#tab-rules-ioport-tx-action-var').is(':checked');
         html = '<br />'+div.ioport;
         break;
       case 'script' :
@@ -496,7 +495,7 @@ $.extend(rules, {
         //var width = div.cancel_rule.lenght + 2;
         //$(div).css("width",width+"em"); 
         break;
-      case 'formula' :  // only since version 0.0.1.29
+      case 'formula' : 
         div.formula_x = $('#tab-rules-formula-x-action-value').val();
         div.formula_y = $('#tab-rules-formula-y-action-value').val();
         div.formula_a = $('#tab-rules-formula-a-action-value').val();
@@ -506,13 +505,13 @@ $.extend(rules, {
         div.formula_n = $('#tab-rules-formula-n-action-value').val();
         html = '<br />'+div.formula_a+'*'+div.formula_x+'^'+div.formula_m+'+'+div.formula_b+'*'+div.formula_y+'^'+div.formula_n+'+'+div.formula_c; //a*x^m+b*y^n+c
         break;
-      case 'start-actionlist' : // only since version 0.0.1.29
+      case 'start-actionlist' :
         div.rule_id = $('#tab-rules-start-actionlist-action-rule-id').val();
         //div.list = $('#tab-rules-start-actionlist-action-list').val();
         div.list = $('#tab-rules-start-actionlist-action-list').attr('checked');
         html = '<br />rule : '+div.rule_id+'<br />actionlist : '+((div.list)?"true":"false");
         break;
-      case 'set-rule-active' : // only since version 0.0.1.29
+      case 'set-rule-active' :
           div.rule_id = $('#tab-rules-set-rule-active-action-rule-id').val();
           div.active = $('#tab-rules-set-rule-active-action-active').attr('checked');
           html = '<br />rule : '+div.rule_id+'<br />active : '+((div.active)?"yes":"no");
@@ -613,7 +612,7 @@ $.extend(rules, {
       case 'cancel' : // < type="" rule-id="" />
         xml.attr('rule-id',action[0].rule_id);
         break;
-      case 'formula' :  // only since version 0.0.1.29 : a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
+      case 'formula' :  // a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
         xml.attr('x',action[0].formula_x);
         xml.attr('y',action[0].formula_y);
         xml.attr('a',action[0].formula_a);
@@ -622,11 +621,11 @@ $.extend(rules, {
         xml.attr('m',action[0].formula_m);
         xml.attr('n',action[0].formula_n);
         break;
-      case 'start-actionlist' : // only since version 0.0.1.29 < type="" rule-id="" list="true/false" /> 
+      case 'start-actionlist' : // < type="" rule-id="" list="true/false" /> 
         xml.attr('rule-id',action[0].rule_id);
         xml.attr('list',((action[0].list)?"true":"false"));
         break;
-      case 'set-rule-active' : // only since version 0.0.1.29 < type="" rule-id="" active="yes/no" /> 
+      case 'set-rule-active' : // < type="" rule-id="" active="yes/no" /> 
           xml.attr('rule-id',action[0].rule_id);
           xml.attr('active',((action[0].active)?"yes":"no"));
           break;
@@ -668,7 +667,10 @@ $.extend(rules, {
               $('<tr>').append('<th width="150">Value</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-set-value-action-value" size="50">').append('<select id="tab-rules-set-value-action-value-select" style="display:none;" ></select>'))
               );
+            //$("#tab-rules-set-value-action-object").bind('change', function() {
             listobjectsetvalue.bind('change', function() {
+              //console.log("change object", $("#tab-rules-set-value-action-object option:selected"), $("#tab-rules-set-value-action-object option:selected")[0].type);
+              console.log("change object", $("option:selected" , this), $("option:selected" , this)[0].type);
               if (_objectTypesValues[$("#tab-rules-set-value-action-object option:selected")[0].type])
               {
                 values=_objectTypesValues[$("#tab-rules-set-value-action-value-select option:selected")[0].type];
@@ -681,7 +683,7 @@ $.extend(rules, {
                 $("#tab-rules-set-value-action-value-select").hide();
                 $("#tab-rules-object-condition-value").show();
               }
-            });
+            });//.trigger('change');
             break;
           case 'copy-value' :
             var listobjectcopyvaluefrom = listobject.clone();
@@ -842,7 +844,7 @@ $.extend(rules, {
               .append($('<td>').append(listrules))
               );
             break;
-          case 'formula' :  // only since version 0.0.1.29
+          case 'formula' :
             tbody.append($('<tr>').append('<td width="300" colspan="2" style="font-weight: bold; color: #F00; line-height: 25px;">Formula : a*x^m+b*y^n+c </td>'));
             tbody.append($('<tr>').append('<th width="50">x</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-x-action-value" size="2">')));
             tbody.append($('<tr>').append('<th width="50">y</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-y-action-value" size="2">')));
@@ -852,7 +854,7 @@ $.extend(rules, {
             tbody.append($('<tr>').append('<th width="50">m</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-m-action-value" size="2">')));
             tbody.append($('<tr>').append('<th width="50">n</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-n-action-value" size="2">')));
             break;
-          case 'start-actionlist' : // only since version 0.0.1.29
+          case 'start-actionlist' :
             var listrules = $('#listRules').clone();
             listrules.attr("id","tab-rules-start-actionlist-action-rule-id");
             tbody.append(
@@ -864,7 +866,7 @@ $.extend(rules, {
               .append($('<td>').append('<input type="checkbox" id="tab-rules-start-actionlist-action-list" >'))
               );
             break;
-          case 'set-rule-active' : // only since version 0.0.1.29
+          case 'set-rule-active' :
               var listrules = $('#listRules').clone();
               listrules.attr("id","tab-rules-set-rule-active-action-rule-id");
               tbody.append(

@@ -17,25 +17,26 @@
 <td width="65%">
 <table class="form">
 	<tr>
-		<th>ID</th>
+		<th>{l lang='en'}ID{/l}</th>
 		<td>
-			<input id="edit-object-id" name="edit-object-id" class="required" size="25" type="text">
+			<input id="edit-object-id" name="edit-object-id" class="required" size="25" type="text"><br />
+      <span style="color: #F00;">{l lang='en'}for ID use only alphanumeric characters, - , _ , and NO SPACES{/l}</span>
 		</td>
 	</tr>
 	<tr>
-		<th>Name</th>
+		<th>{l lang='en'}Name{/l}</th>
 		<td><input id="edit-object-label" name="edit-object-label" size="50" type="text"></td>
 	</tr>
 	<tr>
-		<th>Type</th>
+		<th>{l lang='en'}Type{/l}</th>
 		<td>{html_options name=dummy id="edit-object-type" options=$objectTypes}</td>
 	</tr>
 	<tr>
-		<th>GAD</th>
+		<th>{l lang='en'}GAD{/l}</th>
 		<td><input id="edit-object-gad" size="10" type="text"></td>
 	</tr>
 	<tr>
-		<th>Flags</th>
+		<th>{l lang='en'}Flags{/l}</th>
 		<td>
 			<input id="edit-object-flag-c" type="checkbox"/><span title="Communication">c</span>
 			<input id="edit-object-flag-r" type="checkbox"/><span title="Read">r</span>
@@ -46,12 +47,12 @@
 		</td>
 	</tr>
 	<tr>
-		<th>Initial value</th>
+		<th>{l lang='en'}Initial value{/l}</th>
 		<td>
 			<select id="edit-object-init" > <!--onchange="if ($(this).val()=='') $('#edit-object-init-value').css('visibility','visible'); else $('#edit-object-init-value').css('visibility','hidden'); "-->
-				<option value="request">request (read from bus)</option>
-				<option value="persist">persist (read from persistant storage)</option>
-				<option value="">autre (define a value)</option>
+				<option value="request">{l lang='en'}request (read from bus){/l}</option>
+				<option value="persist">{l lang='en'}persist (read from persistant storage){/l}</option>
+				<option value="">{l lang='en'}other (define a value){/l}</option>
 			</select>
 			<input type="text" id="edit-object-init-value" size="4">
 			<!-- <select id="edit-object-init-val-select"></select> -->
@@ -59,7 +60,7 @@
 	</tr>
 	<tr>
 		<th>History</th>
-		<td><input id="edit-object-flag-log" type="checkbox"/><span title="Log">Record value change</span></td>
+		<td><input id="edit-object-flag-log" type="checkbox"/><span title="Log">{l lang='en'}Record value change{/l}</span></td>
 	</tr>
 </table>
 
@@ -75,20 +76,20 @@
 <form id="readwrite-object-form">
 <table class="form">
 	<tr>
-		<th>Object</th>
+		<th>{l lang='en'}Object{/l}</th>
 		<td>
 			<select id="readwrite-object-id"></select>
 		</td>
 	</tr>
 	<tr>
-		<th>Value</th>
+		<th>{l lang='en'}Value{/l}</th>
 		<td>
 			<select id="readwrite-object-val-select"></select>
 			<input id="readwrite-object-val-input" size="10" type="text">
 		</td>
 	</tr>
 	<tr>
-		<th>Received value</th>
+		<th>{l lang='en'}Received value{/l}</th>
 		<td><input id="readwrite-object-recv" readonly size="10" type="text"></td>
 	</tr>
 </table>
@@ -98,10 +99,10 @@
   <table id="objects-tab-table">
   	<thead>
   		<tr>
-  			<th width="30%">Object</th>
-  			<th width="30%">Description</th>
-  			<th width="10%">GAD</th>
-  			<th width="30%">Type</th>
+  			<th width="30%">{l lang='en'}Object{/l}</th>
+  			<th width="30%">{l lang='en'}Description{/l}</th>
+  			<th width="10%">{l lang='en'}GAD{/l}</th>
+  			<th width="30%">{l lang='en'}Type{/l}</th>
   		</tr>
   	</thead>
   	<tbody>

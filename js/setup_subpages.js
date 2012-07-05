@@ -1,6 +1,7 @@
 var subpages = {
 	config: null,
 	currentSubPage: null,
+  number: 0,
 
 	// Load subpages from server
 	load: function()
@@ -26,7 +27,7 @@ var subpages = {
 				if (xmlResponse.getAttribute('status') == 'success')
 				{
 					messageBox("Sub-pages saved successfully", "Info", "check");
-					loadSubPages();
+					subpages.load();
 				}	else messageBox(tr("Error while saving design: ")+xmlResponse.textContent, "Error", "alert");
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -128,7 +129,7 @@ var subpages = {
 		$('subpage', subpages.config).each(function() {
 			if (this.getAttribute('name')==name) {
 				found=true;
-				return;
+				return found;
 			}
 		});
 		return found;
@@ -282,11 +283,13 @@ var subpages = {
     var type=o.conf.getAttribute('type');
     var desc=o.conf.getAttribute('desc');
     if (!desc) desc = type;
+    subpages.number++;
+    o.number = subpages.number; 
 
     var tr=$('<tr/>');
     tr.get(0).obj = o;
 
-    var th=$('<th>' + type + '</th>');
+    var th=$('<th>' + subpages.number + ' ' + type + '</th>');
     tr.append(th);
     tr.click(function() {
       this.obj.div.widgetMovable("select");
@@ -315,6 +318,7 @@ var subpages = {
   // Refresh Widgets List	
 	refreshWidgetsList: function() {
 		$("#tab-subpages-widgets-list tbody").empty();
+    subpages.number = 0;
     var tr=$('<tr><th>subpage</th><td><span>'+$("#tab-subpages-list").val()+'</span></td></tr>');
     tr.click(function() {
   		$(".active", "#tab-subpages-widgets-list").removeClass("active");
@@ -388,10 +392,10 @@ var subpages = {
 		$.each(properties, function() {
 	
 			// Comment or separator
-			if (this.type=="comment")
+			if (this.type=="comment" || this.type=="separator")
 			{
 		    var tr=$('<tr>');
-		    tr.append($('<th colspan="3" class="comment">' + this.label + '</th>'));
+		    tr.append($('<th colspan="3" class="' + this.type + '">' + this.label + '</th>'));
 			} else
 			{
 		    var tr=$('<tr>');
@@ -403,7 +407,7 @@ var subpages = {
 	    	var subPageParameterValue=value.substring(1,value.length);
 
 		    // Add checkbox to use a sub-page parameter
-		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture"))
+		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture") || (this.type=="zone") || (this.type=="multipleObject"))
 		    {
 			    var input=$('<input type="checkbox">');
 			    input.get(0).paramId=this.id;
@@ -427,7 +431,7 @@ var subpages = {
 				// Add parameter				
 		    var td=$('<td>');
 	    
-		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture")) {
+		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture") || (this.type=="zone") || (this.type=="multipleObject")) {
 					// Select for selecting sub-page parameter
 		    	var select=$('<select>');
 		    	if (!isSubPageParameter) select.css('display','none');
@@ -481,6 +485,81 @@ var subpages = {
 					});
 	    		if (isSubPageParameter) select.css('display','none');
 		    	td.append(select);
+		  	}
+
+		    // multipleObject setting
+		    if (this.type=="multipleObject") 
+		    {
+					var tabobject = new Array;
+          $('object', _objects).each(function() {
+            var label_obj = ((this.textContent=="")?this.getAttribute('id'):this.textContent);
+            var value_obj = this.getAttribute('id');        
+            var tab = [];
+            tab["label"] = label_obj;
+            tab["value"] = value_obj;
+            tabobject.push(tab);
+					});
+
+          /* use autocomplete jquery-ui cf. http://jqueryui.com/demos/autocomplete/#combobox and http://jqueryui.com/demos/autocomplete/#multiple */
+          wrapper = $( "<span>" )
+            .addClass( "ui-combobox" );
+          input = $("<input>")
+            .appendTo( wrapper )
+            .val( value )
+            .attr("id", this.id)
+            .attr("name", this.id)
+            // don't navigate away from the field on tab when selecting an item
+            .bind( "keydown", function( event ) {
+              if ( event.keyCode === $.ui.keyCode.TAB &&
+                  $( this ).data( "autocomplete" ).menu.active ) {
+                event.preventDefault();
+              }
+            })
+            .autocomplete({
+              minLength: 0,
+              delay: 0,
+              source: function( request, response ) {
+                // delegate back to autocomplete, but extract the last term
+                response( $.ui.autocomplete.filter(
+                  tabobject, extractLast( request.term ) ) );
+              },
+              focus: function() {
+                // prevent value inserted on focus
+                return false;
+              },
+              select: function( event, ui ) {
+                var terms = split( this.value );
+                // remove the current input
+                terms.pop();
+                // add the selected item
+                terms.push( ui.item.value );
+                // add placeholder to get the comma-and-space at the end
+                terms.push( "" );
+                this.value = terms.join( ", " );
+                //this.value = terms.join( "|" ); // le séparateur doit être en lien avec la fonction "split( val )" définie plus bas 
+                return false;
+              }
+            });
+
+          $( "<span>" )
+            .attr( "tabIndex", -1 )
+            .attr( "title", "Show All Items" )
+            .appendTo( wrapper )
+            .append('<span class="ui-button-icon-primary ui-icon ui-icon-triangle-1-s"></span>')
+            .addClass( "ui-button ui-state-default ui-button-icon-only" )
+            .click(function() {
+              // close if already visible
+              if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
+                input.autocomplete( "close" );
+                return;
+              }
+              // work around a bug (likely same cause as #5265)
+              $( this ).blur();
+              // pass empty string as value to search for, displaying all results
+              input.autocomplete( "search", "" );
+              input.focus();
+            });
+		    	td.append(wrapper);
 		  	}
 		
 		    // Picture setting
@@ -609,6 +688,8 @@ var subpages = {
 		select.append($("<option value='text'>Text</option>"));
 		select.append($("<option value='object'>Object</option>"));
 		select.append($("<option value='picture'>Picture</option>"));
+		select.append($("<option value='zone'>Zone</option>"));
+		//select.append($("<option value='multipleObject' disabled='1' >multipleObject</option>"));  // TODO ...
 		select.val(type);
 		td.append(select);
 		tr.append(td);
@@ -635,7 +716,7 @@ var subpages = {
 			var type=$(".type",this).val();
 			
 			if ((id=="")||(label=="")) {
-				messageBox("Please complate all fields", "Error", "alert");
+				messageBox("Please complete all fields", "Error", "alert");
 				return false;
 			}
 
@@ -660,6 +741,13 @@ var subpages = {
 		});
 	}
 }
+/* functions for multipleObject */
+function split( val ) {
+  return val.split( /,\s*/ );
+}
+function extractLast( term ) {
+  return split( term ).pop();
+}
 
 jQuery(function($) {
 	
@@ -670,7 +758,8 @@ jQuery(function($) {
 
 	$("#tab-subpages-list-widgets").draggable({ 
   	containment: "parent" ,
-  	scroll: false
+  	scroll: false,
+  	handle: "div:first"
   });
 	
 	$("#tab-subpages-delete-widget").button({
@@ -785,6 +874,67 @@ jQuery(function($) {
 	
 	$("#button-save-subpage").click(function() {
 		subpages.save();
+	});
+
+  $("#show-list-widgets-subpage-checkbox").change(function() {
+		$('#tab-subpages-list-widgets').toggle();
+    if( $('#tab-subpages-list-widgets').is(':visible') )
+      $('#show-list-widgets-subpage-checkbox').attr('checked','1');
+    else
+      $('#show-list-widgets-subpage-checkbox').removeAttr('checked');
+	});
+  $("#show-list-widgets-subpage-checkbox").click(function() {
+		$('#show-list-widgets-subpage-checkbox').change();
+	});
+	$("#show-list-widgets-subpage").click(function() {
+		$('#show-list-widgets-subpage-checkbox').change();
+	});
+  $("#tab-subpages-list-widgets .minus").click(function() {
+		$('#show-list-widgets-subpage-checkbox').change();
+	});
+
+  $("#tab-subpages-list-widgets .down").click(function() {
+    if ($(".active", "#tab-subpages-widgets-list").length > 0) {
+      var obj = $(".active", "#tab-subpages-widgets-list").get(0).obj;
+      if ( obj.number < subpages.number ) {
+        var _this_subpage = $('subpage[name=' + subpages.currentSubPage + ']', subpages.config);
+        obj.number = obj.number + 1;
+        var number = obj.number , objsav = obj;
+        $("tbody tr", "#tab-subpages-widgets-list").each(function() { 
+          if (this.obj) {
+            if (this.obj.number == number && objsav != this.obj) {
+              this.obj.number = this.obj.number - 1;
+              $(".active", "#tab-subpages-widgets-list").before($(this));
+              $(obj.conf, _this_subpage).before($(this.obj.conf, _this_subpage));
+            } 
+            this.obj.div.css("z-index", this.obj.number ); 
+            $( 'th', this).html( this.obj.number + " " + this.obj.conf.getAttribute('type') ); 
+          }
+        });
+      }
+    }
+	});
+  $("#tab-subpages-list-widgets .up").click(function() {
+    if ($(".active", "#tab-subpages-widgets-list").length > 0) {
+      var obj = $(".active", "#tab-subpages-widgets-list").get(0).obj;
+      if (obj.number > 1) {
+        var _this_subpage = $('subpage[name=' + subpages.currentSubPage + ']', subpages.config);
+        obj.number = obj.number - 1;
+        var number = obj.number;
+        var objsav = obj;
+        $("tbody tr", "#tab-subpages-widgets-list").each(function() { 
+          if (this.obj) {
+            if (this.obj.number == number && objsav != this.obj) {
+              this.obj.number = this.obj.number + 1;
+              $(".active", "#tab-subpages-widgets-list").after($(this));
+              $(obj.conf, _this_subpage).after($(this.obj.conf, _this_subpage));
+            }  
+            this.obj.div.css("z-index", this.obj.number ); 
+            $( 'th', this).html( this.obj.number + " " + this.obj.conf.getAttribute('type') ); 
+          }
+        });
+      }
+    }
 	});
 
 	$("#widgetsubpagediv").click(function() {

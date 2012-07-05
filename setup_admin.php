@@ -82,9 +82,16 @@ tpl()->assignByRef('widgetscssiswritable', $widgetscssiswritable);
 tpl()->assignByRef('contentwidgetscss', $contentwidgetscss);
 
 /* gestions des pgm supplémentaire utilisateurs */
-require_once("include/pgmrunning.php");
+if (file_exists("include/pgmrunning.php")) {
+  $pgmrunning = array();
+  $pgmrunning_param = array();
+  require_once("include/pgmrunning.php");
+} else {
+  $pgmrunning = array();
+  $pgmrunning_param = array();
+}
 tpl()->assignByRef("pgmrunning",$pgmrunning);
-tpl()->assignByRef("pgmrunning_param",$pgmrunning_param);
+tpl()->assignByRef("pgmrunning_param",$pgmrunning_param); 
 
 
 tpl()->display('setup_admin.tpl');

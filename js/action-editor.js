@@ -13,12 +13,12 @@ var actionEditor = {
 	    'cycle-on-off' : 'Cycle On Off', // < type="" id="" on="" off="" count="" ><stopcondition ... />
 //	    'repeat' : 'Repeat', // < type="" period="" count="" ><action ... />			// Todo
 //	    'conditional' : 'Conditional', // < type="" ><condition ...								// Todo
-	    'send-sms' : 'Send Sms', // TODO conditionner si linknx est compiler avec curl < type="" id="" value="" var="true/false" />
-	    'send-email' : 'Send Email', // TODO conditionner si linknx est compiler avec smtp <action type="" to="" subject="" var="true/false" >text<action/>
+	    'send-sms' : 'Send Sms', // < type="" id="" value="" var="true/false" />
+	    'send-email' : 'Send Email', // <action type="" to="" subject="" var="true/false" >text<action/>
 	    'dim-up' : 'Dim Up', // < type="" id="" start="" stop="" duration="" />
 	    'shell-cmd' : 'Shell Cmd', // < type="" cmd="" var="true/false" />
 	    'ioport-tx' : 'Ioport Tx', // < type="" hex="true/false" data="" ioport="" var="true/false" />
-	    'script' : 'Script', // TODO conditionner si linknx est compiler avec lua // < type="" >script <... />
+	    'script' : 'Script', // < type="" >script <... />
 //	    'cancel' : 'Cancel', // < type="" rule-id="" />
 	    'formula' : 'Formula', // id = a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
 	    'start-actionlist' : 'Start actionlist', // < type="" rule-id="" list="true/false" />
@@ -113,8 +113,6 @@ var actionEditor = {
 		actionEditor.fillObjectsSelect(dialog);
 		actionEditor.fillIOPortsSelect(dialog);
 		
-	  //$('#tab-rules-'+type+'-action-'+attr).text(div[0].script);
-    // TODO données en fonction du "type" ...
     switch (tr.conf.getAttribute('type')) {
       case 'set-value' :
         $("[name=id]", dialog).val(tr.conf.getAttribute('id'));
@@ -191,7 +189,7 @@ var actionEditor = {
       case 'cancel' :
 //        $('#tab-rules-cancel-action-value').val(div.cancel_rule);
         break;
-      case 'formula' :  // only since version 0.0.1.29
+      case 'formula' :
         $("[name=id]", dialog).val(tr.conf.getAttribute('id'));
         $("[name=x]", dialog).val(tr.conf.getAttribute('x'));
         $("[name=y]", dialog).val(tr.conf.getAttribute('y'));
@@ -201,11 +199,11 @@ var actionEditor = {
         $("[name=m]", dialog).val(tr.conf.getAttribute('m'));
         $("[name=n]", dialog).val(tr.conf.getAttribute('n'));
         break;
-      case 'start-actionlist' : // only since version 0.0.1.29
+      case 'start-actionlist' :
         $("[name=rule-id]", dialog).val(tr.conf.getAttribute('rule-id'));
 				if (tr.conf.getAttribute('list')=="true") $("[name=list]", dialog).attr('checked', '1'); else $("[name=list]", dialog).removeAttr('checked');
         break;
-      case 'set-rule-active' : // only since version 0.0.1.29
+      case 'set-rule-active' :
         $("[name=rule-id]", dialog).val(tr.conf.getAttribute('rule-id'));
 				if (tr.conf.getAttribute('active')=="yes") $("[name=active]", dialog).attr('checked', '1'); else $("[name=active]", dialog).removeAttr('checked');
         break;
@@ -248,13 +246,11 @@ var actionEditor = {
 	    	break;
 	    case 'send-sms':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());
-	    	//conf.setAttribute('value', '<![CDATA[' + $("[name=value]", dialog).val() + ']]>');
 	    	conf.setAttribute('value', $("[name=value]", dialog).val());
 	    	break;
 	    case 'send-email':
 	    	conf.setAttribute('to', $("[name=to]", dialog).val());
 	    	conf.setAttribute('subject', $("[name=subject]", dialog).val());
-	    	//conf.textContent='<![CDATA[' + $("[name=message]", dialog).val() + ']]>';
 	    	conf.textContent= $("[name=message]", dialog).val();
 	    	break;
 	    case 'dim-up':
@@ -264,7 +260,6 @@ var actionEditor = {
 	    	conf.setAttribute('duration', $("[name=duration]", dialog).val());
 	    	break;
 	    case 'shell-cmd':
-	    	//conf.setAttribute('cmd', '<![CDATA[' + $("[name=cmd]", dialog).val() + ']]>');
 	    	conf.setAttribute('cmd', $("[name=cmd]", dialog).val() );
 	    	break;
 	    case 'ioport-tx':

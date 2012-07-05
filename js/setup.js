@@ -3,6 +3,8 @@ var _objects;
 var imagesDir='';
 var imagesInput=null;
 var colorPickerInput=null;
+//var _superuser=false;
+var _superuser=(tab_config['superuser']=="true")?true:false;
 
 jQuery(document).ready(function(){
 
@@ -89,6 +91,15 @@ jQuery(document).ready(function(){
 		  maintab.tabs('select', '#' + ui.panel.id);
 		},
 		select: function(event, ui) {
+      $('h3', '#leftMenu').each(function() {
+        if ($(this).attr("tab_id") == $(ui.tab).attr('href').substring(5)) {
+          //$(this).click();
+          //$(this).trigger("accordionchange");
+          //switchTab($(this));
+          //maintab.tabs('select',$(this).attr('tab_id'));
+          return true;
+        }
+      });
 			$("#propertiesContainer div").hide();
 			var property=$(ui.tab).attr('href') + '-property';
 			if ($(property).length)	

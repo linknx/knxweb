@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once("include/common.php");
 
@@ -8,6 +8,7 @@ tpl()->addJs("lib/jquery/js/jquery.min.js");
 tpl()->addJs("lib/jquery/js/jquery-ui-1.8.10.custom.min.js");
 tpl()->addJs('lib/jquery.scrollTo-1.4.2-min.js');
 tpl()->addJs('lib/jquery.serialScroll-1.2.2-min.js');
+//tpl()->addJs('lib/jquery.knob-1.1.0.js');
 tpl()->addJs("js/eibcommunicator.js");
 tpl()->addJs("js/uicontroller.js");
 tpl()->addJs("js/common.js");

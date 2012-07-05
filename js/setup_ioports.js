@@ -16,6 +16,10 @@ var ioports = {
 				$("#edit-ioport-serial-speed").val(ioport[0].data.getAttribute('speed'));
 				$("#edit-ioport-serial-framing").val(ioport[0].data.getAttribute('framing'));
 				if (ioport[0].data.getAttribute('flow')) $("#edit-ioport-serial-flow").val(ioport[0].data.getAttribute('flow')); else $("#edit-ioport-serial-flow").val('none');
+        // only in linknx version >= 0.0.1.31 !!!
+        if (ioport[0].data.getAttribute('mode')) $("#edit-ioport-serial-mode").val(ioport[0].data.getAttribute('mode')); else $("#edit-ioport-serial-mode").val('text');
+        if (ioport[0].data.getAttribute('timeout')) $("#edit-ioport-serial-timeout").val(ioport[0].data.getAttribute('timeout')); else $("#edit-ioport-serial-timeout").val('');
+        if (ioport[0].data.getAttribute('regex')=='true')	$("#edit-ioport-serial-regex").attr('checked',true); else $("#edit-ioport-serial-regex").removeAttr('checked');
 			} else if (ioport[0].data.getAttribute('type')=='tcp')
 			{
 				$("#edit-ioport-type-tcp").attr('checked',true);
@@ -33,6 +37,12 @@ var ioports = {
 			
 			$("#edit-ioport-form")[0].validator.resetForm();
 			$('#edit-ioport-dialog').dialog('open');
+
+      $("#edit-ioport-serial-mode").change(function() {
+        if (this.value != 'raw') $("#edit-ioport-serial-timeout").attr("disabled", "1");
+        else $("#edit-ioport-serial-timeout").removeAttr("disabled"); 
+      });
+      $("#edit-ioport-serial-mode").trigger("change");
 		}
 		
 	},
@@ -52,6 +62,9 @@ var ioports = {
 		$("#edit-ioport-serial-speed").val('');
 		$("#edit-ioport-serial-framing").val('');
 		$("#edit-ioport-serial-flow").val('none');
+		$("#edit-ioport-serial-mode").val('text');
+		$("#edit-ioport-serial-timeout").val('');
+		$("#edit-ioport-serial-regex").removeAttr('checked');
 
 		$("#edit-ioport-id").removeAttr('readonly');
 
@@ -59,6 +72,12 @@ var ioports = {
 
 		$("#edit-ioport-form")[0].validator.resetForm();
 		$('#edit-ioport-dialog').dialog('open');
+
+    $("#edit-ioport-serial-mode").change(function() {
+      if (this.value != 'raw') $("#edit-ioport-serial-timeout").attr("disabled", "1");
+      else $("#edit-ioport-serial-timeout").removeAttr("disabled"); 
+    });
+    $("#edit-ioport-serial-mode").trigger("change");
 	},
 	
 	// Delete ioport 'id'
@@ -98,6 +117,9 @@ var ioports = {
 				body+='speed="' + $("#edit-ioport-serial-speed").val() + '" ';
 				body+='framing="' + $("#edit-ioport-serial-framing").val() + '" ';
 				body+='flow="' + $("#edit-ioport-serial-flow").val() + '" ';
+				body+='mode="' + $("#edit-ioport-serial-mode").val() + '" ';
+				if ( $("#edit-ioport-serial-mode").val() == 'raw') body+='timeout="' + $("#edit-ioport-serial-timeout").val() + '" ';
+				body+='regex="' + (($("#edit-ioport-serial-regex").attr('checked'))?'true':'false') + '" ';
 			}
 			body+='/></ioports></services></config></write>';
 		

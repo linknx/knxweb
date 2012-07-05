@@ -87,8 +87,7 @@ var objects = {
 			var responseXML=queryLinknx(body);
 			if (responseXML!=false)	objects.refreshObjectList();
 			loading.hide();
-		} else messageBox("You cannot delete this Object because it's used in a rule.", 'Error','error'); 
-    //messageBox('Vous ne pouvez pas supprimer cet objet car il est utilisé dans une règle.','Erreur','error');
+		} else messageBox("You cannot delete this Object because it's used in a rule.", 'Error','error');
 	},
 	
 	// Process add/edit object
@@ -113,12 +112,10 @@ var objects = {
 						'>' +	$("#edit-object-label").val() + '';
 			
 			//Listener
-			$('input:text',$('#edit-object-td-listener')).each( function() {
-				if ($(this).val() != "") {
-          body+='<listener gad="' + $(this).val() + '"';
-  				if ($(".flag_listener",$(this).parent()).attr('checked')) body+= ' read="true"';
-  				body+=' />';
-        }
+			$('input',$('#edit-object-td-listener')).each( function() {
+				body+='<listener gad="' + $(this).val() + '"';
+				if ($(".flag_listener",$(this).parent()).attr('checked')) body+= ' read="true"';
+				body+=' />';
 			});
 			
 			body+='</object></objects></config></write>';
@@ -170,7 +167,6 @@ var objects = {
 						tr.append($("<td>").html(this.getAttribute('id')));
 						tr.append($("<td>").html(this.textContent));
 						tr.append($("<td>").html(this.getAttribute('gad')));
-						//tr.append($("<td>").html(this.getAttribute('type')));
 						tr.append($("<td>").html(tab_objectTypes[this.getAttribute('type')]));
 						tr.dblclick(function() {
 							objects.editObject(this.data.getAttribute('id'));
@@ -239,7 +235,6 @@ jQuery(document).ready(function(){
 						$("#readwrite-object-recv").val(value);
 					else
             messageBox("Error when we read the object","Error","error");
-						//messageBox("Erreur lors de la lecture de l'object","Erreur","error");
 				},
 				"Write": function() {
 					if ($("#readwrite-object-val-select").css('display')!='none')
@@ -248,12 +243,12 @@ jQuery(document).ready(function(){
 						var value=$("#readwrite-object-val-input").val();
 	
 					var result=writeObjectValue($("#readwrite-object-id").val(),value);
-					if (!result) messageBox("Error when we read the object","Error","error"); //messageBox("Erreur lors de l'écriture de l'object","Erreur","error");
+					if (!result) messageBox("Error when we read the object","Error","error");
 				},
 				"Close": function() { $(this).dialog("close"); }
 		},
 		resizable: false,
-		title: "Read/Write value of an objet",//"Lire/Envoyer la valeur d'un objet",
+		title: "Read/Write value of an objet",
 		width: "430px",
 		modal: true
 	});
@@ -305,15 +300,12 @@ jQuery(document).ready(function(){
 	$('#objects-tab-table').show();
 	$('#objects-tab-table').tableize({
 		selectable: true,
-		//disableTextSelect: true,
-    //pager: 'objects-tab-pager',
-    //pagersize: 10,
 	});
 	// Clean dummy tr
 	$('#objects-tab-table tbody').empty();
 
 
-/* test ETS.xml */
+/* test ETS.xml */ // TODO mettre dans le paramétrage/config le path + nom du fichier
   // Move tab-objects-propertybottom DOM to #OptionContainer on the bottom of the page
   var etstab = $('#tab-objects-propertybottom').clone();
   $('#tab-objects-propertybottom').remove();
@@ -332,15 +324,15 @@ jQuery(document).ready(function(){
         headers: { 7:{sorter: false}, 8:{sorter: false}, 9:{sorter: false}, 10:{sorter: false}, 11:{sorter: false}}    
     	}
 	});
-  //$("#objects-ets-pager").css("position","relative");
   $("#objects-ets-pager").css("position","static");
   $("#objects-ets-pager").show();
 
   etstab.show();
   $("#OptionContainer").show();
   $("#openOptionContainer").show();
-  
-  $("#objects-tab-table-ets tbody tr").dblclick(function(){
+
+  //$("#objects-tab-table-ets tbody tr").dblclick(function(){
+  $("#objects-tab-table-ets tbody tr").live( 'dblclick', function(){
     msg = "";
     i = 0;
     tab_data = [];
@@ -349,8 +341,6 @@ jQuery(document).ready(function(){
       msg = msg + i + " : " + this.textContent + " / ";
       tab_data[i] = this.textContent;
     });
-    console.log(msg);
-    //objects.newObject();
     var listener = false;
 
     $("#edit-object-label").val('');
@@ -382,7 +372,6 @@ jQuery(document).ready(function(){
     if (tab_data[11] == "T") $("#edit-object-flag-t").attr('checked',true);
     if (tab_data[12] == "Act") $("#edit-object-flag-u").attr('checked',true);
     
-    // $("#edit-object-gad").val(tab_data[6]);  // TODO gérer le listener si plusieurs GA ...
     var list_gad = tab_data[6].split(', ');
 
     $("#edit-object-gad").val(list_gad[0]);
@@ -391,7 +380,6 @@ jQuery(document).ready(function(){
     for( i = 1; i < list_gad.length; i++)
     {
       var atrlistener = $("<tr>");
-      //var id = $("#edit-object-id").val();
       var id = '';
       atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="' + list_gad[i] + '" size="10" > <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" > ' + tr("Read") + ' </td>'));
       atrlistener.appendTo($('#edit-object-td-listener'));
@@ -405,7 +393,6 @@ jQuery(document).ready(function(){
       $('#edit-object-td-listener').hide();
     }
     $('#edit-object-dialog').dialog('open');
-    // fin function newObject TODO gérer ouverture avec des listener
 
   });
 

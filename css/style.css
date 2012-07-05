@@ -208,7 +208,7 @@ div.textDiv {
 */
 
 table.textDiv td {
-	padding: 2 5 2 5;
+	padding: 2px 5px 2px 5px;
 }
 
 div.editDiv {
@@ -230,7 +230,7 @@ div.hsliderDiv {
 
 div.hsliderDiv div {
 	float: left;
-	height; 32px;
+	height: 32px;
 	width: 32px;
 }
 

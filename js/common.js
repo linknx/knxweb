@@ -54,27 +54,16 @@ function tr(msg)
 {
 	var cRet = (typeof(i18n)!='undefined') ? i18n[msg] : msg;
 	if(!cRet) {
-		return "§§§" + msg + "§§§";
+		//return "§§§" + msg + "§§§";
+		return msg;
 	}
 	return cRet;
 }
 
 function saveConfig()
-{
-// Anthony, a quoi ça sert?
-/*  var now = new Date();
-  var month = now.getMonth() + 1;
-  var file = prompt( tr("Please enter path and save file name :"), "config-" + now.getFullYear() + "-" + month + "-"+now.getDate() +".xml" );
-  
-  if (!file) { 
-	  alert(tr("Error: No file to write config to"));
-	  return;
-	} else { 
-	  var body = '<admin><save file="' + file + '"/></admin>';
-	}
-	queryLinknx(body); */
-	
-	queryLinknx('<admin><save/></admin>');
+{	
+	var ret = queryLinknx('<admin><save/></admin>');
+  if (ret != "false" ) messageBox(tr("Configuration saved under linknx file param"), "Info", "check");
 }
 
 function isObjectUsed(id)
@@ -88,7 +77,6 @@ function isObjectUsed(id)
 			if ((this.getAttribute('type')=='object')&&(this.getAttribute('id')==id))
 			{
 				used=true;
-				//return false; // ?? à tester ...
 				return used;
 			}
 		});
@@ -287,9 +275,6 @@ function queryLinknx(message) {
 }
 
 function queryKnxweb(action, type, message, callasync) {
-	//if (!type) type = 'xml';
-  //if (!message) message = '';
-  //if (!callasync) callasync = false;
 	var data;
 	var req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action='+action, data: message, processData: false, dataType: type,async: callasync,
 		success: function(responseXML, status) {
@@ -350,7 +335,6 @@ $.fn.widgetMovable = function(method) {
 			$(widget).addClass("selected");
 			
 			$(".resizeSE").hide();
-			//$(".resizeSE", widget).show();
 			$(widget).children(".resizeSE").show();
 		
 			if (options.onSelect!=null) 

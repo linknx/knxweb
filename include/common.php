@@ -1,4 +1,4 @@
-<?
+<?php
 
 	if (!file_exists('include/config.xml') || file_get_contents( 'include/config.xml' ) == '')
 	{
@@ -6,7 +6,6 @@
 		die;
 	}
 
-	//require_once('include/config.inc.php');
   $_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
   unset($_config['comment']); // enleve les commentaires
 
@@ -16,12 +15,23 @@
 		header('Location: check_install.php');
 		die;
   }
+  /* get version of knxwbe2 in cvs sourceforge */
+
+  if ($_config["superuser"]=="true") {
+    exec('wget -O /tmp/version_cvs http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/knxweb2/version');
+    $version_knxweb2_cvs = exec('cat /tmp/version_cvs');
+    $MAJ_knxweb2 = !( $version_knxweb2 == $version_knxweb2_cvs );
+    exec('rm /tmp/version_cvs');
+  } else {
+    $MAJ_knxweb2 = false;
+  }
+  /* /version on cvs sourceforge */
 
 	require_once('include/tpl.php');
 	require_once('lang/lang.php');
 
   // Convert to a Javascript array
-//	$json_config = json_encode($_config);
+//	$json_config = json_encode($_config)
 //	tpl()->assign_by_ref("json_config",$json_config);
 	//echo '<script type="text/javascript" >var tab_config = '.$json_config.';</script>';
 

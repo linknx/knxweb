@@ -60,10 +60,13 @@ class MySmarty extends Smarty
 	
 	public function lBlock($params, $content, &$smarty, &$repeat)
 	{
-		if ($content != "")
-		{
-	    return l($content, $params);
-		}
+    // n'affiche que lors de la balise fermante
+    if(!$repeat){
+  		if ($content != "")
+  		{
+  	    return l($content, $params);
+  		}
+    }
 	}
 	
 	public function addCss($path)
@@ -128,12 +131,13 @@ class MySmarty extends Smarty
 $_tpl = null;
 function tpl()
 {
-	global $_tpl, $_config;
+	global $_tpl, $_config, $_lang;
 	if($_tpl == null) 
 	{
 		$_tpl = new MySmarty();
 		
 		$_tpl->assignByRef("_config",$_config);
+    $_tpl->assignByRef("_lang",$_lang);
 	}
 	
 	return $_tpl;
