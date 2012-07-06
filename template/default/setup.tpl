@@ -40,7 +40,7 @@
 </head>
 <body style="cursor:progress;">
 
-<div id="creditsContent">
+<div id="creditsContent" style="display:none;">
 Credits : <br />
  - Cyrille D. (zikibe) <br />
  - Jean-François M. (jef2000) <br />
