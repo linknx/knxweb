@@ -109,13 +109,15 @@ var objects = {
 						' type="' + $("#edit-object-type").val() + '"' +
 						' init="' + ( ($('#edit-object-init').val()!='') ? $("#edit-object-init").val() : $("#edit-object-init-value").val() ) + '"' +
 						(($('#edit-object-flag-log').attr("checked"))?' log="true"':'') +
-						'>' +	$("#edit-object-label").val() + '';
+						'>' +	trim($("#edit-object-label").val()) + '';
 			
 			//Listener
-			$('input',$('#edit-object-td-listener')).each( function() {
-				body+='<listener gad="' + $(this).val() + '"';
-				if ($(".flag_listener",$(this).parent()).attr('checked')) body+= ' read="true"';
-				body+=' />';
+			$('input:text',$('#edit-object-td-listener')).each( function() {
+				if ($(this).val() !="") {
+					body+='<listener gad="' + $(this).val() + '"';
+					if ($(".flag_listener",$(this).parent()).attr('checked')) body+= ' read="true"';
+					body+=' />';
+				}
 			});
 			
 			body+='</object></objects></config></write>';
@@ -182,6 +184,11 @@ var objects = {
 			}
 		});
 	}
+}
+
+function trim (myString)
+{
+  return myString.replace(/^\s+/g,'').replace(/\s+$/g,'');
 }
 
 jQuery(document).ready(function(){
