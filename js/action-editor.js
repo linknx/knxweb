@@ -163,11 +163,15 @@ var actionEditor = {
         break;
       case 'send-sms' :
         $("[name=id]", dialog).val(tr.conf.getAttribute('id'));
+        if ( tr.conf.getAttribute('var') == "true") $("[name=var]", dialog).attr('checked','1').trigger('change'); 
+        else $("[name=var]", dialog).removeAttr('checked').trigger('change');
         $("[name=value]", dialog).val(tr.conf.getAttribute('value'));
         break;
       case 'send-email' :
         $("[name=to]", dialog).val(tr.conf.getAttribute('to'));
         $("[name=subject]", dialog).val(tr.conf.getAttribute('subject'));
+        if ( tr.conf.getAttribute('var') == "true") $("[name=var]", dialog).attr('checked','1').trigger('change'); 
+        else $("[name=var]", dialog).removeAttr('checked').trigger('change');
         $("[name=message]", dialog).val(tr.conf.textContent);
         break;
       case 'dim-up' :
@@ -177,10 +181,16 @@ var actionEditor = {
         $("[name=duration]", dialog).val(tr.conf.getAttribute('duration'));
         break;
       case 'shell-cmd' :
+        if ( tr.conf.getAttribute('var') == "true") $("[name=var]", dialog).attr('checked','1').trigger('change'); 
+        else $("[name=var]", dialog).removeAttr('checked').trigger('change');
         $("[name=cmd]", dialog).val(tr.conf.getAttribute('cmd'));
         break;
       case 'ioport-tx' :
         $("[name=ioport]", dialog).val(tr.conf.getAttribute('ioport'));
+        if ( tr.conf.getAttribute('hex') == "true") $("[name=hex]", dialog).attr('checked','1').trigger('change'); 
+        else $("[name=hex]", dialog).removeAttr('checked').trigger('change');
+        if ( tr.conf.getAttribute('var') == "true") $("[name=var]", dialog).attr('checked','1').trigger('change'); 
+        else $("[name=var]", dialog).removeAttr('checked').trigger('change');
         $("[name=data]", dialog).val(tr.conf.getAttribute('data'));
         break;
       case 'script' :
@@ -246,11 +256,13 @@ var actionEditor = {
 	    	break;
 	    case 'send-sms':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());
+	    	conf.setAttribute('var', $("[name=var]", dialog).is(':checked'));
 	    	conf.setAttribute('value', $("[name=value]", dialog).val());
 	    	break;
 	    case 'send-email':
 	    	conf.setAttribute('to', $("[name=to]", dialog).val());
 	    	conf.setAttribute('subject', $("[name=subject]", dialog).val());
+	    	conf.setAttribute('var', $("[name=var]", dialog).is(':checked'));
 	    	conf.textContent= $("[name=message]", dialog).val();
 	    	break;
 	    case 'dim-up':
@@ -260,10 +272,13 @@ var actionEditor = {
 	    	conf.setAttribute('duration', $("[name=duration]", dialog).val());
 	    	break;
 	    case 'shell-cmd':
+	    	conf.setAttribute('var', $("[name=var]", dialog).is(':checked'));
 	    	conf.setAttribute('cmd', $("[name=cmd]", dialog).val() );
 	    	break;
 	    case 'ioport-tx':
 	    	conf.setAttribute('ioport', $("[name=ioport]", dialog).val());
+	    	conf.setAttribute('hex', $("[name=hex]", dialog).is(':checked'));
+	    	conf.setAttribute('var', $("[name=var]", dialog).is(':checked'));
 	    	conf.setAttribute('data', $("[name=data]", dialog).val());
 	    	break;
 	    case 'script':

@@ -97,6 +97,10 @@
 			<td><input type="text" name="id" size="20"></td>
 		</tr>
 		<tr>
+			<th width="150">{l lang='en'}Var{/l}</th>
+			<td><input type="checkbox" name="var" value="1"> ex. $ { id_objet } </td>
+		</tr>
+		<tr>
 			<th width="150">{l lang='en'}Message{/l}</th>
 			<td><input type="text" name="value" size="50"></td>
 		</tr>
@@ -148,6 +152,10 @@
 <div id="action-dialog-shell-cmd-dialog" style="display:none;" >
 	<table>
 		<tr>
+			<th width="150">{l lang='en'}Var{/l}</th>
+			<td><input type="checkbox" name="var" value="1"> ex. $ { id_objet } </td>
+		</tr>
+		<tr>
 			<th width="150">{l lang='en'}Command{/l}</th>
 			<td><input type="text" name="cmd" size="50"></td>
 		</tr>
@@ -159,6 +167,14 @@
 		<tr>
 			<th width="150">{l lang='en'}IO Port{/l}</th>
 			<td><select name="ioport" class="ioport-select" /></td>
+		</tr>
+		<tr>
+			<th width="150">{l lang='en'}Hexadecimal{/l}</th>
+			<td><input type="checkbox" name="hex" value="1"></td>
+		</tr>
+		<tr>
+			<th width="150">{l lang='en'}Var{/l}</th>
+			<td><input type="checkbox" name="var" value="1"> ex. $ { id_objet } </td>
 		</tr>
 		<tr>
 			<th width="150">{l lang='en'}Data{/l}</th>
