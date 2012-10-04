@@ -1,4 +1,5 @@
 <?php
+header('cache-control: no-cache');
 
 $_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
 unset($_config['comment']); 

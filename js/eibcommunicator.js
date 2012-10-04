@@ -27,7 +27,9 @@ var EIBCommunicator = {
 			return;
 		var body = "<write><object id='"+obj+"' value='"+value+"'/></write>";
 
-		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml' ,
+		var t = new Date().getTime();
+
+		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: body, processData: false, dataType: 'xml' , cache: false,
 			success: function(responseXML, status) {
 				var xmlResponse = responseXML.documentElement;
 				if (xmlResponse.getAttribute('status') == 'success') {
@@ -54,7 +56,9 @@ var EIBCommunicator = {
 					body += "<object id='" + objects[i] + "'/>";
 			body += "</objects></read>";
 
-			var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
+			var t = new Date().getTime();
+      
+			var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: body, processData: false, dataType: 'xml', cache: false,
 				success: function(responseXML, status) {
 					var xmlResponse = responseXML.documentElement;
 					if (xmlResponse.getAttribute('status') != 'error') {
@@ -98,7 +102,9 @@ var EIBCommunicator = {
   	}
 	},
 	query: function(body, successCallBack) {
-		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml' ,
+		var t = new Date().getTime();
+
+		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: body, processData: false, dataType: 'xml' , cache: false,
 			success: function(responseXML, status) {
 				if (successCallBack) successCallBack(responseXML.documentElement);
 			}
