@@ -10,22 +10,12 @@
   unset($_config['comment']); // enleve les commentaires
 
 
-  $version_knxweb2 = exec('cat version');
+  $version_knxweb2 = exec('cat ' . dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'version');
   if ($_config["version"] != $version_knxweb2) {
 		header('Location: check_install.php');
 		die;
   }
-  /* get version of knxwbe2 in cvs sourceforge */
-
-  if ($_config["superuser"]=="true") {
-    exec('wget -O /tmp/version_cvs http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/knxweb2/version');
-    $version_knxweb2_cvs = exec('cat /tmp/version_cvs');
-    $MAJ_knxweb2 = !( $version_knxweb2 == $version_knxweb2_cvs );
-    exec('rm /tmp/version_cvs');
-  } else {
-    $MAJ_knxweb2 = false;
-  }
-  /* /version on cvs sourceforge */
+  $MAJ_knxweb2 = false;
 
 	require_once('include/tpl.php');
 	require_once('lang/lang.php');

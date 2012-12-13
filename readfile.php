@@ -168,7 +168,9 @@ if ($typelog == "mysql") {
 
 } else if ($typelog == "file") {
   
-  $result=str_replace("\n","<br />",`tail -n $log_nbenreg $filelog`);
+  //$result=str_replace("\n","<br />",`tail -n $log_nbenreg $filelog`);
+  exec('tail -n ' . $log_nbenreg . ' ' . $filelog, $res);
+  $result=implode("<br />", $res);
 
   $result2 = substr($result, 0, -6); // enlève le dernier "<br />" 
   

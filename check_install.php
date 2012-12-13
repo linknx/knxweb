@@ -17,24 +17,46 @@ function _get($key, $default='') {
 
 $pwd=getcwd(); // Retourne le dossier de travail courant
 $apache_user=exec('whoami');
-$version_knxweb2 = exec('cat version');
+$version_knxweb2 = exec('cat ' . dirname(__FILE__) . DIRECTORY_SEPARATOR . 'version');
 
-$eibd_running = `ps ax | grep eibd | grep -v grep`;
+//$eibd_running = `ps ax | grep eibd | grep -v grep`;
+/*
+ * ps ax | grep eibd | grep -v grep => marche pas sur syno
+ * ps | grep eibd | grep -v grep => marche pas sur pc 
+ * pstree -a | grep eibd | grep -v grep => a priroi marche sur syno et PC
+ *
+ */  
+
+$eibd_running = exec('ps | grep eibd | grep -v grep');
 if ($eibd_running!="") {
   $eibd_running_param = explode("eibd ",$eibd_running);
   $eibd_running_param = $eibd_running_param[1];
 } else {
-  $eibd_running_param = $_config["eibd"];
+  $eibd_running = exec('ps ax | grep eibd | grep -v grep');
+  if ($eibd_running!="") {
+    $eibd_running_param = explode("eibd ",$eibd_running);
+    $eibd_running_param = $eibd_running_param[1];
+  } else {
+    $eibd_running_param = $_config["eibd"];
+  }
 }
 
-$linknx_running = `ps ax | grep linknx | grep -v grep`;
+//$linknx_running = `ps ax | grep linknx | grep -v grep`;
+$linknx_running = exec('ps | grep linknx | grep -v grep');
 if ($linknx_running!="") {
   $linknx_running_param = explode("linknx ",$linknx_running);
   $linknx_running_param = $linknx_running_param[1];
   $linknx_param_pos_w = (strpos($linknx_running_param, "-w") >= 0);
 } else {
-  $linknx_running_param = $_config["linknx"];
-  $linknx_param_pos_w = false;
+  $linknx_running = exec('ps ax | grep linknx | grep -v grep');
+  if ($linknx_running!="") {
+    $linknx_running_param = explode("linknx ",$linknx_running);
+    $linknx_running_param = $linknx_running_param[1];
+    $linknx_param_pos_w = (strpos($linknx_running_param, "-w") >= 0);
+  } else {
+    $linknx_running_param = $_config["linknx"];
+    $linknx_param_pos_w = false;
+  }
 }
 
 if (isset($_GET["ajax"])) {
@@ -304,7 +326,7 @@ if (isset($_GET["ajax"])) {
     if (!$_config["defaultVersion"]) $_config["defaultVersion"] = "design";
     if (!$_config["imageDir"]) $_config["imageDir"] = "pictures/";
 
-		$config="<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>
+		$config="<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>
 <param>
   <linknx_host>" . $_SESSION['linknx_host'] . "</linknx_host> <!-- ip du serveur linknx -->
   <linknx_port>" . $_SESSION['linknx_port'] . "</linknx_port> <!-- port connexion avec serveur linknx -->
@@ -312,7 +334,7 @@ if (isset($_GET["ajax"])) {
   <lang>" . $_SESSION['lang'] . "</lang> <!-- langue -->
   <version>" . $version_knxweb2 . "</version> <!-- version de KnxWeb -->
   <title>" . $_SESSION['title_knxweb'] . "</title> <!-- Titre des pages Web : KnxWeb - Ma maison en un clic -->
-  <Path_Image_Background>" . $_config["Path_Image_Background"] . "</Path_Image_Background> <!-- emplancement des images de fond d'écran -->
+  <Path_Image_Background>" . $_config["Path_Image_Background"] . "</Path_Image_Background> <!-- emplacement des images de fond d'écran -->
   <defaultDesign>" . $_config["defaultDesign"] . "</defaultDesign> <!-- version et design par défaut => design/version.xml par défaut default/design.xml -->
   <defaultVersion>" . $_config["defaultVersion"] . "</defaultVersion> <!-- fichier xml de description -->
   <startMobileView>false</startMobileView> <!-- démarrage par défaut de la vue \"Mobile\" -->
@@ -323,15 +345,15 @@ if (isset($_GET["ajax"])) {
   <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx> <!-- type de log de linknx file/mysql/null -->
   <imageDir>" . $_config["imageDir"] . "</imageDir> <!-- chemin d'accès aux images -->
   <useJavaIfAvailable>" . $_SESSION['useJavaIfAvailable'] . "</useJavaIfAvailable> <!-- Use java applet to update objects value on display design if Java is installed on client -->
-  <versionLinknx>" . $_SESSION['version'] . "</versionLinknx> <!-- linknx peux gérer les SMS -->
-  <haveSMS>" . $_SESSION['haveSMS'] . "</haveSMS> <!-- linknx peux gérer les SMS -->
-  <haveEmail>" . $_SESSION['haveEmail'] . "</haveEmail> <!-- linknx peux gérer les Email -->
-  <haveLua>" . $_SESSION['haveLua'] . "</haveLua> <!-- linknx peux gérer les LUA -->
-  <haveLog4cpp>" . $_SESSION['haveLog4cpp'] . "</haveLog4cpp> <!-- linknx est compilé avec Log4cpp -->
-  <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql> <!-- linknx est compilé avec Mysql -->
+  <versionLinknx>" . $_SESSION['version'] . "</versionLinknx> <!-- version de linknx -->
+  <haveSMS>" . $_SESSION['haveSMS'] . "</haveSMS> <!-- linknx g�re l'envoi de SMS -->
+  <haveEmail>" . $_SESSION['haveEmail'] . "</haveEmail> <!-- linknx g�re l'envoi d'Email -->
+  <haveLua>" . $_SESSION['haveLua'] . "</haveLua> <!-- linknx g�re les actions et conditions de type script LUA -->
+  <haveLog4cpp>" . $_SESSION['haveLog4cpp'] . "</haveLog4cpp> <!-- linknx est compil� avec Log4cpp -->
+  <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql> <!-- linknx peut g�rer les log via Mysql -->
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
-$subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+$subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 <subpages></subpages>";
     $res2 = true;
     if (!is_file('design/subpages.xml')) $res2=file_put_contents('design/subpages.xml', $subpages); 
