@@ -326,31 +326,31 @@ if (isset($_GET["ajax"])) {
     if (!$_config["defaultVersion"]) $_config["defaultVersion"] = "design";
     if (!$_config["imageDir"]) $_config["imageDir"] = "pictures/";
 
-		$config="<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>
+		$config="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 <param>
-  <linknx_host>" . $_SESSION['linknx_host'] . "</linknx_host> <!-- ip du serveur linknx -->
-  <linknx_port>" . $_SESSION['linknx_port'] . "</linknx_port> <!-- port connexion avec serveur linknx -->
-  <template>default</template> <!-- template utiliser images, css, code html tpl -->
-  <lang>" . $_SESSION['lang'] . "</lang> <!-- langue -->
-  <version>" . $version_knxweb2 . "</version> <!-- version de KnxWeb -->
-  <title>" . $_SESSION['title_knxweb'] . "</title> <!-- Titre des pages Web : KnxWeb - Ma maison en un clic -->
-  <Path_Image_Background>" . $_config["Path_Image_Background"] . "</Path_Image_Background> <!-- emplacement des images de fond d'Ã©cran -->
-  <defaultDesign>" . $_config["defaultDesign"] . "</defaultDesign> <!-- version et design par dÃ©faut => design/version.xml par dÃ©faut default/design.xml -->
-  <defaultVersion>" . $_config["defaultVersion"] . "</defaultVersion> <!-- fichier xml de description -->
-  <startMobileView>false</startMobileView> <!-- dÃ©marrage par dÃ©faut de la vue \"Mobile\" -->
-  <defaultMobileDesign>default</defaultMobileDesign> <!-- version et design par dÃ©faut de la visu \"Mobile\" -->
-  <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu \"Mobile\" -->
-  <eibd>" . $_SESSION['eibd_param'] . "</eibd> <!-- paramÃ¨tres d'appel de eibd exemple : ft12:/dev/ttyS0 ou -d -D -S -T -i ipt:192.168.1.10:3671 -->
-  <linknx>" . $_SESSION['linknx_param'] . "</linknx> <!-- paramÃ¨tres d'appel de linknx -->
-  <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx> <!-- type de log de linknx file/mysql/null -->
-  <imageDir>" . $_config["imageDir"] . "</imageDir> <!-- chemin d'accÃ¨s aux images -->
-  <useJavaIfAvailable>" . $_SESSION['useJavaIfAvailable'] . "</useJavaIfAvailable> <!-- Use java applet to update objects value on display design if Java is installed on client -->
-  <versionLinknx>" . $_SESSION['version'] . "</versionLinknx> <!-- version de linknx -->
-  <haveSMS>" . $_SESSION['haveSMS'] . "</haveSMS> <!-- linknx gére l'envoi de SMS -->
-  <haveEmail>" . $_SESSION['haveEmail'] . "</haveEmail> <!-- linknx gére l'envoi d'Email -->
-  <haveLua>" . $_SESSION['haveLua'] . "</haveLua> <!-- linknx gére les actions et conditions de type script LUA -->
-  <haveLog4cpp>" . $_SESSION['haveLog4cpp'] . "</haveLog4cpp> <!-- linknx est compilé avec Log4cpp -->
-  <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql> <!-- linknx peut gérer les log via Mysql -->
+  <linknx_host>" . $_SESSION['linknx_host'] . "</linknx_host>
+  <linknx_port>" . $_SESSION['linknx_port'] . "</linknx_port>
+  <template>default</template>
+  <lang>" . $_SESSION['lang'] . "</lang>
+  <version>" . $version_knxweb2 . "</version>
+  <title>" . $_SESSION['title_knxweb'] . "</title>
+  <Path_Image_Background>" . $_config["Path_Image_Background"] . "</Path_Image_Background>
+  <defaultDesign>" . $_config["defaultDesign"] . "</defaultDesign>
+  <defaultVersion>" . $_config["defaultVersion"] . "</defaultVersion>
+  <startMobileView>false</startMobileView>
+  <defaultMobileDesign>default</defaultMobileDesign>
+  <defaultMobileVersion>mobile</defaultMobileVersion>
+  <eibd>" . $_SESSION['eibd_param'] . "</eibd>
+  <linknx>" . $_SESSION['linknx_param'] . "</linknx>
+  <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx>
+  <imageDir>" . $_config["imageDir"] . "</imageDir>
+  <useJavaIfAvailable>" . $_SESSION['useJavaIfAvailable'] . "</useJavaIfAvailable>
+  <versionLinknx>" . $_SESSION['version'] . "</versionLinknx>
+  <haveSMS>" . $_SESSION['haveSMS'] . "</haveSMS>
+  <haveEmail>" . $_SESSION['haveEmail'] . "</haveEmail>
+  <haveLua>" . $_SESSION['haveLua'] . "</haveLua>
+  <haveLog4cpp>" . $_SESSION['haveLog4cpp'] . "</haveLog4cpp>
+  <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql>
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
 $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
