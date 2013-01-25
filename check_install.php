@@ -172,6 +172,22 @@ if (isset($_GET["ajax"])) {
       $title_knxweb = "KnxWeb - Ma maison en un clic";
     else 
       $title_knxweb = $_config["title"];
+
+    if (!isset($_GET['check'])) { // pas de check de fait donc on prend les valeur par défaut ou celles de la config existante 
+      if (!$_config["lang"]) $default_lang = 'en'; else $default_lang = $_config["lang"];
+      if (!$_config["useJavaIfAvailable"]) $useJavaIfAvailable = "off"; else $useJavaIfAvailable = (($_config["useJavaIfAvailable"]=="true")?"on":"off");
+      if (!$_config["superuser"]) $superuser = "off"; else $superuser = (($_config["superuser"]=="true")?"on":"off");
+      if (!$_config["uitheme"]) $default_uitheme = 'cupertino'; else $default_uitheme = $_config["uitheme"];
+    }
+
+    // find list of jquery ui theme for KnxWeb
+    $ret = glob('lib/jquery/css/*', GLOB_ONLYDIR);
+    $uitheme=array();
+    foreach ($ret as $path)
+    {
+      if (file_exists( $path . '/jquery-ui.css')) $uitheme[basename($path)]=basename($path);
+    }
+
 ?>
 <style>
 .red {
@@ -188,9 +204,13 @@ if (isset($_GET["ajax"])) {
     font-size: 10px;
     font-weight: bold;
 }
+.superuser {
+  display: none;
+}
 </style>
 		<form id="linknxForm" method=GET >
-		<table> <!-- width="400" -->
+    <input type="hidden" name="check" value="yes">
+		<table class="ui-widget-content" style="border:none;" >
 			<tr>
 				<td>Linknx host</td>
 				<td><input type="text" name="linknx_host" value="<?php echo _get('linknx_host','127.0.0.1'); ?>" size="15"></td>
@@ -200,27 +220,44 @@ if (isset($_GET["ajax"])) {
 				<td><input type="text" name="linknx_port" value="<?php echo _get('linknx_port',1028); ?>" size="4"></td>
 			</tr>
       <tr><td colspan="2"><br /> </td></tr>
+      <tr><td colspan="2" id="titleknxweb" ></td></tr>
       <tr>
 				<td>Title of HTML page of Knxweb</td>
 				<td>
           <input type="text" name="title_knxweb" value="<?php echo _get('title_knxweb',$title_knxweb); ?>" size="50">
         </td>
 			</tr>
-      <tr>
+      <tr title="Use java applet to update objects value on display design if Java is installed on client">
 				<td>Use by default applet Java if available</td><!-- Use java applet to update objects value on display design if Java is installed on client -->
-				<td><input type="checkbox" name="useJavaIfAvailable" <?php echo ((_get('useJavaIfAvailable',$useJavaIfAvailable)=="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
+				<td><input type="checkbox" name="useJavaIfAvailable" <?php echo ((_get('useJavaIfAvailable',$useJavaIfAvailable)==="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
 			</tr> 
       <tr>
 				<td>Language</td>
 				<td>
           <select name="lang" id="lang" >
-            <?php if (!$_config["lang"]) $default_lang = _get('lang','en'); else $default_lang = $_config["lang"];
+            <?php
             foreach ($lang as $key => $value) { ?>
-                <option value="<?php echo $key; ?>" <?php echo (($default_lang == $key )?'checked="1"':""); ?> ><?php echo $value; ?></option>
+                <option value="<?php echo $key; ?>" <?php echo ((_get('lang',$default_lang) == $key )?'selected="true"':""); ?> ><?php echo $value; ?></option>
             <?php } ?>
           </select>
         </td>
 			</tr>
+      <tr class="superuser">
+				<td></td>
+				<td><input type="checkbox" name="superuser" <?php echo ((_get('superuser',$superuser)==="on")?'checked="1"':""); ?>" >Super User</td>
+			</tr> 
+      <tr>
+				<td>UI Theme</td>
+				<td>
+          <select name="uitheme" id="uitheme" onchange="changeUiTheme(this);" >
+            <?php
+            foreach ($uitheme as $key => $value) { ?>
+                <option value="<?php echo $key; ?>" <?php echo ((_get('uitheme',$default_uitheme) == $key )?'selected="true"':""); ?> ><?php echo $value; ?></option>
+            <?php } ?>
+          </select>
+        </td>
+			</tr>
+      <tr><td colspan="2"><br /> </td></tr>
       <tr>
 				<td>EIBD</td>
 				<td>
@@ -248,7 +285,8 @@ if (isset($_GET["ajax"])) {
         </td>
 			</tr>
 			<tr>
-				<td colspan="2" style="padding-top: 10px;"><input type="button" id="checkLinknxButton" onclick="checkLinknx();" value="Check"></td>
+				<td style="padding-top: 10px;"><input type="button" id="checkLinknxButton" onclick="checkLinknx();" value="Check"></td>
+				<td id="showsuperuser" > </td>
 			</tr>
 		</table>
 		</form>
@@ -257,8 +295,14 @@ if (isset($_GET["ajax"])) {
 				$('#tabs').tabs('url', 1, "check_install.php?ajax&config&" + $("#linknxForm").serialize());
 				$('#tabs').tabs('load',1);
 			}
+      function changeUiTheme(val)
+      {
+        $("link[href*=lib\\/jquery\\/css]:first").attr('href', 'lib/jquery/css/' + $(val).val() + '/jquery-ui.css');
+      };
 			
 			$("#checkLinknxButton").button();
+      $("#titleknxweb").html("KnxWeb use Jquery " + $().jquery + " and Jquery-Ui " + $.ui.version );
+      $("#showsuperuser").dblclick( function() { $('.superuser').show();});
 		</script>
 <?php
 		$error=false;
@@ -290,6 +334,8 @@ if (isset($_GET["ajax"])) {
           $_SESSION['useJavaIfAvailable']=($_GET['useJavaIfAvailable']=="on")?"true":"false";
           $_SESSION['lang']=$_GET['lang'];
           $_SESSION['title_knxweb']=$_GET['title_knxweb'];
+          $_SESSION['superuser']=($_GET['superuser']=="on")?"true":"false";
+          $_SESSION['uitheme']=$_GET['uitheme'];
 					
 ?>
 				Found Linknx version : <?=$info["version"]?><br />
@@ -328,29 +374,31 @@ if (isset($_GET["ajax"])) {
 
 		$config="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 <param>
-  <linknx_host>" . $_SESSION['linknx_host'] . "</linknx_host>
-  <linknx_port>" . $_SESSION['linknx_port'] . "</linknx_port>
-  <template>default</template>
-  <lang>" . $_SESSION['lang'] . "</lang>
-  <version>" . $version_knxweb2 . "</version>
-  <title>" . $_SESSION['title_knxweb'] . "</title>
-  <Path_Image_Background>" . $_config["Path_Image_Background"] . "</Path_Image_Background>
-  <defaultDesign>" . $_config["defaultDesign"] . "</defaultDesign>
-  <defaultVersion>" . $_config["defaultVersion"] . "</defaultVersion>
-  <startMobileView>false</startMobileView>
-  <defaultMobileDesign>default</defaultMobileDesign>
-  <defaultMobileVersion>mobile</defaultMobileVersion>
-  <eibd>" . $_SESSION['eibd_param'] . "</eibd>
-  <linknx>" . $_SESSION['linknx_param'] . "</linknx>
-  <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx>
-  <imageDir>" . $_config["imageDir"] . "</imageDir>
-  <useJavaIfAvailable>" . $_SESSION['useJavaIfAvailable'] . "</useJavaIfAvailable>
-  <versionLinknx>" . $_SESSION['version'] . "</versionLinknx>
-  <haveSMS>" . $_SESSION['haveSMS'] . "</haveSMS>
-  <haveEmail>" . $_SESSION['haveEmail'] . "</haveEmail>
-  <haveLua>" . $_SESSION['haveLua'] . "</haveLua>
-  <haveLog4cpp>" . $_SESSION['haveLog4cpp'] . "</haveLog4cpp>
-  <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql>
+  <linknx_host>" . $_SESSION['linknx_host'] . "</linknx_host> <!-- ip du serveur linknx -->
+  <linknx_port>" . $_SESSION['linknx_port'] . "</linknx_port> <!-- port connexion avec serveur linknx -->
+  <template>default</template> <!-- template utiliser images, css, code html tpl -->
+  <lang>" . $_SESSION['lang'] . "</lang> <!-- langue -->
+  <version>" . $version_knxweb2 . "</version> <!-- version de KnxWeb -->
+  <title>" . $_SESSION['title_knxweb'] . "</title> <!-- Titre des pages Web : KnxWeb - Ma maison en un clic -->
+  <Path_Image_Background>" . $_config["Path_Image_Background"] . "</Path_Image_Background> <!-- emplacement des images de fond d'écran -->
+  <defaultDesign>" . $_config["defaultDesign"] . "</defaultDesign> <!-- version et design par défaut => design/version.xml par défaut default/design.xml -->
+  <defaultVersion>" . $_config["defaultVersion"] . "</defaultVersion> <!-- fichier xml de description -->
+  <startMobileView>false</startMobileView> <!-- démarrage par défaut de la vue \"Mobile\" -->
+  <defaultMobileDesign>default</defaultMobileDesign> <!-- version et design par défaut de la visu \"Mobile\" -->
+  <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu \"Mobile\" -->
+  <eibd>" . $_SESSION['eibd_param'] . "</eibd> <!-- paramètres d'appel de eibd exemple : ft12:/dev/ttyS0 ou -d -D -S -T -i ipt:192.168.1.10:3671 -->
+  <linknx>" . $_SESSION['linknx_param'] . "</linknx> <!-- paramètres d'appel de linknx -->
+  <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx> <!-- type de log de linknx file/mysql/null -->
+  <imageDir>" . $_config["imageDir"] . "</imageDir> <!-- chemin d'accès aux images -->
+  <useJavaIfAvailable>" . $_SESSION['useJavaIfAvailable'] . "</useJavaIfAvailable> <!-- Use java applet to update objects value on display design if Java is installed on client -->
+  <versionLinknx>" . $_SESSION['version'] . "</versionLinknx> <!-- version de linknx -->
+  <haveSMS>" . $_SESSION['haveSMS'] . "</haveSMS> <!-- linknx gére l'envoi de SMS -->
+  <haveEmail>" . $_SESSION['haveEmail'] . "</haveEmail> <!-- linknx gére l'envoi d'Email -->
+  <haveLua>" . $_SESSION['haveLua'] . "</haveLua> <!-- linknx gére les actions et conditions de type script LUA -->
+  <haveLog4cpp>" . $_SESSION['haveLog4cpp'] . "</haveLog4cpp> <!-- linknx est compilé avec Log4cpp -->
+  <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql> <!-- linknx peut gérer les log via Mysql -->
+  <uitheme>" . $_SESSION['uitheme'] . "</uitheme> <!-- theme jquery-ui -->
+" . (($_SESSION['superuser']=="true")?"<superuser>" . $_SESSION['superuser'] . "</superuser>":"") . "
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
 $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
@@ -362,9 +410,10 @@ $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 ?>
 		Configuration file written.<br />
 		<br />
-		<!--You must now delete the file check_install.php (rm <?php echo $pwd;?>/check_install.php) to finish knxweb setup.<br />
+		<!--You must now delete the file check_install.php (rm <?php echo $pwd;?>/check_install.php) to finish knxweb setup.<br />-->
+    If you use an old version of knxweb (version <=0.7) you can convert the "old" design with <a href="recovery_design.php">this function</a> before.<br />
 		<br />
-		When done, --><a href="setup.php">click here</a> to configure knxweb.
+		<!--When done, --><a href="setup.php">click here</a> to configure knxweb.
 <?php
 		} else echo "Error while writing configuration to file include/config.xml";
 	}
@@ -382,7 +431,7 @@ $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 	<style type="text/css">
 		body, html {
 			font-family: Arial, Tahoma, Helvetica, sans-serif;
-			color: #000;
+			/*color: #000;*/
 			background: #FFF;
 			padding: 20px;
 		}
@@ -397,9 +446,9 @@ $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
 	</style>
 	
 	<title>KnxWeb - Setup</title>
-	<link rel="stylesheet" type="text/css" href="lib/jquery/css/cupertino/jquery-ui-1.8.10.custom.css" />
+	<link rel="stylesheet" type="text/css" href="lib/jquery/css/cupertino/jquery-ui.css" />
 	<script type="text/javascript" src="lib/jquery/js/jquery.min.js"></script>
-	<script type="text/javascript" src="lib/jquery/js/jquery-ui-1.8.10.custom.min.js"></script>
+	<script type="text/javascript" src="lib/jquery/js/jquery-ui.min.js"></script>
 	
 	<script>
 		$(function() {

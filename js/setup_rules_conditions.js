@@ -11,6 +11,7 @@ $.extend(rules, {
     'timer':'Timer',
     'time-counter':'Time Counter',
     'ioport-rx':'Ioport Rx',
+    'ioport-connect':'Ioport Connect',
     'script':'Script' // si linknx gère lua
   */
   
@@ -57,17 +58,22 @@ $.extend(rules, {
       case "time-counter":
         div[0].endpoint = [];
         div[0].endpoint[1] = jsPlumb.addEndpoint(div, $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
-        div[0].timecounter_threshold=condition.getAttribute('id');
-        div[0].timecounter_resetdelay=condition.getAttribute('id');
+        div[0].timecounter_threshold=condition.getAttribute('threshold');
+        div[0].timecounter_resetdelay=condition.getAttribute('reset-delay');
         rules.positionCondition(type, condition, numcondition, div);
         var k = 1;
         collonne_condition++;
         pos_top_condition[collonne_condition] = 0;
         $(condition).children("condition").each(function () {
           var condition2 = rules.addConditionRule(this.getAttribute('type'), this, numcondition);
+          //jsPlumb.connect({source:condition2[0].endpointout, target:div[0].endpoint[k]});
+          if (condition2[0].type == "and" || condition2[0].type == "or") {
+            jsPlumb.connect({source:condition2[0].endpoint[0], target:div[0].endpoint[k]});
+          } else {
           jsPlumb.connect({source:condition2[0].endpointout, target:div[0].endpoint[k]});
+          }
+          if (k > 1) messageBox(tr("Maximum number of condition for reaching this time-counter"),tr("Condition time-counter"),"alert");
           k++;
-          if (k > 1) messageBox("Maximum number of condition for reaching this time-counter ","Condition time-counter","alert");
         });
         if (collonne_condition>1) collonne_condition--;
         break;
@@ -177,14 +183,20 @@ $.extend(rules, {
         rulestab.tabs('select', '#tab-rules-timer-condition-start');
         break;
       case "ioport-rx": // <condition type="" expected="" ioport="" trigger="true"/>
-        //messageBox("a implémenter ...","TODO","alert");
         div[0].ioport_expected=condition.getAttribute('expected');
+        div[0].ioport_ioport=condition.getAttribute('ioport');
+        div[0].ioport_trigger=condition.getAttribute('trigger');
+/* new in Linknx 0.0.1.31 ajout des attributs : regex="(true/)false" hex="(true/)false"  object="" */
+        div[0].regex=condition.getAttribute('regex');
+        div[0].regex=condition.getAttribute('hex');
+        break;
+      case "ioport-connect": // <condition type="" ioport="" trigger="true" />  /* new in Linknx 0.0.1.31 */ 
         div[0].ioport_ioport=condition.getAttribute('ioport');
         div[0].ioport_trigger=condition.getAttribute('trigger');
         break;
       case "script":
-        div[0].script=condition.getAttribute('script');
-        //div[0].script_var=condition.getAttribute('var'); // TODO a gérer ...
+        //div[0].script=condition.getAttribute('script');
+        div[0].script=condition.textContent;
         break;
       case "and":
         var div = this.addAnd();
@@ -199,8 +211,8 @@ $.extend(rules, {
           } else {
             jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[k]});
           }
+          if (k > 11) messageBox(tr("Maximum number of condition for reaching this AND"),tr("Condition And"),"alert");
           k++;
-          if (k > 11) messageBox("Maximum number of condition for reaching this AND ","Condition And","alert");
         });
         if (collonne_condition>1) collonne_condition--;
         break;
@@ -217,8 +229,8 @@ $.extend(rules, {
           } else {
             jsPlumb.connect({source:temp_conditionor[0].endpointout, target:div[0].endpoint[k]});
           }
+          if (k > 11) messageBox(tr("Maximum number of condition for reaching this OR"),tr("Condition Or"),"alert");
           k++;
-          if (k > 11) messageBox("Maximum number of condition for reaching this OR ","Condition Or","alert");
         });
         if (collonne_condition>1) collonne_condition--;
         break;
@@ -231,9 +243,14 @@ $.extend(rules, {
         //pos_right_condition[collonne_condition] = 0;
         $(condition).children("condition").each(function () {
           var condition2 = rules.addConditionRule(this.getAttribute('type'), this, numcondition);
+          //jsPlumb.connect({source:condition2[0].endpointout, target:div[0].endpoint[k]});
+          if (condition2[0].type == "and" || condition2[0].type == "or") {
+            jsPlumb.connect({source:condition2[0].endpoint[0], target:div[0].endpoint[k]});
+          } else {
           jsPlumb.connect({source:condition2[0].endpointout, target:div[0].endpoint[k]});
+          }
+          if (k > 1) messageBox(tr("Maximum number of condition for reaching this NOT"),tr("Condition Not"),"alert");
           k++;
-          if (k > 1) messageBox("Maximum number of condition for reaching this NOT ","Condition Not","alert");
         });
         if (collonne_condition>1) collonne_condition--;
         break;
@@ -372,8 +389,14 @@ $.extend(rules, {
         var div = this.addNot();
         break;
       case "ioport-rx":
-        //messageBox("a implémenter ...","TODO","alert");
         div[0].ioport_expected='';
+        div[0].ioport_ioport='';
+        div[0].ioport_trigger=false;
+/* new in Linknx 0.0.1.31 ajout des attributs : regex="(true/)false" hex="(true/)false"  object="" */
+        div[0].regex=false;
+        div[0].hex=false;
+        break;
+      case "ioport-connect": // <condition type="" ioport="" trigger="true" />  /* new in Linknx 0.0.1.31 */ 
         div[0].ioport_ioport='';
         div[0].ioport_trigger=false;
         break;
@@ -538,11 +561,18 @@ $.extend(rules, {
         this.addNot();
         break;*/
       case "ioport-rx":
-        //messageBox("a implémenter ...","TODO","alert");
         $('#tab-rules-ioport-rx-condition-expected').val(div.ioport_expected);
         $('#tab-rules-ioport-rx-condition-ioport').val(div.ioport_ioport);
         if (div.ioport_trigger) $('#tab-rules-ioport-rx-condition-trigger').attr('checked','1').trigger('change'); 
         else $('#tab-rules-ioport-rx-condition-trigger').removeAttr('checked').trigger('change');
+/* new in Linknx 0.0.1.31 ajout des attributs : regex="(true/)false" hex="(true/)false"  object="" */
+        //div[0].regex=false;
+        //div[0].hex=false;
+        break;
+      case "ioport-connect": /* new in Linknx 0.0.1.31 */
+        $('#tab-rules-ioport-connect-condition-ioport').val(div.ioport_ioport);
+        if (div.ioport_trigger) $('#tab-rules-ioport-connect-condition-trigger').attr('checked','1').trigger('change'); 
+        else $('#tab-rules-ioport-connect-condition-trigger').removeAttr('checked').trigger('change');
         break;
       case "script":
         $('#tab-rules-script-condition-script').text(div.script);
@@ -689,6 +719,14 @@ $.extend(rules, {
         //if ($('#tab-rules-ioport-rx-condition-trigger').attr('checked')!='') div.ioport_trigger=true; else div.ioport_trigger=false;
         div.ioport_trigger=$('#tab-rules-ioport-rx-condition-trigger').is(':checked');
         html = '<br />' + div.ioport_ioport +'<br />'+ div.ioport_expected;
+/* new in Linknx 0.0.1.31 ajout des attributs : regex="(true/)false" hex="(true/)false"  object="" */
+        //div[0].regex=false;
+        //div[0].hex=false;
+        break;
+      case "ioport-connect": /* new in Linknx 0.0.1.31 */ 
+        div.ioport_ioport=$('#tab-rules-ioport-connect-condition-ioport').val();
+        div.ioport_trigger=$('#tab-rules-ioport-connect-condition-trigger').is(':checked');
+        html = '<br />' + div.ioport_ioport;
         break;
       case "script":
         div.script=$('#tab-rules-script-condition-script').val();
@@ -703,7 +741,11 @@ $.extend(rules, {
   
   // ******************** /saveCondition ************************
   generateNodeXMLCondition: function(condition) {
+    if (condition[0].stopcondition) {
+      var xml=$('<stopcondition/>');
+    } else {
     var xml=$('<condition/>');
+    }
     xml.attr('type',condition[0].type);
     switch (condition[0].type) {
       case 'object':
@@ -812,6 +854,13 @@ $.extend(rules, {
       case 'ioport-rx':
         xml.attr('ioport',condition[0].ioport_ioport);
         xml.attr('expected',condition[0].ioport_expected);
+        if (condition[0].ioport_trigger) xml.attr('trigger','true');
+/* new in Linknx 0.0.1.31 ajout des attributs : regex="(true/)false" hex="(true/)false"  object="" */
+        //div[0].regex=false;
+        //div[0].hex=false;
+        break;
+      case "ioport-connect": // <condition type="" ioport="" trigger="true" />  /* new in Linknx 0.0.1.31 */ 
+        xml.attr('ioport',condition[0].ioport_ioport);
         if (condition[0].ioport_trigger) xml.attr('trigger','true');
         break;
       case 'script':
@@ -1019,16 +1068,22 @@ $.extend(rules, {
             });
             $("#timer-condition-until-type-other").trigger('change');
             break;
-          case "and":
+          /*case "and":
             break;
           case "or":
             break;
           case "not":
-            break;
+            break;*/
           case "ioport-rx":
-            //messageBox("a implémenter ...","TODO","alert");
             $("#tab-rules-ioport-rx-condition-form")[0].validator=$("#tab-rules-ioport-rx-condition-form").validate();
             $("#tab-rules-ioport-rx-condition-form")[0].validator.resetForm();
+    /* new in Linknx 0.0.1.31 ajout des attributs : regex="(true/)false" hex="(true/)false"  object="" */
+            //div[0].regex=false;
+            //div[0].hex=false;
+            break;
+          case "ioport-connect":                                              
+            $("#tab-rules-ioport-connect-condition-form")[0].validator=$("#tab-rules-ioport-rx-condition-form").validate();
+            $("#tab-rules-ioport-connect-condition-form")[0].validator.resetForm();
             break;
           case "script":
             break;
@@ -1037,11 +1092,11 @@ $.extend(rules, {
     }    
     $('#'+id).dialog({
       autoOpen: false,
-      buttons: { 
-          "Annuler": function() { rules.handleDialogCancel(this); },
-          "Supprimer": function() { rules.handleDialogDelete(this); },
-          "Sauver": function() { if (rules.handleDialogSave(this)) $(this).dialog("close"); }
-      },
+      buttons: [ 
+          { text: tr("Cancel"), click: function() { rules.handleDialogCancel(this); } },
+          { text: tr("Remove"), click: function() { rules.handleDialogDelete(this); } },
+          { text: tr("Save"), click: function() { if (rules.handleDialogSave(this)) $(this).dialog("close"); } }
+      ],
       resizable: false,
       title: title,
       width: width,

@@ -45,15 +45,19 @@ cf. http://www.developpez.net/forums/d271424/webmasters-developpement-web/contri
 
 cf. doc pour les "events" : http://jquerymobile.com/demos/1.1.0/docs/api/events.html
 
+
+cf. http://www.touraineverte.com/jquery-mobile/demos/1.0/docs/api/data-attributes.html
+http://www.touraineverte.com/jquery-mobile/demos/1.0/docs/pages/page-dynamic.html
+
+
+
  */
 
-//var _version = tab_config['defaultDesign']+'/'+tab_config['defaultVersion'];
-//var _version = tab_config['defaultDesign']+'/mobile'; // TODO ajouter common.js et gérer aussi "tab_config" ...
-var _version = 'design/mobile';
+//var _versionMobile = tab_config['defaultDesign']+'/'+tab_config['defaultVersion'];
+//var _versionMobile = tab_config['defaultDesign']+'/mobile'; // TODO ajouter common.js et gérer aussi "tab_config" ...
+var _versionMobile = 'z/mobile';
 
-_visuMobile = true;
-//_currentPage = "page0";
-_currentPage = "newPage";
+_currentPage = "home";
 
 var widgetmobile = {
 	config: null,
@@ -71,6 +75,14 @@ var widgetmobile = {
 	getVersion: function() {
 		return this.version;
 	},
+  setCurrentPage: function(page) {
+    // TODO à tester changer de page ...
+    $.mobile.changePage("#"+page);
+    _currentPage = page;
+  },
+  removeSelected: function() {
+    $('.selected', '#' + _currentPage).removeClass('selected');
+  },
 
 	widgetList: {
 	  'slider' : 'Slider',
@@ -83,130 +95,202 @@ var widgetmobile = {
 	  'select' : 'Select',
 	  'text' : 'Text',
 	  'html' : 'Html', 
+    'fieldcontain' : 'Fieldcontain', 
 	},
 	// Load design
-	New: function(w)	{
+  New: function(conf, parentId)  {
     this.incControl ++;
-    console.log("New widgetmobile ",w['type']," N°",this.incControl, w );
+    console.log("New widgetmobile ",conf.getAttribute("type")," N°",this.incControl, "conf=", conf, "parentId=", parentId);
+    conf.setAttribute('num_id', this.incControl);
     var div;
-		switch (w['type']) {
+
+    if (!parentId) {
+      parentId = _currentPage + " .content" ;
+    }
+    conf.setAttribute('parentId', parentId);
+
+    switch (conf.getAttribute('type')) {
       case 'slider':
-      	div = widgetmobile.slider(w);
+        div = widgetmobile.slider(conf);
         break;
       case 'toggleswicth':
-      	div = widgetmobile.toggleswicth(w);
+        div = widgetmobile.toggleswicth(conf);
         break; 
       case 'listview':
-      	div = widgetmobile.listview(w);
+        div = widgetmobile.listview(conf);
         break;
       case 'list-divider':
-      	div = 'TODO ...' + w['type'];
+        div = 'TODO ...' + conf.getAttribute('type');
         break;
       case 'controlgroup':
-      	div = widgetmobile.controlgroup(w);
+        div = widgetmobile.controlgroup(conf);
         break;
       case 'button':
-      	div = widgetmobile.button(w);
+        div = widgetmobile.button(conf);
         break;
       case 'radioswicth':
-      	div = 'TODO ...' + w['type'];
+        div = widgetmobile.radioswicth(conf);
         break;
       case 'select':
-      	div = 'TODO ...' + w['type'];
+        div = 'TODO ...' + conf.getAttribute('type');
         break;
       case 'text':
-      	div = widgetmobile.text(w);;
+        div = widgetmobile.text(conf);
         break;
       case 'html':
-      	//div = widgetmobile.html(w);
-      	div = widgetmobile.sliderTST(w);
+        div = widgetmobile.html(conf);
+        break;
+      case 'fieldcontain':
+        var id = "control_"+this.incControl;
+        conf.setAttribute('id',id);
+        //div = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" />');
+        div = $('<div data-role="fieldcontain" />');
+        div.click(function(){
+          window.parent.editWidgetMobile(this);
+          return false; 
+        })
         break;
     }
-    /*
-    if (w['prepend'])
-      $("#content", "#" + _currentPage).prepend(div.get(0));
-    else
-      $("#content", "#" + _currentPage).append(div.get(0));
-    */
-
-    if (w['prepend']) {
-      div.prependTo( "#" + _currentPage + " .content" ).trigger( "create" );
-      //div.prependTo( "#" + _currentPage + " .content" );
+    div.get(0).conf = conf;
+/*
+    if (conf.getAttribute('prepend') == "true" ) {
+      //div.prependTo( "#" + parentId ).trigger( "create" );
+      div.prependTo( "#" + parentId );
     } else {
-      div.appendTo( "#" + _currentPage + " .content" ).trigger( "create" );
-      //div.appendTo( "#" + _currentPage + " .content" );
+      div.appendTo( "#" + parentId ).trigger( "create" );
     }
+*/
 
     this.tabControls[this.incControl] = div;
+    return div;
 	},
 
   // Load design
-	Edit: function(w)	{
-    //this.incControl ++;
-    var div;
-		switch (w['type']) {
+  Edit: function(div)  {
+    var conf = div.get(0).conf;
+    console.log("Edit widgetmobile ",conf.getAttribute("type"), "conf=", conf, "div=", div);
+
+    switch (conf.getAttribute('type')) {
       case 'slider':
-      	div = widgetmobile.slider(w, true);
+        div = widgetmobile.slider(conf, true);
         div.slider('refresh');
         break;
       case 'toggleswicth':
-      	div = widgetmobile.toggleswicth(w, true);
+        div = widgetmobile.toggleswicth(conf, true);
         break; 
       case 'listview':
-      	div = 'TODO ...' + w['type'];
+        //div = 'TODO ...' + conf.getAttribute('type');
+        div.listview('refresh');
         break;
       case 'list-divider':
-      	div = 'TODO ...' + w['type'];
+        //div = 'TODO ...' + conf.getAttribute('type');
         break;
       case 'button':
-      	div = 'TODO ...' + w['type'];
+        //div = 'TODO ...' + conf.getAttribute('type');
         break;
       case 'radioswicth':
-      	div = 'TODO ...' + w['type'];
+        //div = 'TODO ...' + conf.getAttribute('type');
         break;
       case 'select':
-      	div = 'TODO ...' + w['type'];
+        //div = 'TODO ...' + conf.getAttribute('type');
         break;
       case 'text':
-      	div = 'TODO ...' + w['type'];
+        //div = 'TODO ...' + conf.getAttribute('type');
         break;
       case 'html':
-      	div = 'TODO ...' + w['type'];
+        //div = 'TODO ...' + conf.getAttribute('type');
         break; 
     }
+    //div.trigger('destroy').trigger('create');
+    return div;
+  },
+
+  addTo: function(obj, items)  { // items can be an array ...
+    var conf = obj.get(0).conf;
+    console.debug("Add to widgetmobile ",conf.getAttribute("type"), "conf=", conf, "obj=", obj, "items=", items, items.length);
+    var div;
+    var id = conf.getAttribute('id');
+    switch (conf.getAttribute('type')) {
+      case 'slider':
+        //div = widgetmobile.slider(conf, true);
+        obj.slider('refresh');
+        break;
+      case 'toggleswicth':
+        //div = widgetmobile.toggleswicth(conf, true);
+        break; 
+      case 'listview':
+        for (var i=0; i<items.length; i++)
+        {
+          obj.append(items[i]);
+          console.log("items ",items[i]);
+        }
+        //$('ul', obj).listview('refresh');
+        //obj.trigger('refresh');
+        $(obj).listview('refresh');
+        break;
+      case 'list-divider':
+        //div = 'TODO ...' + conf.getAttribute('type');
+        break;
+      case 'button':
+        //div = 'TODO ...' + conf.getAttribute('type');
+        break;
+      case 'radioswicth':
+        //div = 'TODO ...' + conf.getAttribute('type');
+        break;
+      case 'select':
+        //div = 'TODO ...' + conf.getAttribute('type');
+        break;
+      case 'text':
+        //div = 'TODO ...' + conf.getAttribute('type');
+        break;
+      case 'html':
+        //div = 'TODO ...' + conf.getAttribute('type');
+        break; 
+    }
+    //div.trigger('destroy').trigger('create');
+    return div;
 	},
 
 	// Slider
-	slider: function(w, edit)	{
-
-    if (!w['mini']) w['mini'] = "true";
-    if (!w['highlight']) w['highlight'] = "true";
-    var id = "control_"+this.incControl;
+  slider: function(conf, edit)  {
+/*
+ * options : num_id, text, mini, value, highlight, max, min
+ * obj : <input>
+ * 
+ */
     var html = '';
     if (!edit) {
-      if (!w['max']) w['max'] = 100;
-      if (!w['text']) w['text'] = "Input slider:"; // TODO pour les tests à enlever !!
+      var id = "control_"+this.incControl;
+      //conf.getAttribute('num_id') = this.incControl;
+      conf.setAttribute('id',id);
+      conf.setAttribute('value', (parseInt(conf.getAttribute('max')) + parseInt(conf.getAttribute('min'))) / 2);
+      html+= '<label for="' + id + '">' + conf.getAttribute('text') + '</label>';
+      html+= '<input type="range" data-type="range" name="' + id + '" id="' + id + '" value="' + conf.getAttribute('value') + '" min="' + conf.getAttribute('min') + '" max="' + conf.getAttribute('max') + '" data-highlight="' + conf.getAttribute('highlight') + '" data-mini="' + conf.getAttribute('mini') + '" />';
+      // TODO ajouter step="5" data-theme="a" : theme data-track-theme="b" : trackTheme ...
 
-      html+= '<label for="' + id + '">' + w['text'] + '</label>';
-      html+= '<input type="range" name="slider" id="' + id + '" value="60" min="0" max="' + w['max'] + '" data-highlight="' + w['highlight'] + '" data-mini="' + w['mini'] + '" />';
-
-      //var input_slider = $('<label for="' + id + '">' + w['text'] + '</label><input type="range" name="slider" id="' + id + '" value="60" min="0" max="' + w['max'] + '" data-highlight="' + w['highlight'] + '" data-mini="' + w['mini'] + '" />');
       var input_slider = $(html);
-//data-highlight="' + w['highlight'] + '" data-mini="' + w['mini'] + '"
-      w['num_id'] = this.incControl;
-      var slider = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" />');
+
+//      var slider = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" />');
+      var slider = $('<div />');
       slider.append(input_slider);
-      w['obj'] = $('input', slider);
+      slider.click(function(){
+        window.parent.editWidgetMobile(this); 
+      })
+      //conf.setAttribute('obj', input_slider); // $('input', slider);
 
+      //input_slider.slider();
+      //slider = input_slider;
+      //slider.get(0).conf = conf;
+
+      if (conf.getAttribute('prepend') == "true" ) {
+        //slider.prependTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+        slider.prependTo( "#" + conf.getAttribute('parentId') );
+      } else {
+        slider.appendTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+      }
     } else { // Edit Mode
-      //var slider = $("#" + w['id'] );
-      var slider = this.tabControls[w['num_id']];
+      var slider = this.tabControls[conf.getAttribute('num_id')];
     }
-
-    //$('input', slider).slider();
-    //$('input', slider).slider({ mini: w['mini'], highlight: w['highlight'] });  => fonctionne !!!! mais que pour le slider pas le "label" et la zone en saisie pour le "chiffre"
-    //$("#"+id, slider).slider({ mini: w['mini'], highlight: w['highlight'] });  // disabled: "true"
-    //$('input', slider).slider('refresh');
 
     /*
     $( ".selector" ).bind( "change", function(event, ui) {
@@ -216,28 +300,14 @@ var widgetmobile = {
 
     return slider;
 	},
-  // Slider tst
-	sliderTST: function(w, edit)	{
-    if (!edit) {
-      var slider = $("#slider-0").parent().clone();
-      $("input", slider).attr("id", "control_"+this.incControl);
-      $("label", slider).attr("for", "control_"+this.incControl);
-      $("label", slider).attr("id", "control_"+this.incControl+"-label");
-      w['num_id'] = this.incControl;
-    } else {
-      //var slider = $("#" + w['id'] );
-      var slider = this.tabControls[w['num_id']];
-    }
-    console.log(slider);
-    //$("input", slider).attr("data-highlight", "true");
-    //$("input", slider).attr("data-mini", "true");
-    //$("input", slider).slider('refresh');
-    //$("input", slider).slider();
-    return slider;
-	},
 
 	// Toggle swicth
-	toggleswicth: function(w, edit)	{
+  toggleswicth: function(conf, edit)  {
+/*
+ * options : num_id, text, mini, val1, val1_label, val2, val2_label
+ * obj : <select>
+ * 
+ */
 /*
 <div class="containing-element">
   <label for="flip-a">Select slider:</label>
@@ -254,30 +324,54 @@ ui-field-contain div.ui-slider-switch { width: […]; }
 TODO : à voir comment gérer ça ...
  
 */
-    if (!w['mini']) w['mini'] = "true";
+    if (!conf.getAttribute('mini')) conf.setAttribute('mini', true);
     var id = "control_"+this.incControl;
+    conf.setAttribute('id', id);
     var html = '';
 
     if (!edit) {
-      if (!w['val1_label']) { if (!w['val1']) w['val1_label'] = "Off"; else w['val1_label'] = w['val1']; }
-      if (!w['val1']) w['val1'] = "off";
-      if (!w['val2_label']) { if (!w['val2']) w['val2_label'] = "On"; else w['val2_label'] = w['val2']; }
-      if (!w['val2']) w['val2'] = "on";
+      conf.setAttribute('num_id', this.incControl);
+      if (!conf.getAttribute('val1_label')) { if (!conf.getAttribute('val1')) conf.setAttribute('val1_label',"Off"); else conf.setAttribute('val1_label',conf.getAttribute('val1')); }
+      if (!conf.getAttribute('val1')) conf.setAttribute('val1',"off");
+      if (!conf.getAttribute('val2_label')) { if (!conf.getAttribute('val2')) conf.setAttribute('val2_label',"On"); else conf.setAttribute('val2_label',conf.getAttribute('val2')); }
+      if (!conf.getAttribute('val2')) conf.setAttribute('val2',"on");
 
-      if (!w['text']) w['text'] = "Select slider:"; // TODO pour les tests à enlever !!
+      if (!conf.getAttribute('text')) conf.setAttribute('text',"Select slider"); // TODO pour les tests à enlever !!
 
-      html+= '<label for="' + id + '">' + w['text'] + '</label>';
-      html+= '<select name="slider" id="' + id + '" data-role="slider" data-mini="' + w['mini'] + '" ><option value="' + w['val1'] + '">' + w['val1_label'] + '</option><option value="' + w['val2'] + '">' + w['val1_label'] + '</option></select>'; 
+      html+= '<label for="' + id + '">' + conf.getAttribute('text') + '</label>';
+      html+= '<select name="' + id + '" id="' + id + '" data-role="slider" data-mini="' + conf.getAttribute('mini') + '" ><option value="' + conf.getAttribute('val1') + '">' + conf.getAttribute('val1_label') + '</option><option value="' + conf.getAttribute('val2') + '">' + conf.getAttribute('val1_label') + '</option></select>'; 
 
       var select_toggleswicth = $(html);
-
-      w['num_id'] = this.incControl;
+/*
       var toggleswicth  = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" />');
       toggleswicth.append(select_toggleswicth);
-      w['obj'] = $('input', toggleswicth );
+      conf.setAttribute('obj', select_toggleswicth); // $('select', toggleswicth );
+      toggleswicth.get(0).conf = conf;
+      select_toggleswicth.select();
 
+*/
+
+      //var toggleswicth  = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" />');
+      var toggleswicth  = $('<div/>');
+      toggleswicth.append(select_toggleswicth);
+
+      toggleswicth.click(function(){
+        window.parent.editWidgetMobile(this); 
+      })
+      //conf.setAttribute('obj', select_toggleswicth); // $('select', toggleswicth );
+
+      //toggleswicth.get(0).conf = conf;
+      select_toggleswicth.select();
+      //toggleswicth = select_toggleswicth;
+
+      if (conf.getAttribute('prepend') == "true" ) {
+        //toggleswicth.prependTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+        toggleswicth.prependTo( "#" + conf.getAttribute('parentId') );
+      } else {
+        toggleswicth.appendTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+      }
     } else { // Edit Mode
-      var toggleswicth = this.tabControls[w['num_id']];
+      var toggleswicth = this.tabControls[conf.getAttribute('num_id')];
       //$('.selector').slider('refresh');
     }
 
@@ -291,7 +385,12 @@ TODO : à voir comment gérer ça ...
 	},
 
 	// listview
-	listview: function(w, edit)	{ // ensemble de "button"
+  listview: function(conf, edit)  { // ensemble de "button"
+/*
+ * options : num_id, text
+ * obj : <div>
+ * 
+ */
 /*
 <ul data-role="listview" data-theme="g">
 	<li><a href="acura.html">Acura</a></li>
@@ -312,19 +411,51 @@ TODO : à voir comment gérer ça ...
 $('#mylist').listview();
 $('#mylist').listview('refresh');
 */
-    if (!w['mini']) w['mini'] = "true";
+    if (!conf.getAttribute('mini')) conf.setAttribute('mini',true);
     var id = "control_"+this.incControl;
+    conf.setAttribute('id',id);
     var html = '';
 
-    var listview = $('<ul data-role="listview" data-inset="true" id="' + id + '" ><li data-role="list-divider">' + w['text'] + '</li><li><a href="#page0">Page0</a></li></ul>');
-    //var div = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" />');
-    var div = $('<div/>');
+    //var listview = $('<ul data-role="listview" data-inset="true" id="' + id + '" ><li data-role="list-divider">' + conf.getAttribute('text') + '</li><li><a href="#home">Go to Home</a></li></ul>');
+    var listview = $('<ul data-role="listview" id="' + id + '" />');
+    var divider = $('<li data-role="list-divider">' + conf.getAttribute('text') + '</li>');
+    listview.append(divider);
+    listview.get(0).divider = [];
+    listview.get(0).divider[1] = divider;
+    var link = $('<li><a href="#home">Go to Home</a></li>');
+    listview.append(link);
+    listview.get(0).link = [];
+    listview.get(0).link[1] = link;
+/*    var div = $('<div/>');
     div.append(listview);
-		return div;
+    div.click(function(){
+      window.parent.editWidgetMobile(this); 
+    });
+*/
+    listview.click(function(){
+      window.parent.editWidgetMobile(this); 
+    });
+    if (conf.getAttribute('prepend') == "true" ) {
+      //div.prependTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+      listview.prependTo( "#" + conf.getAttribute('parentId') );
+      listview.listview().trigger( "create" );
+    } else {
+      //div.appendTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+      //div.appendTo( "#" + conf.getAttribute('parentId') );
+      listview.appendTo( "#" + conf.getAttribute('parentId') );
+      listview.listview().trigger( "create" );
+    }
+
+    return listview;// div;
 	},
 
 	// button
-	button: function(w, edit)	{
+  button: function(conf, edit)  {
+/*
+ * options : num_id, text, mini, link, inline, icon, iconpos, theme (b=active), type (hrml tag : a, li), role (button, list-divider)  // TODO gérer type et role pour les listes notament
+ * obj : button
+ * 
+ */
 /*
 $('a').buttonMarkup({ icon: "star" , iconpos: "right", iconshadow: "false", shadow: "false"});
 $('[type='submit']').button('refresh');
@@ -354,26 +485,51 @@ Search - data-icon="search"
 
 
 */
-    if (!w['mini']) w['mini'] = "true"; // TODO pour les test à supprimer  
-    if (!w['link']) w['link'] = "#"; // TODO pour les test à supprimer
     var id = "control_"+this.incControl;
+    conf.setAttribute('num_id', this.incControl);
+    conf.setAttribute('id', id);
     var html = '';
-    if (w['mini']) html+= 'data-mini="' + w['mini'] + '" ';
-    if (w['inline']) html+= 'data-inline="' + w['inline'] + '" '; // false => largeur "page" / true => bouton "réduit"
-    if (w['icon']) html+= 'data-icon="' + w['icon'] + '" ';
-    if (w['iconpos']) html+= 'data-iconpos="' + w['iconpos'] + '" '; // notext/top/bottom/right/left(default)
-    if (w['theme']) html+= 'data-theme="' + w['theme'] + '" '; // data-theme="b" => boutton "active" blue color
+    if (conf.getAttribute('mini')) html+= 'data-mini="' + conf.getAttribute('mini') + '" ';
+    if (conf.getAttribute('inline')) html+= 'data-inline="' + conf.getAttribute('inline') + '" '; // false => largeur "page" / true => bouton "réduit"
+    if (conf.getAttribute('icon')) html+= 'data-icon="' + conf.getAttribute('icon') + '" ';
+    if (conf.getAttribute('iconpos')) html+= 'data-iconpos="' + conf.getAttribute('iconpos') + '" '; // notext/top/bottom/right/left(default)
+    if (conf.getAttribute('theme')) html+= 'data-theme="' + conf.getAttribute('theme') + '" '; // data-theme="b" => boutton "active" blue color
 
-    var button = $('<a href="' + w['link'] + '" data-role="button" id="' + id + '" ' + html + '>' + w['text'] + '</a>');
+    var button = $('<a href="' + conf.getAttribute('link') + '" data-role="button" id="' + id + '" ' + html + '>' + conf.getAttribute('text') + '</a>');
+
+    //conf.setAttribute('obj', button);
     
-    var div = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" />');
+/*    var div = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" />');
     div.append(button);
-		return div;
+    div.get(0).conf = conf;
+    div.click(function(){
+      window.parent.editWidgetMobile(this); // appel fonction de la fenetre parent en mode "iframe" 
+    })
+*/
+    //button.get(0).conf = conf;
+    button.click(function(){
+      window.parent.editWidgetMobile(this); 
+    })
+    //button.button();
+//    return div;
+
+    if (conf.getAttribute('prepend') == "true" ) {
+      button.prependTo( "#" + conf.getAttribute('parentId') ).button();
+    } else {
+      button.appendTo( "#" + conf.getAttribute('parentId') ).button();
+    }
+
+    return button;
 	},
 
 
   // controlgroup
-	controlgroup: function(w, edit)	{ // ensemble de button
+  controlgroup: function(conf, edit)  { // ensemble de button 
+/*
+ * options : num_id, text, type (''/horizontal)
+ * obj : null
+ * 
+ */
 /*
 <div data-role="controlgroup">
   <a href="index.html" data-role="button">Yes</a>
@@ -382,20 +538,40 @@ Search - data-icon="search"
 </div>
 */
     var id = "control_"+this.incControl;
+    conf.setAttribute('id', id);
     var html = '';
-    if (w['mini']) html+= 'data-mini="' + w['mini'] + '" ';
-    if (w['type']) html+= 'data-mini="' + w['type'] + '" '; // horizontal
+    if (conf.getAttribute('mini')) html+= 'data-mini="' + conf.getAttribute('mini') + '" ';
+    if (conf.getAttribute('type')) html+= 'data-type="' + conf.getAttribute('type') + '" '; // horizontal
+    var id = "control_"+this.incControl;
 
     // TODO a supprimer pour test ajoute des "button" 
     var html2 = '<a href="#" data-role="button">Yes</a><a href="#" data-role="button">No</a><a href="#" data-role="button">Maybe</a>';
 
     
     var div = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" ><div data-role="controlgroup" id="' + id + '" ' + html + '>' + html2 + '</div></div>');
+    //div.get(0).conf = conf;
+    if (conf.getAttribute('prepend') == "true" ) {
+      //div.prependTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+      div.prependTo( "#" + conf.getAttribute('parentId') );
+    } else {
+      div.appendTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+    }
+
 		return div;
 	},
 
   // radioswicth
-	radioswicth: function(w, edit)	{ // ensemble de 2 bouton radio
+  radioswicth: function(conf, edit)  { // ensemble de 2 bouton radio
+/*
+ * options : num_id, text, val1, val1_label, val2, val2_label, type (''/horizontal)
+ * obj : null
+ * 
+ */
+/*
+ * options : num_id, text, type
+ * obj : <select>
+ * 
+ */
 /*
 <div data-role="fieldcontain">
   <fieldset data-role="controlgroup" data-type="horizontal" >
@@ -406,19 +582,40 @@ Search - data-icon="search"
   </fieldset>
 </div>
 */
-    if (!w['mini']) w['mini'] = "true";
+    if (!conf.getAttribute('mini')) conf.setAttribute('mini', true);
     var id = "control_"+this.incControl;
+    conf.setAttribute('id',id);
     var html = '';
 
-    var div = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" ><div data-role="controlgroup" id="' + id + '" ' + html + '>' + html2 + '</div></div>');
+    // TODO a supprimer pour test ajoute des "button" 
+    var html2 = '<fieldset data-role="controlgroup" data-type="horizontal" >';
+    html2 = html2 + '<input type="radio" name="radio-choice-1" id="radio-choice-1" value="choice-1"  />';
+    html2 = html2 + '<label for="radio-choice-1">I</label>';
+    html2 = html2 + '<input type="radio" name="radio-choice-1" id="radio-choice-2" value="choice-2" checked="checked" />';
+    html2 = html2 + '<label for="radio-choice-2">O</label>';
+    html2 = html2 + '</fieldset>';
 
     
     var div = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" ><div data-role="controlgroup" id="' + id + '" ' + html + '>' + html2 + '</div></div>');
+    //div.get(0).conf = conf;
+
+    if (conf.getAttribute('prepend') == "true" ) {
+      //div.prependTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+      div.prependTo( "#" + conf.getAttribute('parentId') );
+    } else {
+      div.appendTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+    }
+    
 		return div;
 	},
 
 	// text
-	text: function(w, edit)	{
+  text: function(conf, edit)  { 
+/*
+ * options : num_id, text, text2
+ * obj : null
+ * 
+ */
 /*
 <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" >
   <div class="ui-grid-a">
@@ -427,23 +624,39 @@ Search - data-icon="search"
   </div>
 </div>
 */
-    if (!w['mini']) w['mini'] = "true";
+    if (!conf.getAttribute('mini')) conf.setAttribute('mini',true);
     var id = "control_"+this.incControl;
+    conf.setAttribute('id',id);
     var html = '';
-    html+= '<div class="ui-grid-a" id="' + id + '"><div class="ui-block-a newtextblockA" ><h3>' + w['text'] + '</h3></div><div class="ui-block-b newtextblockB" >' + w['text'] + '</div></div>';
+    html+= '<div class="ui-grid-a" id="' + id + '"><div class="ui-block-a newtextblockA" ><h3>' + conf.getAttribute('text') + '</h3></div><div class="ui-block-b newtextblockB" >' + conf.getAttribute('text2') + '</div></div>';
     
     var div = $('<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain" >' + html + '</div>');
+
+    if (conf.getAttribute('prepend') == "true" ) {
+      //div.prependTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+      div.prependTo( "#" + conf.getAttribute('parentId') );
+    } else {
+      div.appendTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+    }
+
 		return div;
 	},
 
 	// Html
-	html: function(w, edit)	{
+  html: function(conf, edit)  { // TODO ... 
+/*
+ * options : num_id, text
+ * obj : null
+ * 
+ */ 
+    var id = "control_"+this.incControl;
+    conf.setAttribute('id',id);
     if (!edit) {
-      var slider = $('<label for="' + this.incControl + '">Input slider:</label><input type="range" name="slider" id="' + this.incControl + '" value="60" min="0" max="100" data-highlight="true" data-mini="true"/>');
-      w['num_id'] = this.incControl;
+      var slider = $('<label for="' + id + '">Input slider:</label><input type="range" name="slider" id="' + id + '" value="60" min="0" max="100" data-highlight="true" data-mini="true"/>');
+      //conf.setAttribute('num_id',this.incControl);
     } else {
-      //var slider = $("#" + w['id'] );
-      var slider = this.tabControls[w['num_id']];
+      //var slider = $("#" + conf.getAttribute('id') );
+      var slider = this.tabControls[conf.getAttribute('num_id')];
     }
 
     $('input', slider).slider();
@@ -457,10 +670,33 @@ Search - data-icon="search"
 
     //slider.appendTo( ".ui-page" ).trigger( "create" );
     //div.appendTo( "#" + _currentPage + " .content" ).trigger( "create" );
-    div.appendTo( "#" + _currentPage + " .content" ).trigger( "create" );
+
+    if (conf.getAttribute('prepend') == "true" ) {
+      //div.prependTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+      div.prependTo( "#" + conf.getAttribute('parentId') );
+    } else {
+      div.appendTo( "#" + conf.getAttribute('parentId') ).trigger( "create" );
+    }
 
     return div;
 	},
+
+  // Load design
+  addPage: function(id, title)  {
+    var html = '<div data-role="page" id="' + id + '" data-add-back-btn="true">';
+    // header
+    html = html + '<div data-role="header" class="header">';
+    html = html + '<h1>' + title + '</h1>';
+    html = html + '<a href="#home" data-icon="home" class="ui-btn-right" data-iconpos="notext">Home</a>';
+    html = html + '</div>';
+    // page content
+    html = html + '<div data-role="content" class="content"></div>';
+
+    html = html + '</div>';
+    var page = $(html)
+    $('body').append(page);
+    return page;
+  },
 }
 
 function loadDesign(version)
@@ -488,7 +724,7 @@ $(document).bind("mobileinit", function(){
 
 $(document).ready(function() {
 
-	//test loadDesign(_version); // TODO pour le moment en dur dans le code de la page !!
+  //test loadDesign(_versionMobile); // TODO pour le moment en dur dans le code de la page !!
 
   
   

@@ -122,7 +122,7 @@ if ($typelog == "mysql") {
     } else {
       $lowlimit=0;
     }
-    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' LIMIT ".$lowlimit." , ".$log_nbenreg;
+    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." ASC LIMIT ".$lowlimit." , ".$log_nbenreg;
     //$sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' LIMIT 0 , ".$log_nbenreg;
   } else {
     $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." DESC LIMIT 0 , ".$log_nbenreg;
@@ -168,14 +168,16 @@ if ($typelog == "mysql") {
 
 } else if ($typelog == "file") {
   
+  if ($_GET['output'] == 'json') {
   //$result=str_replace("\n","<br />",`tail -n $log_nbenreg $filelog`);
   exec('tail -n ' . $log_nbenreg . ' ' . $filelog, $res);
   $result=implode("<br />", $res);
 
-  $result2 = substr($result, 0, -6); // enlève le dernier "<br />" 
+    //$result2 = substr($result, 0, -6); // enlève le dernier "<br />" 
   
   // convertit en tableau surement moyen de faire plus propre qu'un "eval" ...
-  eval( "\$result_tab = array(array(\"" . str_replace(" > ","\",\"",str_replace("<br />","\"), array(\"",$result2)) . "\"));" );
+    //eval( "\$result_tab = array(array(\"" . str_replace(" > ","\",\"",str_replace("<br />","\"), array(\"",$result2)) . "\"));" );
+    eval( "\$result_tab = array(array(\"" . str_replace(" > ","\",\"",str_replace("<br />","\"), array(\"",$result)) . "\"));" );
 
   // pour le format json on converti les données 
   foreach ($result_tab as $k => $v) {
@@ -190,6 +192,11 @@ if ($typelog == "mysql") {
     else if ($float_value == "stop") $float_value = 0;
     else if ($float_value == "down") $float_value = -1;
     $result_tab[$k][1] = floatval(str_replace(",", ".", $float_value));
+  }
+  } else {
+    //$result=str_replace("\n","<br />",str_replace(">","&gt;",str_replace("<","&lt;",`tail -n $log_nbenreg $filelog`)));
+    exec('tail -n ' . $log_nbenreg . ' ' . $filelog, $res);
+    $result=str_replace("\n","<br />",str_replace(">","&gt;",str_replace("<","&lt;",implode("\n", $res))));
   }
 
 }

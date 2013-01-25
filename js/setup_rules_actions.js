@@ -1,12 +1,21 @@
 
-function cdataTextcontent(data) {
+function cdataTextcontent(data, cdata = true) {
   var pos = data.indexOf('<![CDATA['); //'<![CDATA[' + action[0].objvalue + ']]>'
   //'&lt;![CDATA[' ']]&gt;'
   if (pos != "-1") {
     var pos2 = data.lastIndexOf(']]>');
     data = data.substring(pos + 9 ,pos2);
+  } else {
+    pos = data.indexOf('&lt;![CDATA['); //'<![CDATA[' + action[0].objvalue + ']]>'
+    if (pos != "-1") {
+      var pos2 = data.lastIndexOf(']]&gt;');
+      data = data.substring(pos + 12 ,pos2);
   } 
-  return '<![CDATA[' + data + ']]>';
+  }
+  if (cdata) 
+    return '<![CDATA[' + data + ']]>';
+  else
+    return data;
 }
 
 $.extend(rules, {
@@ -31,7 +40,7 @@ $.extend(rules, {
     'formula' : 'Formula',
     'start-actionlist' : 'Start-actionlist'
 */
-  addActionRule: function(type, action, numaction) {
+  addActionRule: function(type, action, numaction, actionlist) {
     nbrAction++;
     var div=$('<div>');
     div.addClass('action');
@@ -39,13 +48,11 @@ $.extend(rules, {
     div.attr("id", type+((new Date().getTime())));
     div[0].type=type;
     div[0].condition=false;
-    $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
       rules.editAction(this.type, this, false, true);
     });
 
-    // TODO gérer le "Delay" pour chaque action
     div[0].delay=action.getAttribute('delay');
     
     switch (type) {
@@ -78,13 +85,100 @@ $.extend(rules, {
         div[0].off=action.getAttribute('off');
         div[0].count=action.getAttribute('count');
         div.css("width","140px");
+        
+        var inputPoint = {
+          endpoint:["Rectangle", {width:10, height:10} ],
+          paintStyle:{ fillStyle:'#D0D' },  // rouge + bleu => violet ?
+          isSource:false,
+          isTarget:true,
+          scope:'connection',
+          connectorStyle : {
+              lineWidth:3,
+              strokeStyle:'#000'
+          },
+          dropOptions : myDropOptions
+        };
+        div[0].endpoint[0]= jsPlumb.addEndpoint(div.attr("id"), $.extend({ anchor:[0.5, 0, 0, 0], uuid: "endpoint2"+div.attr("id") }, inputPoint));
+        var k = 1;
+        //collonne_condition++;
+        //pos_top_condition[collonne_condition] = 0;
+        $(action).children("condition").each(function () {
+          var temp_conditionand = rules.addConditionRule(this.getAttribute('type'), this, numcondition);
+          jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[0]});
+          if (k > 1) messageBox(tr("Maximum number of condition for reaching this cycle-on-off"),tr("Action cycle-on-off"),"alert");
+          k++;
+        });
+        
         break;
       case 'repeat' :
         div[0].period=action.getAttribute('period');
         div[0].count=action.getAttribute('count');
-        div.css("width","140px");
+        div[0].endpoint = [];
+        div[0].endpoint[1] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0, 0, 0] }, outputEndpoint));
+        div[0].endpoint[2] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.1, 0, 0] }, outputEndpoint));
+        div[0].endpoint[3] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.2, 0, 0] }, outputEndpoint));
+        div[0].endpoint[4] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.3, 0, 0] }, outputEndpoint));
+        div[0].endpoint[5] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.4, 0, 0] }, outputEndpoint));
+        div[0].endpoint[6] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint));
+        div[0].endpoint[7] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.6, 0, 0] }, outputEndpoint));
+        div[0].endpoint[8] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.7, 0, 0] }, outputEndpoint));
+        div[0].endpoint[9] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.8, 0, 0] }, outputEndpoint));
+        div[0].endpoint[10] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.9, 0, 0] }, outputEndpoint));
+        div[0].endpoint[11] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 1, 0, 0] }, outputEndpoint));
+        var k = 1;
+        $(action).children("action").each(function () {
+          var temp_action = rules.addActionRule(this.getAttribute('type'), this, numaction, actionlist);
+          jsPlumb.connect({source:temp_conditionand[0].endpointin, target:div[0].endpoint[k]});
+          if (k > 11) messageBox(tr("Maximum number of action for reaching this Repeat"),tr("Action Repeat"),"alert");
+          k++;
+        });
         break;
-      case 'conditional' : // TODO à compléter
+      case 'conditional' :
+        //addConditional
+        div[0].endpoint = [];
+        //div[0].endpointin = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[0, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, inputEndpoint));
+        
+        var inputPoint = {
+          endpoint:["Rectangle", {width:10, height:10} ],
+          paintStyle:{ fillStyle:'#D0D' },  // rouge + bleu => violet ?
+          isSource:false,
+          isTarget:true,
+          scope:'connection',
+          connectorStyle : {
+              lineWidth:3,
+              strokeStyle:'#000'
+          },
+          dropOptions : myDropOptions
+        };
+        div[0].endpoint[0]= jsPlumb.addEndpoint(div.attr("id"), $.extend({ anchor:[0.5, 0, 0, 0], uuid: "endpoint2"+div.attr("id") }, inputPoint));
+        
+        div[0].endpoint[1] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0, 0, 0] }, outputEndpoint));
+        div[0].endpoint[2] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.1, 0, 0] }, outputEndpoint));
+        div[0].endpoint[3] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.2, 0, 0] }, outputEndpoint));
+        div[0].endpoint[4] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.3, 0, 0] }, outputEndpoint));
+        div[0].endpoint[5] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.4, 0, 0] }, outputEndpoint));
+        div[0].endpoint[6] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint));
+        div[0].endpoint[7] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.6, 0, 0] }, outputEndpoint));
+        div[0].endpoint[8] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.7, 0, 0] }, outputEndpoint));
+        div[0].endpoint[9] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.8, 0, 0] }, outputEndpoint));
+        div[0].endpoint[10] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.9, 0, 0] }, outputEndpoint));
+        div[0].endpoint[11] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 1, 0, 0] }, outputEndpoint));
+        //rules.positionCondition(type, condition, numcondition, div);
+        var k = 1;
+        //collonne_condition++;
+        //pos_top_condition[collonne_condition] = 0;
+        $(action).children("condition").each(function () {
+          var temp_conditionand = rules.addConditionRule(this.getAttribute('type'), this, numcondition);
+          jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[0]});
+          if (k > 1) messageBox(tr("Maximum number of condition for reaching this Conditional"),tr("Action Conditional"),"alert");
+          k++;
+        });
+        $(action).children("action").each(function () {
+          var temp_action = rules.addActionRule(this.getAttribute('type'), this, numaction, actionlist);
+          jsPlumb.connect({source:temp_conditionand[0].endpointin, target:div[0].endpoint[k]});
+          if (k > 11) messageBox(tr("Maximum number of action for reaching this Conditional"),tr("Action Conditional"),"alert");
+          k++;
+        });
         break;
       case 'send-sms' :
         div[0].objid=action.getAttribute('id');
@@ -119,13 +213,14 @@ $.extend(rules, {
         div.css("width","140px");
         break;
       case 'script' :
-        div[0].script=action.textContent;
+        div[0].script=cdataTextcontent(action.textContent, false);
         break;
       case 'cancel' :
         div[0].cancel_rule=action.getAttribute('rule-id');
         div.css("width","140px");
         break;
       case 'formula' :
+        div[0].formula_id=action.getAttribute('id');
         div[0].formula_x=action.getAttribute('x');
         div[0].formula_y=action.getAttribute('y');
         div[0].formula_a=action.getAttribute('a');
@@ -133,7 +228,7 @@ $.extend(rules, {
         div[0].formula_c=action.getAttribute('c');
         div[0].formula_m=action.getAttribute('m');
         div[0].formula_n=action.getAttribute('n');
-        div.css("width","140px");
+        div.css("width","auto").css("height","auto");
         break;
       case 'start-actionlist' :
         div[0].rule_id=action.getAttribute('rule-id');
@@ -147,11 +242,14 @@ $.extend(rules, {
           break;
     }; 
 
+    $('#tab-rules-container').append(div); 
+
     //div.css("top",pos_top+numaction*50);
     //div.css("right",pos_right + 70);
-    
+    if (actionlist)
     div.css("top",20+numaction*50);
-    //div.css("top",20+nbrAction*50);
+    else
+      div.css("top",pos_top + 20+numaction*50); 
     
     div.css("right",pos_right-div.width()-90);
    
@@ -212,13 +310,70 @@ $.extend(rules, {
         div[0].off='';
         div[0].count='';
         div.css("width","140px");
+        div[0].endpoint = [];
+        //div[0].endpointin = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[0, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, inputEndpoint));
+        
+        var inputPoint = {
+          endpoint:["Rectangle", {width:10, height:10} ],
+          paintStyle:{ fillStyle:'#D0D' },  // rouge + bleu => violet ?
+          isSource:false,
+          isTarget:true,
+          scope:'connection',
+          connectorStyle : {
+              lineWidth:3,
+              strokeStyle:'#000'
+          },
+          dropOptions : myDropOptions
+        };
+        div[0].endpoint[0]= jsPlumb.addEndpoint(div.attr("id"), $.extend({ anchor:[0.5, 0, 0, 0], uuid: "endpoint2"+div.attr("id") }, inputPoint));
         break;
       case 'repeat' :
         div[0].period='';
         div[0].count='';
-        div.css("width","140px");
+        div[0].endpoint = [];
+        div[0].endpoint[1] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0, 0, 0] }, outputEndpoint));
+        div[0].endpoint[2] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.1, 0, 0] }, outputEndpoint));
+        div[0].endpoint[3] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.2, 0, 0] }, outputEndpoint));
+        div[0].endpoint[4] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.3, 0, 0] }, outputEndpoint));
+        div[0].endpoint[5] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.4, 0, 0] }, outputEndpoint));
+        div[0].endpoint[6] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint));
+        div[0].endpoint[7] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.6, 0, 0] }, outputEndpoint));
+        div[0].endpoint[8] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.7, 0, 0] }, outputEndpoint));
+        div[0].endpoint[9] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.8, 0, 0] }, outputEndpoint));
+        div[0].endpoint[10] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.9, 0, 0] }, outputEndpoint));
+        div[0].endpoint[11] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 1, 0, 0] }, outputEndpoint));
         break;
-      case 'conditional' : // TODO à compléter
+      case 'conditional' :
+        //addConditional
+        div[0].endpoint = [];
+        //div[0].endpointin = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[0, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, inputEndpoint));
+        
+        var inputPoint = {
+          endpoint:["Rectangle", {width:10, height:10} ],
+          paintStyle:{ fillStyle:'#D0D' },  // rouge + bleu => violet ?
+          isSource:false,
+          isTarget:true,
+          scope:'connection',
+          connectorStyle : {
+              lineWidth:3,
+              strokeStyle:'#000'
+          },
+          dropOptions : myDropOptions
+        };
+        div[0].endpoint[0]= jsPlumb.addEndpoint(div.attr("id"), $.extend({ anchor:[0.5, 0, 0, 0], uuid: "endpoint2"+div.attr("id") }, inputPoint));
+        
+        div[0].endpoint[1] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0, 0, 0] }, outputEndpoint));
+        div[0].endpoint[2] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.1, 0, 0] }, outputEndpoint));
+        div[0].endpoint[3] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.2, 0, 0] }, outputEndpoint));
+        div[0].endpoint[4] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.3, 0, 0] }, outputEndpoint));
+        div[0].endpoint[5] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.4, 0, 0] }, outputEndpoint));
+        div[0].endpoint[6] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.5, 0, 0] }, outputEndpoint));
+        div[0].endpoint[7] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.6, 0, 0] }, outputEndpoint));
+        div[0].endpoint[8] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.7, 0, 0] }, outputEndpoint));
+        div[0].endpoint[9] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.8, 0, 0] }, outputEndpoint));
+        div[0].endpoint[10] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.9, 0, 0] }, outputEndpoint));
+        div[0].endpoint[11] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 1, 0, 0] }, outputEndpoint));
+        
         break;
       case 'send-sms' :
         div[0].objid='';
@@ -253,15 +408,14 @@ $.extend(rules, {
         div.css("width","140px");
         break;
       case 'script' :
-        //html = '<br />'+$('#tab-rules-script-action-script').val();
         div[0].script='';
         break;
       case 'cancel' :
-        //html = '<br />'+$('#tab-rules-cancel-action-value').val();
         div[0].cancel_rule='';
         div.css("width","140px");
         break;
       case 'formula' : 
+        div[0].formula_id='';
         div[0].formula_x='';
         div[0].formula_y='';
         div[0].formula_a='1.0';
@@ -269,7 +423,7 @@ $.extend(rules, {
         div[0].formula_c='0.0';
         div[0].formula_m='1.0';
         div[0].formula_n='1.0';
-        div.css("width","140px");
+        div.css("width","auto").css("height","auto");
         break;
       case 'start-actionlist' :
         div[0].rule_id='';
@@ -291,7 +445,7 @@ $.extend(rules, {
   
   editAction: function(type, div, isNew, openDialog) {
     if (!document.getElementById('tab-rules-'+type+'-action-dialog')) {
-      rules.createDialogAction('tab-rules-'+type+'-action-dialog', "Editer "+type, "540px" , true, type);
+      rules.createDialogAction('tab-rules-'+type+'-action-dialog', tr("Edit") + " "+type, "540px" , true, type);
     }
     if (isNew!='')
       $('#tab-rules-'+type+'-action-dialog')[0].isNew=isNew; 
@@ -304,7 +458,6 @@ $.extend(rules, {
     
     $('#tab-rules-action-delay').val(div.delay);
     
-    // TODO données en fonction du "type" ...
     switch (type) {
       case 'set-value' :
         $('#tab-rules-set-value-action-object').val(div.objid);
@@ -318,6 +471,7 @@ $.extend(rules, {
         break;
       case 'toggle-value' :
         $('#tab-rules-toggle-value-action-object').val(div.objid);
+        $('#tab-rules-toggle-value-action-object').trigger('change');
         break;
       case 'set-string' :
         $('#tab-rules-set-string-action-object').val(div.objid);
@@ -331,14 +485,12 @@ $.extend(rules, {
         $('#tab-rules-cycle-on-off-action-on').val(div.on);
         $('#tab-rules-cycle-on-off-action-off').val(div.off);
         $('#tab-rules-cycle-on-off-action-count').val(div.count);
-  // TODO gérer stopcondition
         break;
       case 'repeat' :
         $('#tab-rules-repeat-action-period').val(div.period);
         $('#tab-rules-repeat-action-count').val(div.count);
-  // TODO gérer Action 
         break;
-      case 'conditional' : // TODO à compléter
+      case 'conditional' :
         break;
       case 'send-sms' :
         $('#tab-rules-send-sms-action-id').val(div.objid);
@@ -373,12 +525,14 @@ $.extend(rules, {
         else $('#tab-rules-ioport-tx-action-var').removeAttr('checked').trigger('change');
         break;
       case 'script' :
-        $('#tab-rules-script-action-script').val(div.script);
+        //$('#tab-rules-script-action-script').val(div.script);
+        $('#tab-rules-script-action-script').text(div.script);
         break;
       case 'cancel' :
         $('#tab-rules-cancel-action-value').val(div.cancel_rule);
         break;
       case 'formula' :
+        $('#tab-rules-formula-id-action-value').val(div.formula_id);
         $('#tab-rules-formula-x-action-value').val(div.formula_x);
         $('#tab-rules-formula-y-action-value').val(div.formula_y);
         $('#tab-rules-formula-a-action-value').val(div.formula_a);
@@ -412,7 +566,6 @@ $.extend(rules, {
     switch (type) {
       case 'set-value' :
         div.objid=$('#tab-rules-set-value-action-object').val();
-        //div.objvalue=$('#tab-rules-set-value-action-value').val();
         if ($('#tab-rules-set-value-action-value-select').css('display')!='none')
           div.objvalue=$('#tab-rules-set-value-action-value-select').val();
         else
@@ -442,26 +595,24 @@ $.extend(rules, {
         div.on=$('#tab-rules-cycle-on-off-action-on').val();
         div.off=$('#tab-rules-cycle-on-off-action-off').val();
         div.count=$('#tab-rules-cycle-on-off-action-count').val();
-        html = '<br />'+div.objid+'<br />'+div.on+' '+div.off+'<br />'+div.count;
+        html = '<br />'+div.objid+'<br />'+tr('on')+': '+div.on+'s. '+tr('off')+': '+div.off+'s. '+tr('count')+': '+div.count;
         break;
       case 'repeat' :
         div.period=$('#tab-rules-repeat-action-period').val();
         div.count=$('#tab-rules-repeat-action-count').val();
         html = '<br />'+div.period+'<br />'+div.count;
         break;
-      case 'conditional' : // TODO à compléter
+      case 'conditional' :
         break;
       case 'send-sms' :
         div.objid=$('#tab-rules-send-sms-action-id').val();
         div.objvalue=$('#tab-rules-send-sms-action-value').val();
-        //div.smsvar=$('#tab-rules-send-sms-action-var').val();
         div.smsvar=$('#tab-rules-send-sms-action-var').is(':checked');
         html = '<br />'+div.objid+'<br />'+div.objvalue;
         break;
       case 'send-email' :
         div.objto=$('#tab-rules-send-email-action-to').val();
         div.subject=$('#tab-rules-send-email-action-subject').val();
-        //div.emailvar=$('#tab-rules-send-email-action-var').val();
         div.emailvar=$('#tab-rules-send-email-action-var').is(':checked');
         div.objtext=$('#tab-rules-send-email-action-text').val();
         html = '<br />'+div.objto+'<br />'+div.subject;
@@ -487,15 +638,15 @@ $.extend(rules, {
         break;
       case 'script' :
         div.script = $('#tab-rules-script-action-script').val();
+        //div.script = $('#tab-rules-script-action-script').text();
         html = '';
         break;
       case 'cancel' :
         div.cancel_rule = $('#tab-rules-cancel-action-value').val();
         html = '<br />'+div.cancel_rule;
-        //var width = div.cancel_rule.lenght + 2;
-        //$(div).css("width",width+"em"); 
         break;
       case 'formula' : 
+        div.formula_id = $('#tab-rules-formula-id-action-value').val();
         div.formula_x = $('#tab-rules-formula-x-action-value').val();
         div.formula_y = $('#tab-rules-formula-y-action-value').val();
         div.formula_a = $('#tab-rules-formula-a-action-value').val();
@@ -503,11 +654,10 @@ $.extend(rules, {
         div.formula_c = $('#tab-rules-formula-c-action-value').val();
         div.formula_m = $('#tab-rules-formula-m-action-value').val();
         div.formula_n = $('#tab-rules-formula-n-action-value').val();
-        html = '<br />'+div.formula_a+'*'+div.formula_x+'^'+div.formula_m+'+'+div.formula_b+'*'+div.formula_y+'^'+div.formula_n+'+'+div.formula_c; //a*x^m+b*y^n+c
+        html = '<br />'+div.formula_id+'=<br />'+div.formula_a+'*'+div.formula_x+'^'+div.formula_m+'+'+div.formula_b+'*'+div.formula_y+'^'+div.formula_n+'+'+div.formula_c; //a*x^m+b*y^n+c
         break;
       case 'start-actionlist' :
         div.rule_id = $('#tab-rules-start-actionlist-action-rule-id').val();
-        //div.list = $('#tab-rules-start-actionlist-action-list').val();
         div.list = $('#tab-rules-start-actionlist-action-list').attr('checked');
         html = '<br />rule : '+div.rule_id+'<br />actionlist : '+((div.list)?"true":"false");
         break;
@@ -556,20 +706,15 @@ $.extend(rules, {
         xml.attr('on',action[0].on);
         xml.attr('off',action[0].off);
         xml.attr('count',action[0].count);
-        //xml.attr('count',action[0].stopcondition);
         break;
       case 'repeat' : // < type="" period="" count="" ><action ... />
         xml.attr('period',action[0].period);
         xml.attr('count',action[0].count);
-  // TODO à faire ...
         break;
       case 'conditional' : // < type="" ><condition ...
-  // TODO à faire ...
         break;
       case 'send-sms' : // < type="" id="" value="" var="true/false" />
         xml.attr('id',action[0].objid);
-        //xml.attr('value','<![CDATA[' + action[0].objvalue + ']]>');
-        //xml.attr('value',cdataTextcontent(action[0].objvalue));
         xml.attr('value',action[0].objvalue);
         xml.attr('var',action[0].smsvar);
         break;
@@ -577,7 +722,6 @@ $.extend(rules, {
         xml.attr('to',action[0].objto);
         xml.attr('subject',action[0].subject);
         xml.attr('var',action[0].emailvar);
-        //xml.text('<![CDATA[' + action[0].objtext + ']]>');
         //xml.text(cdataTextcontent(action[0].objtext));
         xml.text(action[0].objtext);
         break;
@@ -588,31 +732,24 @@ $.extend(rules, {
         xml.attr('duration',action[0].duration);
         break;
       case 'shell-cmd' : // < type="" cmd="" var="true/false" />
-        //xml.attr('cmd',cdataTextcontent(action[0].cmd));
         xml.attr('cmd',action[0].cmd);
         xml.attr('var',action[0].cmdvar);
         break;
       case 'ioport-tx' : // < type="" hex="true/false" data="" ioport="" var="true/false" />
         xml.attr('hex',action[0].hex);
-        //xml.attr('data',cdataTextcontent(action[0].data));
         xml.attr('data',action[0].data);
         xml.attr('ioport',action[0].ioport);
         xml.attr('var',action[0].ioportvar);
         break;
       case 'script': // conditionner si linknx est compiler avec lua // < type="" >script <... />
-        /*
-        xml.attr('id',action[0].object_id);
-        xml.attr('op',action[0].object_operation);
-        xml.attr('value',action[0].object_value);
-        if (action[0].object_trigger) xml.attr('trigger','true');
-        */
-        //xml.text('<![CDATA[' + action[0].script + ']]>');
-        xml.text(cdataTextcontent(action[0].script));
+        //xml.text(cdataTextcontent(action[0].script));
+        xml.text(action[0].script);
         break;
       case 'cancel' : // < type="" rule-id="" />
         xml.attr('rule-id',action[0].rule_id);
         break;
-      case 'formula' :  // a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
+      case 'formula' :  // id=a*x^m+b*y^n+c < type="" id="object" x="" y="" a="1" b="1" c="0" m="1" n="1" />
+        xml.attr('id',action[0].formula_id);
         xml.attr('x',action[0].formula_x);
         xml.attr('y',action[0].formula_y);
         xml.attr('a',action[0].formula_a);
@@ -639,6 +776,31 @@ $.extend(rules, {
         for (var j = 0; j < l.length; j++) {
           xml.append(this.generateNodeXML($('#'+l[j].targetId)));
         }
+      } else if (l) {
+        var action2 = $('#'+l.targetId);
+        if (!action2[0].condition && l.sourceId == action.attr("id")) {
+          xml.append(this.generateNodeXML($('#'+l.targetId)));
+        }
+      }
+    }
+    if (action[0].endpoint) {
+      var c = jsPlumb.getConnections({target:action.attr('id')}); // action.attr('id') // action[0].endpoint[0]
+      for (var i in c) {
+        var l = c[i];
+        if (l && l.length > 0) {
+          for (var j = 0; j < l.length; j++) {
+            xml.append(this.generateNodeXML($('#'+l[j].sourceId)));
+          }
+        } else if (l) {
+          var condition2 = $('#'+l.sourceId);
+          if (condition2[0].condition && l.targetId == action.attr("id") && l.sourceId != "actionlistOnTrue" && l.sourceId != "actionlistOnFalse") {
+            // gére le spécifique "stopcondition" de l'action "cycle-on-off"
+            if ( action[0].type == 'cycle-on-off') {
+              condition2[0].stopcondition = true;              
+            }
+            xml.append(this.generateNodeXML($('#'+l.sourceId)));
+          }
+        }
       }
     }
    
@@ -661,16 +823,13 @@ $.extend(rules, {
             var listobjectsetvalue = listobject.clone();
             listobjectsetvalue.attr("id","tab-rules-set-value-action-object");
             tbody.append(
-              $('<tr>').append('<th width="150">Object</th>')
+              $('<tr>').append('<th width="150">'+tr('Object')+'</th>')
               .append($('<td>').append(listobjectsetvalue))
               ).append(
-              $('<tr>').append('<th width="150">Value</th>')
+              $('<tr>').append('<th width="150">'+tr('Value')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-set-value-action-value" size="50">').append('<select id="tab-rules-set-value-action-value-select" style="display:none;" ></select>'))
               );
-            //$("#tab-rules-set-value-action-object").bind('change', function() {
             listobjectsetvalue.bind('change', function() {
-              //console.log("change object", $("#tab-rules-set-value-action-object option:selected"), $("#tab-rules-set-value-action-object option:selected")[0].type);
-              console.log("change object", $("option:selected" , this), $("option:selected" , this)[0].type);
               if (_objectTypesValues[$("#tab-rules-set-value-action-object option:selected")[0].type])
               {
                 values=_objectTypesValues[$("#tab-rules-set-value-action-value-select option:selected")[0].type];
@@ -683,7 +842,7 @@ $.extend(rules, {
                 $("#tab-rules-set-value-action-value-select").hide();
                 $("#tab-rules-object-condition-value").show();
               }
-            });//.trigger('change');
+            });
             break;
           case 'copy-value' :
             var listobjectcopyvaluefrom = listobject.clone();
@@ -691,10 +850,10 @@ $.extend(rules, {
             var listobjectcopyvalueto = listobject.clone();
             listobjectcopyvalueto.attr("id","tab-rules-copy-value-action-object-to");
             tbody.append(
-              $('<tr>').append('<th width="150">From</th>')
+              $('<tr>').append('<th width="150">'+tr('From')+'</th>')
               .append($('<td>').append(listobjectcopyvaluefrom))
               ).append(
-              $('<tr>').append('<th width="150">to</th>')
+              $('<tr>').append('<th width="150">'+tr('To')+'</th>')
               .append($('<td>').append(listobjectcopyvalueto))
               );
             break;
@@ -702,7 +861,7 @@ $.extend(rules, {
             var listobjecttogglevalue = listobject_1_001.clone();
             listobjecttogglevalue.attr("id","tab-rules-toggle-value-action-object");
             tbody.append(
-              $('<tr>').append('<th width="150">Object</th>')
+              $('<tr>').append('<th width="150">'+tr('Object')+'</th>')
               .append($('<td>').append(listobjecttogglevalue))
               );
             break;
@@ -710,10 +869,10 @@ $.extend(rules, {
             var listobjectsetstring = listobject.clone();
             listobjectsetstring.attr("id","tab-rules-set-string-action-object");
             tbody.append(
-              $('<tr>').append('<th width="150">Object</th>')
+              $('<tr>').append('<th width="150">'+tr('Object')+'</th>')
               .append($('<td>').append(listobjectsetstring))
               ).append(
-              $('<tr>').append('<th width="150">String</th>')
+              $('<tr>').append('<th width="150">'+tr('String')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-set-string-action-string" size="50">'))
               );
             break;
@@ -721,7 +880,7 @@ $.extend(rules, {
             var listobjectsendread = listobject.clone();
             listobjectsendread.attr("id","tab-rules-send-read-request-action-object");
             tbody.append(
-              $('<tr>').append('<th width="150">Object</th>')
+              $('<tr>').append('<th width="150">'+tr('Object')+'</th>')
               .append($('<td>').append(listobjectsendread))
               );
             break;
@@ -729,60 +888,54 @@ $.extend(rules, {
             var listobjectcycleonoff = listobject.clone();
             listobjectcycleonoff.attr("id","tab-rules-cycle-on-off-action-object");
             tbody.append(
-              $('<tr>').append('<th width="150">Object</th>')
+              $('<tr>').append('<th width="150">'+tr('Object')+'</th>')
               .append($('<td>').append(listobjectcycleonoff))
               ).append(
-              $('<tr>').append('<th width="150">on</th>')
-              .append($('<td>').append('<input type="text" id="tab-rules-cycle-on-off-action-on" size="10">'))
+              $('<tr>').append('<th width="150">'+tr('on')+'</th>')
+              .append($('<td>').append('<input type="text" id="tab-rules-cycle-on-off-action-on" size="10"> '+tr('secondes')))
               ).append(
-              $('<tr>').append('<th width="150">off</th>')
-              .append($('<td>').append('<input type="text" id="tab-rules-cycle-on-off-action-off" size="10">'))
+              $('<tr>').append('<th width="150">'+tr('off')+'</th>')
+              .append($('<td>').append('<input type="text" id="tab-rules-cycle-on-off-action-off" size="10"> '+tr('secondes')))
               ).append(
-              $('<tr>').append('<th width="150">count</th>')
+              $('<tr>').append('<th width="150">'+tr('Count')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-cycle-on-off-action-count" size="10">'))
-              ).append( // TODO Stopcondition à gérer
-              $('<tr>').append('<th width="150">Stop condition</th>')
-              .append($('<td>').append('<input type="text" id="tab-rules-cycle-on-off-action-stopcondition" size="10">'))
               );
             break;
           case 'repeat' :
             tbody.append(
-              $('<tr>').append('<th width="150">Period</th>')
+              $('<tr>').append('<th width="150">'+tr('Period')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-repeat-action-period" size="10">'))
               ).append(
-              $('<tr>').append('<th width="150">Count</th>')
+              $('<tr>').append('<th width="150">'+tr('Count')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-repeat-action-count" size="10">'))
-              ).append( // TODO action à gérer
-              $('<tr>').append('<th width="150">action</th>')
-              .append($('<td>').append(' '))
               );
             break;
-          case 'conditional' : // TODO à gérer
+          case 'conditional' :
             break;
           case 'send-sms' :
             tbody.append(
-              $('<tr>').append('<th width="150">Phone Number</th>')
+              $('<tr>').append('<th width="150">'+tr('Phone Number')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-send-sms-action-id" size="15">'))
               ).append(
-              $('<tr>').append('<th width="150">Value</th>')
+              $('<tr>').append('<th width="150">'+tr('Value')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-send-sms-action-value" size="80">'))
               ).append(
-              $('<tr>').append('<th width="150">Var</th>')
+              $('<tr>').append('<th width="150">'+tr('Var')+'</th>')
               .append($('<td>').append('<input type="checkbox" id="tab-rules-send-sms-action-var" >'))
               );
             break;
           case 'send-email' :
             tbody.append(
-              $('<tr>').append('<th width="150">To</th>')
+              $('<tr>').append('<th width="150">'+tr('To')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-send-email-action-to" size="50">'))
               ).append(
-              $('<tr>').append('<th width="150">Subject</th>')
+              $('<tr>').append('<th width="150">'+tr('Subject')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-send-email-action-subject" size="80">'))
               ).append(
-              $('<tr>').append('<th>Var</th>')
+              $('<tr>').append('<th>'+tr('Var')+'</th>')
               .append($('<td>').append('<input type="checkbox" id="tab-rules-send-email-action-var" >'))
               ).append(
-              $('<tr>').append('<th width="150">Text</th>')
+              $('<tr>').append('<th width="150">'+tr('Text')+'</th>')
               .append($('<td>').append('<textarea cols="80" rows="4" id="tab-rules-send-email-action-text">'))
               );
             break;
@@ -790,22 +943,22 @@ $.extend(rules, {
             var listobjectdimup = listobject.clone();
             listobjectdimup.attr("id","tab-rules-dim-up-action-object");
             tbody.append(
-              $('<tr>').append('<th width="150">Object</th>')
+              $('<tr>').append('<th width="150">'+tr('Object')+'</th>')
               .append($('<td>').append(listobjectdimup))
               ).append(
-              $('<tr>').append('<th width="150">Start</th>')
+              $('<tr>').append('<th width="150">'+tr('Start')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-dim-up-action-start" size="10">'))
               ).append(
-              $('<tr>').append('<th width="150">Stop</th>')
+              $('<tr>').append('<th width="150">'+tr('Stop')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-dim-up-action-stop" size="10">'))
               ).append(
-              $('<tr>').append('<th width="150">Duration</th>')
+              $('<tr>').append('<th width="150">'+tr('Duration')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-dim-up-action-duration" size="10">'))
               );
             break;
           case 'shell-cmd' :
             tbody.append(
-              $('<tr>').append('<th width="150">Command Shell</th>')
+              $('<tr>').append('<th width="150">'+tr('Command Shell')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-shell-cmd-action-value" size="50">'))
               ).append(
               $('<tr>').append('<th >Var</th>')
@@ -816,23 +969,23 @@ $.extend(rules, {
             var ioport_tx_select = _ioport_select.clone();
             ioport_tx_select.attr("id","tab-rules-send-ioport-tx-ioport");
             tbody.append(
-              $('<tr>').append('<th width="150">Io-Port</th>')
+              $('<tr>').append('<th width="150">'+tr('Io-Port')+'</th>')
               //.append($('<td>').append('<input type="text" id="tab-rules-ioport-tx-action-ioport" size="10">'))
               .append($('<td>').append(ioport_tx_select))
               ).append(
-              $('<tr>').append('<th width="150">Data</th>')
+              $('<tr>').append('<th width="150">'+tr('Data')+'</th>')
               .append($('<td>').append('<input type="text" id="tab-rules-send-ioport-tx-data" size="90" >'))
               ).append(
-              $('<tr>').append('<th width="150">Hex</th>')
+              $('<tr>').append('<th width="150">'+tr('Hex')+'</th>')
               .append($('<td>').append('<input type="checkbox" id="tab-rules-ioport-tx-action-hex" >'))
               ).append(
-              $('<tr>').append('<th width="150">Var</th>')
+              $('<tr>').append('<th width="150">'+tr('Var')+'</th>')
               .append($('<td>').append('<input type="checkbox" id="tab-rules-ioport-tx-action-var" >'))
               );
             break;
           case 'script' :
             tbody.append(
-              $('<tr>').append('<th width="150">Script</th>')
+              $('<tr>').append('<th width="150">'+tr('Script')+'</th>')
               .append($('<td>').append('<textarea cols="80" rows="4" name="script" class="script" id="tab-rules-script-action-script">'))
               );
             break;
@@ -840,14 +993,23 @@ $.extend(rules, {
             var listrules = $('#listRules').clone();
             listrules.attr("id","tab-rules-cancel-action-value");
             tbody.append(
-              $('<tr>').append('<th width="150">Cancel Rule</th>')
+              $('<tr>').append('<th width="150">'+tr('Cancel Rule')+'</th>')
               .append($('<td>').append(listrules))
               );
             break;
           case 'formula' :
-            tbody.append($('<tr>').append('<td width="300" colspan="2" style="font-weight: bold; color: #F00; line-height: 25px;">Formula : a*x^m+b*y^n+c </td>'));
-            tbody.append($('<tr>').append('<th width="50">x</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-x-action-value" size="2">')));
-            tbody.append($('<tr>').append('<th width="50">y</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-y-action-value" size="2">')));
+            tbody.append($('<tr>').append('<td width="300" colspan="2" style="font-weight: bold; color: #F00; line-height: 25px;">'+tr('Formula')+' : '+tr('Object')+'=a*x^m+b*y^n+c </td>'));
+            var listobjectset_id = listobject.clone();                   
+            listobjectset_id.attr("id","tab-rules-formula-id-action-value");
+            tbody.append($('<tr>').append('<th width="50">'+tr('Object')+'</th>').append($('<td>').append(listobjectset_id)));
+            var listobjectset_x = listobject.clone();
+            listobjectset_x.prepend('<option value="">'+tr('No Object')+'</option>');                   
+            listobjectset_x.attr("id","tab-rules-formula-x-action-value");
+            tbody.append($('<tr>').append('<th width="50">x</th>').append($('<td>').append(listobjectset_x)));
+            var listobjectset_y = listobject.clone();
+            listobjectset_y.prepend('<option value="">'+tr('No Object')+'</option>');                   
+            listobjectset_y.attr("id","tab-rules-formula-y-action-value");
+            tbody.append($('<tr>').append('<th width="50">y</th>').append($('<td>').append(listobjectset_y)));
             tbody.append($('<tr>').append('<th width="50">a</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-a-action-value" size="2">')));
             tbody.append($('<tr>').append('<th width="50">b</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-b-action-value" size="2">')));
             tbody.append($('<tr>').append('<th width="50">c</th>').append($('<td>').append('<input type="text" id="tab-rules-formula-c-action-value" size="2">')));
@@ -858,11 +1020,11 @@ $.extend(rules, {
             var listrules = $('#listRules').clone();
             listrules.attr("id","tab-rules-start-actionlist-action-rule-id");
             tbody.append(
-              $('<tr>').append('<th width="150">Rule</th>')
+              $('<tr>').append('<th width="150">'+tr('Rule')+'</th>')
               .append($('<td>').append(listrules))
               );
             tbody.append(
-              $('<tr>').append('<th width="150">Start actionlist</th>')
+              $('<tr>').append('<th width="150">'+tr('Start actionlist')+'</th>')
               .append($('<td>').append('<input type="checkbox" id="tab-rules-start-actionlist-action-list" >'))
               );
             break;
@@ -870,17 +1032,17 @@ $.extend(rules, {
               var listrules = $('#listRules').clone();
               listrules.attr("id","tab-rules-set-rule-active-action-rule-id");
               tbody.append(
-                $('<tr>').append('<th width="150">Rule</th>')
+                $('<tr>').append('<th width="150">'+tr('Rule')+'</th>')
                 .append($('<td>').append(listrules))
                 );
               tbody.append(
-                $('<tr>').append('<th width="150">Set rule active</th>')
+                $('<tr>').append('<th width="150">'+tr('Set rule active')+'</th>')
                 .append($('<td>').append('<input type="checkbox" id="tab-rules-set-rule-active-action-active" >'))
                 );
               break;
         };
         tbody.append(
-          $('<tr>').append('<th>Delay</th>')
+          $('<tr>').append('<th>'+tr('Delay')+'</th>')
           .append($('<td>').append('<input type="text" id="tab-rules-action-delay" size="10">'))
         );
         $('#'+id).append($('<form id="tab-rules-'+type+'-action-form" />').append($('<table class="form" />').append(tbody)));
@@ -889,11 +1051,11 @@ $.extend(rules, {
     
     $('#'+id).dialog({
       autoOpen: false,
-      buttons: { 
-          "Annuler": function() { rules.handleDialogCancel(this); },
-          "Supprimer": function() { rules.handleDialogDelete(this); },
-          "Sauver": function() { if (rules.handleDialogSave(this)) $(this).dialog("close"); }
-      },
+      buttons: [ 
+          { text: tr("Cancel"), click: function() { rules.handleDialogCancel(this); } },
+          { text: tr("Remove"), click: function() { rules.handleDialogDelete(this); } },
+          { text: tr("Save"), click: function() { if (rules.handleDialogSave(this)) $(this).dialog("close"); } }
+      ],
       resizable: false,
       title: title,
       width: width,

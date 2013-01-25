@@ -1,7 +1,7 @@
 <?php
   $lang['en'] = "English";  // default
-  /*
   $lang['fr'] = "Francais";
+  /*
   $lang['de'] = "Deutsch";
   $lang['nl'] = "Nederlands";
   $lang['pl'] = "Polski";
@@ -22,7 +22,7 @@
 
     if (file_exists("lang/_" . $_config['lang'] . ".php")) {
       include "lang/_" . $_config['lang'] . ".php";
-      if ($_config['superuser']=="true") file_put_contents('lang/_' . $_config['lang'] . '_nottranslate', ''); // clear not translate file
+      //if ($_config['translate']=="true") file_put_contents('lang/_' . $_config['lang'] . '_nottranslate', ''); // clear not translate file
     } else  $_lang = array();
   }
   initLang();
@@ -35,18 +35,19 @@
   
   	if($_lang == null) initLang();
   	
-  	if(isset($_lang[$keyName]) || $_lang[$keyName] = '')
+  	if(isset($_lang[$keyName]))
   	{
   		$keyContent = $_lang[$keyName];
   		$keyContent = preg_replace('~\$(\d)~e', '$params[\1]', $keyContent);
-  		return $keyContent;
+  		 if ($keyContent != '') return $keyContent;
+       else return "#$keyContent#"; 
   	} else {
       $_lang[$keyName] = $keyName;
-      if ($_config['superuser']=="true") {
+      if ($_config['translate']=="true") {
         nottranslate($keyName, $_config['lang'], $params);
-        return "*$keyName*";
       } 
-      return $keyName;
+      return "#$keyName#"; 
+      //return $keyName;
     }
   }
   function nottranslate($keyName, $lang, $params)

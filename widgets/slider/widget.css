@@ -17,3 +17,6 @@
   top: 0;
   height: 100%;
 }
+.slider .ui-corner-all {
+  border-radius: 0px; 
+}

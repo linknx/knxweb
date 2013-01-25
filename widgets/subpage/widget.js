@@ -63,7 +63,7 @@ CSubPage.prototype.refreshHTML = function() {
 		else
 			div.css("background-image", "url(" + getImageUrl(bgimage) + ")"); 
 	} else div.css("background-image", "none");
-	
+	var number = 0;
 	subpage.children('controls').children('control').each(function() {
 		var obj = null;
 		var type = this.getAttribute('type');
@@ -88,10 +88,15 @@ CSubPage.prototype.refreshHTML = function() {
 
 		if (cls)
 		{
+      var floating_zone_sv = _floating_zone;
+      _floating_zone = false;
 			obj = new cls(conf);
+      _floating_zone = floating_zone_sv;
 
 			if (obj!=null) {
 				div.append(obj.div);
+        number++;
+        obj.div.css("z-index", number );
 				return true;
 			}
 			return false;
@@ -102,7 +107,8 @@ CSubPage.prototype.refreshHTML = function() {
   if (this.conf.getAttribute("view_mode")!="") { 
     this.dialogdiv = div;
     
-    this.opensubpage = $("<img src='" + getImageUrl(this.conf.getAttribute("picture-dialog")) + "' alt='click'/>"); 
+    this.opensubpage = $("<img src='" + getImageUrl(this.conf.getAttribute("picture-dialog")) + "' alt='click' style='z-index:1;' />");
+    this.div.css("z-index", 1); 
     this.opensubpage[0].owner = this;
     
     this.div.append(this.opensubpage);

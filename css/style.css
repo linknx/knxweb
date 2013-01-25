@@ -26,6 +26,7 @@ body {
 #zoneContainer li {
 	position: relative;
 	float: left;
+  background: no-repeat;
 }
 
 #screen .prev {
@@ -212,7 +213,7 @@ table.textDiv td {
 }
 
 div.editDiv {
-	display: block;
+	display: none;
 	overflow: hidden; 
 	border: 1px solid black;
 	padding: 5px;

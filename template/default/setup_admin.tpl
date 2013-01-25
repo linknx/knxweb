@@ -1,7 +1,10 @@
 {foreach from=$jsList item=js} 
 <script type="text/javascript" src="{$js}"></script>
 {/foreach} 				     
-
+{if (!$progstatus && !$configknxweb && !$logobjects && !$loglinknx)}
+<h3 style="color: #F00; font-weight: bold;">{l lang="en"}Please select a section to administer in the left menu.{/l}</h3>
+{/if}
+{if ($progstatus)}
 <div class="titleadmin2">{l lang="en"}Services status{/l} {$_SERVER['DOCUMENT_ROOT']}</div>
 <table width="100%">
 	<tr>
@@ -54,7 +57,8 @@
 	</tr>
 {/foreach}
 </table>
-
+{/if}
+{if ($logobjects)}
 <div class="titleadmin2">{l lang="en"}Object log (last "lines"){/l}</div>
 <select id="selectLogObject">
 <option value="">{l lang="en"}Choose an Object{/l}</option>
@@ -77,11 +81,12 @@
   <option value="100" >100</option>
   <option value="200" >200</option>
 </select>
-<input type="button" value="Reload" onclick="reloadLogObject();" >
+<input type="button" value="{l lang="en"}Reload{/l}" onclick="reloadLogObject();" >
 <div id="divLogObject" class="codeadmin"><br /><br /><br /></div> 
-
+{/if}
+{if ($configknxweb)}
 <div class="titleadmin2">{l lang="en"}Config KnxWeb{/l}</div>
-<table>
+<table class="ui-widget-content" style="border:none;" >
 {foreach from=$_config key=k item=conf}
 	<tr>
 		<th>{$k}</th>
@@ -100,6 +105,13 @@
   			    <option value="mysql" {if ($conf=='mysql')} selected="true" {/if}>{l lang="en"}Mysql{/l}</option>
           </select>
         {else}
+          {if ($k=="uitheme")}
+            <select id="config-{$k}-id" onchange="changeUiTheme(this);">
+              {foreach from=$uitheme key=k2 item=conf2}
+              <option value="{$k2}" {if ($conf==$k2)} selected="true" {/if}>{$conf2}</option>
+              {/foreach}
+            </select>
+          {else}
           {if ($conf=='true' || $conf=='false')}
             <input id="config-{$k}-id" class="required" type="checkbox" {if ($conf=='true')} checked="checked" {/if}>
           {else}
@@ -107,12 +119,13 @@
           {/if}
         {/if}
 			{/if}
+			{/if}
 		</td>
 	</tr>
 {/foreach}
   <tr>
 		<td colspan="2" style="text-align:center;">
-		<input type="submit" name="saveKnxWebConfig" value="Apply"></td>
+		<input type="submit" name="saveKnxWebConfig" value="{l lang="en"}Apply{/l}"></td>
 	</tr>
 </table>
 
@@ -121,13 +134,14 @@
 <textarea cols="70" rows="25" style="width:100%;" name="contentwidgetscss" id="contentwidgetscss" >{$contentwidgetscss}</textarea>
 <div>
 {if ($widgetscssiswritable)}
-<input type="button" name="updatewidgetscss" value="Update File" />
+<input type="button" name="updatewidgetscss" value="{l lang="en"}Update File{/l}" />
 {else}
 <p><em>{l lang="en"}You need to make the file widgets/widgets.css writable before save your changes.{/l}</em></p>
 {/if}
 </div>
 {/if}
-
+{/if}
+{if ($loglinknx)}
 <div class="titleadmin2">{l lang="en"}linknx log files (last{/l} 
   <select id="selectLinknxLogFileCount">
     <option value="1" >1</option>
@@ -145,11 +159,12 @@
     <option value="200" >200</option>
   </select> {l lang="en"}lines){/l} 
 </div>
-<center>  <input type="button" value="Reload" onclick="reloadLogLinknx();" ></center>
+<center>  <input type="button" value="{l lang="en"}Reload{/l}" onclick="reloadLogLinknx();" ></center>
 <div id="divLinknxLog" class="codeadmin">
 	{$linknxLog}
 </div>
-
+{/if}
+{if ($networksetup)}
 <div class="titleadmin2">{l lang="en"}Network setup{/l}</div>
 {if ($network['Networksetting'])}
 	<table width="400">
@@ -189,5 +204,6 @@
 		<img src="images/ko.png" alt="ko">{l lang="en"}Problem connecting to network information{/l}</td>
 	</tr>		
 </table>	
+{/if}
 {/if}
                                                                                                        

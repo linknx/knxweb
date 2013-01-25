@@ -1,6 +1,6 @@
 function saveConfigKnxWeb()
 {
-  var string = '<?xml version="1.0" encoding="utf-8" standalone="no"?>\n<param>\n';
+  var string = '<?xml version="1.0" encoding="utf-8" standalone="yes"?>\n<param>\n';
   for (var key in tab_config) 
   {
     if ($("#config-"+key+"-id")[0].type == "checkbox" ) {
@@ -13,7 +13,7 @@ function saveConfigKnxWeb()
   string = string+'</param>';
   
   if (queryKnxweb('saveconfig', 'xml', string, false)) 
-    messageBox("Config saved successfully reload the web page for take effect in KnxWeb immediately", 'Info', 'info');
+    messageBox(tr("Config saved successfully reload the web page for take effect in KnxWeb immediately"), tr('Info'), 'info');
 
 };
 
@@ -27,10 +27,10 @@ function readFile(pathlogfile, nbenreg, dest)
   				$("#"+dest).html(responseHTML);
   			},
   			error: function (XMLHttpRequest, textStatus, errorThrown) {
-  				messageBox(tr("Error Unable to load: ")+textStatus, 'Erreur', 'alert');
+  				messageBox(tr("Error Unable to load: ")+textStatus, tr('Error'), 'alert');
   			}
   	});
-	} else alert("Pas de fichier à afficher");
+	} else messageBox(tr("Nothing"), tr('Error'), 'alert');
 };
 
 function readLinknxLogFile(nbenreg, dest)
@@ -42,16 +42,16 @@ function readLinknxLogFile(nbenreg, dest)
 				$("#"+dest).html(responseHTML);
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
-				messageBox(tr("Error Unable to load: ")+textStatus, 'Erreur', 'alert');
+				messageBox(tr("Error Unable to load: ")+textStatus, tr('Error'), 'alert');
 			}
 	});
 };
 
 function endUpload(success){
   if (success == 1){
-    messageBox('Upload OK', 'Info', 'info');
+    messageBox(tr('Upload OK'), tr('Info'), 'info');
   } else {
-    messageBox('Upload KO', 'Erreur', 'alert');
+    messageBox(tr('Upload KO'), tr('Error'), 'alert');
   }
   return true;
 };
@@ -82,7 +82,7 @@ function sendAction(actiontype)
 
 function updateWidgetsCss(val)
 {
-	alert("update file widgets.css");
+  messageBox(tr("update file widgets.css"), tr('Info'), 'info');
   /*
   queryKnxweb(action, type, message, callasync)
 =>jQuery.ajax({ type: 'post', url: 'design_technique.php?action='+action, data: message, processData: false, dataType: type,async: callasync,
@@ -90,6 +90,11 @@ function updateWidgetsCss(val)
   queryKnxweb('updatewidgetscss', 'html', val, false);
 };
 
+function changeUiTheme(val)
+{
+  //"lib/jquery/css/cupertino/jquery-ui-1.8.23.custom.css"
+  $("link[href*=lib\\/jquery\\/css]:first").attr('href', 'lib/jquery/css/' + $(val).val() + '/jquery-ui.css');
+};
 
 jQuery(document).ready(function(){
 	$("input[name=saveKnxWebConfig]").click( function() { saveConfigKnxWeb(); } );

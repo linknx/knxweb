@@ -80,6 +80,8 @@ CArea.prototype.refreshHTML = function() {
     $('.back', this.div).css('opacity','');
   else
     $('.back', this.div).css('opacity', this.conf.getAttribute("opacity"));
+  
+  $('.back', this.div).addClass(this.conf.getAttribute("class"));
 
 };
 

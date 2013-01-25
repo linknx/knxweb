@@ -55,15 +55,38 @@ if (isset($_GET['ajax']))
 	die;
 }
 
+/* get version of knxwbe2 in cvs sourceforge */
+
+  $opts = array(
+    'http'=>array(
+      'method'=>"GET",
+      'header'=>"Content-Type: text/html; charset=utf-8"
+    )
+  );
+  
+  $context = stream_context_create($opts);
+  $version_knxweb2_cvs = file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/knxweb2/version', false, $context);
+  
+  $tab_version = explode(".", $version_knxweb2);
+  $version = $tab_version[0] * 100 + $tab_version[1] * 10 + $tab_version[2];   
+  $tab_version_cvs = explode(".", $version_knxweb2_cvs);
+  $version_cvs = $tab_version_cvs[0] * 100 + $tab_version_cvs[1] * 10 + $tab_version_cvs[2];
+  $MAJ_knxweb2 = ( $version_cvs > $version ); 
+
+/* /version on cvs sourceforge */
+
 tpl()->assignByRef('json_config', $json_config); // utiliser les données $_config en javascript
 
-tpl()->addCss("lib/jquery/css/cupertino/jquery-ui-1.8.10.custom.css");
+//tpl()->addCss("lib/jquery/css/cupertino/jquery-ui-1.8.23.custom.css");
+if (!isset($_config["uitheme"]) || $_config["uitheme"] == "") $_config["uitheme"] = "cupertino";
+tpl()->addCss("lib/jquery/css/" . $_config["uitheme"] . "/jquery-ui.css");
 tpl()->addJs("lib/jquery/js/jquery.min.js");
-tpl()->addJs("lib/jquery/js/jquery-ui-1.8.10.custom.min.js");
+tpl()->addJs("lib/jquery/js/jquery-ui.min.js");
 tpl()->addJs("js/eibcommunicator.js");
 tpl()->addJs("js/uicontroller.js");
 tpl()->addJs("js/common.js");
 tpl()->addJs('js/widget.js');
+tpl()->addJs('lib/jquery.ui.touch-punch.min.js');
 tpl()->addJs('js/action-editor.js');
 
 tpl()->addJs("lib/tablesorter/jquery.tablesorter.js");
@@ -74,6 +97,7 @@ tpl()->addJs("lib/jquery-validate/localization/messages_fr.js");
 tpl()->addJs("lib/jsplumb/jquery.jsPlumb-1.3.3-all.js");
 tpl()->addJs('lib/jquery.scrollTo-1.4.2-min.js');
 tpl()->addJs('lib/jquery.serialScroll-1.2.2-min.js');
+//tpl()->addJs('lib/jquery.knob-1.1.0.js');
 
 tpl()->addJs('lib/farbtastic/farbtastic.js');
 tpl()->addCss('lib/farbtastic/farbtastic.css');

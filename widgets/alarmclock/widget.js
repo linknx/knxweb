@@ -18,7 +18,7 @@ function CAlarmClock(conf) {
       width: 'auto'
     });
   $(this.div).click(function() {
-    if (!this.owner.editMode)
+    if (!_editMode)
     {
         var pos_x = parseInt((this.owner.div.css('left')).replace('px',''));
         var pos_y = parseInt((this.owner.div.css('top')).replace('px',''));

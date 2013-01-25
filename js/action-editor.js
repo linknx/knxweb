@@ -368,7 +368,7 @@ var actionEditor = {
 						});
 					}
 					else
-						messageBox(tr("Error: ")+responseXML.textContent, 'Erreur', 'alert');
+						messageBox(tr("Error: ")+responseXML.textContent, tr('Error'), 'alert');
 					loading.hide();
 				}
 			});
@@ -379,7 +379,7 @@ var actionEditor = {
 jQuery(function($) {
   var actionsSelect=$('#action-dialog-select').get(0);
   actionsSelect.options[actionsSelect.options.length] = new Option(tr("Add an action"), "")
-  for(key in actionEditor.actionsList) actionsSelect.options[actionsSelect.options.length] = new Option(actionEditor.actionsList[key], key);
+  for(key in actionEditor.actionsList) actionsSelect.options[actionsSelect.options.length] = new Option(tr(actionEditor.actionsList[key]), key);
   
   $('#action-dialog-select').change(function(e){
   	if (this.value!="")
@@ -391,11 +391,9 @@ jQuery(function($) {
   });
 
 	$("#action-dialog").dialog({
-		buttons: {
-			Ok: function() {
-				$( this ).dialog( "close" );
-			}
-		},
+		buttons: [
+      { text: tr("Ok"), click: function() { $( this ).dialog( "close" ); } }
+    ],
 		title: "Action editor",
 		width: 500,
 		height: 300,
@@ -409,18 +407,18 @@ jQuery(function($) {
 	
 	$.each(actionEditor.actionsList, function(key, value) {
 		$("#action-dialog-" + key + "-dialog").dialog({
-			buttons: {
-				Ok: function() {
+			buttons: [
+          { text: tr("Ok"), click: function() {
 					actionEditor.processCloseDialog($(this));
 					actionEditor.subPageObjects= [ ];
 					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
+          } },
+          { text: tr("Cancel"), click: function() { 
 					if (actionEditor.isNew) actionEditor.del($(this.editing));
 					$( this ).dialog( "close" );
-				}
-			},
-			title: "Edit " + value + " action",
+          } }
+        ],
+			title: tr("Edit") + " " + tr(value) + " " + tr("action"),
 			width: 450,
 			modal: true,
 			autoOpen: false

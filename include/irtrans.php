@@ -1,4 +1,4 @@
-<?
+<?php
 
 class IRTrans {
 	private $_hostname;

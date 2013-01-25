@@ -6,6 +6,6 @@
 	<version>1.0</version>
 	<category>Basic widgets</category>
 	<settings>
-		<setting id="html" label="HTML" type="text" />
+		<setting id="html" label="HTML" type="textarea" />
 	</settings>
 </widget>

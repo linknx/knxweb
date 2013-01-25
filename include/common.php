@@ -58,8 +58,8 @@
 		'w' => 'Write',
 		't' => 'Transmit',
 		'u' => 'Update',
-		's' => 'Stateless'
-		//'f' => 'Force',
+		//'s' => 'Stateless'
+		'f' => 'Force',
 		//'i' => 'Init'
 	);
 
@@ -154,12 +154,20 @@
 		$widgets = getWidgets();
 		foreach($widgets as $name => $info)
 		{
-//			if (!$isMobile) tpl()->addJs($info['path'] . '/js/display.js');
-//			if ($isMobile && file_exists($info['path'] . '/js/mobile.js')) tpl()->addJs($info['path'] . '/js/mobile.js');
-			
 			if (file_exists($info['path'] . '/widget.css')) tpl()->addCss($info['path'] . '/widget.css');
 			tpl()->addJs($info['path'] . '/widget.js');
 		}
 	}
+
+  function getUiThemes()
+  {
+    $uitheme = glob('lib/jquery/css/*', GLOB_ONLYDIR);
+    $ret=array();
+    foreach ($uitheme as $path)
+    {
+      if (file_exists( $path . '/jquery-ui.css')) $ret[basename($path)]=basename($path);
+    }
+    return $ret;
+  }
 
 ?>

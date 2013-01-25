@@ -30,7 +30,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>{l lang="en"}XML server type : por{/l}</th>
+			<th>{l lang="en"}XML server type : port{/l}</th>
 			<td>
 				<select id="setupgeneral-xmlserver-type">
 					<option value="inet">{l lang="en"}inet{/l}</option>
@@ -41,7 +41,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th>{l lang="en"}Persistance type{/l}</th>
+			<th>{l lang="en"}Persistence type{/l}</th>
 			<td>
 				<select id="setupgeneral-persistence-type">
 					<option value="">{l lang="en"}disabled{/l}</option>
@@ -51,11 +51,11 @@
 			</td>
 		</tr>
 		<tr class="setupgeneral-persistence-file">
-			<th>{l lang="en"}Persistance directory{/l}</th>
+			<th>{l lang="en"}Persistence directory{/l}</th>
 			<td><input type="text" name="setupgeneral-persistence-path" id="setupgeneral-persistence-path" size="40"></td>
 		</tr>
 		<tr class="setupgeneral-persistence-file">
-			<th>{l lang="en"}Persistance log directory{/l}</th>
+			<th>{l lang="en"}Persistence log directory{/l}</th>
 			<td><input type="text" name="setupgeneral-persistence-logpath" id="setupgeneral-persistence-logpath" size="40"></td>
 		</tr>
 		<tr class="setupgeneral-persistence-mysql">

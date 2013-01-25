@@ -210,11 +210,9 @@ var events = {
 	  $('#tab-events-fluxxml').dialog({ 
 	  	width: 800,
 			modal: true,
-			buttons: {
-				Close: function() {
-					$( this ).dialog( "close" );
-				}
-			},
+			buttons: [
+        { text: tr("Close"), click: function() { $( this ).dialog("close"); } }
+      ]
 	  });
 	},
   executeAction: function(eventid) {
@@ -224,11 +222,11 @@ var events = {
     $('action', actions).each(function() {
       actionsText = actionsText + serializeXmlToString(this);
 		});
-    if (confirm(tr('Really execute actions of the event : '+eventid+' ?'))) {
+    if (confirm(tr('Really execute actions of the event')+' : '+eventid+' ?')) {
       var responseXML=queryLinknx('<execute>'+actionsText+'</execute>');
       if (responseXML!=false)
       {
-        messageBox(tr("Event execute successfully"),"Execute Event","");
+        messageBox(tr("Event execute successfully"),tr("Execute Actionlist"),"");
       }
 		} 
   },

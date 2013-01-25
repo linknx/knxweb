@@ -289,7 +289,7 @@
                   <td><select id="timer-condition-until-variabletime-time"></select></td>
                 </tr>
                 <tr style="background-color: #DDD">
-                  <td rowspan="2"><input type="radio" id="timer-condition-until-constantdate" name="timer-condition-until-constantdate" checked> {l lang='en'}Date constante{/l}</td>
+                  <td rowspan="2"><input type="radio" id="timer-condition-until-constantdate" name="timer-condition-until-constantdate" checked> {l lang='en'}Date constant{/l}</td>
                   <td>{l lang='en'}Day/Month/Year{/l}</td>
                   <td>
                     <input type="text" class="number" name="timer-condition-until-constantdate-day" id="timer-condition-until-constantdate-day" size="2"> /
@@ -351,7 +351,7 @@
 <table class="form">
   <tbody>
     <tr>
-      <th>{l lang='en'}Io Port{/l}</th>
+      <th>{l lang='en'}IO Port{/l}</th>
       <td>
         <!-- <input type="text" class="required" id="tab-rules-ioport-rx-condition-ioport"> -->
         <select id="tab-rules-ioport-rx-condition-ioport"></select>

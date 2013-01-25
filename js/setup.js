@@ -21,23 +21,23 @@ jQuery(document).ready(function(){
 		modal: true,
 		buttons: [
 	    {
-	        text: "Set no image",
+	        text: tr("Set no image"),
 	        click: function() { 
 						if (imagesInput!=null)
 						{
 	        		imagesInput.val('');
 							imagesInput.trigger('change');
 						}
-						$(this).dialog("close");
+						$( this ).dialog("close");
 	        }
 	    },
 	    {
-	        text: "Create folder",
+	        text: tr("Create folder"),
 	        click: function() { createImageFolder(); }
 	    },
 	    {
-	        text: "Close",
-	        click: function() { $(this).dialog("close"); }
+	        text: tr("Close"),
+	        click: function() { $( this ).dialog("close"); }
 	    }
 		]
 	});
@@ -62,16 +62,16 @@ jQuery(document).ready(function(){
 		resizable: false,
 		buttons: [
 	    {
-	        text: "Ok",
+	        text: tr("Ok"),
 	        click: function() { 
 	        	colorPickerInput.val($("#colorpicker-dialog-input").val());
 	        	colorPickerInput.trigger('change');
-	        	$(this).dialog("close"); 
+	        	$( this ).dialog("close"); 
 	        }
 	    },
 	    {
-	        text: "Cancel",
-	        click: function() { $(this).dialog("close"); }
+	        text: tr("Cancel"),
+	        click: function() { $( this ).dialog("close"); }
 	    }
 		]
 	});

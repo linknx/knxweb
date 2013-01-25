@@ -50,6 +50,10 @@ CSlider.prototype.refreshHTML = function() {
   var step = parseInt( delta / (parseInt(this.conf.getAttribute("width"))) );
   if (step < 1) step = 1;
 
+  this.actionslide = this.conf.getAttribute("actionslide") == "true";
+  this.actionstop = true;
+  if (this.conf.getAttribute("actionstop") == "") this.actionstop = this.conf.getAttribute("actionstop") == "true";
+
   var range = 'min';
   if (this.position!='right_bottom') { range = 'max'; this.reversevalue = true; } else { this.reversevalue = false; } 
   
@@ -91,7 +95,7 @@ CSlider.prototype.refreshHTML = function() {
     $( '.sliderdiv', this.div ).slider( "option", "orientation", 'horizontal' );
   }
   
-  if (this.editMode) // en mode édition affichage à "50%" pour voir les 2 "couleurs"
+  if (_editMode) // en mode édition affichage à "50%" pour voir les 2 "couleurs"
   {
     this.updateObject(this.conf.getAttribute("feedback-object"),(( this.delta / 2 ) + this.min ));
   } else {
@@ -99,14 +103,12 @@ CSlider.prototype.refreshHTML = function() {
     $( '.sliderdiv', this.div ).bind( "slidestop", function(event, ui) {
       var value = this.owner.convertFromUiValue(ui.value);
       $(".value",this.owner.div).text(value).show(); // + "ui:" + ui.value
-      if (!this.owner.editMode)
+      if (!_editMode)
       {
         var actions = $("actionlist[id=slidestop-action]", this.owner.conf);
         if (actions.length==0 || !actions.length) {
-          var actions=this.owner.conf.ownerDocument.createElement('actionlist');
-          actions.setAttribute('id', "slidestop-action");
-          this.owner.conf.appendChild(actions);
-          actions = $(actions);
+          actions = $('<actionlist id="slidestop-action" ></actionlist>');
+          this.owner.conf.appendChild(actions.get(0));
         }
         var action = $("action[id='" + this.owner.conf.getAttribute("command-object") + "']", actions);
         if ( action.attr("type") == "set-value" ) {
@@ -120,9 +122,16 @@ CSlider.prototype.refreshHTML = function() {
     $( '.sliderdiv', this.div ).bind( "slide", function(event, ui) {
       var value = this.owner.convertFromUiValue(ui.value);
       $(".value",this.owner.div).text(value).show(); // + "ui:" + ui.value
-      if (!this.owner.editMode)
+      if (!_editMode)
       {
         var actions=$("actionlist[id=slide-action]", this.owner.conf);
+        if (this.owner.actionslide) {
+          var action = $("action[id='" + this.owner.conf.getAttribute("command-object") + "']", actions);
+          if ( action.attr("type") == "set-value" ) {
+            action.remove();
+          } 
+          actions.append($("<action type='set-value' id='" + this.owner.conf.getAttribute("command-object") + "' value='" + value + "'></action>")[0]);
+        }
         if (actions.length>0) EIBCommunicator.executeActionList(actions);
       }
     });
@@ -139,7 +148,7 @@ CSlider.prototype.convertToUiValue = function(value) {
   if (value < this.min ) value = this.min;
   else if (value > this.max ) value = this.max;
   if (this.reversevalue) value =  this.max + this.min -  value;
-  var valueui = parseInt(value) + parseInt(this.min);
+  var valueui = parseInt(value) - parseInt(this.min);
   return valueui;  
 }
 

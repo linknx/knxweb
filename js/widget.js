@@ -4,7 +4,7 @@ function CWidget(conf) {
 CWidget.prototype = {
 	isResizable: false,	// TODO : put this variable in plugin's manifest.xml
   isDraggable: true, // TODO : put this variable in plugin's manifest.xml
-	editMode: false,
+	editMode: false, // TODO remplacé par _editMode variable globale
 	enabled: true,		// enabled = false => no commands are send to the bus (during setup)
 	
 	// Return needed feedback object
@@ -27,6 +27,10 @@ CWidget.prototype = {
 	// Called by eibcommunicator when a feedback object value has changed
 	updateObject: function(obj,value) {
 	},
+  
+	// Called utiliser dans le clear dans setup_design et design_view 
+	deleteWidget: function() {
+	},
 	
 	// Initialize a widget
 	init: function(conf) {
@@ -34,14 +38,30 @@ CWidget.prototype = {
 
 		var x = conf.getAttribute("x");
   	var y = conf.getAttribute("y");
+    var defaultGridWidth = 20;
+    var defaultWidgetGridWidth = 32;
+		if (_editMode) { // TODO en mode "subpage" design n'est pas définit et pas tenir compte de la grid ...
+      if (design) {
+			if (design.grid) {
+			  defaultGridWidth = design.gridWidth;
+        if (defaultGridWidth < 20) defaultGridWidth = Math.round(Math.round( 20 / design.gridWidth) *  design.gridWidth); 
+			}
+			if (design.gridwidgetsize) {
+        defaultWidgetGridWidth = design.gridWidth; 
+        if (defaultWidgetGridWidth < 32) defaultWidgetGridWidth = Math.round(Math.round( 20 / design.gridWidth) *  design.gridWidth); 
+			}
+      }
+		}
   	if (!x) 
   	{
-  		x = 20;
+  		//x = 20;
+  		x = defaultGridWidth;
   		conf.setAttribute("x", x);
   	}
   	if (!y)
   	{
-  		y = 20;
+  		//y = 20;
+  		y = defaultGridWidth;
   		conf.setAttribute("y", y);
   	}
 		
@@ -55,22 +75,33 @@ CWidget.prototype = {
 		var a=this.div.get(0);
 		a.owner=this;
 		
+    //console.log('widget', this.div, this.div.parent(), (this.div.parent())[0].conf.getAttribute("type"));
+	//if (!design.floating) {	// TODO en mode "subpage" et "view" design n'est pas définit
+  if (!_floating_zone) {	
 		this.div.css('left', x+"px");
 		this.div.css('top', y+"px");
+  } else { // _floating_zone_margin
+		this.div.css('float', "left");
+    this.div.css('position', "relative");  
+  }
 		
 		var width = conf.getAttribute("width");
 		var height = conf.getAttribute("height");
 
 		if ((!width) && (this.isResizable))
 		{
-  		conf.setAttribute("width", 32);
-			this.div.css('width', 32);
+  		//conf.setAttribute("width", 32);
+			//this.div.css('width', 32);
+  		conf.setAttribute("width", defaultWidgetGridWidth);
+			this.div.css('width', defaultWidgetGridWidth);
 		} else if (this.isResizable) this.div.css('width', width);
 
 		if ((!height) && (this.isResizable))
 		{
-  		conf.setAttribute("height", 32);
-			this.div.css('height', 32);
+  		//conf.setAttribute("height", 32);
+			//this.div.css('height', 32);
+  		conf.setAttribute("height", defaultWidgetGridWidth);
+			this.div.css('height', defaultWidgetGridWidth);
 		} else if (this.isResizable) this.div.css('height', height);
 		
 		this.div.css('display', 'block');
@@ -120,6 +151,6 @@ CWidget.prototype = {
 		}
 		
 		this.refreshHTML();
-		if (!this.editMode) EIBCommunicator.refreshListeningObject(this);
+		if (!_editMode) EIBCommunicator.refreshListeningObject(this);
 	}
 }

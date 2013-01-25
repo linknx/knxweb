@@ -5,7 +5,7 @@ function CButton(conf) {
   this.active=false;
   
   $(this.div).click(function() {
-  	if (!this.owner.editMode)
+    if (!_editMode)
   	{
 	  	var answer = true
       if (this.owner.conf.getAttribute('confirm') == "yes") answer = confirm(tr("confirm the command"));
@@ -43,7 +43,7 @@ CButton.prototype = new CWidget();
 // Refresh HTML from config
 CButton.prototype.refreshHTML = function() {
   var displaypicture = this.conf.getAttribute("display-picture");
-  if (this.editMode && displaypicture == "yes")
+  if (_editMode && displaypicture == "yes")
     $(".buttonContent", this.div).css('background-image', 'url(' + getImageUrl(this.conf.getAttribute("picture-active")) + ')');
   else
 	$(".buttonContent", this.div).css('background-image', 'url(' + getImageUrl(this.conf.getAttribute("picture")) + ')');
@@ -58,7 +58,6 @@ CButton.prototype.refreshHTML = function() {
 
 // Called by eibcommunicator when a feedback object value has changed
 CButton.prototype.updateObject = function(obj,value) {
-
 	if (obj==this.conf.getAttribute("feedback-object"))
 	{
 	    var val = value;
@@ -67,27 +66,21 @@ CButton.prototype.updateObject = function(obj,value) {
 	    if (parseFloat(feedback_val)) feedback_val = parseFloat(this.conf.getAttribute("feedback-value"));
 		switch (this.conf.getAttribute("feedback-compare")) {
 			case 'eq':
-				//this.active=(value==this.conf.getAttribute("feedback-value"));
 				this.active=(val==feedback_val);
 				break;
 			case 'neq':
-				//this.active=(value!=this.conf.getAttribute("feedback-value"));
 				this.active=(val!=feedback_val);
 				break;
 			case 'gt':
-				//this.active=(value>this.conf.getAttribute("feedback-value"));
 				this.active=(val>feedback_val);
 				break;
 			case 'lt':
-				//this.active=(value<this.conf.getAttribute("feedback-value"));
 				this.active=(val<feedback_val);
 				break;
 			case 'gte':
-				//this.active=(value>=this.conf.getAttribute("feedback-value"));
 				this.active=(val>=feedback_val);
 				break;
 			case 'lte':
-				//this.active=(value<=this.conf.getAttribute("feedback-value"));
 				this.active=(val<=feedback_val);
 				break;
 			default:

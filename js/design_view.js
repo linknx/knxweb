@@ -1,4 +1,4 @@
-var _subpages;
+_editMode = false;
 
 var design_view = {
 	config: null,
@@ -77,6 +77,10 @@ var design_view = {
 
 	draw: function(zone) {
 		var enableSlider=(($("config",design_view.config)[0].getAttribute('enableSlider')=='true')?true:false);
+    var conf_zone = $("config",design_view.config)[0];
+    
+    _floating_zone = ((conf_zone.getAttribute('floating'))?true:false);
+    _floating_zone_margin = conf_zone.getAttribute('floating');
 		
 		design_view.clear();
 
@@ -113,8 +117,7 @@ var design_view = {
 				design_view.addWidget(this, e);
 			})
 
-      // charger également les "control" lié au design lui-même, soit des controls/widget lié au design et pas à une zone précise
-      // TODO a gérer avec paramètre de la zone si celle-ci ne veux pas afficher les control/widgets "globaux" on aura globalcontrol="false" par défaut on affiche sinon
+      // charger Ã©galement les "control" liÃ© au design lui-mÃªme, soit des controls/widget liÃ© au design et pas Ã  une zone prÃ©cise
       if (this.getAttribute('globalcontrol')!='false') {
         $('zones', design_view.config).children('control').each(function() {
           design_view.addWidget(this, e);
@@ -136,12 +139,23 @@ var design_view = {
 			
 			$("#screen .prev").css('display','block');
 			$("#screen .next").css('display','block');
+
+
+      if(isMobile()){
+         container.bind('swipeleft',function(event){
+            $("#screen .next").click();
+         });
+         container.bind('swiperight',function(event){
+            $("#screen .prev").click();
+         });
+      }
 		}
 	},
 	
 	clear: function() {
 		EIBCommunicator.removeAll();
 		$("#widgetdiv .widget").each(function() {
+			this.owner.deleteWidget();
 			$(this).remove();
 		});
 		design_view.currentZone=null;
@@ -164,7 +178,25 @@ function gotoZone(id)
 	} else
 	{
 		$("#zoneContainer > div").hide();
-		$("#" + id).show();
+
+    var selectedEffect = $("config",design_view.config)[0].getAttribute('effect');
+    if (!selectedEffect) selectedEffect = "";
+    if (selectedEffect=="random" ) selectedEffect = _tab_effects[Math.floor(Math.random() * (_tab_effects.length + 1 ) )];
+    
+    // most effect types need no options passed by default
+    var options = {};
+    // some effects have required parameters
+    if ( selectedEffect === "scale" ) {
+        options = { percent: 100 };
+    } else if ( selectedEffect === "size" ) {
+  		var width=$("config",design_view.config)[0].getAttribute('width');
+  		var height=$("config",design_view.config)[0].getAttribute('height');
+      options = { to: { width: width, height: height } };
+    }
+    
+    // run the effect
+    $("#" + id).show( selectedEffect, options, 1000 );
+		//$("#" + id).show();
 	}
 }
 
@@ -195,6 +227,8 @@ jQuery(function($) {
 				});
 			}
 			 
+      EIBCommunicator.runUpdate();
+/* 
 			if (tab_config.useJavaIfAvailable=='true')
 			{
 				if (navigator.javaEnabled())
@@ -203,6 +237,7 @@ jQuery(function($) {
 					EIBCommunicator.updateAll();
 				} else EIBCommunicator.periodicUpdate();
 			} else EIBCommunicator.periodicUpdate();
+*/
 			
 			loading.hide();
 		});

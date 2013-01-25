@@ -63,13 +63,23 @@ if (isset($_GET['action'])) {
 					print("<createdesign status='error'>Restricted character in design name");
 				elseif (mkdir("design/".$name, 0777) == false)
 					print("<createdesign status='error'>Unable to create design folder");
-				elseif ($fp = fopen("design/".$name."/design.xml", 'w')) {
-					fwrite($fp, "<?xml version='1.0'?><config width='1280' height='1024' enableSlider='false'><zones/></config>\n");
+				else { // TODO gérer design et mobile en paramètres 'ver' comme le save ...
+          if (!isset($_GET['mobile'])) {
+    				if ($fp = fopen("design/".$name."/design.xml", 'w')) {
+    					fwrite($fp, "<?xml version='1.0' encoding='UTF-8'?><config width='1280' height='1024' enableSlider='false'><zones/></config>\n");
 					fclose($fp);
 					print("<createdesign status='success'>");
 				}
 				else
 					print("<createdesign status='error'>Unable to save new design");
+          } elseif ($fp = fopen("design/".$name."/mobile.xml", 'w')) {
+    					fwrite($fp, "<?xml version='1.0' encoding='UTF-8'?><config><pages><page name='home' title='KnxWebMobile'><header/></page></pages></config>\n");
+    					fclose($fp);
+    					print("<createdesign status='success'>");
+    				}
+    				else
+    					print("<createdesign status='error'>Unable to save new design");
+        }
 			}
 			else
 				print("<createdesign status='error'>No design name specified");
@@ -196,6 +206,54 @@ if (isset($_GET['action'])) {
 				print("<updatewidgetscss status='error'>Unable to create widgets/widgets.css file");
 			print("</updatewidgetscss>\n");
 	    break;
+
+    case 'widgetsdl':
+      $widget = $_GET['widget'];
+      exec('wget -O /tmp/widget.tar http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/widgets_knxweb2/' . $widget . '/?view=tar');
+      $path_knxweb2 = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'widgets' . DIRECTORY_SEPARATOR;
+      exec('tar -xf /tmp/widget.tar --directory='.$path_knxweb2);
+      exec('rm /tmp/widget.tar');
+      print("<widgetsdl status='success' />\n"); 
+      break;
+      
+    case 'subpagesdl':
+      $subpage = $_GET['subpage'];
+      $opts = array(
+        'http'=>array(
+          'method'=>"GET",
+          'header'=>"Content-Type: application/xml; charset=utf-8", 
+          'timeout' => 20
+        )
+      );
+      $context = stream_context_create($opts);
+      $subpagexml = simplexml_load_string(file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/subpages_knxweb2/' . $subpage . '/subpage.xml', false, $context));
+      print("<subpagesdl status='success'>");
+      if ($subpagexml) {
+        $fgc = simplexml_load_file("design/subpages.xml");
+        if ($fgc) {
+          $domsubpagesxml = dom_import_simplexml($fgc); //$fgc->subpages
+          $domfgc  = dom_import_simplexml($subpagexml);
+          $domfgc  = $domsubpagesxml->ownerDocument->importNode($domfgc, TRUE);
+          $domsubpagesxml->appendChild($domfgc);
+  				$fgc->asXML("design/subpages.xml"); 
+  				print("<updatesubpagesxml status='success'>");
+  			} else
+  				print("<updatesubpagesxml status='error'>Unable to update design/subpages.xml file");
+  			print("</updatesubpagesxml>\n");
+      } 
+      $widgetscss = file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/subpages_knxweb2/' . $subpage . '/widgets.css', false, $context);
+      if ($widgetscss) {
+        $fp = fopen("widgets/widgets.css", 'a+');  // 'a+' => Ouvre en lecture et écriture ; place le pointeur de fichier à la fin du fichier. Si le fichier n'existe pas, on tente de le créer.
+        if ($fp) {  
+  				fwrite($fp, "\n /* Supage " . $subpage . " Add from cvs */\n" . $widgetscss);
+  				fclose($fp);
+  				print("<updatewidgetscss status='success'>");
+  			} else
+  				print("<updatewidgetscss status='error'>Unable to update/create widgets/widgets.css file");
+  			print("</updatewidgetscss>\n");
+      }      
+      print("</subpagesdl>\n");
+      break;
 
 		default:
 			print("<response status='error'>Unknown action</response>\n");

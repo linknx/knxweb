@@ -1,9 +1,12 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml">
+<!DOCTYPE html>
+<html lang="{$_config.lang}">
 <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		
 		<meta http-equiv="pragma" content="no-cache" />
 		<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+    <meta name="viewport" content="user-scalable=no,width=device-width" /> <!-- for mobile -->
 		
 		<title>{$_config.title}</title>
 		{foreach from=$cssList item=css}

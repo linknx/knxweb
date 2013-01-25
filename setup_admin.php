@@ -9,24 +9,33 @@ tpl()->addJs('js/setup_admin.js');
 
 tpl()->assignByRef("lang",$lang);
 
+tpl()->assign('progstatus', (isset($_GET['progstatus']))); 
+tpl()->assign('configknxweb', (isset($_GET['configknxweb'])));
+tpl()->assign('logobjects', (isset($_GET['logobjects'])));
+tpl()->assign('loglinknx', (isset($_GET['loglinknx'])));
+tpl()->assign('networksetup', false);
+
 $Fnetwork ='/etc/network/interfaces';
 $log_Linknx =''; // /tmp/linknx.log ou autre exemple : /var/lib/linknx/linknx.log
 $pathLog = ''; // exemple : "/var/lib/linknx/log"
 $logType = ''; // '' / 'file' / 'mysql'
 
-$linknx=new Linknx($_config['linknx_host'], $_config['linknx_port']);
-$info=$linknx->getLogging();
-if ($info!==false) {
+if (isset($_GET['logobjects']) || isset($_GET['loglinknx']))
+{
+  $linknx=new Linknx($_config['linknx_host'], $_config['linknx_port']);
+  $info=$linknx->getLogging();
+  if ($info!==false) {
   $log_Linknx = $info['logging']['output'];
-}
-$info=$linknx->getServices();
-if ($info!==false) {
+  }
+  $info=$linknx->getServices();
+  if ($info!==false) {
   $logType = $info['persistence']['type'];
   if ($logType == 'file') $pathLog = $info['persistence']['logpath'];
-}
+  }
 
-if ($logType == 'file') {
+  if ($logType == 'file') {
   $objects=$linknx->getObjects();
+    //$logfile = glob( dirname(dirname(__FILE__)) .$pathLog.'*.log');
   $logfile = glob($pathLog.'*.log');
   $order = array( $pathLog , '.log' );
   foreach ($logfile as $value) {
@@ -34,8 +43,8 @@ if ($logType == 'file') {
     $type = $objects[$id]["type"];
     $listobjectlog[$id] = $value . '_type_' . $type;
   } 
-}
-if ($logType == 'mysql') {
+  }
+  if ($logType == 'mysql') {
   // requete sur la base mysql $info['persistence'][] host/user/pass/db/table/logtable
   // $listobjectlog[$object] = $object
   $serveur       = $info['persistence']['host'];
@@ -62,11 +71,43 @@ if ($logType == 'mysql') {
     $nbenreg--;
   }
   mysql_close();
+  }
 }
 tpl()->assignByRef('logFile', $listobjectlog );
 tpl()->assignByRef('logType',$logType);
 
-require("include/admin.php");
+if (isset($_GET['progstatus']))
+{
+  require("include/admin.php");
+  tpl()->assign('networksetup', true);
+} else {
+  $network=array();
+  $linknxLog="";
+  $eibd_running="";
+  $eibd_running_param="";
+  $linknx_running="";
+  $linknx_running_param="";
+  $widgetscss = "widgets/widgets.css";
+  $widgetscssexist = false;
+  $widgetscss = "";
+}
+if (isset($_GET['configknxweb']))
+{
+  $widgetscss = "widgets/widgets.css";
+  $widgetscssexist = false;
+  $widgetscssiswritable = false;
+  if ( file_exists($widgetscss) ) {
+    $widgetscssexist = true;
+    $widgetscssiswritable = is_writable( $widgetscss );
+    $contentwidgetscss = '';
+    if ( !$error && filesize($widgetscss) > 0 ) {
+      $f = fopen($widgetscss, 'r');
+      $contentwidgetscss = fread($f, filesize($widgetscss));
+    }
+  } else {
+    $widgetscss = "";
+  }
+}
 
 tpl()->assignByRef('_SERVER', $_SERVER);
 
@@ -82,7 +123,7 @@ tpl()->assignByRef('widgetscssiswritable', $widgetscssiswritable);
 tpl()->assignByRef('contentwidgetscss', $contentwidgetscss);
 
 /* gestions des pgm supplémentaire utilisateurs */
-if (file_exists("include/pgmrunning.php")) {
+if (file_exists("include/pgmrunning.php") && isset($_GET['progstatus'])) {
   $pgmrunning = array();
   $pgmrunning_param = array();
   require_once("include/pgmrunning.php");
@@ -93,6 +134,8 @@ if (file_exists("include/pgmrunning.php")) {
 tpl()->assignByRef("pgmrunning",$pgmrunning);
 tpl()->assignByRef("pgmrunning_param",$pgmrunning_param); 
 
+$uitheme = getUiThemes();
+tpl()->assignByRef('uitheme', $uitheme);
 
 tpl()->display('setup_admin.tpl');
 

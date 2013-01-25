@@ -67,13 +67,13 @@ var rules = {
     div.addClass('condition');
     div.addClass('and');
     div.attr("id", "and"+((new Date().getTime())));
-    div.html('Et');
+    div.html(tr('And'));
     div[0].type="and";
     div[0].condition=true;
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
-      if (confirm("Supprimer cette condition ?"))
+      if (confirm(tr("Delete this condition ?")))
       {
         jsPlumb.removeAllEndpoints(this);
         $(this).remove();
@@ -108,13 +108,13 @@ var rules = {
     div.addClass('condition');
     div.addClass('or');
     div.attr("id", "or"+((new Date().getTime())));
-    div.html('Ou');;
+    div.html(tr('Or'));
     div[0].type="or";
     div[0].condition=true;
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
-      if (confirm("Supprimer cette condition ?"))
+      if (confirm(tr("Delete this condition ?")))
       {
         jsPlumb.removeAllEndpoints(this);
         $(this).remove();
@@ -148,13 +148,13 @@ var rules = {
     div.addClass('condition');
     div.addClass('not');
     div.attr("id", "not"+((new Date().getTime())));
-    div.html('Not');
+    div.html(tr('Not'));
     div[0].type="not";
     div[0].condition=true;
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
-      if (confirm("Supprimer cette condition ?"))
+      if (confirm(tr("Delete this condition ?")))
       {
         jsPlumb.removeAllEndpoints(this);
         $(this).remove();
@@ -300,8 +300,8 @@ var rules = {
     var responseXML=queryLinknx('<write><config><rules><rule id="'+ruleid+'" active="'+active+'" /></rules></config></write>');
     if (responseXML!=false)
     {
-      if ( active == true ) messageBox(tr("Rule active successfully"),"Active Rule","");
-      else messageBox(tr("Rule inactive successfully"),"Active Rule","");
+      if ( active == true ) messageBox(tr("Rule active successfully"),tr("Active Rule"),"");
+      else messageBox(tr("Rule inactive successfully"),tr("Active Rule"),"");
       return true;
     }
     return false;
@@ -367,17 +367,17 @@ function loadRule(xml)
     }
     if (!typeactionlist || typeactionlist == "on-true" || typeactionlist == "if-true") {
       $('action', this).each(function() {
-        var action = rules.addActionRule( this.getAttribute('type'), this, i);
+        var action = rules.addActionRule( this.getAttribute('type'), this, i, true);
         i++;
         jsPlumb.connect({source:actionlist[0].ontrue[i], target: action[0].endpointin});
-        if (i>10) { messageBox("Nombre maximum d'action atteint","Action On-True","alert"); return 0; }// TODO gérer si plus de 10 actions ... 
+        if (i>10) { messageBox(tr("Maximum number of share reached"),tr("Action True"),"alert"); return 0; }// TODO gérer si plus de 10 actions ... 
       });
     } else if ( typeactionlist == "on-false" || typeactionlist == "if-false") {
       $('action', this).each(function() {
-        var action = rules.addActionRule( this.getAttribute('type'), this, i);
+        var action = rules.addActionRule( this.getAttribute('type'), this, i, false);
         i++;
         jsPlumb.connect({source:actionlist[0].onfalse[i], target: action[0].endpointin});
-        if (i>10) { messageBox("Nombre maximum d'action atteint","Action On-False","alert"); return 0; }// TODO gérer si plus de 10 actions ... 
+        if (i>10) { messageBox(tr("Maximum number of share reached"),tr("Action False"),"alert"); return 0; }// TODO gérer si plus de 10 actions ... 
       });
     }
 
@@ -457,3 +457,31 @@ function deleteRule()
   rules.deleteAllCurrentRule();
   reloadloadRulesList();  
 };
+
+function executeActionRule(type)  // type = true => actionlist de type "true" sinon "false"
+{
+  rules.generateXML();
+  var rule = $("#tab-rules-property").text();
+  if (type) {
+    var actions = $('actionlist[type=on-true]', rule)[0];
+    if (!actions) actions = $('actionlist[type=if-true]', rule)[0];
+  } else {
+    var actions = $('actionlist[type=on-false]', rule)[0];
+    if (!actions) actions = $('actionlist[type=if-false]', rule)[0];
+  }  
+  //var actions = $('rule[id="' + eventid + '"] actionlist',events.config)[0];
+  var actionsText = '';
+  $('action', actions).each(function() {
+    actionsText = actionsText + serializeXmlToString(this);
+	});
+  console.log("Test executeActionRule", type, actions, " actionsText:*", actionsText, "**");
+  if (actionsText !='') {
+    if (confirm(tr('Really execute actions of the rule ?'))) {
+      var responseXML=queryLinknx('<execute>'+actionsText+'</execute>');
+      if (responseXML!=false)
+      {
+        messageBox(tr("Action of the rule execute successfully"),tr("Execute Actionlist"),"");
+      }
+  	}
+  } 
+}

@@ -172,9 +172,13 @@ CWindow.prototype.refreshHTML = function() {
     .removeClass('ui-icon-circle-triangle-w');
 
   if (this.conf.getAttribute("position") == "bottom") {
-    var top = this.div.parent().css("height").replace(/px$/,"");
-    this.div.css("top", top+"px");
-    this.div.css("left",this.conf.getAttribute("shift"));
+    var top = 0;
+    if (!this.div.parent().css("height") ) {
+      if (!$('#widgetdiv').css("height") ) top = $('#zoneContainer').css("height").replace(/px$/,"");
+      else top = $('#widgetdiv').css("height").replace(/px$/,"");
+    } else top = this.div.parent().css("height").replace(/px$/,"");
+    this.div.css("top", top + "px");
+    this.div.css("left",this.conf.getAttribute("shift") + "px");
     $(".open", this.div).addClass("bottom");
     ico_show = "n";
     ico_hide = "s";
@@ -183,7 +187,7 @@ CWindow.prototype.refreshHTML = function() {
   }
   if (this.conf.getAttribute("position") == "top") {
     this.div.css("top", "0");
-    this.div.css("left", this.conf.getAttribute("shift"));
+    this.div.css("left", this.conf.getAttribute("shift") + "px");
     $(".open", this.div).addClass("top");
     ico_show = "s";
     ico_hide = "n";
@@ -191,9 +195,13 @@ CWindow.prototype.refreshHTML = function() {
     $('.widget', this.div).hide();
   }
   if (this.conf.getAttribute("position") == "right") {
-    var left = this.div.parent().css("width").replace(/px$/,"");
-    this.div.css("left", left+"px");
-    this.div.css("top",this.conf.getAttribute("shift"));
+    var left = 0;
+    if (!this.div.parent().css("width") ) {
+      if (!$('#widgetdiv').css("width") ) left = $('#zoneContainer').css("width").replace(/px$/,"");
+      else left = $('#widgetdiv').css("width").replace(/px$/,"");
+    } else left = this.div.parent().css("width").replace(/px$/,"");
+    this.div.css("left", left + "px");
+    this.div.css("top",this.conf.getAttribute("shift") + "px");
     $(".open", this.div).addClass("right");
     ico_show = "e";
     ico_hide = "w";
@@ -202,7 +210,7 @@ CWindow.prototype.refreshHTML = function() {
   }
   if (this.conf.getAttribute("position") == "left") {
     this.div.css("left", "0");
-    this.div.css("top",this.conf.getAttribute("shift"));
+    this.div.css("top",this.conf.getAttribute("shift") + "px");
     $(".open", this.div).addClass("left");
     ico_show = "w";
     ico_hide = "e";

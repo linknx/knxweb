@@ -1,3 +1,11 @@
+var _EventCanUse = false;
+if(typeof(EventSource)!=="undefined")
+{
+  _EventCanUse = true;
+} else {
+  _EventCanUse = false;
+} 
+
 // EIBCommunicator
 var EIBCommunicator = {
 	listeners: new Object(),
@@ -120,6 +128,34 @@ var EIBCommunicator = {
 		EIBCommunicator.updateAll(function(XMLHttpRequest, textStatus) {
 				setTimeout('EIBCommunicator.periodicUpdate()', 1000);
 			});
+	},
+	runUpdate: function() {
+    if (_EventCanUse && tab_config.useEventSource=='true') {
+      // Update all object at the beginning, after linknx only send "notify" of objects changed
+      EIBCommunicator.updateAll();
+      var source=new EventSource("event_linknx.php");
+      source.onmessage=function(event)
+      {
+        var xmlResponse = StringtoXML(event.data).documentElement; // Convert the data in xml 
+        if (xmlResponse.getAttribute('status') == 'error') { // retour de l'enregistrement de "notification"
+          UIController.setNotification(tr("Error: ")+xmlResponse.textContent);
+        } else if (xmlResponse.getAttribute('status') == 'success') {  // retour de l'enregistrement de "notification"
+          UIController.setNotification(tr("Success: ")+xmlResponse.textContent);
+        } else if (xmlResponse.getAttribute('id') && xmlResponse.nodeName == "notify") {
+          console.log("EventSource update object id=", xmlResponse.getAttribute('id'), "value=", xmlResponse.childNodes[0].nodeValue); // TODO à enlever
+          EIBCommunicator.sendUpdate(xmlResponse.getAttribute('id'), xmlResponse.childNodes[0].nodeValue);
+        } 
+      }
+    } else {
+      if (tab_config.useJavaIfAvailable=='true')
+  		{
+  			if (navigator.javaEnabled())
+  			{
+  				// Update all object
+  				EIBCommunicator.updateAll();
+  			} else EIBCommunicator.periodicUpdate();
+  		} else EIBCommunicator.periodicUpdate();
+    }
 	},
 	removeAll: function() {
 		for(key in EIBCommunicator.listeners) 

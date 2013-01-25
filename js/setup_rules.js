@@ -18,7 +18,7 @@ jQuery(document).ready(function(){
         });
       }
       else
-        messageBox(tr("Error: ")+responseXML.textContent, 'Erreur', 'alert');
+        messageBox(tr("Error: ")+responseXML.textContent, tr('Error'), 'alert');
     }
   });
   
@@ -160,8 +160,12 @@ jQuery(document).ready(function(){
   
   var actionlistontrue =$('<div>');
   actionlistontrue.attr("id", "actionlistOnTrue");
-  actionlistontrue.css("height", "120px").css("width", "70px").css("top", "0px").css("position", "absolute");
+  actionlistontrue.attr("title", tr("DblClick : Toggle On-True / If-True"));
+  //actionlistontrue.css("height", "120px").css("width", "70px").css("top", "0px").css("position", "absolute");
   actionlistontrue.append('<span style="position: absolute; top: 50%; text-align: center; right: 10px;">On-True</span>');
+  Playactionlistontrue = $('<div class="play" title="'+tr('Execute')+'" ></div>')
+  Playactionlistontrue.click(function() { executeActionRule(true);});
+  actionlistontrue.append(Playactionlistontrue);
   
   actionlistontrue[0].type="actionlist";
   actionlistontrue[0].condition=true;
@@ -186,9 +190,12 @@ jQuery(document).ready(function(){
   
   var actionlistonfalse =$('<div>');
   actionlistonfalse.attr("id", "actionlistOnFalse");
-  actionlistonfalse.css("height", "120px").css("width", "70px").css("top", "120px").css("position", "absolute");
-  
+  actionlistontrue.attr("title", tr("DblClick : Toggle On-False / If-False"));
+  //actionlistonfalse.css("height", "120px").css("width", "70px").css("top", "120px").css("position", "absolute");
   actionlistonfalse.append('<span style="position: absolute; top: 50%; text-align: center; right: 10px;">On-False</span>');
+  Playactionlistonfalse = $('<div class="play" title="'+tr('Execute')+'" ></div>')
+  Playactionlistonfalse.click(function() { executeActionRule(false);});
+  actionlistonfalse.append(Playactionlistonfalse);
   
   actionlistonfalse[0].type="actionlist";
   actionlistonfalse[0].condition=true;

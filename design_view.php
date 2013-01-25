@@ -2,18 +2,20 @@
 
 require_once("include/common.php");
 
-tpl()->addCss("lib/jquery/css/cupertino/jquery-ui-1.8.10.custom.css");
+if (!isset($_config["uitheme"]) || $_config["uitheme"] == "") $_config["uitheme"] = "cupertino";
+tpl()->addCss("lib/jquery/css/" . $_config["uitheme"] . "/jquery-ui.css");
 tpl()->addCss('css/style.css');
 tpl()->addJs("lib/jquery/js/jquery.min.js");
-tpl()->addJs("lib/jquery/js/jquery-ui-1.8.10.custom.min.js");
+tpl()->addJs("lib/jquery/js/jquery-ui.min.js");
 tpl()->addJs('lib/jquery.scrollTo-1.4.2-min.js');
 tpl()->addJs('lib/jquery.serialScroll-1.2.2-min.js');
-//tpl()->addJs('lib/jquery.knob-1.1.0.js');
+
 tpl()->addJs("js/eibcommunicator.js");
 tpl()->addJs("js/uicontroller.js");
 tpl()->addJs("js/common.js");
 tpl()->addJs('js/widget.js');
 tpl()->addJs('js/design_view.js');
+tpl()->addJs('lib/jquery.ui.touch-punch.min.js');
 
 $widgets=getWidgets();
 tpl()->assign_by_ref("widgets",$widgets);

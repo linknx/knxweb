@@ -149,19 +149,19 @@ jQuery(document).ready(function(){
 	
 	$('#exceptiondays-dialog').dialog({ 
 		autoOpen: false,
-		buttons: { 
-				"Cancel": function() { $(this).dialog("close"); },
-				"Add": function() {
+		buttons: [
+      { text: tr("Cancel"), click: function() { $( this ).dialog("close"); } },
+      { text: tr("Add"), click: function() { 
 					if ($("#exceptiondays-form").valid())
 					{
 						var option=$('<option value="' + $("#exceptiondays-dialog-date").val() + '">' + $("#exceptiondays-dialog-date").val() + '</option>');
 						$("#setupgeneral-exceptiondays").append(option);
 						$(this).dialog("close");
 					}
-				}
-		},
+      } }
+    ],
 		resizable: false,
-		title: "Add date",
+		title: tr("Add date"),
 		width: 400,
 		modal: true
 	});

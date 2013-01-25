@@ -7,7 +7,7 @@
 <table class="form">
 	<tbody>
 		<tr>
-			<th width="150">{l lang="en"}ID{/l}</th>
+			<th width="150">{l lang="en"}Id{/l}</th>
 			<td>
 				<input id="edit-ioport-id" name="edit-ioport-id" class="required" type="text">
 			</td>

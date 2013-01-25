@@ -3,70 +3,103 @@
   <name>charts</name>
   <label>Charts</label>
   <description>Charts with Highcharts</description>
-  <version>1.0</version>
-  <category>Basic widgets</category>
+  <version>1.1</version>
+  <category>Various widgets</category>
   <settings>
     <setting id="picture" label="Picture" type="picture" default="32x32_graph.png" />
     <setting id="legend" label="Legend" type="list" default="true">
 			<option key="true" value="Yes" />
 			<option key="false" value="No" />
 		</setting>
-    <setting id="title" label="Title" type="text" default="Graph" />
+    <setting id="title" label="Title" type="text" default="Curve log object with HighStock" />
+
+    <setting id="navigator" label="Navigator" type="list" default="true">
+      <option key="true" value="Yes" />
+      <option key="false" value="No" />
+    </setting>
+    <setting id="ordinal" label="Short time line" type="list" default="true">
+      <option key="true" value="Yes" />
+      <option key="false" value="No" />
+    </setting>
+
+    <setting label="Delay to date (mysql log)" type="comment" />
+    <setting id="duration" label="Duration" type="text" default="1" />
+    <setting id="periodicity" label="Periodicity" type="list" default="day">
+      <option key="hour" value="Hour" />
+      <option key="day" value="Day" />
+      <!-- <option key="week" value="Week" /> -->
+      <option key="month" value="Month" />
+      <option key="year" value="year" />
+    </setting>
+    <setting label="Nb Enreg (file log)" type="comment" />
+    <setting id="nbenreg" label="Nb Enreg" type="text" default="1000" />
 
     <setting label="Curves" type="comment" />
     <setting id="id" label="Object" type="object" />
-    <setting id="nbenreg" label="Nb Enreg" type="text" default="1000" />
-    <setting id="typeid" label="Type of the object" type="list" default="temperature">
-			<option key="temperature" value="Temperature" />
-			<option key="swicth" value="Swicth" />
-			<option key="blind" value="Blind" />
-			<option key="water" value="Water" />
-			<option key="gaz" value="Gaz" />
-			<option key="electricity" value="Electricity" />
+
+    <setting id="typecurve" label="Type of the object" type="list" default="spline">
+      <option key="line" value="line" />
+      <option key="switch" value="line 'switch On/Off'" />
+      <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
+      <option key="pourcent" value="line '%'" />
+      <option key="area" value="area" />
+      <option key="areaspline" value="areaspline" />   
+      <option key="spline" value="spline" />
+      <option key="temperature" value="spline 'temperature'" />
+      <!-- <option key="bar" value="bar" />        
+      <option key="column" value="column" />     
+      <option key="pie" value="pie" />        
+      <option key="scatter" value="scatter" />      
+      <option key="candlestick" value="candlestick" />
+      <option key="ohlc" value="ohlc" /> -->       
 		</setting>
     <setting label="" type="separator" />
     <setting id="id1" label="Object" type="object" />
-    <setting id="nbenreg1" label="Nb Enreg" type="text" default="1000" />
-    <setting id="typeid1" label="Type of the object" type="list" default="temperature">
-			<option key="temperature" value="Temperature" />
-			<option key="swicth" value="Swicth" />
-			<option key="blind" value="Blind" />
-			<option key="water" value="Water" />
-			<option key="gaz" value="Gaz" />
-			<option key="electricity" value="Electricity" />
+    <setting id="typecurve1" label="Type of the object" type="list" default="spline">
+      <option key="line" value="line" />
+      <option key="switch" value="line 'switch On/Off'" />
+      <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
+      <option key="pourcent" value="line '%'" />
+      <option key="area" value="area" />
+      <option key="areaspline" value="areaspline" />   
+      <option key="spline" value="spline" />
+      <option key="temperature" value="spline 'temperature'" />       
 		</setting>
     <setting label="" type="separator" />
     <setting id="id2" label="Object" type="object" />
-    <setting id="nbenreg2" label="Nb Enreg" type="text" default="1000" />
-    <setting id="typeid2" label="Type of the object" type="list" default="temperature">
-			<option key="temperature" value="Temperature" />
-			<option key="swicth" value="Swicth" />
-			<option key="blind" value="Blind" />
-			<option key="water" value="Water" />
-			<option key="gaz" value="Gaz" />
-			<option key="electricity" value="Electricity" />
+    <setting id="typecurve2" label="Type of the object" type="list" default="spline">
+      <option key="line" value="line" />
+      <option key="switch" value="line 'switch On/Off'" />
+      <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
+      <option key="pourcent" value="line '%'" />
+      <option key="area" value="area" />
+      <option key="areaspline" value="areaspline" />   
+      <option key="spline" value="spline" />
+      <option key="temperature" value="spline 'temperature'" />       
 		</setting>
     <setting label="" type="separator" />
     <setting id="id3" label="Object" type="object" />
-    <setting id="nbenreg3" label="Nb Enreg" type="text" default="1000" />
-    <setting id="typeid3" label="Type of the object" type="list" default="temperature">
-			<option key="temperature" value="Temperature" />
-			<option key="swicth" value="Swicth" />
-			<option key="blind" value="Blind" />
-			<option key="water" value="Water" />
-			<option key="gaz" value="Gaz" />
-			<option key="electricity" value="Electricity" />
+    <setting id="typecurve3" label="Type of the object" type="list" default="spline">
+      <option key="line" value="line" />
+      <option key="switch" value="line 'switch On/Off'" />
+      <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
+      <option key="pourcent" value="line '%'" />
+      <option key="area" value="area" />
+      <option key="areaspline" value="areaspline" />   
+      <option key="spline" value="spline" />
+      <option key="temperature" value="spline 'temperature'" />       
 		</setting>
     <setting label="" type="separator" />
     <setting id="id4" label="Object" type="object" />
-    <setting id="nbenreg4" label="Nb Enreg" type="text" default="1000" />
-    <setting id="typeid4" label="Type of the object" type="list" default="temperature">
-			<option key="temperature" value="Temperature" />
-			<option key="swicth" value="Swicth" />
-			<option key="blind" value="Blind" />
-			<option key="water" value="Water" />
-			<option key="gaz" value="Gaz" />
-			<option key="electricity" value="Electricity" />
+    <setting id="typecurve4" label="Type of the object" type="list" default="spline">
+      <option key="line" value="line" />
+      <option key="switch" value="line 'switch On/Off'" />
+      <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
+      <option key="pourcent" value="line '%'" />
+      <option key="area" value="area" />
+      <option key="areaspline" value="areaspline" />   
+      <option key="spline" value="spline" />
+      <option key="temperature" value="spline 'temperature'" />       
 		</setting>
 
   </settings>

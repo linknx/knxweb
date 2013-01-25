@@ -1,3 +1,5 @@
+_editMode = true;
+
 var subpages = {
 	config: null,
 	currentSubPage: null,
@@ -26,12 +28,12 @@ var subpages = {
 				var xmlResponse = responseXML.documentElement;
 				if (xmlResponse.getAttribute('status') == 'success')
 				{
-					messageBox("Sub-pages saved successfully", "Info", "check");
+					messageBox(tr("Sub-pages saved successfully"), tr("Info"), "check");
 					subpages.load();
-				}	else messageBox(tr("Error while saving design: ")+xmlResponse.textContent, "Error", "alert");
+				}	else messageBox(tr("Error while saving design: ")+xmlResponse.textContent, tr("Error"), "alert");
 			},
 			error: function (XMLHttpRequest, textStatus, errorThrown) {
-					messageBox(tr("Error while saving design: ")+textStatus, "Error", "alert");
+					messageBox(tr("Error while saving design: ")+textStatus, tr("Error"), "alert");
 			}
 		});
 	},
@@ -57,7 +59,7 @@ var subpages = {
 				subpages.draw(name);
 				subpages.refreshSubPagesList();
 
-			} else messageBox("Another sub-page with the same name already exists", "Error", "alert");
+			} else messageBox(tr("Another sub-page with the same name already exists"), tr("Error"), "alert");
 		}
 	},
   
@@ -200,9 +202,11 @@ var subpages = {
 			}
 
 
-	
+	    var number = 0;
 			subpage.children('controls').children('control').each(function() {
-				subpages.addWidget(this);
+				var obj = subpages.addWidget(this);
+        number++;
+        obj.div.css("z-index", number );
 			});
 		}
 	},
@@ -219,6 +223,28 @@ var subpages = {
 		
 			if (obj!=null) {
 				$('#widgetsubpagediv').append(obj.div);
+				obj.edit(subpages.onWidgetSelect, subpages.onWidgetMove, subpages.onWidgetResize);
+        subpages.addWidgetsList(obj);
+        $('control', conf).each(function() {
+  				subpages.addWidgetChildren(this, obj.content);
+  			});
+				return obj;
+			}
+			return false;
+		}	else return false;
+	},
+
+	// Add widget from conf and to a parent
+	addWidgetChildren: function(conf, parent) {
+		var obj = null;
+		var type = conf.getAttribute('type');
+		var cls = UIController.widgetList[type];
+
+		if (cls)
+		{
+			obj = new cls(conf);
+			if (obj!=null) {
+        parent.append(obj.div);
 				obj.edit(subpages.onWidgetSelect, subpages.onWidgetMove, subpages.onWidgetResize);
         subpages.addWidgetsList(obj);
 				return obj;
@@ -305,11 +331,9 @@ var subpages = {
       $('#tab-design-fluxxml').dialog({ 
         width: 812,
         modal: true,
-        buttons: {
-          Close: function() {
-            $( this ).dialog( "close" );
-          }
-        },
+        buttons: [
+          { text: tr("Close"), click: function() { $( this ).dialog( "close" ); } }
+        ]
       });
     });
 
@@ -367,6 +391,12 @@ var subpages = {
 	  var tr=$('<tr><th colspan="2">Y</th><td><input id="tab-subpages-properties-y" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("y") + '"></td></tr>');
 	   $("#tab-subpages-widget-properties tbody").append(tr);
 	
+    var tr=$('<tr><th>' +tr('Description')+'</th><td><input id="tab-subpages-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
+    $("#tab-subpages-widget-properties tbody").append(tr);
+    $("#tab-subpages-properties-desc").change(function() {
+      o.setSetting("desc", $(this).val());
+    });
+	
 		if (o.isResizable) {
 			var tr=$('<tr><th colspan="2">Width</th><td><input id="tab-subpages-properties-width" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("width") + '"></td></tr>');
 			$("#tab-subpages-widget-properties tbody").append(tr);
@@ -402,9 +432,16 @@ var subpages = {
 		    tr.append($('<th>' + this.label + '</th>'));
 
 	    	var value=o.conf.getAttribute(this.id);
-	    	if (value==null) value="";
+	    	if (value=="undefined" || value==null) value="";
 	    	var isSubPageParameter=((value.substring(0,1)=="_")?true:false);
 	    	var subPageParameterValue=value.substring(1,value.length);
+        if (o.conf.getAttribute('type')=="html" && o.conf.firstChild) {
+          if (value!="") {
+            o.conf.removeAttribute("html");
+            o.conf.firstChild.nodeValue = value;
+          }
+          value = o.conf.firstChild.nodeValue;
+        } 
 
 		    // Add checkbox to use a sub-page parameter
 		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture") || (this.type=="zone") || (this.type=="multipleObject"))
@@ -451,10 +488,17 @@ var subpages = {
 		    if (this.type=="text") 
 		    {
           var input=$('<input type="text" name="' + this.id + '" value="">');
-          if (!isSubPageParameter) input.val(o.conf.getAttribute(this.id));
+          if (!isSubPageParameter) input.val(value); //o.conf.getAttribute(this.id)
 	    		if (isSubPageParameter) input.css('display','none');
 		    	td.append(input);
 		    }
+		    // TextArea setting
+        if (this.type=="textarea") {
+          var textareaproperties = $('<textarea name="' + this.id + '" rows="4" />');
+          if (!isSubPageParameter) textareaproperties.text(value);
+	    		if (isSubPageParameter) textareaproperties.css('display','none');
+          td.append(textareaproperties);
+        };
 		
 		    // List setting
 		    if (this.type=="list") 
@@ -565,7 +609,7 @@ var subpages = {
 		    // Picture setting
 		    if (this.type=="picture") 
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + ((!isSubPageParameter)?o.conf.getAttribute(this.id):"") + '">'));
+					var input=($('<input type="text" name="' + this.id + '" value="' + ((!isSubPageParameter)?value:"") + '">')); //o.conf.getAttribute(this.id)
 					input.click(function() {
 						openImagesManager($(this));
 					});			
@@ -632,9 +676,9 @@ var subpages = {
 	    $("#tab-subpages-widget-properties tbody").append(tr);
 		});
 		
-		$("#tab-subpages-widget-properties input, #tab-subpages-widget-properties select").change( function() {
+		$("#tab-subpages-widget-properties input, #tab-subpages-widget-properties select, #tab-subpages-widget-properties textarea").change( function() {
 			// Update conf on selected object when a property change
-			if (($(this).get(0).tagName=="SELECT") || ($(this).attr('type')=="text"))
+			if (($(this).get(0).tagName=="SELECT") || ($(this).attr('type')=="text") || ($(this).get(0).tagName=="TEXTAREA"))
 			{
 				if ($(this).attr('name').substring(0,1)=="_") {
 					var name=$(this).attr('name').substring(1,$(this).attr('name').length);
@@ -643,7 +687,14 @@ var subpages = {
 					var name=$(this).attr('name');
 					var value=$(this).val();
 				}
-				if ($("div .selected").length>0)	$("div .selected").get(0).owner.setSetting(name, value);
+				if ($("div .selected").length>0) {
+          //$("div .selected").get(0).owner.setSetting(name, value);
+          var selectedWidget=$("div .selected").get(0);
+          // if widget is a html :
+          if ((selectedWidget.owner.conf.getAttribute('type')=='html') && (name=="html")) 
+            $(selectedWidget.owner.conf).empty().append(selectedWidget.owner.conf.ownerDocument.createCDATASection(value));
+          else selectedWidget.owner.setSetting(name, value);
+        }
 			} else $("input[type=text]:visible,select:visible",$(this).parent().parent()).trigger('change');
 		});
 		
@@ -716,7 +767,7 @@ var subpages = {
 			var type=$(".type",this).val();
 			
 			if ((id=="")||(label=="")) {
-				messageBox("Please complete all fields", "Error", "alert");
+				messageBox(tr("Please complete all fields"), tr("Error"), "alert");
 				return false;
 			}
 
@@ -809,14 +860,10 @@ jQuery(function($) {
 	});
 	
 	$("#tab-subpages-parameters").dialog({
-		buttons: {
-			Ok: function() {
-				if (subpages.saveParameters()) $( this ).dialog( "close" );
-			},
-			Cancel: function() {
-				$( this ).dialog( "close" );
-			}
-		},
+		buttons: [
+      { text: tr("Ok"), click: function() { if (subpages.saveParameters()) $( this ).dialog( "close" ); } },
+      { text: tr("Cancel"), click: function() { $( this ).dialog( "close" ); } }
+    ],
 		width: 450,
 		height: 300,
 		modal: true,
@@ -824,7 +871,7 @@ jQuery(function($) {
 		open: function() {
 			subpages.fillParameters();
 		},
-		close: function() {
+		"Close": function() {
 			if ($("div .selected").length>0)	
 				subpages.displayProperties($("div .selected").get(0).owner);
 		}

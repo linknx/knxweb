@@ -1,8 +1,15 @@
+_editMode = true;
+
 var design = {
 	config: null,
 	currentDesign: null,
 	currentVersion: null,
 	currentZone: null,
+  grid: false,
+  gridwidgetsize: false,
+  gridWidth: 1,
+  widgetMargin: 10,
+  floating: false,
 	
 	// Load design
 	load: function(designName, version)	{
@@ -63,7 +70,6 @@ var design = {
 						var option = "<option value='" + this.getAttribute('name') +"'>" + this.getAttribute('name') + "</option>";
 						$('#tab-design-design-list').append(option);
 					});
-					$('#tab-design-design-list').val(UIController.getDesignName());
 				}
 				else
 					$('#tab-design-design-list').text('Unable to load design list: '+xmlResponse.textContent);
@@ -77,9 +83,16 @@ var design = {
 	// Refresh zone select	
 	refreshZoneList: function() {
 		$('#tab-design-zone-list').empty();
+    $('#tab-design-zones-list tbody').empty();
 		$('zone', design.config).each(function() {
 			var option = "<option value='" + this.getAttribute('id')+"'>" + this.getAttribute('name') + "</option>";
 			$('#tab-design-zone-list').append(option);
+      var tr = $("<tr zoneId='" + this.getAttribute('id') + "'><td>" + this.getAttribute('id')+"</td><td>" + this.getAttribute('name') + "</td></tr>");
+      tr.click(function() {
+        $(".active", "#tab-design-zones-list").removeClass("active");
+        $(this).addClass("active");
+      });
+      $('#tab-design-zones-list tbody').append(tr);
 		});
 	},	
 	
@@ -95,11 +108,44 @@ var design = {
 			var height=$("config",design.config)[0].getAttribute('height');
 			$("#tab-design-width").val( ((width!=null)?width:1280) );
 			$("#tab-design-height").val( ((height!=null)?height:1024) );
+			var effect=$("config",design.config)[0].getAttribute('effect');
+      if (effect) $("#tab-design-effect").val(effect);
 			
 			$("#tab-design-zone-background").val(zone.attr('img'));
       $("#tab-design-zone-globalcontrol").attr("checked", ((zone.attr('globalcontrol')!="false")?true:false));
 
-			if ($("config",design.config)[0].getAttribute('enableSlider')=='true') $("#tab-design-slider").attr('checked', true); else $("#tab-design-slider").attr('checked', false);
+			if ($("config",design.config)[0].getAttribute('enableSlider')=='true') {
+        $("#tab-design-slider").attr('checked', true);
+        $("#tab-design-effect").attr('disabled', 'disabled'); 
+      } else {
+        $("#tab-design-slider").attr('checked', false);
+        $("#tab-design-effect").removeAttr('disabled');
+      }
+      if ($("config",design.config)[0].getAttribute('grid')) {
+        $("#tab-design-grid").attr('checked', true);
+        $("#tab-design-grid-width").val($("config",design.config)[0].getAttribute('grid')); 
+      } else {
+        $("#tab-design-grid").attr('checked', false);
+        //$("#tab-design-grid-width").val(1);
+      }
+      $("#tab-design-grid-width").change();
+      if ($("config",design.config)[0].getAttribute('gridwidgetsize')) {
+        $("#tab-design-grid-widgetsize").attr('checked', true);
+      } else {
+        $("#tab-design-grid-widgetsize").attr('checked', false);
+      }
+      
+      if ($("config",design.config)[0].getAttribute('floating')) {
+        $("#tab-design-floating").attr('checked', true);
+        $("#tab-design-margin").val($("config",design.config)[0].getAttribute('floating'));
+        _floating_zone = true;
+        _floating_zone_margin = $("config",design.config)[0].getAttribute('floating');
+      } else {
+        $("#tab-design-floating").attr('checked', false);
+        _floating_zone = false;
+        _floating_zone_margin = 10;
+      }
+      $("#tab-design-floating").change();
 
 			$('#widgetdiv').width($("#tab-design-width").val());
 			$('#widgetdiv').height($("#tab-design-height").val());
@@ -186,6 +232,7 @@ var design = {
 	// Delete a widget
 	deleteWidget: function(o) {
     var ow = o.get(0).owner;
+    if (!ow) return false;
     //$(o.conf).children('control').each(function() {
     $(".widget", o).each(function() {
       design.deleteWidget($(this));
@@ -193,6 +240,7 @@ var design = {
     design.removeWidgetsList(ow);
 		// Remove div
 		ow.div.remove();
+		ow.deleteWidget();
 		// Remove from xml
 		$(ow.conf).remove();
 	},
@@ -241,6 +289,22 @@ var design = {
 				obj = new cls(this);
 				if (obj!=null) {
 					div.append(obj.div);
+          
+          $('control', this).each(function() {
+          	var obj2 = null;
+      			var type2 = this.getAttribute('type');
+      			var cls2 = UIController.widgetList[type2];
+      			if (cls2)
+      			{
+      				obj2 = new cls2(this);
+      				if (obj2!=null) {
+      					obj.content.append(obj2.div);
+      					return true;
+      				}
+      				return false;
+      			}	else return false;
+          });
+          
 					return true;
 				}
 				return false;
@@ -253,9 +317,10 @@ var design = {
 	// Remove all widgets
 	clear: function() {
 		$("#widgetdiv .widget").each(function() {
+			if(this.owner) this.owner.deleteWidget();
 			$(this).remove();
-			$('#bgImage').hide();
 		});
+		$('#bgImage').hide();
     design.refreshWidgetsList();
 		design.currentZone=null;
 	},
@@ -293,11 +358,9 @@ var design = {
 	  $('#tab-design-fluxxml').dialog({ 
 	  	width: 812,
 			modal: true,
-			buttons: {
-				Close: function() {
-					$( this ).dialog( "close" );
-				}
-			},
+			buttons: [
+        { text: tr("Close"), click: function() { $( this ).dialog("close"); } }
+      ]
 	  });
 	},
 	
@@ -403,7 +466,7 @@ var design = {
     var tr=$('<tr><th>Description</th><td><input id="tab-design-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
     $("#tab-design-widget-properties tbody").append(tr);
     $("#tab-design-properties-desc").change(function() {
-      o.setSetting("name", $(this).val());
+      o.setSetting("desc", $(this).val());
     });
 
 		if (o.isResizable) {
@@ -423,6 +486,9 @@ var design = {
 		if (_widgetscssexist) {
       var tr=$('<tr><th>Class CSS</th><td><input id="tab-design-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
 			$("#tab-design-widget-properties tbody").append(tr);
+			$("#tab-design-properties-class").change(function() {
+				o.setSetting("class", $(this).val());
+			});
     }
 	  
 		$("#tab-design-properties-x").change(function() {
@@ -467,6 +533,13 @@ var design = {
 
 	    	var value=o.conf.getAttribute(this.id);
 	    	if (value=="undefined" || value==null) value="";
+        if (o.conf.getAttribute('type')=="html" && o.conf.firstChild) {
+          if (value!="") {
+            o.conf.removeAttribute("html"); //o.conf.setAttribute("html", "");
+            o.conf.firstChild.nodeValue = value;
+          }
+          value = o.conf.firstChild.nodeValue;
+        } 
 		    
 		    var td=$('<td>');
 		    // Text setting
@@ -638,7 +711,7 @@ var design = {
 		    // Color setting
 		    if (this.type=="color") 
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + o.conf.getAttribute(this.id) + '">'));
+					var input=($('<input type="text" name="' + this.id + '" value="' + value + '">'));
 					input.click(function() {
 						openColorPicker($(this));
 					});			
@@ -670,7 +743,6 @@ var design = {
 				    	}
 						});
 						actionEditor.open(actions, widgetObjects);
-						//actionEditor.open(actions);
 					});			
 		    	td.append(input);
 		  	}
@@ -698,14 +770,16 @@ var design = {
 	    $("#tab-design-widget-properties tbody").append(tr);
 		});
 		
-		$("#tab-design-properties input,select,textarea").change( function() {
+		$("#tab-design-properties input, #tab-design-properties select, #tab-design-properties textarea").change( function() {
 			// Update conf on selected object when a property change
-			if ($("#widgetdiv .selected").length>0 && $(this).attr('name') != "undefined")
+			//if ($("#widgetdiv .selected").length>0 && $(this).attr('name') != "undefined")
+      if ($("#widgetdiv .selected").length>0 && $(this).attr('name'))
 			{
 				var selectedWidget=$("#widgetdiv .selected").get(0);
-				// if widget is a html2 :
-				if ((selectedWidget.owner.conf.getAttribute('type')=='html2') && ($(this).attr('name')=="html")) $(selectedWidget.owner.conf).empty().append(selectedWidget.owner.conf.ownerDocument.createCDATASection($(this).val()));
-				selectedWidget.owner.setSetting($(this).attr('name'), $(this).val());
+				// if widget is a html :
+				if ((selectedWidget.owner.conf.getAttribute('type')=='html') && ($(this).attr('name')=="html")) 
+					$(selectedWidget.owner.conf).empty().append(selectedWidget.owner.conf.ownerDocument.createCDATASection($(this).val()));
+				else selectedWidget.owner.setSetting($(this).attr('name'), $(this).val());
 				// if widget is a subpage and subpage name modified
 				if ((selectedWidget.owner.conf.getAttribute('type')=='subpage') && ($(this).attr('name')=="subpage")) design.displayProperties(selectedWidget.owner);
 			}
@@ -713,11 +787,6 @@ var design = {
 		
 		$("#tab-design-widget-properties input, #tab-design-widget-properties select").focusout(function() { $(this).trigger('change'); });
 	},
-
-  // Show design list widgets off the page
-  displayDesignListWidgets: function() {
-    $("#tab-design-widgets-list").show();
-  },
 
   // add widget to the WidgetsList
   addWidgetsList: function(o, globalcontrol, child) {
@@ -746,11 +815,9 @@ var design = {
       $('#tab-design-fluxxml').dialog({ 
         width: 812,
         modal: true,
-        buttons: {
-          Close: function() {
-            $( this ).dialog( "close" );
-          }
-        },
+        buttons: [
+          { text: tr("Close"), click: function() { $( this ).dialog("close"); } }
+        ]
       });
     });
 
@@ -857,13 +924,13 @@ function extractLast( term ) {
 }
 
 function array_search(what, where) {
-  var index_du_tableau=-1
+  var index_du_tableau=-1;
   for(elt in where) {
     index_du_tableau++;
     if (where[elt]==what) { return index_du_tableau }
   }
   index_du_tableau=-1;
-  return index_du_tableau
+  return index_du_tableau;
 }
 
 jQuery(function($) {
@@ -893,11 +960,97 @@ jQuery(function($) {
 		$('#widgetdiv').height($(this).val());
 	});
 	
+  $("#tab-design-grid").click(function() {
+    $("#tab-design-grid-width").change();
+    /*if ($(this).is(':checked')) {
+      $("config",design.config)[0].setAttribute('grid', $("#tab-design-grid-width").val());
+      design.grid = true;
+      $("#widgetdiv .selected").draggable('option', 'grid', [design.gridWidth, design.gridWidth]);
+      $("#tab-design-grid-width").change();
+      $('.grid', '#widgetdiv').show();
+    } else {
+      $("config",design.config)[0].removeAttribute('grid');
+      design.grid = false;
+      $("#widgetdiv .selected").draggable('option', 'grid', [1, 1]);                              
+      $('.grid', '#widgetdiv').hide();
+    }*/
+  });
+
+  $("#tab-design-grid-width").change(function() {
+    var val = parseInt($(this).val());
+    $('.grid', '#widgetdiv').remove();
+    if (val < 1 ) val = 1;
+    if (val > 10) {
+      var designwidth = $("#tab-design-width").val();
+      var designheight = $("#tab-design-height").val(); 
+      for (i=val; i < designwidth; i = i + val) { //z-index:1000;  &nbsp;
+        $('#widgetdiv').prepend('<div class="grid" style="border-left: 1px dashed Black;position:absolute;height:' + designheight + 'px;display: block;top:0;left: ' + i + 'px;"></div>');
+      }
+      for (i=val; i < designheight; i = i + val) { // z-index:1000;
+        $('#widgetdiv').prepend('<div class="grid" style="border-bottom: 1px dashed Black;position:absolute;width:' + designwidth + 'px;display: block;left:0;top: ' + i + 'px;"></div>');
+      }
+    }
+    design.gridWidth = val;
+    if ($("#tab-design-grid").is(':checked')) {
+      $("config",design.config)[0].setAttribute('grid', val);
+      design.grid = true;
+      $("#widgetdiv .selected").draggable('option', 'grid', [design.gridWidth, design.gridWidth]);
+      $('.grid', '#widgetdiv').show();
+    } else {
+      $("config",design.config)[0].removeAttribute('grid');
+      design.grid = false;
+      $("#widgetdiv .selected").draggable('option', 'grid', [1, 1]);                              
+      $('.grid', '#widgetdiv').hide();
+    }
+  });
+  $("#tab-design-grid-widgetsize").click(function() {
+    if ($(this).is(':checked')) {
+      design.gridwidgetsize = true;
+      $("config",design.config)[0].setAttribute('gridwidgetsize', true);
+    } else {
+      design.gridwidgetsize = false;
+      $("config",design.config)[0].removeAttribute('gridwidgetsize');
+    }
+  });
+
+  $("#tab-design-floating").click(function() {
+    $("#tab-design-margin").change();
+  });
+
+  $("#tab-design-margin").change(function() {
+    var val = parseInt($(this).val());
+    design.widgetMargin = val;
+    if ($("#tab-design-floating").is(':checked')) {
+      $("config",design.config)[0].setAttribute('floating', val);
+      design.floating = true;
+    } else {
+      $("config",design.config)[0].removeAttribute('floating');
+      design.floating = false;
+    }
+  });
+
+  $("#tab-design-effect").change(function(e) {
+    var val = $(this).val();
+    if (val !="") $("config",design.config)[0].setAttribute('effect', val);
+    else $("config",design.config)[0].removeAttribute('effect');
+  });
+
+  $("#tab-design-effect").empty();
+  $("#tab-design-effect").append('<option value="" selected="1" >' + tr("None") + '</option>');
+  $("#tab-design-effect").append('<option value="random">' + tr("Random") + '</option>');
+  $.each(_tab_effects, function(key, label) {
+    var option=($('<option value="' + label + '">' + tr(label) + '</option>'));
+    $("#tab-design-effect").append(option);
+  });
+
 	$("#tab-design-slider").click(function() {
-		if ($(this).is(':checked'))
+		if ($(this).is(':checked')) {
 				$("config",design.config)[0].setAttribute('enableSlider', 'true');
-		else
+        $("#tab-design-effect").attr('disabled', 'disabled');
+		} else {
 				$("config",design.config)[0].setAttribute('enableSlider', 'false');
+        $("#tab-design-effect").removeAttr('disabled');
+    }
 	});
 
   $("#tab-design-zone-globalcontrol").click(function() {
@@ -933,8 +1086,8 @@ jQuery(function($) {
 		{
 			var conf=$("#widgetdiv .selected").get(0).owner.conf;
 			var newConf=conf.cloneNode(true);
-			newConf.setAttribute('x',20);
-			newConf.setAttribute('y',20);
+			newConf.setAttribute('x',parseInt(conf.getAttribute('x')) + 20);
+			newConf.setAttribute('y',parseInt(conf.getAttribute('y')) + 20);
 			$('zone[id='+design.currentZone+']', design.config)[0].appendChild(newConf);
 			var obj=design.addWidget(newConf);
 			obj.div.widgetMovable("select");
@@ -1013,7 +1166,7 @@ jQuery(function($) {
 	$("#button-remove-design").click(function() {
 		design.removeDesign();
 	});
-
+  /* Widgets List */
   $("#show-list-widgets-design-checkbox").change(function() {
 		$('#tab-design-list-widgets').toggle();
     if( $('#tab-design-list-widgets').is(':visible') )
@@ -1029,6 +1182,59 @@ jQuery(function($) {
 	});
   $("#tab-design-list-widgets .minus").click(function() {
 		$('#show-list-widgets-design-checkbox').change();
+	});
+  /* Zones list */
+
+	$("#design-zones-list").draggable({ 
+  	containment: "parent" ,
+  	scroll: false,
+  	handle: "div:first"
+  });
+
+  $("#show-zones-list-checkbox").change(function() {
+		$('#design-zones-list').toggle();
+    if( $('#design-zones-list').is(':visible') )
+      $('#show-zones-list-checkbox').attr('checked','1');
+    else
+      $('#show-zones-list-checkbox').removeAttr('checked');
+	});
+  $("#show-zones-list-checkbox").click(function() {
+		$('#show-zones-list-checkbox').change();
+	});
+	$("#show-zones-list").click(function() {
+		$('#show-zones-list-checkbox').change();
+	});
+  $("#design-zones-list .minus").click(function() {
+		$('#show-zones-list-checkbox').change();
+	});
+  $("#design-zones-list .down").click(function() {
+    if ($(".active", "#tab-design-zones-list").length > 0) {
+      var zoneId = $(".active", "#tab-design-zones-list").attr('zoneId');
+      var next = false;
+      $("tbody tr", "#tab-design-zones-list").each(function() {
+        if ( zoneId == this.getAttribute("zoneId")) next = true;
+        else if (next) {
+          $(".active", "#tab-design-zones-list").before($(this));
+          $('zone[id=' + zoneId + ']', design.config).before($('zone[id=' + this.getAttribute("zoneId") + ']', design.config));
+          next = false;
+        }
+      });
+    }
+	});
+  $("#design-zones-list .up").click(function() {
+    if ($(".active", "#tab-design-zones-list").length > 0) {
+      var zoneId = $(".active", "#tab-design-zones-list").attr('zoneId');
+      var zoneIdprec = "";
+      var _this_prec = "";
+      $("tbody tr", "#tab-design-zones-list").each(function() {
+        if ( zoneId == this.getAttribute("zoneId")) { 
+          $(".active", "#tab-design-zones-list").after($(_this_prec));
+          $('zone[id=' + zoneId + ']', design.config).after($('zone[id=' + zoneIdprec + ']', design.config));
+        }
+        zoneIdprec = this.getAttribute("zoneId");
+        _this_prec = this;
+      });
+    }
 	});
   
 	$("#button-try-design").click(function() {
@@ -1053,7 +1259,6 @@ jQuery(function($) {
 	design.load($('#tab-design-design-list').val(), tab_config['defaultVersion']);
 	design.draw($('#tab-design-zone-list').val());
 	design.displayDesignProperties();
-	design.displayDesignListWidgets();
 	
 	loading.hide();
 });

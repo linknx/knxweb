@@ -211,12 +211,12 @@ jQuery(document).ready(function(){
 	// Setup ioport edit dialog
 	$('#edit-ioport-dialog').dialog({ 
 		autoOpen: false,
-		buttons: { 
-				"Cancel": function() { $(this).dialog("close"); },
-				"Save": function() { if (ioports.processAddEdit()) $(this).dialog("close"); }
-		},
+		buttons: [
+      { text: tr("Cancel"), click: function() { $(this).dialog("close"); } },
+      { text: tr("Save"), click: function() { if (ioports.processAddEdit()) $(this).dialog("close"); } }
+    ],
 		resizable: false,
-		title: "Add/Edit IO port",
+		title: tr("Add/Edit IO port"),
 		width: "540px",
 		modal: true
 	});

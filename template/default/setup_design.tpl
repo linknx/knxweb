@@ -15,14 +15,14 @@
     <div style="float:right;margin-left: 7px;" class="minus ui-button ui-widget ui-state-default ui-corner-all">
       <span class="ui-icon ui-icon-minus"></span>
     </div>
-    <!-- <div style="float:right;" class="down ui-button ui-widget ui-state-default ui-corner-all ui-state-highlight">
+    <div style="float:right;" class="down ui-button ui-widget ui-state-default ui-corner-all ui-state-highlight">
       <span class="ui-icon ui-icon-arrowthick-1-s"></span>
     </div>
     <div style="float:right;" class="up ui-button ui-widget ui-state-default ui-corner-all ui-state-highlight">
       <span class="ui-icon ui-icon-arrowthick-1-n"></span>
-    </div> -->
+    </div>
   </div>
-  <div id="tab-design-widgets-list-div" style="height: 280px;overflow: auto;">
+  <div style="height: 280px;overflow: auto;">
     <table cellpadding="0" cellspacing="0" id="tab-design-widgets-list">
       <thead>
         <tr>
@@ -41,7 +41,7 @@
 		{l lang='en'}Widget information{/l}
 	</div>
 	
-	<div id="tab-design-widget-buttons">
+	<div id="tab-design-widget-buttons" style="display:none;" >
 		<button id="button-delete-widget">{l lang='en'}Delete{/l}</button>
 		<button id="button-clone-widget">{l lang='en'}Clone{/l}</button>
     <button id="button-locked-widget">{l lang='en'}Locked{/l}</button>
@@ -69,6 +69,35 @@
 			<tr>
 				<th>{l lang='en'}Enable slider{/l}</th>
 				<td><input type="checkbox" id="tab-design-slider" value="1"></td>
+			</tr>
+      <tr>
+        <th class="separator" colspan="2"></th>
+      </tr>
+			<tr>
+				<th>{l lang='en'}Grid{/l}</th>
+				<td><input type="checkbox" id="tab-design-grid" value="1" style="width:auto;"><input type="text" value="1"  size="4" style="width:auto;" id="tab-design-grid-width" ></td>
+			</tr>
+			<tr>
+				<th>{l lang='en'}Widget size attach to the Grid{/l}</th>
+				<td><input type="checkbox" id="tab-design-grid-widgetsize" value="1" style="width:auto;"></td>
+			</tr>
+      <tr>
+        <th class="separator" colspan="2"></th>
+      </tr>
+			<tr>
+				<th>{l lang='en'}Floating Widgets{/l}</th>
+				<td><input type="checkbox" id="tab-design-floating" value="1" style="width:auto;"></td>
+			</tr>
+			<tr>
+				<th>{l lang='en'}Margin Widgets{/l}</th>
+				<td><input type="text" id="tab-design-margin" value="10" ></td>
+			</tr>
+      <tr>
+        <th class="separator" colspan="2"></th>
+      </tr>
+			<tr>
+				<th>{l lang='en'}Effects{/l}</th>
+				<td><select id="tab-design-effect"></select></td>
 			</tr>
 			<tr>
 				<th>{l lang='en'}XML source{/l}</th>
@@ -102,4 +131,31 @@
 			</tr>
 		</tbody>
 	</table>
+</div>
+
+<div id="design-zones-list">
+  <div class="ui-state-active ui-corner-top header">
+    {l lang='en'}Zones List{/l}
+    <div style="float:right;margin-left: 7px;" class="minus ui-button ui-widget ui-state-default ui-corner-all">
+      <span class="ui-icon ui-icon-minus"></span>
+    </div>
+    <div style="float:right;" class="down ui-button ui-widget ui-state-default ui-corner-all ui-state-highlight">
+      <span class="ui-icon ui-icon-arrowthick-1-s"></span>
+    </div>
+    <div style="float:right;" class="up ui-button ui-widget ui-state-default ui-corner-all ui-state-highlight">
+      <span class="ui-icon ui-icon-arrowthick-1-n"></span>
+    </div>
+  </div>
+  <div style="height: 280px;overflow: auto;">
+    <table cellpadding="0" cellspacing="0" id="tab-design-zones-list">
+      <thead>
+        <tr>
+           <th>{l lang='en'}Id{/l}</th>
+           <th>{l lang='en'}Name{/l}</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -17,10 +17,10 @@
 <td width="65%">
 <table class="form">
 	<tr>
-		<th>{l lang='en'}ID{/l}</th>
+		<th>{l lang='en'}Id{/l}</th>
 		<td>
 			<input id="edit-object-id" name="edit-object-id" class="required" size="25" type="text"><br />
-      <span style="color: #F00;">{l lang='en'}for ID use only alphanumeric characters, - , _ , and NO SPACES{/l}</span>
+      <span style="color: #F00;">{l lang='en'}for Id use only alphanumeric characters, - , _ , and NO SPACES{/l}</span>
 		</td>
 	</tr>
 	<tr>
@@ -38,12 +38,14 @@
 	<tr>
 		<th>{l lang='en'}Flags{/l}</th>
 		<td>
-			<input id="edit-object-flag-c" type="checkbox"/><span title="Communication">c</span>
-			<input id="edit-object-flag-r" type="checkbox"/><span title="Read">r</span>
-			<input id="edit-object-flag-w" type="checkbox"/><span title="Write">w</span>
-			<input id="edit-object-flag-t" type="checkbox"/><span title="Transmit">t</span>
-			<input id="edit-object-flag-u" type="checkbox"/><span title="Update">u</span>
-			<input id="edit-object-flag-s" type="checkbox"/><span title="Stateless">s</span>
+			<input id="edit-object-flag-c" type="checkbox"/><span title="{l lang='en'}Communication{/l}">c</span>
+			<input id="edit-object-flag-r" type="checkbox"/><span title="{l lang='en'}Read{/l}">r</span>
+			<input id="edit-object-flag-w" type="checkbox"/><span title="{l lang='en'}Write{/l}">w</span>
+			<input id="edit-object-flag-t" type="checkbox"/><span title="{l lang='en'}Transmit{/l}">t</span>
+			<input id="edit-object-flag-u" type="checkbox"/><span title="{l lang='en'}Update{/l}">u</span>
+			<!-- <input id="edit-object-flag-s" type="checkbox"/><span title="{l lang='en'}Stateless{/l}">s</span> -->
+      <input id="edit-object-flag-f" type="checkbox"/><span title="{l lang='en'}Force Write{/l}">f</span>
+      <span style="color: #F00;">{l lang='en'}by default : "cwtu"{/l}</span>
 		</td>
 	</tr>
 	<tr>
@@ -99,10 +101,11 @@
   <table id="objects-tab-table">
   	<thead>
   		<tr>
-  			<th width="30%">{l lang='en'}Object{/l}</th>
-  			<th width="30%">{l lang='en'}Description{/l}</th>
+  			<th width="25%">{l lang='en'}Object{/l}</th>
+  			<th width="10%">{l lang='en'}Value{/l}</th>
+  			<th width="30%">{l lang='en'}Name{/l}</th>
   			<th width="10%">{l lang='en'}GAD{/l}</th>
-  			<th width="30%">{l lang='en'}Type{/l}</th>
+  			<th width="25%">{l lang='en'}Type{/l}</th>
   		</tr>
   	</thead>
   	<tbody>

@@ -19,7 +19,7 @@
 		</setting>
 		<setting id="style" label="Custom style" type="text" />
 		<setting label="Feedback object" type="comment" />
-		<setting id="object" label="Objet" type="object" />
+		<setting id="object" label="Object" type="object" />
 		<setting id="pattern" label="Pattern" type="text" default="(.*)" />
 	</settings>
 	<feedbacks>

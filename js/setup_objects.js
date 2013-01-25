@@ -21,7 +21,8 @@ var objects = {
 				if (object[0].data.getAttribute('flags').indexOf('w')!=-1) $('#edit-object-flag-w').attr('checked',true);
 				if (object[0].data.getAttribute('flags').indexOf('t')!=-1) $('#edit-object-flag-t').attr('checked',true);
 				if (object[0].data.getAttribute('flags').indexOf('u')!=-1) $('#edit-object-flag-u').attr('checked',true);
-				if (object[0].data.getAttribute('flags').indexOf('s')!=-1) $('#edit-object-flag-s').attr('checked',true);
+				//if (object[0].data.getAttribute('flags').indexOf('s')!=-1) $('#edit-object-flag-s').attr('checked',true);
+				if (object[0].data.getAttribute('flags').indexOf('f')!=-1) $('#edit-object-flag-f').attr('checked',true);
 			}
 	
 			if ((object[0].data.getAttribute('init')=='request')||(object[0].data.getAttribute('init')=='persist')) {
@@ -41,7 +42,8 @@ var objects = {
 				// Gad listener
 				var atrlistener = $("<tr>");
 				var id = $("#edit-object-id").val();
-				atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="' + this.getAttribute('gad') + '" size="10" > <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" ' + (this.getAttribute('read')?'checked="true"':'') + '> ' + tr("Read") + ' </td>'));
+        id = id.replace(" ", "_");
+				atrlistener.append($('<th>' + tr("Listener") + ' :</th><td> <input type="text" class="listener_' + id + '" value="' + this.getAttribute('gad') + '" size="10" > <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" ' + (this.getAttribute('read')?'checked="true"':'') + '> ' + tr("Read") + ' </td>'));
 				atrlistener.appendTo($('#edit-object-td-listener'));
 				listener = true;
 			});
@@ -87,7 +89,7 @@ var objects = {
 			var responseXML=queryLinknx(body);
 			if (responseXML!=false)	objects.refreshObjectList();
 			loading.hide();
-		} else messageBox("You cannot delete this Object because it's used in a rule.", 'Error','error');
+		} else messageBox(tr("You cannot delete this Object because it's used in a rule."), tr('Error'),'error');
 	},
 	
 	// Process add/edit object
@@ -101,9 +103,12 @@ var objects = {
 			if ($('#edit-object-flag-w').attr("checked")) flags+='w';
 			if ($('#edit-object-flag-t').attr("checked")) flags+='t';
 			if ($('#edit-object-flag-u').attr("checked")) flags+='u';
-			if ($('#edit-object-flag-s').attr("checked")) flags+='s';
+			//if ($('#edit-object-flag-s').attr("checked")) flags+='s';
+			if ($('#edit-object-flag-f').attr("checked")) flags+='f';
 		
-			var body='<write><config><objects><object id="' + $("#edit-object-id").val() + '"' +
+      var id = $("#edit-object-id").val(); 
+      id = id.replace(" ", "_");
+			var body='<write><config><objects><object id="' + id + '"' +
 						' gad="' + $("#edit-object-gad").val() + '"' +
 						((flags!='')?' flags="' + flags + '"':'') +
 						' type="' + $("#edit-object-type").val() + '"' +
@@ -144,8 +149,39 @@ var objects = {
 		$('#readwrite-object-dialog').dialog('open');
 	},
 	
+	dialoggraph: function(_this, idobject) {
+		//messageBox(tr("TODO ... generate a graph for the object : ") + idobject, tr('Error'),'alert');
+    var nbenreg = 10;
+    var url = 'readfile.php?objectlog=' + idobject + '&nbenreg=' + nbenreg + '&output=html';
+  	req = jQuery.ajax({ type: 'post', url: url, dataType: 'html', 
+  			success: function(responseHTML, status) 
+  			{
+  				//$("#"+dest).html(responseHTML);
+  				$(_this).attr("title", tr("Log")+" : \n"+responseHTML.replace(new RegExp("(<br />)", "g"),"\n").replace(new RegExp("(&gt;)", "g"),">"));
+  			},
+  			error: function (XMLHttpRequest, textStatus, errorThrown) {
+  				messageBox(tr("Error Unable to load: ")+textStatus, tr('Error'), 'alert');
+  			}
+  	});
+	},
+  
 	refreshObjectList: function() {
 		loading.show();
+	  var tab_object_value = [];
+
+		var body = '<read><objects/></read>';
+		var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
+			success: function(responseXML, status) {
+				var xmlResponse = responseXML.documentElement;
+				if (xmlResponse.getAttribute('status') != 'error') {
+					$('object', responseXML).each(function() {
+						tab_object_value[this.getAttribute('id')] = this.getAttribute('value');
+					});
+				}
+				else
+					messageBox(tr("Error: ")+responseXML.textContent, tr('Error'), 'alert');
+			}
+		});
 	
 		var body = '<read><config><objects/></config></read>';
 		var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
@@ -167,8 +203,14 @@ var objects = {
 						tr.attr('object-id',this.getAttribute('id'));
 						tr[0].data=this;
 						tr.append($("<td>").html(this.getAttribute('id')));
+            var bplog = ""; 
+            if (this.getAttribute('log')=="true") bplog = "&nbsp;<span onclick='objects.dialoggraph(this, \"" + this.getAttribute('id') + "\");' style='position:absolute;' class='ui-state-default ui-corner-all'><span class='ui-icon ui-icon-signal'></span></span>";            
+						tr.append($("<td style='text-align: center;' />").html(tab_object_value[this.getAttribute('id')] + bplog ));
 						tr.append($("<td>").html(this.textContent));
-						tr.append($("<td>").html(this.getAttribute('gad')));
+            var listener = "&nbsp;"; 
+            if ($(this).children().is('listener')) listener = "&nbsp;<span style='position:absolute;' class='ui-state-default ui-corner-all' title='Listener' ><span style='margin: 1px 5px;display: block;' >L</span></span>";
+            //console.log(this.getAttribute('id'), this, $(this).children(), $(this).children().is('listener'));
+						tr.append($("<td>").html((this.getAttribute('gad')?this.getAttribute('gad'):"&nbsp;") + listener ));
 						tr.append($("<td>").html(tab_objectTypes[this.getAttribute('type')]));
 						tr.dblclick(function() {
 							objects.editObject(this.data.getAttribute('id'));
@@ -179,7 +221,7 @@ var objects = {
 					$("#objects-tab-table").trigger("refresh");
 				}
 				else
-					messageBox(tr("Error: ")+responseXML.textContent, 'Error', 'alert');
+					messageBox(tr("Error: ")+responseXML.textContent, tr('Error'), 'alert');
 				loading.hide();
 			}
 		});
@@ -199,11 +241,11 @@ jQuery(document).ready(function(){
 	$('#button-add-object').bind('click', objects.newObject);
 	$('#button-edit-object').bind('click', function() {
 		var selected=$('.row_selected:first','#objects-tab-table')[0];
-		if (selected) objects.editObject(selected.data.getAttribute('id')); else messageBox('Please select an objet','Attention','alert');//messageBox('Veuillez choisir un objet dans la liste','Attention','alert');
+		if (selected) objects.editObject(selected.data.getAttribute('id')); else messageBox(tr('Please select an objet'),tr('Attention'),'alert');
 	});
 	$('#button-remove-object').bind('click', function() {
 		var selected=$('.row_selected:first','#objects-tab-table')[0];
-		if (selected) objects.deleteObject(selected.data.getAttribute('id')); else messageBox('Please select an objet','Attention','alert');//messageBox('Veuillez choisir un objet dans la liste','Attention','alert');
+		if (selected) objects.deleteObject(selected.data.getAttribute('id')); else messageBox(tr('Please select an objet'),tr('Attention'),'alert');
 	});
 	$('#button-read-object').bind('click', objects.readwriteObject);
 	
@@ -213,20 +255,31 @@ jQuery(document).ready(function(){
 	// Setup object edit dialog
 	$('#edit-object-dialog').dialog({ 
 		autoOpen: false,
-		buttons: {
-				"Add a listener": function() { 
+		buttons: [
+      { text: tr("Add a listener"), click: function() { 
 					var atrlistener = $("<tr>");
 					var id = $("#edit-object-id").val();
+          id = id.replace(" ", "_");
 					atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="" size="10" >  <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" > ' + tr("Read") + ' </td>'));
 					atrlistener.appendTo($('#edit-object-td-listener'));
 					$(this).dialog('option','width',650); 
 					$('#edit-object-td-listener').show();
-				}, 
-				"Cancel": function() { $(this).dialog("close"); $('#edit-object-td-listener').hide(); $(this).dialog('option','width',430);},
-				"Save": function() { if (objects.processAddEdit()) { $(this).dialog("close"); $('#edit-object-td-listener').hide(); $(this).dialog('option','width',430); } }
-		},
+      } },
+      { text: tr("Cancel"), click: function() { 
+        $(this).dialog("close");
+        $('#edit-object-td-listener').hide();
+        $(this).dialog('option','width',430); 
+      } },
+      { text: tr("Save"), click: function() { 
+        if (objects.processAddEdit()) { 
+          $(this).dialog("close");
+          $('#edit-object-td-listener').hide();
+          $(this).dialog('option','width',430);
+        }
+      } }
+    ],
 		resizable: false,
-		title: "Add/Edit an objet", //"Ajouter/Editer un objet",
+		title: tr("Add/Edit an objet"), //"Ajouter/Editer un objet",
 		width: "430px",
 		modal: true
 	});
@@ -235,27 +288,27 @@ jQuery(document).ready(function(){
 	// Setup read/write object dialog
 	$('#readwrite-object-dialog').dialog({ 
 		autoOpen: false,
-		buttons: { 
-				"Read": function() {
+		buttons: [
+      { text: tr("Read"), click: function() { 
 					var value=readObjectValue($("#readwrite-object-id").val());
 					if (value!==false) 
 						$("#readwrite-object-recv").val(value);
 					else
-            messageBox("Error when we read the object","Error","error");
-				},
-				"Write": function() {
+            messageBox(tr("Error when we read the object"),tr("Error"),"error");
+      } },
+      { text: tr("Write"), click: function() {
 					if ($("#readwrite-object-val-select").css('display')!='none')
 						var value=$("#readwrite-object-val-select").val();
 					else
 						var value=$("#readwrite-object-val-input").val();
 	
 					var result=writeObjectValue($("#readwrite-object-id").val(),value);
-					if (!result) messageBox("Error when we read the object","Error","error");
-				},
-				"Close": function() { $(this).dialog("close"); }
-		},
+					if (!result) messageBox(tr("Error when we read the object"),tr("Error"),"error");
+      } },
+      { text: tr("Close"), click: function() { $( this ).dialog("close"); } }
+    ],
 		resizable: false,
-		title: "Read/Write value of an objet",
+		title: tr("Read/Write value of an objet"),
 		width: "430px",
 		modal: true
 	});
@@ -374,8 +427,8 @@ jQuery(document).ready(function(){
     
     /* flags K(=C) L E T M */
     if (tab_data[8]  == "K") $("#edit-object-flag-c").attr('checked',true);
-    if (tab_data[9]  == "L") $("#edit-object-flag-r").attr('checked',true);
-    if (tab_data[10] == "E") $("#edit-object-flag-w").attr('checked',true);
+    if (tab_data[9]  == "L") { $("#edit-object-flag-r").attr('checked',true); $("#edit-object-flag-u").attr('checked',true); }
+    if (tab_data[10] == "E") { $("#edit-object-flag-w").attr('checked',true); $("#edit-object-flag-t").attr('checked',true); }
     if (tab_data[11] == "T") $("#edit-object-flag-t").attr('checked',true);
     if (tab_data[12] == "Act") $("#edit-object-flag-u").attr('checked',true);
     

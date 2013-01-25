@@ -1,5 +1,9 @@
 var _version=tab_config['version'];
 var _visuMobile=false;   // TODO a gérer mieux que ça ...
+var _editMode = false;
+var _subpages;
+var _floating_zone = false;
+var _floating_zone_margin = 10;
 
 var _objectTypesValues = {
 	'1.001': ['on','off'],
@@ -7,6 +11,8 @@ var _objectTypesValues = {
 	'3.008': ['close','open','stop'],
 	'20.102': ['comfort','standby','night','frost']
 }
+
+var _tab_effects = new Array("blind","bounce","clip","drop","explode","fold","highlight","puff","pulsate","scale","shake","size","slide");
 
 // runAfter
 var runAfter = {
@@ -63,7 +69,7 @@ function tr(msg)
 function saveConfig()
 {	
 	var ret = queryLinknx('<admin><save/></admin>');
-  if (ret != "false" ) messageBox(tr("Configuration saved under linknx file param"), "Info", "check");
+  if (ret != "false" ) messageBox(tr("Configuration saved under linknx file param"), tr("Info"), "check");
 }
 
 function isObjectUsed(id)
@@ -211,8 +217,8 @@ var loading = {
         {
                 var loaderContent = $("#loaderContent");
        
-                loaderContent.css("top", ($(window).height() - loaderContent.height()) / 2);
-                loaderContent.css("left", ($(window).width() - loaderContent.width()) / 2);
+                loaderContent.css("top", (parseInt($(window).height()) - parseInt(loaderContent.height())) / 2);
+                loaderContent.css("left", (parseInt($(window).width()) - parseInt(loaderContent.width())) / 2);
         
                 if (($.browser.msie) && ($.browser.version<7)) $("select").hide();
                 $("body").css("cursor", "progress");
@@ -242,23 +248,18 @@ function messageBox(message,title,icon) {
 			resizable: false,
 			autoopen: true,
 			modal: true,
-			buttons: {
-				Ok: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function(event, ui) {
-				$(this).dialog("destroy");
-  			$(this).remove();
-  	 	}
+			buttons: [
+          { text: tr("Ok"), click: function() { $( this ).dialog( "close" ); } },
+          { text: tr("Close"), click: function() { $(this).dialog("destroy");$(this).remove(); } }
+        ]
 	});
 
 }
 
 function queryLinknx(message) {
-	
+	var t = new Date().getTime();
 	var data;
-	var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: message, processData: false, dataType: 'xml',async: false,
+	var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: message, processData: false, dataType: 'xml',async: false,
 		success: function(responseXML, status) {
 			var xmlResponse = responseXML.documentElement;
 			if (xmlResponse.getAttribute('status') == 'success') {
@@ -266,7 +267,7 @@ function queryLinknx(message) {
 			}
 			else 
 			{
-				messageBox(tr("Error: ")+xmlResponse.textContent, 'Erreur', 'alert');
+				messageBox(tr("Error: ")+xmlResponse.textContent, tr('Error'), 'alert');
 				data=false;
 			}
 		}
@@ -275,8 +276,9 @@ function queryLinknx(message) {
 }
 
 function queryKnxweb(action, type, message, callasync) {
+	var t = new Date().getTime();
 	var data;
-	var req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action='+action, data: message, processData: false, dataType: type,async: callasync,
+	var req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action='+action+'&nocache=' + t, data: message, processData: false, dataType: type,async: callasync,
 		success: function(responseXML, status) {
 			var xmlResponse = responseXML.documentElement;
 			if (xmlResponse.getAttribute('status') == 'success') {
@@ -284,7 +286,7 @@ function queryKnxweb(action, type, message, callasync) {
 			}
 			else 
 			{
-				messageBox(tr("Error: ")+xmlResponse.textContent, 'Erreur', 'alert');
+				messageBox(tr("Error: ")+xmlResponse.textContent, tr('Error'), 'alert');
 				data=false;
 			}
 		}
@@ -329,6 +331,14 @@ $.fn.widgetMovable = function(method) {
 	function select(widget) {
 		var options= $(widget).data('widgetMovable');
 
+		if (_editMode) {
+			if (design) {
+        if (design.grid) {
+  			  $(widget).draggable( "option", "grid", [design.gridWidth, design.gridWidth] );
+  			}
+      }
+		}
+    
 		if (!$(widget).hasClass("selected"))
 		{
 			$('div').removeClass("selected");
@@ -370,7 +380,10 @@ $.fn.widgetMovable = function(method) {
 					var div=$('<div class="resizeSE"></div>');
 					div.hide();
 					$this.append(div);
+  				var grid = [1,1];
+  				if (_editMode) { if (design) {if (design.gridwidgetsize) grid = [design.gridWidth, design.gridWidth]; }}
 					div.draggable({
+  					grid: grid,
 						containment: [left,top,9999,9999],
 						drag: function(event, ui) {
 							var div=$(this).parent();
@@ -384,14 +397,38 @@ $.fn.widgetMovable = function(method) {
 				}
 
 				if (options.draggable) {
+  				var grid = [1,1];
+  				if (_editMode) { if (design) {if (design.grid) grid = [design.gridWidth, design.gridWidth]; }}  
   				$this.draggable({
   					containment: 'parent',
+  					cursor: 'move',
+  					opacity: 0.50,
+  					zIndex: 500,
   					delay: 50,
+  					grid: grid,
   					stop: function(event, ui) {
-  						var left=Math.round($(this).css('left').replace(/px$/,"")) + widgetContainer.offset().left;
-  						var top=Math.round($(this).css('top').replace(/px$/,"")) + widgetContainer.offset().top;
+  						//var left=Math.round($(this).css('left').replace(/px$/,"")) + widgetContainer.offset().left;
+  						//var top=Math.round($(this).css('top').replace(/px$/,"")) + widgetContainer.offset().top;
+  						var left=Math.round($(this).css('left').replace(/px$/,""));
+  						var top=Math.round($(this).css('top').replace(/px$/,""));
+              if (_editMode) {
+          			if (design) {
+                  if (design.grid) {
+            			  left = Math.round( left / design.gridWidth ) * design.gridWidth;
+                    top = Math.round( top / design.gridWidth ) * design.gridWidth;
+            			  $(this).css('left', left);
+            			  $(this).css('top', top);
+            			}
+                }
+          		}
+  						var left2=left;
+  						var top2=top;                                                        
+              left+= widgetContainer.offset().left;
+  						top+= widgetContainer.offset().top;
+              
   						$('.resizeSE', this).draggable( "option", "containment", [left,top,9999,9999] );
-  						if (options.onMove!=null) options.onMove(this, ui.position.left, ui.position.top);
+  						//if (options.onMove!=null) options.onMove(this, ui.position.left, ui.position.top);
+  						if (options.onMove!=null) options.onMove(this, left2, top2);
   					},
   					start: function(event, ui) {
   						select(this);
@@ -419,7 +456,32 @@ $.fn.widgetMovable = function(method) {
 	} else if ( typeof method === 'object' || ! method ) {
 		return methods.init.apply( this, arguments );
 	} else {
-		$.error( 'Method ' +  method + ' does not exists.' );
+		//$.error( 'Method ' +  method + ' does not exists.' );
+    //$.error( tr('Method') + ' ' +  tr(method) + ' ' +  tr('does not exists.') );
+    $.error( tr('Method') + ' ' +  method + ' ' +  tr('does not exists.') );
 	}    
 
 };
+
+function isMobile() { // TODO à gérer mieux ?? peut-être à passer via les template php qui peuvent aussi le détecter ... 
+ if( navigator.userAgent.match(/Android/i) ||
+     navigator.userAgent.match(/webOS/i) ||
+     navigator.userAgent.match(/iPad/i) ||
+     navigator.userAgent.match(/iPhone/i) ||
+     navigator.userAgent.match(/iPod/i)
+     ){
+    return true;
+ }
+}
+
+function StringtoXML(text){
+  if (window.ActiveXObject){
+    var doc=new ActiveXObject('Microsoft.XMLDOM');
+    doc.async='false';
+    doc.loadXML(text);
+  } else {
+    var parser=new DOMParser();
+    var doc=parser.parseFromString(text,'text/xml');
+  }
+  return doc;
+}

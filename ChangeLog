@@ -1,3 +1,16 @@
+2013-01-25 Anthony Penhard v0.9.3
+	* Many changes for this version
+		* Objects section : add new datas in the tab list value, log, listener ...
+		* Rules section : all actions and conditions are up to date, add the attribut "init" (in linknx 0.0.1.31)
+		* Design section : Add Grid, Transition effects, zones list, ... 
+		* New Repository section : for subpages and widgets we can download them from the cvs repository of linknx
+	* Fixing bugs
+	* Can use multilingue English or French TODO for others
+	* We can change UI-themes color and picture for "setup"
+	* for testing use "EventSource" for update objects status. We don't have to "pooling" update every secondes, linknx send the objects when their value change
+	to update knxweb design
+
+
 2012-11-11 Anthony Penhard v0.9.2
 	* Released this before commit many changes for next version
 

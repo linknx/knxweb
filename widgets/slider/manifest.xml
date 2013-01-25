@@ -6,18 +6,21 @@
   <version>1.0</version>
   <category>Advanced widgets</category>
   <settings>
-    <setting id="slider-color" label="Slider color" type="color" default="#FF0000" />
-    <setting id="slider-picture" label="Slider picture" type="picture" />
+    <setting label="" type="separator" />
+    <setting id="slider-color" label="Slider color" type="color" default="#FF0000"/>
+    <setting id="slider-picture" label="Slider picture" type="picture"/>
     <setting id="translatepicture" label="Translate picture" type="list" default="false">
-      <option key="true" value="Yes" />
-      <option key="false" value="No" />
+      <option key="true" value="Yes"/>
+      <option key="false" value="No"/>
     </setting>
     <setting id="background-picture" label="Background picture" type="picture" default=""/>
+    <setting label="" type="separator" />
     <setting id="border" label="Border" type="list" default="true">
-      <option key="true" value="Yes" />
-      <option key="false" value="No" />
+      <option key="true" value="Yes"/>
+      <option key="false" value="No"/>
     </setting>
-    <setting id="border-color" label="Border color" type="color" default="#000000" />
+    <setting id="border-color" label="Border color" type="color" default="#000000"/>
+    <setting label="" type="separator" />
     <setting id="orientation" label="Orientation" type="list" default="horizontal">
       <option key="horizontal" value="horizontal"/>
       <option key="vertical" value="Vertical"/>
@@ -26,18 +29,30 @@
       <option key="left_top" value="left or top"/>
       <option key="right_bottom" value="right or bottom"/>
     </setting>
-    <setting id="min" label="Minimum value" type="text" default="0" />
-    <setting id="max" label="Maximum value" type="text" default="100" />
-    <setting label="Feedback object" type="comment" default="" />
-    <setting id="feedback-object" label="Feedback object" type="object" exlude_type="1.001,3.007,3.008,10.001,11.001,16.000,16.001,20.102,28.001" />
-    <setting label="Command object" type="comment" default="" />
-    <setting id="command-object" label="Command object" type="object" exlude_type="1.001,3.007,3.008,10.001,11.001,16.000,16.001,20.102,28.001" />
-    <setting label="Actions when slide stop" type="comment" />
-    <setting id="slidestop-action" label="Action" type="action" />
-    <setting label="Actions when slide" type="comment" />
-    <setting id="slide-action" label="Action" type="action" />
+    <setting label="" type="separator" />
+    <setting id="min" label="Minimum value" type="text" default="0"/>
+    <setting id="max" label="Maximum value" type="text" default="100"/>
+
+    <setting label="" type="separator" />
+    <setting id="actionstop" label="Action on stop" type="list" default="true">
+      <option key="true" value="Yes"/>
+      <option key="false" value="No"/>
+    </setting>
+    <setting id="actionslide" label="Action on slide" type="list" default="">
+      <option key="true" value="Yes"/>
+      <option key="" value="No"/>
+    </setting>
+
+    <setting label="Feedback object" type="comment" default=""/>
+    <setting id="feedback-object" label="Feedback object" type="object" exlude_type="1.001,3.007,3.008,10.001,11.001,16.000,16.001,20.102,28.001"/>
+    <setting label="Command object" type="comment" default=""/>
+    <setting id="command-object" label="Command object" type="object" exlude_type="1.001,3.007,3.008,10.001,11.001,16.000,16.001,20.102,28.001"/>
+    <setting label="Actions when slide stop" type="comment"/>
+    <setting id="slidestop-action" label="Action" type="action"/>
+    <setting label="Actions when slide" type="comment"/>
+    <setting id="slide-action" label="Action" type="action"/>
   </settings>
   <feedbacks>
-    <feedback id="feedback-object" />
+    <feedback id="feedback-object"/>
   </feedbacks>
 </widget>

@@ -16,16 +16,16 @@ function getNetworkConfig()
 			if (strpos($s,'iface eth0 inet dhcp')==false) $config['dhcp']=false; 
 			else $config['dhcp']=true;
 			
-			$s=`/sbin/ifconfig eth0 | grep "inet addr"`;
+			$s= exec('/sbin/ifconfig eth0 | grep "inet addr"');
 			preg_match('~.*inet addr:(.*) Bcast:.* Mask:(.*)~',$s,$r);
 			$config['ip']=trim($r[1]);
 			$config['netmask']=trim($r[2]);
 
-			$s=`/sbin/ip route| grep "default via"`;
+			$s= exec('/sbin/ip route| grep "default via"');
 			preg_match('~default via (.*) dev ~',$s,$r);
 			$config['gateway']=$r[1];
 
-			$s=`/bin/cat /etc/resolv.conf | grep "nameserver "`;
+			$s= exec('/bin/cat /etc/resolv.conf | grep "nameserver "');
 			preg_match_all('~nameserver (.*)~',$s,$r,PREG_SET_ORDER);
 			if (count($r)>0) $config['dns1']=$r[0][1];
 			if (count($r)>1) $config['dns2']=$r[1][1];
@@ -38,15 +38,55 @@ function getNetworkConfig()
 
 $network=getNetworkConfig();
 
-$linknxLog=str_replace("\n","<br />",`tail -n 20 $log_Linknx`);
+$tail_log_linknx = exec('tail -n 20 '.$log_Linknx);
+$linknxLog=str_replace("\n","<br />",$tail_log_linknx);
 
-$eibd_running=`ps ax | grep eibd | grep -v grep`;
-$eibd_running_param=explode("eibd ",$eibd_running);
-$eibd_running_param=$eibd_running_param[1];
+//$eibd_running=`ps ax | grep eibd | grep -v grep`;
+//$eibd_running_param=explode("eibd ",$eibd_running);
+//$eibd_running_param=$eibd_running_param[1];
+//$eibd_running = `ps ax | grep eibd | grep -v grep`;
+/*
+ * ps ax | grep eibd | grep -v grep => marche pas sur syno
+ * ps | grep eibd | grep -v grep => marche pas sur pc 
+ * pstree -a | grep eibd | grep -v grep => a priroi marche sur syno et PC
+ *
+ */  
 
-$linknx_running=`ps aux | grep linknx | grep -v grep`;
+$eibd_running = exec('ps | grep eibd | grep -v grep');
+$eibd_running_param="";
+if ($eibd_running!="") {
+  $eibd_running_param = explode("eibd ",$eibd_running);
+  $eibd_running_param = $eibd_running_param[1];
+} else {
+  $eibd_running = exec('ps ax | grep eibd | grep -v grep');
+  if ($eibd_running!="") {
+    $eibd_running_param = explode("eibd ",$eibd_running);
+    $eibd_running_param = $eibd_running_param[1];
+  } else {
+    $eibd_running_param = $_config["eibd"];
+  }
+}
+
+/*$linknx_running=`ps aux | grep linknx | grep -v grep`;
 $linknx_running_param=explode("linknx ",$linknx_running);
 $linknx_running_param=$linknx_running_param[1];
+*/
+$linknx_running = exec('ps | grep linknx | grep -v grep');
+$linknx_running_param = "";
+if ($linknx_running!="") {
+  $linknx_running_param = explode("linknx ",$linknx_running);
+  $linknx_running_param = $linknx_running_param[1];
+} else {
+  $linknx_running = exec('ps ax | grep linknx | grep -v grep');
+  if ($linknx_running!="") {
+    $linknx_running_param = explode("linknx ",$linknx_running);
+    $linknx_running_param = $linknx_running_param[1];
+  } else {
+    $linknx_running_param = $_config["linknx"];
+    $linknx_param_pos_w = false;
+  }
+}
+
 
 $widgetscss = "widgets/widgets.css";
 $widgetscssexist = false;
