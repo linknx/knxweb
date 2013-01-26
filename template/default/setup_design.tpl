@@ -84,6 +84,7 @@
       <tr>
         <th class="separator" colspan="2"></th>
       </tr>
+<!--
 			<tr>
 				<th>{l lang='en'}Floating Widgets{/l}</th>
 				<td><input type="checkbox" id="tab-design-floating" value="1" style="width:auto;"></td>
@@ -95,6 +96,7 @@
       <tr>
         <th class="separator" colspan="2"></th>
       </tr>
+-->
 			<tr>
 				<th>{l lang='en'}Effects{/l}</th>
 				<td><select id="tab-design-effect"></select></td>
