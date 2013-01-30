@@ -64,7 +64,7 @@ function CCharts(conf) {
         }
         $("*").css("cursor", "progress");
     
-        this.owner.chart = creategraph_teleinfo(this.owner);
+        this.owner.chart = creategraph(this.owner);
         $( "#containerhighstock" ).show();
         
         $( "#containerhighstockdialog" ).dialog({ title: this.owner.title });
