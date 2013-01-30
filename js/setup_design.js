@@ -87,18 +87,19 @@ var design = {
 		$('zone', design.config).each(function() {
 			var option = "<option value='" + this.getAttribute('id')+"'>" + this.getAttribute('name') + "</option>";
 			$('#tab-design-zone-list').append(option);
-      var tr = $("<tr zoneId='" + this.getAttribute('id') + "'><td>" + this.getAttribute('id')+"</td><td>" + this.getAttribute('name') + "</td></tr>");
-      tr.click(function() {
+      var table_tr = $("<tr zoneId='" + this.getAttribute('id') + "'><td>" + this.getAttribute('id')+"</td><td>" + this.getAttribute('name') + "</td></tr>");
+      table_tr.click(function() {
         $(".active", "#tab-design-zones-list").removeClass("active");
         $(this).addClass("active");
       });
-      $('#tab-design-zones-list tbody').append(tr);
+      $('#tab-design-zones-list tbody').append(table_tr);
 		});
 	},	
 	
 	// Draw a zone
 	draw: function(zone) {
 		design.clear();
+    if (_editMode) _designeditview = true;
 
 		if (zone!=null) {
 			this.currentZone = zone;
@@ -452,40 +453,40 @@ var design = {
     }
 	
 	  // Setup standard fields x,y,width,height,desc
-	  var tr=$('<tr><th>Type</th><td><input type="text" disabled="1" value="' + o.conf.getAttribute("type") + '"></td></tr>');
-	   $("#tab-design-widget-properties tbody").append(tr);
+	  var table_tr=$('<tr><th>' +tr('Type')+'</th><td><input type="text" disabled="1" value="' + o.conf.getAttribute("type") + '"></td></tr>');
+	   $("#tab-design-widget-properties tbody").append(table_tr);
 
 		if (o.isDraggable) {
-  	  var tr=$('<tr><th>X</th><td><input id="tab-design-properties-x" type="text" value="' + o.conf.getAttribute("x") + '"></td></tr>');
-  	   $("#tab-design-widget-properties tbody").append(tr);
+  	  var table_tr=$('<tr><th>X</th><td><input id="tab-design-properties-x" type="text" value="' + o.conf.getAttribute("x") + '"></td></tr>');
+  	   $("#tab-design-widget-properties tbody").append(table_tr);
   	 
-  	  var tr=$('<tr><th>Y</th><td><input id="tab-design-properties-y" type="text" value="' + o.conf.getAttribute("y") + '"></td></tr>');
-  	   $("#tab-design-widget-properties tbody").append(tr);
+  	  var table_tr=$('<tr><th>Y</th><td><input id="tab-design-properties-y" type="text" value="' + o.conf.getAttribute("y") + '"></td></tr>');
+  	   $("#tab-design-widget-properties tbody").append(table_tr);
     }
 
-    var tr=$('<tr><th>Description</th><td><input id="tab-design-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
-    $("#tab-design-widget-properties tbody").append(tr);
+    var table_tr=$('<tr><th>' +tr('Description')+'</th><td><input id="tab-design-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
+    $("#tab-design-widget-properties tbody").append(table_tr);
     $("#tab-design-properties-desc").change(function() {
       o.setSetting("desc", $(this).val());
     });
 
 		if (o.isResizable) {
-			var tr=$('<tr><th>Width</th><td><input id="tab-design-properties-width" type="text" value="' + o.conf.getAttribute("width") + '"></td></tr>');
-			$("#tab-design-widget-properties tbody").append(tr);
+			var table_tr=$('<tr><th>' +tr('Width')+'</th><td><input id="tab-design-properties-width" type="text" value="' + o.conf.getAttribute("width") + '"></td></tr>');
+			$("#tab-design-widget-properties tbody").append(table_tr);
 			$("#tab-design-properties-width").change(function() {
 				o.setSetting("width", $(this).val());
 			});
 			
-	  	var tr=$('<tr><th>Height</th><td><input id="tab-design-properties-height" type="text" value="' + o.conf.getAttribute("height") + '"></td></tr>');
-			$("#tab-design-widget-properties tbody").append(tr);
+	  	var table_tr=$('<tr><th>' +tr('Height')+'</th><td><input id="tab-design-properties-height" type="text" value="' + o.conf.getAttribute("height") + '"></td></tr>');
+			$("#tab-design-widget-properties tbody").append(table_tr);
 			$("#tab-design-properties-height").change(function() {
 				o.setSetting("height", $(this).val());
 			});
 		}
 		
 		if (_widgetscssexist) {
-      var tr=$('<tr><th>Class CSS</th><td><input id="tab-design-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
-			$("#tab-design-widget-properties tbody").append(tr);
+      var table_tr=$('<tr><th>' +tr('Class CSS')+'</th><td><input id="tab-design-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
+			$("#tab-design-widget-properties tbody").append(table_tr);
 			$("#tab-design-properties-class").change(function() {
 				o.setSetting("class", $(this).val());
 			});
@@ -524,12 +525,12 @@ var design = {
 	
 			if (this.type=="comment" || this.type=="separator")
 			{
-		    var tr=$('<tr>');
-		    tr.append($('<th colspan="2" class="' + this.type + '">' + this.label + '</th>'));
+		    var table_tr=$('<tr>');
+		    table_tr.append($('<th colspan="2" class="' + this.type + '">' + this.label + '</th>'));
 			} else
 			{
-		    var tr=$('<tr>');
-		    tr.append($('<th>' + this.label + '</th>'));
+		    var table_tr=$('<tr>');
+		    table_tr.append($('<th>' + this.label + '</th>'));
 
 	    	var value=o.conf.getAttribute(this.id);
 	    	if (value=="undefined" || value==null) value="";
@@ -764,10 +765,10 @@ var design = {
 		    	td.append(select);
 		  	}
 		
-		    tr.append(td);
+		    table_tr.append(td);
 			}
 			    
-	    $("#tab-design-widget-properties tbody").append(tr);
+	    $("#tab-design-widget-properties tbody").append(table_tr);
 		});
 		
 		$("#tab-design-properties input, #tab-design-properties select, #tab-design-properties textarea").change( function() {
@@ -794,21 +795,21 @@ var design = {
     var desc=o.conf.getAttribute('desc');
     if (!desc) desc = type;
 
-    var tr=$('<tr/>');
-    tr.get(0).obj = o;
-    if (globalcontrol) tr.css("color", "#FF0000"); // si globalcontrol == "true" c'est que le control/widget est lié au design et pas a la zone elle même
-    if (child) tr.css("color", "#0000FF"); // si child == "true" c'est que le control/widget est lié a un widget "content"
+    var table_tr=$('<tr/>');
+    table_tr.get(0).obj = o;
+    if (globalcontrol) table_tr.css("color", "#FF0000"); // si globalcontrol == "true" c'est que le control/widget est lié au design et pas a la zone elle même
+    if (child) table_tr.css("color", "#0000FF"); // si child == "true" c'est que le control/widget est lié a un widget "content"
 
     var th=$('<th>' + type + '</th>');
-    tr.append(th);
-    tr.click(function() {
+    table_tr.append(th);
+    table_tr.click(function() {
       this.obj.div.widgetMovable("select");
     });
 
     var td=$('<td><span>' + desc + '</span></td>');
-    tr.append(td);
+    table_tr.append(td);
     var bpviewxml =$('<td><button>Xml</button></td>');
-    if (_superuser) tr.append(bpviewxml);
+    if (_superuser) table_tr.append(bpviewxml);
 
     bpviewxml.click(function() {
       $('#tab-design-fluxxml').html("<textarea rows=30 cols=125>" + serializeXmlToString(this.parentNode.obj.conf) + "</textarea>");
@@ -821,7 +822,7 @@ var design = {
       });
     });
 
-    $("#tab-design-widgets-list tbody").append(tr);
+    $("#tab-design-widgets-list tbody").append(table_tr);
   },
   // Refresh Widgets List	
 	refreshWidgetsList: function() {

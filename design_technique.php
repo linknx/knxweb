@@ -254,6 +254,17 @@ if (isset($_GET['action'])) {
       }      
       print("</subpagesdl>\n");
       break;
+      
+    case 'updateknxweb':
+      exec('wget -O /tmp/knxweb2.tar "http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/knxweb2/?view=tar"');
+      //$path_knxweb2 = dirname(__FILE__) . DIRECTORY_SEPARATOR;
+      $path_knxweb2 = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
+      array_splice($path_knxweb2, count($path_knxweb2)-1);
+      $path_knxweb2 = implode( DIRECTORY_SEPARATOR , $path_knxweb2 ) . DIRECTORY_SEPARATOR;
+      exec('tar xvf /tmp/knxweb2.tar --directory='.$path_knxweb2);
+      exec('rm /tmp/knxweb2.tar');
+      print("<updateknxweb status='success' />\n"); 
+      break;
 
 		default:
 			print("<response status='error'>Unknown action</response>\n");

@@ -41,7 +41,9 @@ CWidget.prototype = {
     var defaultGridWidth = 20;
     var defaultWidgetGridWidth = 32;
 		if (_editMode) { // TODO en mode "subpage" design n'est pas définit et pas tenir compte de la grid ...
-      if (design) {
+      //if (design) {
+      // if(typeof design != "undefined") {
+      if (_designeditview) {
 			if (design.grid) {
 			  defaultGridWidth = design.gridWidth;
         if (defaultGridWidth < 20) defaultGridWidth = Math.round(Math.round( 20 / design.gridWidth) *  design.gridWidth); 

@@ -332,7 +332,7 @@ $.fn.widgetMovable = function(method) {
 		var options= $(widget).data('widgetMovable');
 
 		if (_editMode) {
-			if (design) {
+      if (_designeditview) {
         if (design.grid) {
   			  $(widget).draggable( "option", "grid", [design.gridWidth, design.gridWidth] );
   			}
@@ -381,7 +381,7 @@ $.fn.widgetMovable = function(method) {
 					div.hide();
 					$this.append(div);
   				var grid = [1,1];
-  				if (_editMode) { if (design) {if (design.gridwidgetsize) grid = [design.gridWidth, design.gridWidth]; }}
+  				if (_editMode) { if (_designeditview) {if (design.gridwidgetsize) grid = [design.gridWidth, design.gridWidth]; }}
 					div.draggable({
   					grid: grid,
 						containment: [left,top,9999,9999],
@@ -398,7 +398,7 @@ $.fn.widgetMovable = function(method) {
 
 				if (options.draggable) {
   				var grid = [1,1];
-  				if (_editMode) { if (design) {if (design.grid) grid = [design.gridWidth, design.gridWidth]; }}  
+  				if (_editMode) { if (_designeditview) {if (design.grid) grid = [design.gridWidth, design.gridWidth]; }}  
   				$this.draggable({
   					containment: 'parent',
   					cursor: 'move',
@@ -412,7 +412,7 @@ $.fn.widgetMovable = function(method) {
   						var left=Math.round($(this).css('left').replace(/px$/,""));
   						var top=Math.round($(this).css('top').replace(/px$/,""));
               if (_editMode) {
-          			if (design) {
+          			if (_designeditview) {
                   if (design.grid) {
             			  left = Math.round( left / design.gridWidth ) * design.gridWidth;
                     top = Math.round( top / design.gridWidth ) * design.gridWidth;

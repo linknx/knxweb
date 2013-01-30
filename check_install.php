@@ -94,8 +94,13 @@ if (isset($_GET["ajax"])) {
 				<?php 
 					if (file_exists('template/template_c/')) echo '<span style="color: #00FF00">ok</span>'; 
 					else {
-						echo "<span style='color: #FF0000'>no</span> => mkdir $pwd/template/template_c/";
-						$error=true;
+            $mkdirtemplate_c = exec('mkdir '.$pwd.'/template/template_c/');
+            if (file_exists('template/template_c/')) {
+              echo '<span style="color: #00FF00">ok</span><span style="color: #00FF00"> the directory was create</span>';
+            } else {
+  						echo "<span style='color: #FF0000'>no</span> => mkdir $pwd/template/template_c/";
+  						$error=true;
+            }
 					}
 				?>
 			</li>

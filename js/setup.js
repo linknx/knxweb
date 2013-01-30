@@ -3,8 +3,8 @@ var _objects;
 var imagesDir='';
 var imagesInput=null;
 var colorPickerInput=null;
-//var _superuser=false;
 var _superuser=(tab_config['superuser']=="true")?true:false;
+var _designeditview = false;
 
 jQuery(document).ready(function(){
 
@@ -249,7 +249,7 @@ function writeObjectValue(id, value)
 }
 
 function deleteImage(filename) {
-	if (confirm("Are you sure you want to delete " + filename + "?")) {
+	if (confirm(tr("Are you sure you want to delete") + " " + filename + "?")) {
 		req = jQuery.ajax({ 
 			type: 'post',
 			url: 'setup.php?ajax&deleteImage&filename=' + filename, 
@@ -258,7 +258,7 @@ function deleteImage(filename) {
 			{
 				var xmlResponse = responseXML.documentElement;
 				if (xmlResponse.getAttribute('status') != 'success') 
-					messageBox("An error has occured while deleting file", "Error", "alert");
+					messageBox(tr("An error has occured while deleting file"), tr("Error"), "alert");
 				else
 					openImagesManager();
 			}
@@ -267,7 +267,7 @@ function deleteImage(filename) {
 }
 
 function deleteImageFolder(folder) {
-	if (confirm("Are you sure you want to delete folder " + folder + " (folder must be empty) ?")) {
+	if (confirm(tr("Are you sure you want to delete folder") + " " + folder + " (" + tr("folder must be empty") + ") ?")) {
 		req = jQuery.ajax({ 
 			type: 'post',
 			url: 'setup.php?ajax&deleteImageFolder&folder=' + folder, 
@@ -285,7 +285,7 @@ function deleteImageFolder(folder) {
 }
 
 function createImageFolder() {
-	var folder=prompt("Please enter the new folder name","");
+	var folder=prompt(tr("Please enter the new folder name"),"");
 	if (folder!="") {
 		req = jQuery.ajax({ 
 			type: 'post',
@@ -295,7 +295,7 @@ function createImageFolder() {
 			{
 				var xmlResponse = responseXML.documentElement;
 				if (xmlResponse.getAttribute('status') != 'success') 
-					messageBox("An error has occured while creating folder", "Error", "alert");
+					messageBox(tr("An error has occured while creating folder"), tr("Error"), "alert");
 				else
 					openImagesManager();
 			}

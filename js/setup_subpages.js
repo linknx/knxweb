@@ -149,6 +149,8 @@ var subpages = {
 	
 	// Draw a subpage
 	draw: function(name) {
+    if (_editMode) _designeditview = false;
+
 		if (name!=null)
 		{
 			subpages.clear();
@@ -312,19 +314,19 @@ var subpages = {
     subpages.number++;
     o.number = subpages.number; 
 
-    var tr=$('<tr/>');
-    tr.get(0).obj = o;
+    var table_tr=$('<tr/>');
+    table_tr.get(0).obj = o;
 
     var th=$('<th>' + subpages.number + ' ' + type + '</th>');
-    tr.append(th);
-    tr.click(function() {
+    table_tr.append(th);
+    table_tr.click(function() {
       this.obj.div.widgetMovable("select");
     });
 
     var td=$('<td><span>' + desc + '</span></td>');
-    tr.append(td);
-    var bpviewxml =$('<td><button>Xml</button></td>');
-    //tr.append(bpviewxml);
+    table_tr.append(td);
+    var bpviewxml =$('<td><button>' + tr('Xml') + '</button></td>');
+    //table_tr.append(bpviewxml);
 
     bpviewxml.click(function() {
       $('#tab-design-fluxxml').html("<textarea rows=30 cols=125>" + serializeXmlToString(this.parentNode.obj.conf) + "</textarea>");
@@ -337,14 +339,14 @@ var subpages = {
       });
     });
 
-    $("#tab-subpages-widgets-list tbody").append(tr);
+    $("#tab-subpages-widgets-list tbody").append(table_tr);
   },
   // Refresh Widgets List	
 	refreshWidgetsList: function() {
 		$("#tab-subpages-widgets-list tbody").empty();
     subpages.number = 0;
-    var tr=$('<tr><th>subpage</th><td><span>'+$("#tab-subpages-list").val()+'</span></td></tr>');
-    tr.click(function() {
+    var table_tr=$('<tr><th>subpage</th><td><span>'+$("#tab-subpages-list").val()+'</span></td></tr>');
+    table_tr.click(function() {
   		$(".active", "#tab-subpages-widgets-list").removeClass("active");
       $(this).addClass("active")
       $('div').removeClass("selected");
@@ -353,7 +355,7 @@ var subpages = {
   		$("#widgetsubpagediv").addClass("selected");
   		subpages.displaySubpageProperties();
     });
-    $("#tab-subpages-widgets-list tbody").append(tr);
+    $("#tab-subpages-widgets-list tbody").append(table_tr);
 	},
   // remove widget from the WidgetsList
   removeWidgetsList: function(o) {
@@ -385,27 +387,27 @@ var subpages = {
 		var properties = eval( "_widgets." + type + ".settings" );
 
 	  // Setup standard fields x,y,width,height
-	  var tr=$('<tr><th colspan="2">X</th><td><input id="tab-subpages-properties-x" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("x") + '"></td></tr>');
-	   $("#tab-subpages-widget-properties tbody").append(tr);
+	  var table_tr=$('<tr><th colspan="2">X</th><td><input id="tab-subpages-properties-x" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("x") + '"></td></tr>');
+	   $("#tab-subpages-widget-properties tbody").append(table_tr);
 	 
-	  var tr=$('<tr><th colspan="2">Y</th><td><input id="tab-subpages-properties-y" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("y") + '"></td></tr>');
-	   $("#tab-subpages-widget-properties tbody").append(tr);
+	  var table_tr=$('<tr><th colspan="2">Y</th><td><input id="tab-subpages-properties-y" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("y") + '"></td></tr>');
+	   $("#tab-subpages-widget-properties tbody").append(table_tr);
 	
-    var tr=$('<tr><th>' +tr('Description')+'</th><td><input id="tab-subpages-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
-    $("#tab-subpages-widget-properties tbody").append(tr);
+    var table_tr=$('<tr><th colspan="2">' +tr('Description')+'</th><td><input id="tab-subpages-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
+    $("#tab-subpages-widget-properties tbody").append(table_tr);
     $("#tab-subpages-properties-desc").change(function() {
       o.setSetting("desc", $(this).val());
     });
 	
 		if (o.isResizable) {
-			var tr=$('<tr><th colspan="2">Width</th><td><input id="tab-subpages-properties-width" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("width") + '"></td></tr>');
-			$("#tab-subpages-widget-properties tbody").append(tr);
+			var table_tr=$('<tr><th colspan="2">' +tr('Width')+'</th><td><input id="tab-subpages-properties-width" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("width") + '"></td></tr>');
+			$("#tab-subpages-widget-properties tbody").append(table_tr);
 			$("#tab-subpages-properties-width").change(function() {
 				o.setSetting("width", $(this).val());
 			});
 
-	  	var tr=$('<tr><th colspan="2">Height</th><td><input id="tab-subpages-properties-height" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("height") + '"></td></tr>');
-			$("#tab-subpages-widget-properties tbody").append(tr);
+	  	var table_tr=$('<tr><th colspan="2">' +tr('Height')+'</th><td><input id="tab-subpages-properties-height" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("height") + '"></td></tr>');
+			$("#tab-subpages-widget-properties tbody").append(table_tr);
 			$("#tab-subpages-properties-height").change(function() {
 				o.setSetting("height", $(this).val());
 			});
@@ -424,12 +426,12 @@ var subpages = {
 			// Comment or separator
 			if (this.type=="comment" || this.type=="separator")
 			{
-		    var tr=$('<tr>');
-		    tr.append($('<th colspan="3" class="' + this.type + '">' + this.label + '</th>'));
+		    var table_tr=$('<tr>');
+		    table_tr.append($('<th colspan="3" class="' + this.type + '">' + this.label + '</th>'));
 			} else
 			{
-		    var tr=$('<tr>');
-		    tr.append($('<th>' + this.label + '</th>'));
+		    var table_tr=$('<tr>');
+		    table_tr.append($('<th>' + this.label + '</th>'));
 
 	    	var value=o.conf.getAttribute(this.id);
 	    	if (value=="undefined" || value==null) value="";
@@ -462,8 +464,8 @@ var subpages = {
 		    		}
 			    		
 			    });
-			    tr.append($('<th style="width: 15px;">').append(input));
-			  } else tr.append($('<th style="width: 15px;">'));
+			    table_tr.append($('<th style="width: 15px;">').append(input));
+			  } else table_tr.append($('<th style="width: 15px;">'));
 		    
 				// Add parameter				
 		    var td=$('<td>');
@@ -670,10 +672,10 @@ var subpages = {
 		    	td.append(select);
 		  	}
 		
-		    tr.append(td);
+		    table_tr.append(td);
 			}
 			    
-	    $("#tab-subpages-widget-properties tbody").append(tr);
+	    $("#tab-subpages-widget-properties tbody").append(table_tr);
 		});
 		
 		$("#tab-subpages-widget-properties input, #tab-subpages-widget-properties select, #tab-subpages-widget-properties textarea").change( function() {
@@ -727,12 +729,12 @@ var subpages = {
 		label=((typeof(label)!='undefined')? label : "");
 		type=((typeof(type)!='undefined')? type : "");
 		
-		var tr=$("<tr>");
+		var table_tr=$("<tr>");
 
 		var td=$("<td><input type='text' class='id' value='" + id + "'></td>");
-		tr.append(td);
+		table_tr.append(td);
 		var td=$("<td><input type='text' class='label' value='" + label + "'></td>");
-		tr.append(td);
+		table_tr.append(td);
 		var td=$("<td>");
 		
 		var select=$("<select class='type'>");
@@ -743,15 +745,15 @@ var subpages = {
 		//select.append($("<option value='multipleObject' disabled='1' >multipleObject</option>"));  // TODO ...
 		select.val(type);
 		td.append(select);
-		tr.append(td);
+		table_tr.append(td);
 
 		var td=$("<td><img src='images/remove.png'></td>");
 		$("img",td).button();
 		$("img",td).click(function(e) { $(e.target).parent().parent().remove(); });
 		
-		tr.append(td);
+		table_tr.append(td);
 
-		$("#tab-subpages-parameters-list tbody").append(tr);
+		$("#tab-subpages-parameters-list tbody").append(table_tr);
 	},
 	
 	// Triggered when closing the parameters dialog
