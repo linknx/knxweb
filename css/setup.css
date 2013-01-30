@@ -70,10 +70,7 @@ img {
 }
 
 #leftContent .title { 
-	border: 1px solid #2694e8;
-	background: #3baae3 url(../lib/jquery/css/cupertino/images/ui-bg_highlight-hard_70_000000_1x100.png) 50% 50% repeat-x;
 	font-weight: bold;
-	color: #EEE;
 	height: 15px;
 	padding-left: 5px;
   margin-top: 2px;
@@ -89,14 +86,10 @@ img {
   position:fixed;
   bottom:0px;
   display:block;
-  /*max-height: 90%;*/
 }
 
 #OptionContainer .title { 
-  border: 1px solid #2694e8;
-  background: #3baae3 url(../lib/jquery/css/cupertino/images/ui-bg_highlight-hard_70_000000_1x100.png) 50% 50% repeat-x;
   font-weight: bold;
-  color: #EEE;
   height: 15px;
   padding-left: 5px;
 }

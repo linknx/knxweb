@@ -95,7 +95,7 @@ Credits : <br />
 <div id="wrap">
 	<div id="leftContent" class="ui-widget-content" >
 		<div id="appTitle">KnxWeb {$_config.version}</div>
-		<div class="title">{l lang='en'}Menu{/l}</div>
+		<div class="title ui-state-active">{l lang='en'}Menu{/l}</div>
 		<div id="leftMenu" class="ui-helper-reset">
 			<h3 tab_id="setup" tab_label="{l lang='en'}Configuration{/l}"><a href="#"><img src="images/setup.png"> {l lang='en'}Configuration{/l}</a></h3>
 			<div>
