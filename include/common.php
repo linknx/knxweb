@@ -110,8 +110,9 @@
 			if ($feedbacks) {
 				if (is_array($feedbacks['feedback'])) {
 					// Multiple feedbacks
-					foreach((array)$feedbacks['setting'] as $v)
+					foreach((array)$feedbacks['feedback'] as $v) {
 						$ret['feedbacks'][]=(string)$v->attributes()->id;
+					}
 				} else
 				{
 					// single feedback
