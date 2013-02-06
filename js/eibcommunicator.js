@@ -60,7 +60,7 @@ var EIBCommunicator = {
 		if (objects.length > 0) {
 			var body = '<read><objects>';
 			for (i=0; i < objects.length; i++)
-				if (objects[i])
+				if (objects[i] && objects[i] != "null")
 					body += "<object id='" + objects[i] + "'/>";
 			body += "</objects></read>";
 

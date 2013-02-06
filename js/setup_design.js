@@ -516,6 +516,7 @@ var design = {
 					id: this.getAttribute('id'),
 					label: this.getAttribute('label'),
 					type: this.getAttribute('type'),
+					eis_type: this.getAttribute('eis_type')
 				};
 				properties.push(p);
 			});
@@ -580,19 +581,29 @@ var design = {
 	    		var option=($('<option value=""></option>'));
 	    		select.append(option);
 	
-          var exlude_type = [];
-          if (this.exlude_type) {
-            exlude_type = this.exlude_type.split(',');
-          }
           var only_type = [];
-          if (this.only_type) {
+          if (this.eis_type) {
+            only_type = [this.eis_type];
+          } else if (this.only_type) {
             only_type = this.only_type.split(',');
             exlude_type = [];
           }
 
+          var exlude_type = [];
+          if (this.exlude_type) {
+            exlude_type = this.exlude_type.split(',');
+          }
+
           if (only_type.length > 0) {
+            var prev_groups=["","",""];
 					$('object', _objects).each(function() {
             if (array_search( this.getAttribute('type'), only_type )!=-1 ){
+                var groups = this.getAttribute('id').split(':');
+                if ( groups.length == 3 && ( groups[0] != prev_groups[0] || groups[1] != prev_groups[1] ) ) {
+                  var grouplabel = groups[0] + ':' + groups[1];
+                  select.append("<optgroup label='" + grouplabel + "'>");
+                  prev_groups = groups;
+                }
 		    		var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) +' (' + this.getAttribute('type') + ')</option>'));
 		    		if (this.getAttribute('id')==value) option.attr('selected','1');
 		    		select.append(option);

@@ -116,6 +116,7 @@ CCharts.prototype.refreshHTML = function() {
   curve.id = this.conf.getAttribute("id");
 
   curve.libel = this.conf.getAttribute("libel");
+  if (!curve.libel) curve.libel = curve.id;
   if (_editMode) {
     var libel = "";
     $('object[id=' + curve.id + ']', _objects).each(function() {
@@ -167,6 +168,7 @@ CCharts.prototype.refreshHTML = function() {
     curveData.id = this.conf.getAttribute("id" + i);
 
     curveData.libel = this.conf.getAttribute("libel" + i);
+    if (!curveData.libel) curveData.libel = curveData.id;
     if (_editMode) {
       var libel = "";
       $('object[id=' + curveData.id + ']', _objects).each(function() {

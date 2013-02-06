@@ -84,6 +84,7 @@
 			<th>{l lang='en'}ID{/l}</th>
 			<th>{l lang='en'}Label{/l}</th>
 			<th>{l lang='en'}Type{/l}</th>
+			<th>{l lang='en'}EIS data type{/l}</th>
 			<th></th>
 		</thead>
 		<tbody>

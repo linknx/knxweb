@@ -309,6 +309,7 @@ var subpages = {
   // add widget to the WidgetsList
   addWidgetsList: function(o) {
     var type=o.conf.getAttribute('type');
+    var eis_type=o.conf.getAttribute('eis_type');
     var desc=o.conf.getAttribute('desc');
     if (!desc) desc = type;
     subpages.number++;
@@ -375,6 +376,7 @@ var subpages = {
 	// Fill properties table when selecting a widget
 	displayProperties: function(o) {
 		var type=o.conf.getAttribute('type');
+		var eis_type=o.conf.getAttribute('eis_type');
 
 		$('#tab-subpages-properties div:first-child').html(type + ' properties');
 
@@ -724,10 +726,11 @@ var subpages = {
 	},
 	
 	// Add a new line into the parameters dialog
-	addParameterLine: function(id, label, type) {
+	addParameterLine: function(id, label, type, eis_type) {
 		id=((typeof(id)!='undefined')? id : "");
 		label=((typeof(label)!='undefined')? label : "");
 		type=((typeof(type)!='undefined')? type : "");
+		eis_type=((typeof(eis_type)!='undefined')? eis_type : "");
 		
 		var table_tr=$("<tr>");
 
@@ -744,6 +747,17 @@ var subpages = {
 		select.append($("<option value='zone'>Zone</option>"));
 		//select.append($("<option value='multipleObject' disabled='1' >multipleObject</option>"));  // TODO ...
 		select.val(type);
+		td.append(select);
+		table_tr.append(td);
+
+		var td=$("<td>");
+		var select=$("<select class='eis_type'>");
+		select.append($("<option value=''>"+ tr("undefined") + "</option>"));
+		
+// 		if (type=='object') {
+			$.each(tab_objectTypes, function(key, descr) { select.append($("<option value='" + key + "'>" + descr + "</option>")); });
+			select.val(eis_type);
+// 		}
 		td.append(select);
 		table_tr.append(td);
 
@@ -767,6 +781,7 @@ var subpages = {
 			var id=$(".id",this).val();
 			var label=$(".label",this).val();
 			var type=$(".type",this).val();
+			var eis_type=$(".eis_type",this).val();
 			
 			if ((id=="")||(label=="")) {
 				messageBox(tr("Please complete all fields"), tr("Error"), "alert");
@@ -777,6 +792,7 @@ var subpages = {
 			parameter.setAttribute('id', id);
 			parameter.setAttribute('label', label);
 			parameter.setAttribute('type', type);
+			parameter.setAttribute('eis_type', eis_type);
 			
 			$('subpage[name=' + subpages.currentSubPage + ']', subpages.config)[0].getElementsByTagName('parameters')[0].appendChild(parameter);
 		
@@ -790,7 +806,7 @@ var subpages = {
 		$("#tab-subpages-parameters-list tbody").empty();
 
 		$('subpage[name=' + subpages.currentSubPage + '] parameters parameter', subpages.config).each(function() {
-			subpages.addParameterLine(this.getAttribute('id'), this.getAttribute('label'), this.getAttribute('type'));
+			subpages.addParameterLine(this.getAttribute('id'), this.getAttribute('label'), this.getAttribute('type'), this.getAttribute('eis_type') );
 		});
 	}
 }
@@ -866,7 +882,7 @@ jQuery(function($) {
       { text: tr("Ok"), click: function() { if (subpages.saveParameters()) $( this ).dialog( "close" ); } },
       { text: tr("Cancel"), click: function() { $( this ).dialog( "close" ); } }
     ],
-		width: 450,
+		width: 650,
 		height: 300,
 		modal: true,
 		autoOpen: false,

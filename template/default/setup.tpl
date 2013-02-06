@@ -17,6 +17,7 @@
 		var _widgets = {$widgets|json_encode};
 		var _widgetscssexist = {$widgetscssexist};
     var i18n = {$_lang|json_encode};
+		var tab_objectTypes = {$json_objectTypes};
 		</script>
 		{foreach from=$jsList item=js}
 		<script type="text/javascript" src="{$js}"></script>

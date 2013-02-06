@@ -76,6 +76,7 @@ if (isset($_GET['ajax']))
 /* /version on cvs sourceforge */
 
 tpl()->assignByRef('json_config', $json_config); // utiliser les données $_config en javascript
+tpl()->assignByRef('json_objectTypes', $json_objectTypes);
 
 //tpl()->addCss("lib/jquery/css/cupertino/jquery-ui-1.8.23.custom.css");
 if (!isset($_config["uitheme"]) || $_config["uitheme"] == "") $_config["uitheme"] = "cupertino";
