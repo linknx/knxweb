@@ -1,8 +1,8 @@
 <?php
   $lang['en'] = "English";  // default
   $lang['fr'] = "Francais";
-  /*
   $lang['de'] = "Deutsch";
+  /*
   $lang['nl'] = "Nederlands";
   $lang['pl'] = "Polski";
   $lang['sl'] = "Slovene";
