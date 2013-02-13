@@ -51,7 +51,7 @@ var rulesAction = {
     div[0].condition=false;
     
     div.dblclick(function () {
-      rules.editAction(this.type, this, false, true);
+      rulesAction.editAction(this.type, this, false, true);
     });
 
     div[0].delay=action.getAttribute('delay');
@@ -265,7 +265,7 @@ var rulesAction = {
     $('#tab-rules-container').append(div);
     
     div.dblclick(function () {
-      rules.editAction(this.type, this, false, true);
+      rulesAction.editAction(this.type, this, false, true);
     });
     
     div[0].endpointin = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[0, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, inputEndpoint));

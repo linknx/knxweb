@@ -30,7 +30,7 @@ var rulesCondition = {
       $('#tab-rules-container').append(div);
       
       div.dblclick(function () {
-        rules.editCondition(this.type, this, false, true);
+        rulesCondition.editCondition(this.type, this, false, true);
       });
     }
     
@@ -305,7 +305,7 @@ var rulesCondition = {
       $('#tab-rules-container').append(div);
       
       div.dblclick(function () {
-        rules.editCondition(this.type, this, false, true);
+        rulesCondition.editCondition(this.type, this, false, true);
       });
       
       div[0].endpointout = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, outputEndpoint));
