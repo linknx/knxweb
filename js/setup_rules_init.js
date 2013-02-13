@@ -174,9 +174,9 @@ var rules = {
   generateNodeXML: function(div) {
     var xml;
     if(div[0].condition) {
-      xml = this.generateNodeXMLCondition(div);
+      xml = rulesCondition.generateNodeXMLCondition(div);
     } else {
-      xml = this.generateNodeXMLAction(div);
+      xml = rulesAction.generateNodeXMLAction(div);
     } 
     return xml;
   },
@@ -266,9 +266,9 @@ var rules = {
   handleDialogSave: function(dialog) {    
     var type = dialog.editing.type;
     if (dialog.editing.condition) {
-      this.saveCondition(type);
+      rulesCondition.saveCondition(type);
     } else {
-      this.saveAction(type);
+      rulesAction.saveAction(type);
     }
     $(dialog).dialog("close"); 
   },
@@ -348,7 +348,7 @@ function loadRule(xml)
   var k = 0;
   $(xml).children("condition").each(function () {
     var type = this.getAttribute('type');
-    var condition = rules.addConditionRule(type, this, k);
+    var condition = rulesCondition.addConditionRule(type, this, k);
     /* il y a qu'une condition globale !! rattacher condition à actionlist */
     if (type == "and" || type == "or" || type == "not" ) {
       jsPlumb.connect({source:condition[0].endpoint[0], target:actionlist[0].endpoint[0]});
@@ -367,14 +367,14 @@ function loadRule(xml)
     }
     if (!typeactionlist || typeactionlist == "on-true" || typeactionlist == "if-true") {
       $('action', this).each(function() {
-        var action = rules.addActionRule( this.getAttribute('type'), this, i, true);
+        var action = rulesAction.addActionRule( this.getAttribute('type'), this, i, true);
         i++;
         jsPlumb.connect({source:actionlist[0].ontrue[i], target: action[0].endpointin});
         if (i>10) { messageBox(tr("Maximum number of share reached"),tr("Action True"),"alert"); return 0; }// TODO gérer si plus de 10 actions ... 
       });
     } else if ( typeactionlist == "on-false" || typeactionlist == "if-false") {
       $('action', this).each(function() {
-        var action = rules.addActionRule( this.getAttribute('type'), this, i, false);
+        var action = rulesAction.addActionRule( this.getAttribute('type'), this, i, false);
         i++;
         jsPlumb.connect({source:actionlist[0].onfalse[i], target: action[0].endpointin});
         if (i>10) { messageBox(tr("Maximum number of share reached"),tr("Action False"),"alert"); return 0; }// TODO gérer si plus de 10 actions ... 

@@ -326,24 +326,33 @@ var actionEditor = {
 		$('.object-select', div).each(function() {
 			var select=$(this);
 			select.empty();
-			var option=($('<option value="">None</option>'));
+			var option=($('<option value="">' + tr('None') + '</option>'));
 			select.append(option);
-			var optgroup=$("<optgroup label='Objects'>");
-			$('object', _objects).each(function() {
-				var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent!="")?this.textContent:this.getAttribute('id')) + ' (' + this.getAttribute('type') + ')</option>'));
-				option[0].type = this.getAttribute('type');
-				optgroup.append(option);
-			});
-			select.append(optgroup);
 
 			if (actionEditor.subPageObjects.length>0) {
 				var optgroup=$("<optgroup label='Sub-page objects'>");
 				$.each(actionEditor.subPageObjects, function() {
-					var option=($('<option value="_' + this.id + '">' + this.value + '</option>'));
+					//var option=($('<option value="_' + this.id + '">' + this.value + '</option>'));
+					var option=($('<option value="_' + this.id + '">' + this.value + ' (' + this.eis_type + ' )</option>'));
 					optgroup.append(option);
 				});
 				select.append(optgroup);
 			}
+
+			var optgroup=$("<optgroup label='"+tr("Objects")+"'>");
+			var prev_groups=["","",""];
+			$('object', _objects).each(function() {
+				var groups = this.getAttribute('id').split(':');
+				if ( groups.length == 3 && ( groups[0] != prev_groups[0] || groups[1] != prev_groups[1] ) ) {
+					var grouplabel = groups[0] + ':' + groups[1];
+					optgroup.append("<optgroup label='" + grouplabel + "'>");
+					prev_groups = groups;
+				}
+				var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent!="")?this.textContent:this.getAttribute('id')) + ' (' + this.getAttribute('type') + ')</option>'));
+				option[0].type = this.getAttribute('type');
+					optgroup.append(option);
+				});
+				select.append(optgroup);
 		});
 	},
 	

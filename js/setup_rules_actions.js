@@ -1,5 +1,5 @@
 
-function cdataTextcontent(data, cdata = true) {
+function cdataTextcontent(data, cdata) {
   var pos = data.indexOf('<![CDATA['); //'<![CDATA[' + action[0].objvalue + ']]>'
   //'&lt;![CDATA[' ']]&gt;'
   if (pos != "-1") {
@@ -18,7 +18,8 @@ function cdataTextcontent(data, cdata = true) {
     return data;
 }
 
-$.extend(rules, {
+//$.extend(rules, {
+var rulesAction = {
 
   // ******************** Action ************************
 /*
@@ -100,10 +101,8 @@ $.extend(rules, {
         };
         div[0].endpoint[0]= jsPlumb.addEndpoint(div.attr("id"), $.extend({ anchor:[0.5, 0, 0, 0], uuid: "endpoint2"+div.attr("id") }, inputPoint));
         var k = 1;
-        //collonne_condition++;
-        //pos_top_condition[collonne_condition] = 0;
         $(action).children("condition").each(function () {
-          var temp_conditionand = rules.addConditionRule(this.getAttribute('type'), this, numcondition);
+          var temp_conditionand = rulesAction.addConditionRule(this.getAttribute('type'), this, numcondition);
           jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[0]});
           if (k > 1) messageBox(tr("Maximum number of condition for reaching this cycle-on-off"),tr("Action cycle-on-off"),"alert");
           k++;
@@ -127,16 +126,14 @@ $.extend(rules, {
         div[0].endpoint[11] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 1, 0, 0] }, outputEndpoint));
         var k = 1;
         $(action).children("action").each(function () {
-          var temp_action = rules.addActionRule(this.getAttribute('type'), this, numaction, actionlist);
+          var temp_action = rulesAction.addActionRule(this.getAttribute('type'), this, numaction, actionlist);
           jsPlumb.connect({source:temp_conditionand[0].endpointin, target:div[0].endpoint[k]});
           if (k > 11) messageBox(tr("Maximum number of action for reaching this Repeat"),tr("Action Repeat"),"alert");
           k++;
         });
         break;
       case 'conditional' :
-        //addConditional
         div[0].endpoint = [];
-        //div[0].endpointin = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[0, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, inputEndpoint));
         
         var inputPoint = {
           endpoint:["Rectangle", {width:10, height:10} ],
@@ -163,18 +160,15 @@ $.extend(rules, {
         div[0].endpoint[9] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.8, 0, 0] }, outputEndpoint));
         div[0].endpoint[10] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 0.9, 0, 0] }, outputEndpoint));
         div[0].endpoint[11] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 1, 0, 0] }, outputEndpoint));
-        //rules.positionCondition(type, condition, numcondition, div);
         var k = 1;
-        //collonne_condition++;
-        //pos_top_condition[collonne_condition] = 0;
         $(action).children("condition").each(function () {
-          var temp_conditionand = rules.addConditionRule(this.getAttribute('type'), this, numcondition);
+          var temp_conditionand = rulesCondition.addConditionRule(this.getAttribute('type'), this, numcondition);
           jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[0]});
           if (k > 1) messageBox(tr("Maximum number of condition for reaching this Conditional"),tr("Action Conditional"),"alert");
           k++;
         });
         $(action).children("action").each(function () {
-          var temp_action = rules.addActionRule(this.getAttribute('type'), this, numaction, actionlist);
+          var temp_action = rulesAction.addActionRule(this.getAttribute('type'), this, numaction, actionlist);
           jsPlumb.connect({source:temp_conditionand[0].endpointin, target:div[0].endpoint[k]});
           if (k > 11) messageBox(tr("Maximum number of action for reaching this Conditional"),tr("Action Conditional"),"alert");
           k++;
@@ -244,8 +238,6 @@ $.extend(rules, {
 
     $('#tab-rules-container').append(div); 
 
-    //div.css("top",pos_top+numaction*50);
-    //div.css("right",pos_right + 70);
     if (actionlist)
     div.css("top",20+numaction*50);
     else
@@ -311,7 +303,6 @@ $.extend(rules, {
         div[0].count='';
         div.css("width","140px");
         div[0].endpoint = [];
-        //div[0].endpointin = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[0, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, inputEndpoint));
         
         var inputPoint = {
           endpoint:["Rectangle", {width:10, height:10} ],
@@ -344,9 +335,7 @@ $.extend(rules, {
         div[0].endpoint[11] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 1, 0, 0] }, outputEndpoint));
         break;
       case 'conditional' :
-        //addConditional
         div[0].endpoint = [];
-        //div[0].endpointin = jsPlumb.addEndpoint(div.attr("id"),$.extend({ anchor:[0, 0.5, 0, 0], uuid: "endpoint"+div.attr("id") }, inputEndpoint));
         
         var inputPoint = {
           endpoint:["Rectangle", {width:10, height:10} ],
@@ -445,7 +434,7 @@ $.extend(rules, {
   
   editAction: function(type, div, isNew, openDialog) {
     if (!document.getElementById('tab-rules-'+type+'-action-dialog')) {
-      rules.createDialogAction('tab-rules-'+type+'-action-dialog', tr("Edit") + " "+type, "540px" , true, type);
+      rulesAction.createDialogAction('tab-rules-'+type+'-action-dialog', tr("Edit") + " "+type, "540px" , true, type);
     }
     if (isNew!='')
       $('#tab-rules-'+type+'-action-dialog')[0].isNew=isNew; 
@@ -454,8 +443,6 @@ $.extend(rules, {
 
     $('#tab-rules-'+type+'-action-dialog')[0].editing=div;
 
-    //$('#tab-rules-'+type+'-action-'+attr).text(div[0].script);
-    
     $('#tab-rules-action-delay').val(div.delay);
     
     switch (type) {
@@ -525,7 +512,6 @@ $.extend(rules, {
         else $('#tab-rules-ioport-tx-action-var').removeAttr('checked').trigger('change');
         break;
       case 'script' :
-        //$('#tab-rules-script-action-script').val(div.script);
         $('#tab-rules-script-action-script').text(div.script);
         break;
       case 'cancel' :
@@ -558,7 +544,6 @@ $.extend(rules, {
   
   saveAction: function(type) {
     var div=$('#tab-rules-'+type+'-action-dialog')[0].editing;
-    //div.script=$('#tab-rules-'+type+'-action-script').text();
     
     div.delay=$('#tab-rules-action-delay').val();
     
@@ -638,7 +623,6 @@ $.extend(rules, {
         break;
       case 'script' :
         div.script = $('#tab-rules-script-action-script').val();
-        //div.script = $('#tab-rules-script-action-script').text();
         html = '';
         break;
       case 'cancel' :
@@ -722,7 +706,6 @@ $.extend(rules, {
         xml.attr('to',action[0].objto);
         xml.attr('subject',action[0].subject);
         xml.attr('var',action[0].emailvar);
-        //xml.text(cdataTextcontent(action[0].objtext));
         xml.text(action[0].objtext);
         break;
       case 'dim-up' : // < type="" id="" start="" stop="" duration="" />
@@ -742,7 +725,6 @@ $.extend(rules, {
         xml.attr('var',action[0].ioportvar);
         break;
       case 'script': // conditionner si linknx est compiler avec lua // < type="" >script <... />
-        //xml.text(cdataTextcontent(action[0].script));
         xml.text(action[0].script);
         break;
       case 'cancel' : // < type="" rule-id="" />
@@ -769,27 +751,26 @@ $.extend(rules, {
     }
 
     var c = jsPlumb.getConnections({source:action.attr('id')});
-    //var c = jsPlumb.getConnections({source:action[0].endpointin}); 
     for (var i in c) {
       var l = c[i];
       if (l && l.length > 0) {
         for (var j = 0; j < l.length; j++) {
-          xml.append(this.generateNodeXML($('#'+l[j].targetId)));
+          xml.append(rules.generateNodeXML($('#'+l[j].targetId)));
         }
       } else if (l) {
         var action2 = $('#'+l.targetId);
         if (!action2[0].condition && l.sourceId == action.attr("id")) {
-          xml.append(this.generateNodeXML($('#'+l.targetId)));
+          xml.append(rules.generateNodeXML($('#'+l.targetId)));
         }
       }
     }
     if (action[0].endpoint) {
-      var c = jsPlumb.getConnections({target:action.attr('id')}); // action.attr('id') // action[0].endpoint[0]
+      var c = jsPlumb.getConnections({target:action.attr('id')});
       for (var i in c) {
         var l = c[i];
         if (l && l.length > 0) {
           for (var j = 0; j < l.length; j++) {
-            xml.append(this.generateNodeXML($('#'+l[j].sourceId)));
+            xml.append(rules.generateNodeXML($('#'+l[j].sourceId)));
           }
         } else if (l) {
           var condition2 = $('#'+l.sourceId);
@@ -798,7 +779,7 @@ $.extend(rules, {
             if ( action[0].type == 'cycle-on-off') {
               condition2[0].stopcondition = true;              
             }
-            xml.append(this.generateNodeXML($('#'+l.sourceId)));
+            xml.append(rules.generateNodeXML($('#'+l.sourceId)));
           }
         }
       }
@@ -970,7 +951,6 @@ $.extend(rules, {
             ioport_tx_select.attr("id","tab-rules-send-ioport-tx-ioport");
             tbody.append(
               $('<tr>').append('<th width="150">'+tr('Io-Port')+'</th>')
-              //.append($('<td>').append('<input type="text" id="tab-rules-ioport-tx-action-ioport" size="10">'))
               .append($('<td>').append(ioport_tx_select))
               ).append(
               $('<tr>').append('<th width="150">'+tr('Data')+'</th>')
@@ -1063,4 +1043,5 @@ $.extend(rules, {
       modal: true
     });
   }
-});
+};
+//});

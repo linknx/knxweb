@@ -321,7 +321,8 @@ jQuery(document).ready(function(){
 		{
 			values=_objectTypesValues[$("#readwrite-object-id option:selected")[0].type];
 			$("#readwrite-object-val-select").empty();
-			$(values).each(function() { $("#readwrite-object-val-select").append('<option value="' + this + '">' + this + '</option>'); });
+			//$(values).each(function() { $("#readwrite-object-val-select").append('<option value="' + this + '">' + this + '</option>'); });
+			$(values).each(function() { $("#readwrite-object-val-select").append('<option value="' + this + '">' + tr(this.substr(0, 1).toUpperCase() + this.substr(1)) + '</option>'); });
 			$("#readwrite-object-val-select").show();
 			$("#readwrite-object-val-input").hide();
 		} else

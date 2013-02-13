@@ -295,7 +295,7 @@ var subpages = {
 
 	// Show design properties
 	displaySubpageProperties: function() {
-		$('#tab-subpages-properties div:first-child').html('Sub-page properties');
+		$('#tab-subpages-properties div:first-child').html(tr('Sub-page properties'));
 		$('#tab-subpages-widget-buttons').hide();
 		$("#tab-subpages-widget-properties tbody").empty();
 
@@ -429,11 +429,11 @@ var subpages = {
 			if (this.type=="comment" || this.type=="separator")
 			{
 		    var table_tr=$('<tr>');
-		    table_tr.append($('<th colspan="3" class="' + this.type + '">' + this.label + '</th>'));
+		    table_tr.append($('<th colspan="3" class="' + this.type + '">' + tr(this.label) + '</th>'));
 			} else
 			{
 		    var table_tr=$('<tr>');
-		    table_tr.append($('<th>' + this.label + '</th>'));
+		    table_tr.append($('<th>' + tr(this.label) + '</th>'));
 
 	    	var value=o.conf.getAttribute(this.id);
 	    	if (value=="undefined" || value==null) value="";
@@ -750,6 +750,17 @@ var subpages = {
 		td.append(select);
 		table_tr.append(td);
 
+		var td=$("<td>");
+		var select=$("<select class='eis_type'>");
+		select.append($("<option value=''>"+tr("undefined")+"</option>"));
+		
+// 		if (type=='object') {
+			$.each(tab_objectTypes, function(key, descr) { select.append($("<option value='" + key + "'>" + descr + "</option>")); });
+			select.val(eis_type);
+// 		}
+		td.append(select);
+		table_tr.append(td);
+		
 		var td=$("<td>");
 		var select=$("<select class='eis_type'>");
 		select.append($("<option value=''>"+ tr("undefined") + "</option>"));

@@ -408,7 +408,9 @@ $_lang['Footer'] = 'Pied de page';
 $_lang['Update File'] = 'Mise à jour du fichier';
 $_lang['Reload'] = 'Recharger';
 
-
+$_lang['Sub-page properties'] = 'Propriété de la Sous-page';
+$_lang['Design properties'] = 'Propriété du Design';
+$_lang['of'] = 'de';
 
 /*             
 $_lang[''] = '';

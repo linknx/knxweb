@@ -419,7 +419,7 @@ var design = {
 	
 	// Show design properties
 	displayDesignProperties: function() {
-		$("#tab-design-properties div:first-child").html('Design properties');
+		$("#tab-design-properties div:first-child").html(tr('Design properties'));
 		$("#tab-design-widget-buttons").hide();
 		$("#tab-design-widget-properties tbody").empty();
 		
@@ -430,7 +430,7 @@ var design = {
 	displayProperties: function(o) {
 		var type=o.conf.getAttribute('type');
 
-		$("#tab-design-properties div:first-child").html(type + ' properties');
+		$("#tab-design-properties div:first-child").html(tr('Properties')+' '+tr('of')+' '+type);
 		
 		$("#tab-design-design-properties").hide();
 
@@ -582,6 +582,7 @@ var design = {
 	    		select.append(option);
 	
           var only_type = [];
+          var exlude_type = [];
           if (this.eis_type) {
             only_type = [this.eis_type];
           } else if (this.only_type) {
@@ -589,7 +590,6 @@ var design = {
             exlude_type = [];
           }
 
-          var exlude_type = [];
           if (this.exlude_type) {
             exlude_type = this.exlude_type.split(',');
           }
@@ -765,7 +765,7 @@ var design = {
 		    	select=$('<select>');
 		    	select.attr('name', this.id);
 
-	    		var option=($('<option value="">Execute action</option>'));
+	    		var option=($('<option value="">'+tr('Execute action')+'</option>'));
 	    		select.append(option);
 	
 					$('zone', design.config).each(function() {

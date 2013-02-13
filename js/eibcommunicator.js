@@ -102,7 +102,8 @@ var EIBCommunicator = {
   		{
   			var action=actions.childNodes[i]; //var action=actions[i];
   			// Already dispatch new value if type == set-value
-  			if (action.getAttribute('type')=='set-value') EIBCommunicator.sendUpdate(action.getAttribute('id'), action.getAttribute('value'));
+  			//if (action.getAttribute('type')=='set-value') EIBCommunicator.sendUpdate(action.getAttribute('id'), action.getAttribute('value'));
+  			if (action.nodeType == 1 && action.getAttribute('type')=='set-value') EIBCommunicator.sendUpdate(action.getAttribute('id'), action.getAttribute('value'));
   			xml+=serializeXmlToString(actions.childNodes.item(i));//xml+=serializeXmlToString(actions[i]);
   		}
   		xml+='</execute>';

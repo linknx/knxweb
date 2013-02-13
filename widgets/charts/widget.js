@@ -116,15 +116,16 @@ CCharts.prototype.refreshHTML = function() {
   curve.id = this.conf.getAttribute("id");
 
   curve.libel = this.conf.getAttribute("libel");
-  if (!curve.libel) curve.libel = curve.id;
   if (_editMode) {
     var libel = "";
-    $('object[id=' + curve.id + ']', _objects).each(function() {
-      if (curve.id == this.getAttribute('id')) libel = ((this.textContent!="")?this.textContent:this.getAttribute('id'));
+    var id = curve.id.replace(" ", "_");
+    $('object[id=' + id + ']', _objects).each(function() {
+      if (id == this.getAttribute('id')) libel = ((this.textContent!="")?this.textContent:this.getAttribute('id'));
     });
     this.conf.setAttribute('libel', libel );
     curve.libel = libel;
   }
+  if (!curve.libel) curve.libel = curve.id;
 
 /*
   curve.nbenreg=this.conf.getAttribute("nbenreg");
@@ -168,15 +169,16 @@ CCharts.prototype.refreshHTML = function() {
     curveData.id = this.conf.getAttribute("id" + i);
 
     curveData.libel = this.conf.getAttribute("libel" + i);
-    if (!curveData.libel) curveData.libel = curveData.id;
     if (_editMode) {
       var libel = "";
-      $('object[id=' + curveData.id + ']', _objects).each(function() {
-        if (curveData.id == this.getAttribute('id')) libel = ((this.textContent!="")?this.textContent:this.getAttribute('id'));
+      var id = curveData.id.replace(" ", "_");
+      $('object[id=' + id + ']', _objects).each(function() {
+        if (id == this.getAttribute('id')) libel = ((this.textContent!="")?this.textContent:this.getAttribute('id'));
       });
       this.conf.setAttribute('libel' + i, libel );
       curveData.libel = libel;
     }
+    if (!curveData.libel) curveData.libel = curveData.id;
 /*
     curveData.nbenreg=this.conf.getAttribute("nbenreg" + i);
     if (!curveData.nbenreg)

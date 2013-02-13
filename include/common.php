@@ -90,6 +90,7 @@
 				"settings" => array()
 			);
 
+			if (isset($xml['settings'])) {
 			$settings=(array)$xml['settings'];
 			if ($settings) {
 				if (is_array($settings['setting'])) {
@@ -105,10 +106,11 @@
 					$ret['settings'][]=$setting;
 				}
 			}
-
+ 			}
+			if (isset($xml['feedbacks'])) {
 			$feedbacks=(array)$xml['feedbacks'];
 			if ($feedbacks) {
-				if (is_array($feedbacks['feedback'])) {
+					if (isset($feedbacks['feedback']) && is_array($feedbacks['feedback'])) {
 					// Multiple feedbacks
 					foreach((array)$feedbacks['feedback'] as $v) {
 						$ret['feedbacks'][]=(string)$v->attributes()->id;
@@ -118,6 +120,7 @@
 					// single feedback
 					if (isset($feedbacks['feedback'])) $ret['feedbacks'][]=(string)$feedbacks['feedback']->attributes()->id;
 				}
+			}
 			}
 	
 			return $ret;

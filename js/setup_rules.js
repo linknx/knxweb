@@ -11,7 +11,6 @@ jQuery(document).ready(function(){
       if (xmlResponse.getAttribute('status') != 'error') {
         $('ioport', responseXML).each(function() {
           var ioport=this.getAttribute('id');
-          //var option=($('<option value="' + ioport + '">' + ioport + '</option>'));
           var option='<option value="' + ioport + '">' + ioport + '</option>';
           $('#tab-rules-ioport-rx-condition-ioport').append(option);
           _ioport_select.append(option);
@@ -32,7 +31,7 @@ jQuery(document).ready(function(){
 
   $('#addcondition').change(function(){
     var type = this.value;
-    rules.addCondition(type);
+    rulesCondition.addCondition(type);
     this.value = "";
   });
   
@@ -48,7 +47,7 @@ jQuery(document).ready(function(){
   
   $('#addaction').change(function(){
     var type = this.value;
-    rules.addAction(type);
+    rulesAction.addAction(type);
     this.value = "";
   });
 
@@ -69,11 +68,9 @@ jQuery(document).ready(function(){
 
   jsPlumb.bind("jsPlumbConnection",function(data) {
       rules.generateXML();
-      //alert("a connection was made from " + data.sourceId + " to " + data.targetId);
     });
   jsPlumb.bind("jsPlumbConnectionDetached",function(data) {
       rules.generateXML();
-      //alert("a connection was detached from " + data.sourceId + " to " + data.targetId);
     });
   
   myDropOptions = {  
@@ -155,13 +152,11 @@ jQuery(document).ready(function(){
   $('#actionlist').css("right",pos_right-$('#actionlist').width()/2);
   
   actionlist[0].endpoint = [];
-  //actionlist.addEndpoint($.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
   actionlist[0].endpoint[0] = jsPlumb.addEndpoint("actionlist" , $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
   
   var actionlistontrue =$('<div>');
   actionlistontrue.attr("id", "actionlistOnTrue");
   actionlistontrue.attr("title", tr("DblClick : Toggle On-True / If-True"));
-  //actionlistontrue.css("height", "120px").css("width", "70px").css("top", "0px").css("position", "absolute");
   actionlistontrue.append('<span style="position: absolute; top: 50%; text-align: center; right: 10px;">On-True</span>');
   Playactionlistontrue = $('<div class="play" title="'+tr('Execute')+'" ></div>')
   Playactionlistontrue.click(function() { executeActionRule(true);});
@@ -191,7 +186,6 @@ jQuery(document).ready(function(){
   var actionlistonfalse =$('<div>');
   actionlistonfalse.attr("id", "actionlistOnFalse");
   actionlistontrue.attr("title", tr("DblClick : Toggle On-False / If-False"));
-  //actionlistonfalse.css("height", "120px").css("width", "70px").css("top", "120px").css("position", "absolute");
   actionlistonfalse.append('<span style="position: absolute; top: 50%; text-align: center; right: 10px;">On-False</span>');
   Playactionlistonfalse = $('<div class="play" title="'+tr('Execute')+'" ></div>')
   Playactionlistonfalse.click(function() { executeActionRule(false);});
