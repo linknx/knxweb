@@ -363,6 +363,43 @@
         <input type="text" id="tab-rules-ioport-rx-condition-expected">
       </td>
     </tr>
+    
+    <tr>
+      <th>{l lang='en'}Object{/l}0</th>
+      <td>
+        <select id="tab-rules-ioport-rx-condition-object0"></select>
+      </td>
+    </tr>
+    <tr>
+      <th>{l lang='en'}Object{/l}1</th>
+      <td>
+        <select id="tab-rules-ioport-rx-condition-object1"></select>
+      </td>
+    </tr>
+    <tr>
+      <th>{l lang='en'}Object{/l}2</th>
+      <td>
+        <select id="tab-rules-ioport-rx-condition-object2"></select>
+      </td>
+    </tr>
+    <tr>
+      <th>{l lang='en'}Object{/l}3</th>
+      <td>
+        <select id="tab-rules-ioport-rx-condition-object3"></select>
+      </td>
+    </tr>
+    <tr>
+      <th>{l lang='en'}Regex{/l}</th>
+      <td>
+        <input type="checkbox" id="tab-rules-ioport-rx-condition-regex">
+      </td>
+    </tr>                                                             
+    <tr>
+      <th>{l lang='en'}Hex{/l}</th>
+      <td>
+        <input type="checkbox" id="tab-rules-ioport-rx-condition-hex">
+      </td>
+    </tr>
     <tr>
       <th>{l lang='en'}Trigger{/l}</th>
       <td>

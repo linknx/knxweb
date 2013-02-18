@@ -6,16 +6,18 @@ var design_view = {
 	currentVersion: null,
 	currentZone: null,
 
-	load: function(designName, version, callback)	{
+	load: function(designName, version, zone, callback)	{
 		var url = 'design/' + designName + '/' + version + '.xml';
 	
 		design_view.currentDesign=designName;
 		design_view.currentVersion=version;
+    design_view.currentZone=zone;
 		
 		req = jQuery.ajax({ url: url, dataType: 'xml', async: true, cache: false,
 			success: function(responseXML, status) {
 				design_view.config=responseXML;
 				callback();
+        if (zone) gotoZone(zone);
 			}
 		});
 	},
@@ -198,20 +200,24 @@ function gotoZone(id)
     $("#" + id).show( selectedEffect, options, 1000 );
 		//$("#" + id).show();
 	}
+  design_view.currentZone=id;
 }
 
 jQuery(function($) {
 	var design = tab_config['defaultDesign'];
 	var version = tab_config['defaultVersion'];
+  var zone = null;
 	
 	var matched;
 	if (matched = location.search.match(/design=([^&]+)/))
 		design = matched[1];
 	if (matched = location.search.match(/version=([^&]+)/))
 		version = matched[1];
+	if (matched = location.search.match(/zone=([^&]+)/))
+		zone = matched[1];
 
 	design_view.loadSubPages(function() {
-		design_view.load(design, version, function() {
+		design_view.load(design, version, zone, function() {
 			
 			design_view.draw();
 			

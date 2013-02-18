@@ -5,8 +5,8 @@
 		
 		<meta http-equiv="pragma" content="no-cache" />
 		<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-    <meta name="viewport" content="user-scalable=no,width=device-width" /> <!-- for mobile -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="user-scalable=no,width=device-width" />
 		
 		<title>{$_config.title}</title>
 		{foreach from=$cssList item=css}
@@ -31,9 +31,9 @@
 
 <div id="widgetsTemplate" style="display: none;">
 
-	{foreach from=$widgets key=id item=i}
+{foreach from=$widgets key=id item=i}
 		{include file="widgets/$id/widget.html"}
-	{/foreach}
+{/foreach}
 
 </div>
 
@@ -45,8 +45,8 @@
 <div id="screen">
 <img class="prev" src="images/previous.png" alt="prev" width="42" height="53" />
 
-	<div id="zoneContainer">
-	</div>
+<div id="zoneContainer">
+</div>
 
 <img class="next" src="images/next.png" alt="next" width="42" height="53" />
 </div>

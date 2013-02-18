@@ -255,7 +255,7 @@ Credits : <br />
 			
 		</div>
 		<div id="propertiesContainer">
-			<div class="title">{l lang='en'}Properties{/l}</div>
+			<div class="title ui-state-active">{l lang='en'}Properties{/l}</div>
 		</div>
 	</div>
 	

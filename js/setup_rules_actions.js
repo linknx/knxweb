@@ -56,6 +56,8 @@ var rulesAction = {
 
     div[0].delay=action.getAttribute('delay');
     
+    $('#tab-rules-container').append(div); 
+    
     switch (type) {
       case 'set-value' :
         div[0].objid=action.getAttribute('id');
@@ -102,7 +104,7 @@ var rulesAction = {
         div[0].endpoint[0]= jsPlumb.addEndpoint(div.attr("id"), $.extend({ anchor:[0.5, 0, 0, 0], uuid: "endpoint2"+div.attr("id") }, inputPoint));
         var k = 1;
         $(action).children("condition").each(function () {
-          var temp_conditionand = rulesAction.addConditionRule(this.getAttribute('type'), this, numcondition);
+          var temp_conditionand = rulesCondition.addConditionRule(this.getAttribute('type'), this, 0);
           jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[0]});
           if (k > 1) messageBox(tr("Maximum number of condition for reaching this cycle-on-off"),tr("Action cycle-on-off"),"alert");
           k++;
@@ -127,12 +129,13 @@ var rulesAction = {
         var k = 1;
         $(action).children("action").each(function () {
           var temp_action = rulesAction.addActionRule(this.getAttribute('type'), this, numaction, actionlist);
-          jsPlumb.connect({source:temp_conditionand[0].endpointin, target:div[0].endpoint[k]});
+          jsPlumb.connect({source:temp_action[0].endpointin, target:div[0].endpoint[k]});
           if (k > 11) messageBox(tr("Maximum number of action for reaching this Repeat"),tr("Action Repeat"),"alert");
           k++;
         });
         break;
       case 'conditional' :
+        
         div[0].endpoint = [];
         
         var inputPoint = {
@@ -162,14 +165,14 @@ var rulesAction = {
         div[0].endpoint[11] = jsPlumb.addEndpoint(div, $.extend({ anchor:[1, 1, 0, 0] }, outputEndpoint));
         var k = 1;
         $(action).children("condition").each(function () {
-          var temp_conditionand = rulesCondition.addConditionRule(this.getAttribute('type'), this, numcondition);
+          var temp_conditionand = rulesCondition.addConditionRule(this.getAttribute('type'), this, 0);
           jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[0]});
           if (k > 1) messageBox(tr("Maximum number of condition for reaching this Conditional"),tr("Action Conditional"),"alert");
           k++;
         });
         $(action).children("action").each(function () {
           var temp_action = rulesAction.addActionRule(this.getAttribute('type'), this, numaction, actionlist);
-          jsPlumb.connect({source:temp_conditionand[0].endpointin, target:div[0].endpoint[k]});
+          jsPlumb.connect({source:temp_action[0].endpointin, target:div[0].endpoint[k]});
           if (k > 11) messageBox(tr("Maximum number of action for reaching this Conditional"),tr("Action Conditional"),"alert");
           k++;
         });
@@ -235,8 +238,6 @@ var rulesAction = {
           div.css("width","160px");
           break;
     }; 
-
-    $('#tab-rules-container').append(div); 
 
     if (actionlist)
     div.css("top",20+numaction*50);
