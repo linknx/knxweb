@@ -3,11 +3,11 @@
   $lang['fr'] = "Francais";
   $lang['de'] = "Deutsch";
   $lang['no'] = "Norsk";
+  $lang['it'] = "Italiano";
   /*
   $lang['nl'] = "Nederlands";
   $lang['pl'] = "Polski";
   $lang['sl'] = "Slovene";
-  $lang['it'] = "Italiano";
   $lang['es'] = "Espa&ntilde;ol";
   $lang['zh'] = "&#20013;&#25991;";
   $lang['pt'] = "Portugu&ecirc;s";

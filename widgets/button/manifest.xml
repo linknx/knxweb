@@ -25,6 +25,7 @@
 			<option key="right" value="Right" />
 		</setting>
 		<setting id="text-padding" label="Top padding" type="text" default="0" />
+		<setting id="text-padding-left" label="Left padding" type="text" default="0" />
 		
     <setting label="Button mode" type="comment" />
     <setting id="confirm" label="Confirm command" type="list" default="no" >

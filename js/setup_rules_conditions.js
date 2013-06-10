@@ -1,5 +1,4 @@
 
-//$.extend(rules, {
 var rulesCondition = {
   // ******************** Condition Rule ************************
   /*
@@ -415,7 +414,7 @@ var rulesCondition = {
     var widthdialog = "540px";
     if (type == "time-counter") { widthdialog = "480px"; }
     if (type == "timer") { widthdialog = "750px"; }
-    rulesCondition.createDialogCondition('tab-rules-'+type+'-condition-dialog', "Editer "+type, widthdialog , false, type);
+    rulesCondition.createDialogCondition('tab-rules-'+type+'-condition-dialog', tr("Edit") + " " +type, widthdialog , false, type);
     if (isNew!='')
       $('#tab-rules-'+type+'-condition-dialog')[0].isNew=isNew; 
     else
@@ -427,9 +426,11 @@ var rulesCondition = {
       case "object":
         $('#tab-rules-object-condition-object').val(div.object_id);
         $('#tab-rules-object-condition-operation').val(div.object_operation);
+        //$('#tab-rules-object-condition-values').val(div.object_value).trigger('change');
         $('#tab-rules-object-condition-values').val(div.object_value);
         $('#tab-rules-object-condition-value').val(div.object_value);
         $("#tab-rules-object-condition-object").trigger('change');
+        $('#tab-rules-object-condition-values').trigger('change');
         if (div.object_trigger) $('#tab-rules-object-condition-trigger').attr('checked','1').trigger('change'); 
         else $('#tab-rules-object-condition-trigger').removeAttr('checked').trigger('change');
         break;
@@ -860,12 +861,12 @@ var rulesCondition = {
         var l = c[i];
         if (l && l.length > 0) {
           for (var j = 0; j < l.length; j++) {
-            xml.append(this.generateNodeXML($('#'+l[j].sourceId)));
+            xml.append(rules.generateNodeXML($('#'+l[j].sourceId)));
           }
         } else if (l) {
           var condition2 = $('#'+l.sourceId);
           if (condition2[0].condition && l.targetId == condition.attr("id")) {
-            xml.append(this.generateNodeXML($('#'+l.sourceId)));
+            xml.append(rules.generateNodeXML($('#'+l.sourceId)));
           }
         }
       }
@@ -1080,4 +1081,3 @@ var rulesCondition = {
     });
   }
 };
-//});

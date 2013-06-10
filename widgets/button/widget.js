@@ -53,6 +53,7 @@ CButton.prototype.refreshHTML = function() {
 	if (this.conf.getAttribute("color")!="") $('.buttonContent', this.div).css('color', this.conf.getAttribute("color")); else $('.buttonContent', this.div).css('color', '');
 	if (this.conf.getAttribute("align")!="") $('.buttonContent', this.div).css('text-align', this.conf.getAttribute("align")); else $('.buttonContent', this.div).css('text-align', '');
 	if (this.conf.getAttribute("text-padding")!="") $('.buttonContent', this.div).css('padding-top', this.conf.getAttribute("text-padding")); else $('.buttonContent', this.div).css('padding-top', '0');
+  if (this.conf.getAttribute("text-padding-left")!="") $('.buttonContent', this.div).css('padding-left', this.conf.getAttribute("text-padding-left")); else $('.buttonContent', this.div).css('padding-left', '0');
 
 }
 

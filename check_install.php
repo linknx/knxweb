@@ -183,6 +183,7 @@ if (isset($_GET["ajax"])) {
       if (!$_config["useJavaIfAvailable"]) $useJavaIfAvailable = "off"; else $useJavaIfAvailable = (($_config["useJavaIfAvailable"]=="true")?"on":"off");
       if (!$_config["superuser"]) $superuser = "off"; else $superuser = (($_config["superuser"]=="true")?"on":"off");
       if (!$_config["uitheme"]) $default_uitheme = 'cupertino'; else $default_uitheme = $_config["uitheme"];
+      if (!$_config["useEventSource"]) $useEventSource = "off"; else $useEventSource = (($_config["useEventSource"]=="true")?"on":"off");
     }
 
     // find list of jquery ui theme for KnxWeb
@@ -236,6 +237,10 @@ if (isset($_GET["ajax"])) {
 				<td>Use by default applet Java if available</td><!-- Use java applet to update objects value on display design if Java is installed on client -->
 				<td><input type="checkbox" name="useJavaIfAvailable" <?php echo ((_get('useJavaIfAvailable',$useJavaIfAvailable)==="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
 			</tr> 
+      <tr title="Use Event Source to update objects value on display design">
+				<td>Use Event Source if available on navigator</td>
+				<td><input type="checkbox" name="useEventSource" <?php echo ((_get('useEventSource',$useEventSource)==="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
+			</tr>  
       <tr>
 				<td>Language</td>
 				<td>
@@ -341,6 +346,7 @@ if (isset($_GET["ajax"])) {
           $_SESSION['title_knxweb']=$_GET['title_knxweb'];
           $_SESSION['superuser']=($_GET['superuser']=="on")?"true":"false";
           $_SESSION['uitheme']=$_GET['uitheme'];
+          $_SESSION['useEventSource']=($_GET['useEventSource']=="on")?"true":"false";
 					
 ?>
 				Found Linknx version : <?=$info["version"]?><br />
@@ -404,6 +410,7 @@ if (isset($_GET["ajax"])) {
   <haveMysql>" . $_SESSION['haveMysql'] . "</haveMysql> <!-- linknx peut gérer les log via Mysql -->
   <uitheme>" . $_SESSION['uitheme'] . "</uitheme> <!-- theme jquery-ui -->
 " . (($_SESSION['superuser']=="true")?"<superuser>" . $_SESSION['superuser'] . "</superuser>":"") . "
+  <useEventSource>" . $_SESSION['useEventSource'] . "</useEventSource>
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
 $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>

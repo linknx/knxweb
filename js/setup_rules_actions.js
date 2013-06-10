@@ -18,7 +18,6 @@ function cdataTextcontent(data, cdata) {
     return data;
 }
 
-//$.extend(rules, {
 var rulesAction = {
 
   // ******************** Action ************************
@@ -1045,4 +1044,3 @@ var rulesAction = {
     });
   }
 };
-//});
