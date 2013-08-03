@@ -11,6 +11,13 @@ header('Cache-Control: no-cache');
 $linknx_host = "127.0.0.1";
 $linknx_port = 1028;
 /*
+$_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
+unset($_config['comment']); 
+$linknx_host = $_config['linknx_host'];
+$linknx_port = $_config['linknx_port'];
+*/
+
+/*
 $time = date('r');
 echo "data: <deb>Lancement de la notification de Linknx {$time} </deb>\n\n";
 ob_flush();

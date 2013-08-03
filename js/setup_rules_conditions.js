@@ -86,7 +86,7 @@ var rulesCondition = {
           if (!this.getAttribute('time')) 
             div[0].timer_at_time_constantvariable='constant'; 
           else 
-            div[0].timer_at_time_constantvariable= 'variable'; 
+            div[0].timer_at_time_constantvariable='variable'; 
           div[0].timer_at_hour=this.getAttribute('hour');
           div[0].timer_at_min=this.getAttribute('min');
           div[0].timer_at_day=this.getAttribute('day');
@@ -96,7 +96,7 @@ var rulesCondition = {
           if (!this.getAttribute('date')) 
             div[0].timer_at_date_constantvariable='constant'; 
           else 
-            div[0].timer_at_date_constantvariable= 'variable';
+            div[0].timer_at_date_constantvariable='variable';
           if (this.getAttribute('wdays'))
             div[0].timer_at_dow=this.getAttribute('wdays'); //'1234567'
           else
@@ -148,7 +148,7 @@ var rulesCondition = {
           if (!this.getAttribute('time')) 
             div[0].timer_until_time_constantvariable='constant'; 
           else 
-            div[0].timer_until_time_constantvariable= 'variable'; 
+            div[0].timer_until_time_constantvariable='variable'; 
           div[0].timer_until_hour=this.getAttribute('hour');
           div[0].timer_until_min=this.getAttribute('min');
           div[0].timer_until_day=this.getAttribute('day');
@@ -764,13 +764,13 @@ var rulesCondition = {
           {
             if ((condition[0].timer_at_time_constantvariable=='variable')||(condition[0].timer_at_date_constantvariable=='variable')) at.attr('type','variable');
             
-            if (condition[0].timer_at_time_constantvariable='constant')
+            if (condition[0].timer_at_time_constantvariable=='constant')
             {
               if (condition[0].timer_at_hour!='') at.attr('hour',condition[0].timer_at_hour);
               if (condition[0].timer_at_min!='') at.attr('min',condition[0].timer_at_min);
             } else at.attr('time',condition[0].timer_at_timeobject);
 
-            if (condition[0].timer_at_date_constantvariable='constant')
+            if (condition[0].timer_at_date_constantvariable=='constant')
             {
               if (condition[0].timer_at_day!='') at.attr('day',condition[0].timer_at_day);
               if (condition[0].timer_at_month!='') at.attr('month',condition[0].timer_at_month);
@@ -803,13 +803,13 @@ var rulesCondition = {
           {
             if ((condition[0].timer_until_time_constantvariable=='variable')||(condition[0].timer_until_date_constantvariable=='variable')) until.attr('type','variable');
             
-            if (condition[0].timer_until_time_constantvariable='constant')
+            if (condition[0].timer_until_time_constantvariable=='constant')
             {
               if (condition[0].timer_until_hour!='') until.attr('hour',condition[0].timer_until_hour);
               if (condition[0].timer_until_min!='') until.attr('min',condition[0].timer_until_min);
             } else until.attr('time',condition[0].timer_until_timeobject);
 
-            if (condition[0].timer_until_date_constantvariable='constant')
+            if (condition[0].timer_until_date_constantvariable=='constant')
             {
               if (condition[0].timer_until_day!='') until.attr('day',condition[0].timer_until_day);
               if (condition[0].timer_until_month!='') until.attr('month',condition[0].timer_until_month);

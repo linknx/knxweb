@@ -218,6 +218,7 @@ if (isset($_GET['action'])) {
       
     case 'subpagesdl':
       $subpage = $_GET['subpage'];
+      /* $widgetcss = $_GET['widgetcss']; */ /* 0: pas de fichier css; 1: présence du fichier widgets.css */
       $opts = array(
         'http'=>array(
           'method'=>"GET",
@@ -235,17 +236,19 @@ if (isset($_GET['action'])) {
           $domfgc  = dom_import_simplexml($subpagexml);
           $domfgc  = $domsubpagesxml->ownerDocument->importNode($domfgc, TRUE);
           $domsubpagesxml->appendChild($domfgc);
-  				$fgc->asXML("design/subpages.xml"); 
-  				print("<updatesubpagesxml status='success'>");
+          if ($fgc->asXML("design/subpages.xml"))
+  				  print("<updatesubpagesxml status='success'>");
+          else
+            print("<updatesubpagesxml status='error'>Unable to update design/subpages.xml file");
   			} else
-  				print("<updatesubpagesxml status='error'>Unable to update design/subpages.xml file");
+          print("<updatesubpagesxml status='error'>Unable to load design/subpages.xml file");
   			print("</updatesubpagesxml>\n");
       } 
       $widgetscss = file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/subpages_knxweb2/' . $subpage . '/widgets.css', false, $context);
       if ($widgetscss) {
         $fp = fopen("widgets/widgets.css", 'a+');  // 'a+' => Ouvre en lecture et écriture ; place le pointeur de fichier à la fin du fichier. Si le fichier n'existe pas, on tente de le créer.
         if ($fp) {  
-  				fwrite($fp, "\n /* Supage " . $subpage . " Add from cvs */\n" . $widgetscss);
+  				fwrite($fp, "\n /* Subpage " . $subpage . " Add from cvs */\n" . $widgetscss);
   				fclose($fp);
   				print("<updatewidgetscss status='success'>");
   			} else

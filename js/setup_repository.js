@@ -6,10 +6,10 @@ function widgetsdl(w)
   loading.hide(); 
 }
 
-function subpagesdl(w)
+function subpagesdl(w,css)
 {
   loading.show();
-  var result = queryKnxweb('subpagesdl&subpage=' + w, 'xml', '', false);
+  var result = queryKnxweb('subpagesdl&subpage=' + w + '&widgetcss=' + css, 'xml', '', false);
   if (result != false ) messageBox(tr("Download the Subpage") + " " + w + " " + tr("is complete"), tr("Info"), "check");
   loading.hide(); 
 }

@@ -35,12 +35,12 @@
             <td> {$w[1]} </td>
             <td> {$w[2]} </td>
             <td title="{l lang='en'}Download{/l}" >
-              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary subpagesdl" role="button" >
+              <button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary subpagesdl" role="button" onclick="subpagesdl('{$w[0]}','{$w[3]}');" >
                 <span class="ui-button-icon-primary ui-icon ui-icon-arrowthickstop-1-s"></span>
                 <span class="ui-button-text">{l lang='en'}Download{/l}</span>
               </button>
             </td>
-            <td onclick="displayImg(true, '{$w[0]}', '{$w[3]}');" class="ui-state-default ui-corner-all ui-state-hover" {if (!$w[3])}style="display:none;"{/if} >
+            <td onclick="displayImg(true, '{$w[0]}', '{$w[4]}');" class="ui-state-default ui-corner-all ui-state-hover" {if (!$w[4])}style="display:none;"{/if} >
               <span class="ui-icon ui-icon-image"></span>
             </td>
           </tr>

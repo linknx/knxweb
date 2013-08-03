@@ -8,7 +8,12 @@ Aide cf <a href="http://sourceforge.net/apps/mediawiki/linknx/index.php?title=In
 <?php
 $address = "127.0.0.1";
 $port = 1028;
-
+/*
+$_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
+unset($_config['comment']); 
+$linknx_host = $_config['linknx_host'];
+$linknx_port = $_config['linknx_port'];
+*/
 if (isset($_REQUEST['address'])) {
   $address = $_REQUEST['address'];
 }
