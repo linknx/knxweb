@@ -66,14 +66,14 @@ if (isset($_GET['action'])) {
 				else { // TODO gérer design et mobile en paramètres 'ver' comme le save ...
           if (!isset($_GET['mobile'])) {
     				if ($fp = fopen("design/".$name."/design.xml", 'w')) {
-    					fwrite($fp, "<?xml version='1.0' encoding='UTF-8'?><config width='1280' height='1024' enableSlider='false'><zones/></config>\n");
+    					fwrite($fp, "<?xml version='1.0' encoding='UTF-8'?"."><config width='1280' height='1024' enableSlider='false'><zones/></config>\n");
 					fclose($fp);
 					print("<createdesign status='success'>");
 				}
 				else
 					print("<createdesign status='error'>Unable to save new design");
           } elseif ($fp = fopen("design/".$name."/mobile.xml", 'w')) {
-    					fwrite($fp, "<?xml version='1.0' encoding='UTF-8'?><config><pages><page name='home' title='KnxWebMobile'><header/></page></pages></config>\n");
+    					fwrite($fp, "<?xml version='1.0' encoding='UTF-8'?"."><config><pages><page name='home' title='KnxWebMobile'><header/></page></pages></config>\n");
     					fclose($fp);
     					print("<createdesign status='success'>");
     				}

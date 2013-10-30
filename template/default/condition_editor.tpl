@@ -410,3 +410,24 @@
 </table>
 </form>
 </div>
+
+<div id="tab-rules-ioport-connect-condition-dialog" style="display: none;">
+<form id="tab-rules-ioport-connect-condition-form">
+<table class="form">
+  <tbody>
+    <tr>
+      <th>{l lang='en'}IO Port{/l}</th>
+      <td>
+        <select id="tab-rules-ioport-connect-condition-ioport"></select>
+      </td>
+    </tr>
+    <tr>
+      <th>{l lang='en'}Trigger{/l}</th>
+      <td>
+        <input type="checkbox" id="tab-rules-ioport-connect-condition-trigger">
+      </td>
+    </tr>
+  </tbody>
+</table>
+</form>
+</div>

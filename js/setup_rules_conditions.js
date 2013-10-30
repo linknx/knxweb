@@ -837,7 +837,7 @@ var rulesCondition = {
         xml.attr('ioport',condition[0].ioport_ioport);
         xml.attr('expected',condition[0].ioport_expected);
         if (condition[0].ioport_trigger) xml.attr('trigger','true');
-/* new in Linknx 0.0.1.31 ajout des attributs : regex="(true/)false" hex="(true/)false"  object="" */
+/* new in Linknx 0.0.1.31 ajout des attributs : regex="(true/)false" hex="(true/)false"  object0="" object1="" object2="" object3="" */
         xml.attr('object0',condition[0].ioport_object0);
         xml.attr('object1',condition[0].ioport_object1);
         xml.attr('object2',condition[0].ioport_object2);
@@ -1059,7 +1059,7 @@ var rulesCondition = {
             $("#tab-rules-ioport-rx-condition-form")[0].validator.resetForm();
             break;
           case "ioport-connect":                                              
-            $("#tab-rules-ioport-connect-condition-form")[0].validator=$("#tab-rules-ioport-rx-condition-form").validate();
+            $("#tab-rules-ioport-connect-condition-form")[0].validator=$("#tab-rules-ioport-connect-condition-form").validate();
             $("#tab-rules-ioport-connect-condition-form")[0].validator.resetForm();
             break;
           case "script":

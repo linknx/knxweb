@@ -88,9 +88,11 @@
 			<th>{l lang="en"}Timeout (in "raw" mode){/l}</th>
 			<td><input name="edit-ioport-serial-timeout" id="edit-ioport-serial-timeout" size="5" type="text"> {l lang="en"}(ex.: 0ms to 25.5s in steps of 100ms){/l}</td>
 		</tr>
-		<tr>
+		<tr> <!--
 			<th>{l lang="en"}Regular expression{/l}</th>
-			<td><input name="edit-ioport-serial-regex" id="edit-ioport-serial-regex" type="checkbox"></td>
+			<td><input name="edit-ioport-serial-regex" id="edit-ioport-serial-regex" type="checkbox"></td> -->
+			<th>{l lang="en"}Message length{/l}</th>
+			<td><input name="edit-ioport-serial-msg-length" id="edit-ioport-serial-msg-length" size="3" type="text"></td>
 		</tr>
 	</tbody>
 </table>

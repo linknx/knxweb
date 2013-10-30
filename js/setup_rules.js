@@ -13,6 +13,7 @@ jQuery(document).ready(function(){
           var ioport=this.getAttribute('id');
           var option='<option value="' + ioport + '">' + ioport + '</option>';
           $('#tab-rules-ioport-rx-condition-ioport').append(option);
+          $('#tab-rules-ioport-connect-condition-ioport').append(option);
           _ioport_select.append(option);
         });
       }
@@ -221,6 +222,10 @@ jQuery(document).ready(function(){
 
   if (responseXML!=false)
   {
+    $("#tab-rules-ioport-rx-condition-object0").append('<option value="" >' + tr("None") + '</option>');
+    $("#tab-rules-ioport-rx-condition-object1").append('<option value="" >' + tr("None") + '</option>');
+    $("#tab-rules-ioport-rx-condition-object2").append('<option value="" >' + tr("None") + '</option>');
+    $("#tab-rules-ioport-rx-condition-object3").append('<option value="" >' + tr("None") + '</option>');
     $('object', responseXML).each(function() {
       var option=$('<option>' + this.getAttribute('id') + ' ('+this.getAttribute('type')+') </option>').attr('value',this.getAttribute('id'));
       option[0].type=this.getAttribute('type');
@@ -243,6 +248,11 @@ jQuery(document).ready(function(){
       var option=$('<option>' + this.getAttribute('id') + ' (' +  this.getAttribute('type') + ')' + '</option>').attr('value',this.getAttribute('id'));
       $("#tab-rules-objectcompare-condition-object").append(option);
       $("#tab-rules-objectcompare-condition-object2").append(option.clone());
+      
+      $("#tab-rules-ioport-rx-condition-object0").append(option.clone());
+      $("#tab-rules-ioport-rx-condition-object1").append(option.clone());
+      $("#tab-rules-ioport-rx-condition-object2").append(option.clone());
+      $("#tab-rules-ioport-rx-condition-object3").append(option.clone());
       
     });
   }

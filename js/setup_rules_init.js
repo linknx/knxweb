@@ -35,6 +35,7 @@ var conditionsList = {
     'timer':'Timer',
     'time-counter':'Time Counter',
     'ioport-rx':'Ioport Rx',
+    'ioport-connect':'Ioport Connect', /* new in Linknx 0.0.1.31 */
     'script':'Script'
 };
 

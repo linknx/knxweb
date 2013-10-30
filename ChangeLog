@@ -1,3 +1,9 @@
+2013-10-30 Anthony Penhard v0.9.3
+	* Add Nederlands language (credit Eme H.)
+	* Add new function for ioport add in linknx 0.0.1.31 
+	  * We can retrieve the values in objects with rx-condition with regular expression
+	  * Add new condition ioport-connect    
+
 2013-01-25 Anthony Penhard v0.9.3
 	* Many changes for this version
 		* Objects section : add new datas in the tab list value, log, listener ...

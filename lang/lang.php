@@ -4,8 +4,8 @@
   $lang['de'] = "Deutsch";
   $lang['no'] = "Norsk";
   $lang['it'] = "Italiano";
-  /*
   $lang['nl'] = "Nederlands";
+  /*
   $lang['pl'] = "Polski";
   $lang['sl'] = "Slovene";
   $lang['es'] = "Espa&ntilde;ol";
