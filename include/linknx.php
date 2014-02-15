@@ -23,10 +23,12 @@ class Linknx {
 	}
 
 	function query($xml, &$result) {
-		if (!$this->_socket) $this->connect();
+		global $_config;
+    if (!$this->_socket) $this->connect();
 		
 		fwrite($this->_socket, $xml . chr(4));
 		$max_result_lines = 1000;
+    if ($_config['max_result_lines']) $max_result_lines = parseInt($_config['max_result_lines']);
 		$result = '';
 		$cnt = 0;
 		while ($cnt < $max_result_lines && $this->_socket && !feof($this->_socket)) {
