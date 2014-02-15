@@ -2,7 +2,7 @@
 <html lang="{$_config.lang}">
 <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		
+		<meta name="google" value="notranslate">
 		<meta http-equiv="pragma" content="no-cache" />
 		<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />

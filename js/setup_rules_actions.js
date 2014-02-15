@@ -615,7 +615,7 @@ var rulesAction = {
         html = '<br />'+div.cmd;
         break;
       case 'ioport-tx' :
-        div.hex=$('#tab-rules-send-ioport-tx-hex').is(':checked');
+        div.hex=$('#tab-rules-send-ioport-tx-action-hex').is(':checked');
         div.data=$('#tab-rules-send-ioport-tx-data').val();
         div.ioport=$('#tab-rules-send-ioport-tx-ioport').val();
         div.ioportvar=$('#tab-rules-ioport-tx-action-var').is(':checked');

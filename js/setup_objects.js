@@ -170,7 +170,7 @@ var objects = {
 	  var tab_object_value = [];
 
 		var body = '<read><objects/></read>';
-		var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
+		var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml', async: false,
 			success: function(responseXML, status) {
 				var xmlResponse = responseXML.documentElement;
 				if (xmlResponse.getAttribute('status') != 'error') {

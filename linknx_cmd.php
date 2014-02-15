@@ -50,7 +50,8 @@ else {
     if (isset($_REQUEST['action'])) {
         $action = $_REQUEST['action'];
         if ($action == 'send') {
-            $cmd = stripslashes($_REQUEST['cmd']);
+            //$cmd = stripslashes($_REQUEST['cmd']);
+            $cmd = $_REQUEST['cmd'];
             $result = knxsend($fp, $cmd);
         }
     }

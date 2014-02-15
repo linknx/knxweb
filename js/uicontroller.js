@@ -14,4 +14,4 @@ var UIController = {
 	clearNotification: function()	{
 		$('#notificationZone').text('').hide();
 	}
-}
+};

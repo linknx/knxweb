@@ -174,7 +174,7 @@ if (isset($_GET["ajax"])) {
 	// Check Linknx
 	elseif (isset($_GET["config"])) {
     if (!$_config["title"]) 
-      $title_knxweb = "KnxWeb - Ma maison en un clic";
+      $title_knxweb = "KnxWeb - My house in one click";
     else 
       $title_knxweb = $_config["title"];
 
@@ -411,6 +411,7 @@ if (isset($_GET["ajax"])) {
   <uitheme>" . $_SESSION['uitheme'] . "</uitheme> <!-- theme jquery-ui -->
 " . (($_SESSION['superuser']=="true")?"<superuser>" . $_SESSION['superuser'] . "</superuser>":"") . "
   <useEventSource>" . $_SESSION['useEventSource'] . "</useEventSource>
+  <max_result_lines>1000</max_result_lines> <!-- max result lines read when we check linknx reponse default 1000 -->
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
 $subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>

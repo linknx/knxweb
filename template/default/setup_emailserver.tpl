@@ -11,7 +11,7 @@
 			<th>{l lang='en'}Type{/l}</th>
 			<td>
 				<select id="emailserver-type">
-					<option value="smtp">{l lang='en'}smtp{/l}</option>
+					<option value="smtp">{l lang='en'}SMTP{/l}</option>
 				</select>
 			</td>
 		</tr>

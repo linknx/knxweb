@@ -411,6 +411,7 @@ $_lang['Reload'] = 'Recharger';
 $_lang['Sub-page properties'] = 'Propriété de la Sous-page';
 $_lang['Design properties'] = 'Propriété du Design';
 $_lang['of'] = 'de';
+$_lang['EIS data type'] = 'type de donnée';
 
 /*             
 $_lang[''] = '';

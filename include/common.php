@@ -20,6 +20,8 @@
 	require_once('include/tpl.php');
 	require_once('lang/lang.php');
 
+  $_widgets=array();
+
   // Convert to a Javascript array
 //	$json_config = json_encode($_config)
 //	tpl()->assign_by_ref("json_config",$json_config);
@@ -138,13 +140,15 @@
 		}
 		return $ret;
 	}
+  $_widgets=getWidgets();
 
 	function getWidgetsByCategory()
 	{
-		$widgets=getWidgets();
+		//$widgets=getWidgets();
+    global $_widgets;
 		
 		$ret=array();
-		foreach($widgets as $id => $w) {
+		foreach($_widgets as $id => $w) {
 			$cat=$w['category'];
 			unset($w['category']);
 			if (!isset($ret[$cat])) $ret[$cat]=array();
@@ -155,8 +159,9 @@
 	
 	function addWidgetsJsCssToTpl($isEdit = false, $isMobile = false)
 	{
-		$widgets = getWidgets();
-		foreach($widgets as $name => $info)
+		//$widgets = getWidgets();
+    global $_widgets;
+		foreach($_widgets as $name => $info)
 		{
 			if (file_exists($info['path'] . '/widget.css')) tpl()->addCss($info['path'] . '/widget.css');
 			tpl()->addJs($info['path'] . '/widget.js');

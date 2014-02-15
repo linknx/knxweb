@@ -186,10 +186,10 @@ if (isset($_GET['action'])) {
 		case 'savesubpages':
 			if (file_put_contents("design/subpages.xml", file_get_contents("php://input")))
 				echo "<savesubpages status='success'>";
-			elseif (!is_writable("design/".$name."/".$version.".xml"))
+			elseif (!is_writable("design/subpages.xml"))
 				echo "<savesubpages status='error'>design/subpages.xml directory has no write permission on server";
 			else
-				echo "<savesubpages status='error'>Unable to write design to file";
+				echo "<savesubpages status='error'>Unable to write subpages to file";
 			echo "</savesubpages>\n";
 	    break;
 
