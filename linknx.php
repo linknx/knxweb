@@ -6,7 +6,7 @@ unset($_config['comment']);
 
 error_reporting(0);
 $max_result_lines = 1000;
-if ($_config['max_result_lines']) $max_result_lines = parseInt($_config['max_result_lines']);
+if ($_config['max_result_lines']) $max_result_lines = intval($_config['max_result_lines']);
 
 header('Content-Type: application/xml; charset=utf-8');
 
