@@ -282,7 +282,8 @@ var actionEditor = {
 	    	conf.setAttribute('data', $("[name=data]", dialog).val());
 	    	break;
 	    case 'script':
-	    	conf.textContent='<![CDATA[' + $("[name=script]", dialog).val() + ']]>';
+	    	//conf.textContent='<![CDATA[' + $("[name=script]", dialog).val() + ']]>';
+        conf.textContent=$("[name=script]", dialog).val();
 	    	break;
 	    case 'formula':
 	    	conf.setAttribute('id', $("[name=id]", dialog).val());
