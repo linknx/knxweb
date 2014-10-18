@@ -886,7 +886,10 @@ var rulesCondition = {
               {
                 values=_objectTypesValues[$("#tab-rules-object-condition-object option:selected")[0].type];
                 $("#tab-rules-object-condition-values").empty();
-                $(values).each(function() { $("#tab-rules-object-condition-values").append('<option value="' + this + '">' + this + '</option>'); });
+                $(values).each(function() { 
+                  //$("#tab-rules-object-condition-values").append('<option value="' + this + '">' + this + '</option>');
+                  $("#tab-rules-object-condition-values").append('<option value="' + this + '" '+(($("#tab-rules-object-condition-value").val() == this )?'selected ':'') +'>' + tr(this) + '</option>');
+                });
                 $("#tab-rules-object-condition-values").show();
                 $("#tab-rules-object-condition-value").hide();
               } else
