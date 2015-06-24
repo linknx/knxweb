@@ -87,6 +87,7 @@ var rulesAction = {
         div[0].off=action.getAttribute('off');
         div[0].count=action.getAttribute('count');
         div.css("width","140px");
+        div[0].endpoint = [];
         
         var inputPoint = {
           endpoint:["Rectangle", {width:10, height:10} ],
@@ -102,7 +103,7 @@ var rulesAction = {
         };
         div[0].endpoint[0]= jsPlumb.addEndpoint(div.attr("id"), $.extend({ anchor:[0.5, 0, 0, 0], uuid: "endpoint2"+div.attr("id") }, inputPoint));
         var k = 1;
-        $(action).children("condition").each(function () {
+        $(action).children("stopcondition").each(function () {
           var temp_conditionand = rulesCondition.addConditionRule(this.getAttribute('type'), this, 0);
           jsPlumb.connect({source:temp_conditionand[0].endpointout, target:div[0].endpoint[0]});
           if (k > 1) messageBox(tr("Maximum number of condition for reaching this cycle-on-off"),tr("Action cycle-on-off"),"alert");
