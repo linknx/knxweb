@@ -213,7 +213,7 @@ var rulesAction = {
         div[0].script=cdataTextcontent(action.textContent, false);
         break;
       case 'cancel' :
-        div[0].cancel_rule=action.getAttribute('rule-id');
+        div[0].rule_id=action.getAttribute('rule-id');
         div.css("width","140px");
         break;
       case 'formula' :
@@ -401,7 +401,7 @@ var rulesAction = {
         div[0].script='';
         break;
       case 'cancel' :
-        div[0].cancel_rule='';
+        div[0].rule_id='';
         div.css("width","140px");
         break;
       case 'formula' : 
@@ -516,7 +516,7 @@ var rulesAction = {
         $('#tab-rules-script-action-script').text(div.script);
         break;
       case 'cancel' :
-        $('#tab-rules-cancel-action-value').val(div.cancel_rule);
+        $('#tab-rules-cancel-action-value').val(div.rule_id);
         break;
       case 'formula' :
         $('#tab-rules-formula-id-action-value').val(div.formula_id);
@@ -627,8 +627,8 @@ var rulesAction = {
         html = '';
         break;
       case 'cancel' :
-        div.cancel_rule = $('#tab-rules-cancel-action-value').val();
-        html = '<br />'+div.cancel_rule;
+        div.rule_id = $('#tab-rules-cancel-action-value').val();
+        html = '<br />'+div.rule_id;
         break;
       case 'formula' : 
         div.formula_id = $('#tab-rules-formula-id-action-value').val();
