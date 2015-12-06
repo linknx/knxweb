@@ -8,7 +8,7 @@ tpl()->addCss('css/style.css');
 tpl()->addJs('js/setup_subpages.js');
 
 $widgets=getWidgetsByCategory();
-tpl()->assign_by_ref('widgets',$widgets);
+tpl()->assignByRef('widgets',$widgets);
 
 tpl()->display('setup_subpages.tpl');
 

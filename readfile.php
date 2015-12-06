@@ -1,4 +1,5 @@
 <?php
+header('cache-control: no-cache');
 error_reporting(0);
 /*
 paramètres :
@@ -29,6 +30,7 @@ $filelog = '';
 if (isset($_GET['objectlog'])) {
   // $_GET['objectlog'] = object . '_type_' . type exemple : /var/lib/linknx/log/lampe_cuisine.log_type_1.001
   $objectlog = preg_split('/_type_/', $_GET['objectlog']);
+  if ($objectlog[1]) $objectlogtype = $objectlog[1];
   $objectlog = $objectlog[0];
 }
 
@@ -42,7 +44,7 @@ if (isset($_GET['LogLinknx'])) { // log linknx
     $typelog = 'file';
   } else {
     header("Content-type: text/plain; charset=utf-8");
-    print("");
+    print("Error of linknx configuration");
     exit(0);
   }
 } else { // log of an object in linknx
@@ -85,6 +87,7 @@ if ($typelog == 'mysql') {
   $value = "value";
 }
 
+// TODO a gérer mieux car tout le monde n'a pas cette config ...
 setlocale(LC_ALL , "fr_FR" );
 date_default_timezone_set("Europe/Paris");
 

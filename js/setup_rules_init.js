@@ -475,7 +475,7 @@ function executeActionRule(type)  // type = true => actionlist de type "true" si
   $('action', actions).each(function() {
     actionsText = actionsText + serializeXmlToString(this);
 	});
-  console.log("Test executeActionRule", type, actions, " actionsText:*", actionsText, "**");
+  //console.log("Test executeActionRule", type, actions, " actionsText:*", actionsText, "**");
   if (actionsText !='') {
     if (confirm(tr('Really execute actions of the rule ?'))) {
       var responseXML=queryLinknx('<execute>'+actionsText+'</execute>');

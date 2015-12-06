@@ -18,7 +18,7 @@ tpl()->addJs('js/design_view.js');
 tpl()->addJs('lib/jquery.ui.touch-punch.min.js');
 
 $widgets=getWidgets();
-tpl()->assign_by_ref("widgets",$widgets);
+tpl()->assignByRef("widgets",$widgets);
 tpl()->assignByRef('json_config', $json_config);
 
 addWidgetsJsCssToTpl(false);

@@ -100,7 +100,8 @@ if (isset($_GET['configknxweb']))
     $widgetscssexist = true;
     $widgetscssiswritable = is_writable( $widgetscss );
     $contentwidgetscss = '';
-    if ( !$error && filesize($widgetscss) > 0 ) {
+    //if ( !$error && filesize($widgetscss) > 0 ) {
+    if (filesize($widgetscss) > 0 ) {
       $f = fopen($widgetscss, 'r');
       $contentwidgetscss = fread($f, filesize($widgetscss));
     }

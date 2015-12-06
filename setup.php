@@ -106,9 +106,9 @@ tpl()->addCss('lib/farbtastic/farbtastic.css');
 tpl()->addJs("lib/jquery.upload-1.0.2.min.js");
 
 $widgets=getWidgets();
-tpl()->assign_by_ref("widgets",$widgets);
+tpl()->assignByRef("widgets",$widgets);
 $widgetsCategorized=getWidgetsByCategory();
-tpl()->assign_by_ref("widgetsCategorized",$widgetsCategorized);
+tpl()->assignByRef("widgetsCategorized",$widgetsCategorized);
 
 addWidgetsJsCssToTpl(true);
 
@@ -117,8 +117,8 @@ if (file_exists('widgets/widgets.css')) {
   tpl()->addCss('widgets/widgets.css');
   $widgetscssexist = "true";
 }
-tpl()->assign_by_ref("widgetscssexist",$widgetscssexist);
-tpl()->assign_by_ref("MAJ_knxweb2",$MAJ_knxweb2);
+tpl()->assignByRef("widgetscssexist",$widgetscssexist);
+tpl()->assignByRef("MAJ_knxweb2",$MAJ_knxweb2);
 
 tpl()->addCss('css/setup.css');
 

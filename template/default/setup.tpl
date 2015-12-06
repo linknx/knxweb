@@ -159,7 +159,7 @@ Credits : <br />
 				</div>
 
         <div class="subItem" id="button-try-design"><img src="images/display.png" />{l lang='en'}Try design{/l}</div>
-        <div class="subItem" id="button-save-design"><img src="images/fetch.png" />{l lang='en'}Save{/l}</div>
+        <div class="subItem" id="button-save-design"><img src="images/fetch.png" />{l lang='en'}Save the design{/l}</div>
         <div class="subItem" id="show-list-widgets-design"><input type="checkbox" id="show-list-widgets-design-checkbox" value="1" checked="1" > {l lang='en'}Widgets List{/l}</div>
         <div class="subItem" id="show-zones-list"><input type="checkbox" id="show-zones-list-checkbox" > {l lang='en'}Zones List{/l}</div>
       </div>
@@ -185,7 +185,7 @@ Credits : <br />
 					</select>
 				</div>
 
-        <div class="subItem" id="button-save-subpage"><img src="images/fetch.png" />{l lang='en'}Save{/l}</div>
+        <div class="subItem" id="button-save-subpage"><img src="images/fetch.png" />{l lang='en'}Save the sub-page{/l}</div>
         <div class="subItem" id="show-list-widgets-subpage"><input type="checkbox" id="show-list-widgets-subpage-checkbox" value="1" checked="1" > {l lang='en'}Widgets List{/l}</div>
 				<div class="subItem" id="button-refresh-subpages" onclick="subpages.clear();subpages.load();var firstsubpage=$('#tab-subpages-list option:first-child').val();if (firstsubpage) subpages.draw(firstsubpage);"><img src="images/refresh.gif" />{l lang='en'}Refresh Subpages List{/l}</div>
       </div>
@@ -228,7 +228,7 @@ Credits : <br />
         <div class="subItem" id="button-save-design-mobile"><img src="images/fetch.png" />{l lang='en'}Save{/l}</div>
         <div class="subItem" id="show-list-widgets-design-mobile"><input type="checkbox" id="show-list-widgets-design-mobile-checkbox" > {l lang='en'}Widgets List{/l}</div>
       </div> -->			
-			<h3 tab_id="admin" tab_label="{l lang='en'}Administer{/l}" tab_url="setup_admin.php"><a href="#"><img src="images/construct.png"> {l lang='en'}Admin{/l}</a></h3>
+			<h3 tab_label="{l lang='en'}Administer{/l}" tab_url="setup_admin.php"><a href="#"><img src="images/construct.png"> {l lang='en'}Admin{/l}</a></h3>
 			<div>
 			  <div class="subItem" tab_id="admin-programs" tab_label="{l lang='en'}Programs{/l}" tab_url="setup_admin.php?progstatus"><img src="images/fetch.png" /> {l lang='en'}Programs Status{/l}</div>
 			  <div class="subItem" tab_id="admin-config-knxweb" tab_label="{l lang='en'}Config KnxWeb{/l}" tab_url="setup_admin.php?configknxweb"><img src="images/fetch.png" /> {l lang='en'}Config KnxWeb{/l}</div>
