@@ -348,7 +348,6 @@ var design = {
 			var div=$("<div id='background'/>");
 			div.append("<img id='bgImage_" + design.currentZone + "' src='" + getImageUrl(bg) + "' usemap='#shapes_" + design.currentZone + "'/>");
 			div.append("<map id='shapes_" + design.currentZone + "' name='shapes_" + design.currentZone + "'/>");
-			//$('#widgetdiv').append(div);
       $('#widgetdiv').prepend(div);
 			$('#bgImage_' + design.currentZone).maphilight();
 		} else $('#background', '#widgetdiv').remove();
@@ -382,7 +381,6 @@ var design = {
 				design.refreshZoneList();
 				design.draw(zoneID);
 
-        //setTimeout('$("#tab-design-zone-list").val("' + zoneID + '")', 100); // workaround for IE bug
         $("#tab-design-zone-list").val(zoneID);
 			}
 		}
@@ -415,7 +413,6 @@ var design = {
 				design.refreshZoneList();
 				design.draw(zoneID);
 
-				//setTimeout('$("#tab-design-zone-list").val("' + zoneID + '")', 100); // workaround for IE bug
         $("#tab-design-zone-list").val(zoneID);
 
 			}
@@ -719,8 +716,7 @@ var design = {
                 terms.push( ui.item.value );
                 // add placeholder to get the comma-and-space at the end
                 terms.push( "" );
-                this.value = terms.join( ", " );
-                //this.value = terms.join( "|" ); // le séparateur doit être en lien avec la fonction "split( val )" définie plus bas
+                this.value = terms.join( ", " ); // le séparateur doit être en lien avec la fonction "split( val )" définie plus bas
                 return false;
               }
             });
@@ -860,8 +856,8 @@ var design = {
 
     var table_tr=$('<tr/>');
     table_tr.get(0).obj = o;
-    if (globalcontrol) table_tr.addClass( "global" );//table_tr.css("color", "#FF0000"); // si globalcontrol == "true" c'est que le control/widget est lié au design et pas a la zone elle même
-    if (child) table_tr.addClass( "child" );//table_tr.css("color", "#0000FF"); // si child == "true" c'est que le control/widget est lié a un widget "content"
+    if (globalcontrol) table_tr.addClass( "global" ); // si globalcontrol == "true" c'est que le control/widget est lié au design et pas a la zone elle même
+    if (child) table_tr.addClass( "child" ); // si child == "true" c'est que le control/widget est lié a un widget "content"
 
     var th=$('<th>' + type + '</th>');
     table_tr.append(th);
