@@ -3,7 +3,7 @@
 	<name>alarmclock</name>
   <label>Alarm Clock</label>
   <description>Alarm Clock</description>
-  <version>1.0</version>
+  <version>1.1</version>
   <category>Various widgets</category>
   <settings>
     <setting id="user" label="Alarmclock User" type="text" />

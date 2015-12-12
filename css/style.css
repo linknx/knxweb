@@ -325,3 +325,4 @@ div.subpagedialog {
 
 /* for hide title of Dialog add attribute like : .dialog({ ..., dialogClass: 'notitledialog' }) */
 .notitledialog .ui-dialog-titlebar {display:none}
+.goog-menu-vertical {overflow:scroll; max-height:100px;overflow-x:hidden;}

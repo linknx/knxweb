@@ -174,7 +174,7 @@ var rules = {
   
   generateNodeXML: function(div) {
     var xml;
-    if(div[0].condition) {
+    if(typeof div[0].condition != 'undefined' && div[0].condition) {
       xml = rulesCondition.generateNodeXMLCondition(div);
     } else {
       xml = rulesAction.generateNodeXMLAction(div);
@@ -276,6 +276,7 @@ var rules = {
   
   deleteAllCurrentRule: function () {
     $('#id-current-rule').val('');
+    $('#next-exec-current-rule').html('');
     $('#description-current-rule').val('');
     $('#init-current-rule').val('false');
     //conditionsCurrent[]
@@ -327,6 +328,14 @@ function serializeToString(doc)
     return doc.xml;
   return (new XMLSerializer()).serializeToString(doc);
 };
+function convertDate(dateToConvert)
+{
+  if (!dateToConvert) return '';
+  var elem = dateToConvert.split(' ');
+  var jour = elem[0].split('-');
+  var heure = elem[1].split(':');
+  return tr("Next-execution : the")+" "+jour[2]+"/"+jour[1]+"/"+jour[0]+" "+tr("at")+" "+elem[1];
+};
 function loadRule(xml)
 {
   generateXmlFlag = false; // déactive la génération du xml lors des connections car cela ralentie énormément le chargement de la rule
@@ -345,6 +354,7 @@ function loadRule(xml)
     $('.slidermanuelautorule').addClass('sliderauto');
     $('.slidermanuelautorule').removeClass('slidermanuel');
   }
+  if (arrayRulesTimer[$(xml).attr('id')]) $('#next-exec-current-rule').html(convertDate(arrayRulesTimer[$(xml).attr('id')]));
 
   var k = 0;
   $(xml).children("condition").each(function () {
@@ -388,6 +398,7 @@ function loadRule(xml)
 };
 function loadRulesList()
 {
+  loadStatusRulesList();
   var responseXML=queryLinknx('<read><config><rules/></config></read>');
   xmlRules = '';
   if (responseXML!=false)
@@ -395,7 +406,7 @@ function loadRulesList()
     xmlRules = responseXML;
     $('#listRules').append('<option value="">' + tr("Select a rule") + '</option>');
     $('rule', responseXML).each(function() {
-      $('#listRules').append('<option value="' + this.getAttribute("id") + '">' + this.getAttribute("id") + '</option>');
+      $('#listRules').append('<option value="' + this.getAttribute("id") + '">' + this.getAttribute("id")+ ((arrayStatusRules[this.getAttribute('id')] != 'true' )?" ("+tr("inactive")+")":"") + '</option>');
       arrayRules[this.getAttribute('id')]=this; 
     });
   } else $('#listRules').append('<option value="">' + tr("No definite rule") + '</option>');
@@ -407,7 +418,6 @@ function loadRulesList()
     
     this.value = "";
   });
-  loadStatusRulesList();
 };
 function loadStatusRulesList()
 {

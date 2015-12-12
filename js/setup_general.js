@@ -144,7 +144,7 @@ jQuery(document).ready(function(){
 		if ($("#setupgeneral-exceptiondays").val())
 			$("#setupgeneral-exceptiondays option:selected").remove();
 		else
-			messageBox("Veuillez choisir une date dans la liste", "Attention", "alert");
+			messageBox(tr("Please select a date from the list"), tr("Warning"), "alert");
 	});
 	
 	$('#exceptiondays-dialog').dialog({ 

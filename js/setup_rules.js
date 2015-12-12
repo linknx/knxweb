@@ -2,28 +2,20 @@
 jQuery(document).ready(function(){
 
   $( "input:button","#tab-rules").button();
-  
+
   _ioport_select = $('<select>/');
-  var body = '<read><config><services><ioports /></services></config></read>';
-  var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
-    success: function(responseXML, status) {
-      var xmlResponse = responseXML.documentElement;
-      if (xmlResponse.getAttribute('status') != 'error') {
-        $('ioport', responseXML).each(function() {
-          var ioport=this.getAttribute('id');
-          var option='<option value="' + ioport + '">' + ioport + '</option>';
-          $('#tab-rules-ioport-rx-condition-ioport').append(option);
-          $('#tab-rules-ioport-connect-condition-ioport').append(option);
-          _ioport_select.append(option);
-        });
-      }
-      else
-        messageBox(tr("Error: ")+responseXML.textContent, tr('Error'), 'alert');
-    }
+
+  var responseXML = queryLinknx('<read><config><services><ioports /></services></config></read>');
+  if (responseXML) $('ioport', responseXML).each(function() {
+    var ioport=this.getAttribute('id');
+    var option='<option value="' + ioport + '">' + ioport + '</option>';
+    $('#tab-rules-ioport-rx-condition-ioport').append(option);
+    $('#tab-rules-ioport-connect-condition-ioport').append(option);
+    _ioport_select.append(option);
   });
-  
+
   $('#addcondition').append('<option value="">' + tr("Add a condition") + '</option>');
-  
+
   var conditionsSelect=$('#addcondition').get(0);
   for(key in conditionsList) {
     if ( key != 'script' || tab_config['haveLua'] == "true" )
@@ -35,17 +27,17 @@ jQuery(document).ready(function(){
     rulesCondition.addCondition(type);
     this.value = "";
   });
-  
+
   $('#addaction').append('<option value="">' + tr("Add an action") + '</option>');
   var actionsSelect=$('#addaction').get(0);
-  
+
   for(key in actionsList) {
     if ( ( key != 'send-sms' || tab_config['haveSMS'] == "true" ) &&
     ( key != 'send-email' || tab_config['haveEmail'] == "true" ) &&
     ( key != 'script' || tab_config['haveLua'] == "true" ) )
       actionsSelect.options[actionsSelect.options.length] = new Option(actionsList[key], key);
   }
-  
+
   $('#addaction').change(function(){
     var type = this.value;
     rulesAction.addAction(type);
@@ -53,7 +45,7 @@ jQuery(document).ready(function(){
   });
 
   loadRulesList();
-    
+
   // Move property DOM to left column
   var property = $('#tab-rules-property').clone();
   $('#tab-rules-property').remove();
@@ -63,7 +55,7 @@ jQuery(document).ready(function(){
   $("#propertiesContainer div:first").show();
   property.show();
   $("#propertiesContainer").show();
-  
+
   jsPlumb.Defaults.Container = 'tab-rules-container';
   jsPlumb.setDefaultScope("connection");
 
@@ -73,8 +65,8 @@ jQuery(document).ready(function(){
   jsPlumb.bind("jsPlumbConnectionDetached",function(data) {
       rules.generateXML();
     });
-  
-  myDropOptions = {  
+
+  myDropOptions = {
     tolerance:'touch',
     hoverClass:'dropHover',
     activeClass:'dragActive'
@@ -93,8 +85,8 @@ jQuery(document).ready(function(){
     },
     dropOptions : myDropOptions
   };
-  
-                                                                              
+
+
   outputColor = '#0A0'; // vert
   outputEndpoint = {
     endpoint:["Rectangle", {width:10, height:10} ],
@@ -108,10 +100,10 @@ jQuery(document).ready(function(){
     },
     dropOptions : myDropOptions
   };
-  
+
   pos_top = $('#tab-rules-container').height()/2;
   pos_right = $('#tab-rules-container').width()/2;
-  
+
   outputColorFalse = '#D00'; //couleur rouge
   outputEndpointFalse = {
     endpoint:["Rectangle", {width:10, height:10} ],
@@ -125,19 +117,19 @@ jQuery(document).ready(function(){
     },
     dropOptions : myDropOptions
   };
-  
-  
+
+
   actionlist =$('<div>');
   actionlist.addClass('actionlist');
   actionlist.addClass('action');
   actionlist.attr("id", "actionlist");
   actionlist.css("height", "240px").css("width", "70px");
   actionlist.html('Actionlist');
-  
+
   actionlist[0].type="actionlist";
   actionlist[0].condition=true;
   $('#tab-rules-container').append(actionlist);
-  
+
   actionlist.dblclick(function () {
     if ($("span", '#actionlistOnTrue').text() != 'On-True') {
       $("span", '#actionlistOnTrue').text('On-True');
@@ -148,13 +140,13 @@ jQuery(document).ready(function(){
     }
     rules.generateXML();
   });
-  
+
   $('#actionlist').css("top",pos_top-$('#actionlist').height()/2);
   $('#actionlist').css("right",pos_right-$('#actionlist').width()/2);
-  
+
   actionlist[0].endpoint = [];
   actionlist[0].endpoint[0] = jsPlumb.addEndpoint("actionlist" , $.extend({ anchor:[0, 0.5, 0, 0] }, inputEndpoint));
-  
+
   var actionlistontrue =$('<div>');
   actionlistontrue.attr("id", "actionlistOnTrue");
   actionlistontrue.attr("title", tr("DblClick : Toggle On-True / If-True"));
@@ -162,15 +154,15 @@ jQuery(document).ready(function(){
   Playactionlistontrue = $('<div class="play" title="'+tr('Execute')+'" ></div>')
   Playactionlistontrue.click(function() { executeActionRule(true);});
   actionlistontrue.append(Playactionlistontrue);
-  
+
   actionlistontrue[0].type="actionlist";
   actionlistontrue[0].condition=true;
-  
+
   actionlist.append(actionlistontrue);
   actionlistontrue.draggable({ disabled: true });
-  
+
   jsPlumb.draggable("actionlistOnTrue", false);
-  
+
   actionlist[0].ontrue = [];
   actionlist[0].ontrue[0]=null;
   actionlist[0].ontrue[1]  = jsPlumb.addEndpoint("actionlistOnTrue" , $.extend({ anchor:[1, 0, 0, 0] , uuid: "ontrue1" , scope:'ontrue'}, outputEndpoint));
@@ -183,7 +175,7 @@ jQuery(document).ready(function(){
   actionlist[0].ontrue[8]  = jsPlumb.addEndpoint("actionlistOnTrue" , $.extend({ anchor:[1, 0.7, 0, 0] , uuid: "ontrue8" , scope:'ontrue'}, outputEndpoint));
   actionlist[0].ontrue[9]  = jsPlumb.addEndpoint("actionlistOnTrue" , $.extend({ anchor:[1, 0.8, 0, 0] , uuid: "ontrue9" , scope:'ontrue'}, outputEndpoint));
   actionlist[0].ontrue[10] = jsPlumb.addEndpoint("actionlistOnTrue" , $.extend({ anchor:[1, 0.9, 0, 0] , uuid: "ontrue10" , scope:'ontrue'},  outputEndpoint));
-  
+
   var actionlistonfalse =$('<div>');
   actionlistonfalse.attr("id", "actionlistOnFalse");
   actionlistontrue.attr("title", tr("DblClick : Toggle On-False / If-False"));
@@ -191,16 +183,16 @@ jQuery(document).ready(function(){
   Playactionlistonfalse = $('<div class="play" title="'+tr('Execute')+'" ></div>')
   Playactionlistonfalse.click(function() { executeActionRule(false);});
   actionlistonfalse.append(Playactionlistonfalse);
-  
+
   actionlistonfalse[0].type="actionlist";
   actionlistonfalse[0].condition=true;
-  
+
   actionlist.append(actionlistonfalse);
   actionlistonfalse.draggable({ disabled: true });
   actionlist.draggable({ disabled: true });
-  
+
   jsPlumb.draggable("actionlistOnFalse", false);
-  
+
   actionlist[0].onfalse = [];
   actionlist[0].onfalse[0]=null;
   actionlist[0].onfalse[1]  = jsPlumb.addEndpoint("actionlistOnFalse" , $.extend({ anchor:[1, 0.1, 0, 0] , uuid: "onfalse1" , scope:'onfalse'}, outputEndpointFalse));
@@ -213,8 +205,8 @@ jQuery(document).ready(function(){
   actionlist[0].onfalse[8]  = jsPlumb.addEndpoint("actionlistOnFalse" , $.extend({ anchor:[1, 0.8, 0, 0] , uuid: "onfalse8" , scope:'onfalse'}, outputEndpointFalse));
   actionlist[0].onfalse[9]  = jsPlumb.addEndpoint("actionlistOnFalse" , $.extend({ anchor:[1, 0.9, 0, 0] , uuid: "onfalse9" , scope:'onfalse'}, outputEndpointFalse));
   actionlist[0].onfalse[10] = jsPlumb.addEndpoint("actionlistOnFalse" , $.extend({ anchor:[1, 1, 0, 0] , uuid: "onfalse10" , scope:'onfalse'}, outputEndpointFalse));
-  
-  
+
+
   jsPlumb.draggable("actionlist", false);
 
   // Fill object list select
@@ -235,7 +227,7 @@ jQuery(document).ready(function(){
       if (this.getAttribute('type')=='1.001') {
         listobject_1_001.append(option.clone());
       }
-      
+
       if (this.getAttribute('type')=='10.001') {
         $("#timer-condition-at-variabletime-time").append(option.clone());
         $("#timer-condition-until-variabletime-time").append(option.clone());
@@ -248,12 +240,12 @@ jQuery(document).ready(function(){
       var option=$('<option>' + this.getAttribute('id') + ' (' +  this.getAttribute('type') + ')' + '</option>').attr('value',this.getAttribute('id'));
       $("#tab-rules-objectcompare-condition-object").append(option);
       $("#tab-rules-objectcompare-condition-object2").append(option.clone());
-      
+
       $("#tab-rules-ioport-rx-condition-object0").append(option.clone());
       $("#tab-rules-ioport-rx-condition-object1").append(option.clone());
       $("#tab-rules-ioport-rx-condition-object2").append(option.clone());
       $("#tab-rules-ioport-rx-condition-object3").append(option.clone());
-      
+
     });
   }
 
@@ -273,7 +265,7 @@ jQuery(document).ready(function(){
       }
     }
   });
-  
+
   loading.hide();
 
 });

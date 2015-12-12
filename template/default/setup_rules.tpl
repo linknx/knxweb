@@ -20,6 +20,7 @@
   <input type="button" id="button-save-rule" value="{l lang='en'}Valid{/l}" onclick="validRule()">
   <input type="button" id="button-reload-rule" value="{l lang='en'}Reload XML{/l}" onclick="rules.generateXML()">
   <input type="button" id="button-init-rule" value="{l lang='en'}Clear{/l}" onclick="rules.deleteAllCurrentRule()">
+  <span id="next-exec-current-rule"></span>
   <br /><strong><span>{l lang='en'}Description{/l} : </span><input type="text" id="description-current-rule" size="100"></strong>
   <strong>
     <span> {l lang='en'}Rule on "Init" value{/l} : </span>

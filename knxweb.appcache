@@ -1,0 +1,21 @@
+CACHE MANIFEST
+# ref 2
+
+CACHE:
+# CSS
+css/style.css
+
+# Images
+favicon.ico
+images/1pixel.gif
+
+# Scripts
+# js/common.js
+
+# Resources that require the user to be online.
+# NETWORK:
+
+# Fallback content
+FALLBACK:
+/images images/Logo.png
+/ offline.html

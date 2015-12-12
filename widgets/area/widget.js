@@ -76,6 +76,11 @@ CArea.prototype.refreshHTML = function() {
   else
     $('.back', this.div).css('background-color', this.conf.getAttribute("background-color"));
 
+  if (!this.conf.getAttribute("background-picture"))
+    $(".back", this.div).css('background-image', '');
+  else
+    $(".back", this.div).css('background-image', 'url(' + getImageUrl(this.conf.getAttribute("background-picture")) + ')');
+
   if (!this.conf.getAttribute("opacity")) 
     $('.back', this.div).css('opacity','');
   else

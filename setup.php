@@ -1,4 +1,6 @@
 <?php
+ini_set("display_errors", 0);
+error_reporting(0);
 
 require_once("include/common.php");
 
@@ -55,6 +57,8 @@ if (isset($_GET['ajax']))
 	die;
 }
 
+tpl()->assignByRef("lang",$lang);
+
 /* get version of knxwbe2 in cvs sourceforge */
 
   $opts = array(
@@ -65,20 +69,29 @@ if (isset($_GET['ajax']))
   );
   
   $context = stream_context_create($opts);
-  $version_knxweb2_cvs = file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/knxweb2/version', false, $context);
-  
   $tab_version = explode(".", $version_knxweb2);
   $version = $tab_version[0] * 100 + $tab_version[1] * 10 + $tab_version[2];   
+  $version_knxweb2_cvs = @file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/knxweb2/version', false, $context);
+  if ($version_knxweb2_cvs) {
   $tab_version_cvs = explode(".", $version_knxweb2_cvs);
   $version_cvs = $tab_version_cvs[0] * 100 + $tab_version_cvs[1] * 10 + $tab_version_cvs[2];
   $MAJ_knxweb2 = ( $version_cvs > $version ); 
+  } else $MAJ_knxweb2 = false;
+
+  $version_knxweb2_git = @file_get_contents('https://raw.githubusercontent.com/linknx/knxweb/master/version', false, $context);
+  if ($version_knxweb2_git) {
+  $tab_version_git = explode(".", $version_knxweb2_git);
+  $version_git = $tab_version_git[0] * 100 + $tab_version_git[1] * 10 + $tab_version_git[2];
+  $MAJ_knxweb2_git = ( $version_git > $version );
+  } else $MAJ_knxweb2_git = false;
+
+$MAJ_knxweb2_git = true; // TODO a enlever ...
 
 /* /version on cvs sourceforge */
 
 tpl()->assignByRef('json_config', $json_config); // utiliser les données $_config en javascript
 tpl()->assignByRef('json_objectTypes', $json_objectTypes);
 
-//tpl()->addCss("lib/jquery/css/cupertino/jquery-ui-1.8.23.custom.css");
 if (!isset($_config["uitheme"]) || $_config["uitheme"] == "") $_config["uitheme"] = "cupertino";
 tpl()->addCss("lib/jquery/css/" . $_config["uitheme"] . "/jquery-ui.css");
 tpl()->addJs("lib/jquery/js/jquery.min.js");
@@ -98,15 +111,14 @@ tpl()->addJs("lib/jquery-validate/localization/messages_fr.js");
 tpl()->addJs("lib/jsplumb/jquery.jsPlumb-1.3.3-all.js");
 tpl()->addJs('lib/jquery.scrollTo-1.4.2-min.js');
 tpl()->addJs('lib/jquery.serialScroll-1.2.2-min.js');
-//tpl()->addJs('lib/jquery.knob-1.1.0.js');
 
 tpl()->addJs('lib/farbtastic/farbtastic.js');
 tpl()->addCss('lib/farbtastic/farbtastic.css');
 
 tpl()->addJs("lib/jquery.upload-1.0.2.min.js");
+tpl()->addJs("lib/jquery.maphilight.min.js");
 
-$widgets=getWidgets();
-tpl()->assignByRef("widgets",$widgets);
+tpl()->assignByRef("widgets",$_widgets);
 $widgetsCategorized=getWidgetsByCategory();
 tpl()->assignByRef("widgetsCategorized",$widgetsCategorized);
 
@@ -119,10 +131,20 @@ if (file_exists('widgets/widgets.css')) {
 }
 tpl()->assignByRef("widgetscssexist",$widgetscssexist);
 tpl()->assignByRef("MAJ_knxweb2",$MAJ_knxweb2);
+tpl()->assignByRef("MAJ_knxweb2_git",$MAJ_knxweb2_git);
 
 tpl()->addCss('css/setup.css');
 
 tpl()->addJs('js/setup.js');
+
+$plugins = false;
+if (file_exists("plugins.php")) {
+  $plugins = true;
+}
+tpl()->assignByRef("plugins",$plugins);
+
+$_path_knxweb = str_replace('\\', '/', dirname(__FILE__)); //dirname(__FILE__);
+tpl()->assignByRef("_path_knxweb", $_path_knxweb); 
 
 tpl()->display('setup.tpl');
 

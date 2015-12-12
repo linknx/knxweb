@@ -1,5 +1,5 @@
 var _alarmclock;
-var _string_day = Array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
+var _string_day = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
 function CAlarmClock(conf) {
   $.fx.speeds._default = 1000;
@@ -117,12 +117,9 @@ jQuery(document).ready(function(){
     else selectminute+='<option value="' + i + '">' + i + '</option>';
   }
   
-  for(var i=1;i<7;i++) {
+  for(var i=1;i<=7;i++) {
     $("tbody","#alarmclock").append("<tr class='trimpair' ><td><input id='day_"+i+"' type='checkbox'>"+_string_day[i]+"</td><td><select id='day_hour_"+i+"'>"+selecthour+"</select></td><td><select id='day_min_"+i+"'>"+selectminute+"</select></td></tr>");
   }
-  var i = 0;
-  $("tbody","#alarmclock").append("<tr class='trimpair' ><td style='width:110px;'><input id='day_7' type='checkbox'>"+_string_day[i]+"</td><td><select id='day_hour_7'>"+selecthour+"</select></td><td><select id='day_min_7'>"+selectminute+"</select></td></tr>");
-
 });
 
 // Called by eibcommunicator when a feedback object value has changed

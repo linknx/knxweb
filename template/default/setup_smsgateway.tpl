@@ -30,7 +30,7 @@
 		</tr>
 		<tr>
 			<th>{l lang='en'}API id{/l}</th>
-			<td><input type="text" class="required" name="smsgateway-apiid" id="smsgateway-apiid"></td>
+			<td><input type="text" name="smsgateway-apiid" id="smsgateway-apiid"></td>
 		</tr>		
 		<tr>
 			<th>{l lang='en'}From number{/l}</th>

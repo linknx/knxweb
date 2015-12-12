@@ -4,12 +4,15 @@ if(typeof(EventSource)!=="undefined")
   _EventCanUse = true;
 } else {
   _EventCanUse = false;
-} 
+}
 
 // EIBCommunicator
 var EIBCommunicator = {
 	listeners: new Object(),
-	
+	polling: false,
+  stoppolling: false,
+  date_stop_polling: null,
+
 	add: function(o) {
 		var l=o.getListeningObject();
 		for(var i=0;i<l.length; i++)
@@ -28,26 +31,16 @@ var EIBCommunicator = {
 	},
 	refreshListeningObject: function(o) {
 		EIBCommunicator.remove(o);
-		EIBCommunicator.add(o);		
+		EIBCommunicator.add(o);
 	},
 	eibWrite: function(obj,value, successCallBack) {
 		if (!obj)
 			return;
-		var body = "<write><object id='"+obj+"' value='"+value+"'/></write>";
-
-		var t = new Date().getTime();
-
-		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: body, processData: false, dataType: 'xml' , cache: false,
-			success: function(responseXML, status) {
-				var xmlResponse = responseXML.documentElement;
-				if (xmlResponse.getAttribute('status') == 'success') {
-		   			EIBCommunicator.sendUpdate(obj, value);
-				}
-				else
-					alert(tr("Error: ")+xmlResponse.textContent);
-				if (successCallBack) successCallBack(response);
-			}
-		})
+    var responseXML = queryLinknx("<write><object id='"+obj+"' value='"+value+"'/></write>");
+    if (responseXML) {
+      EIBCommunicator.sendUpdate(obj, value);
+			if (successCallBack) successCallBack(responseXML);
+    }
 	},
 	sendUpdate: function(obj,value) {
 		var listeners = EIBCommunicator.listeners[obj];
@@ -59,36 +52,25 @@ var EIBCommunicator = {
 	eibRead: function(objects,completeCallBack) {
 		if (objects.length > 0) {
 			var body = '<read><objects>';
-			for (i=0; i < objects.length; i++)
+			for (var i=0; i < objects.length; i++)
 				if (objects[i] && objects[i] != "null")
 					body += "<object id='" + objects[i] + "'/>";
 			body += "</objects></read>";
 
-			var t = new Date().getTime();
-      
-			var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: body, processData: false, dataType: 'xml', cache: false,
-				success: function(responseXML, status) {
-					var xmlResponse = responseXML.documentElement;
-					if (xmlResponse.getAttribute('status') != 'error') {
+      var xmlResponse = queryLinknx(body);
+      if (xmlResponse) {
 						// Send update to subscribers
 						var objs = xmlResponse.getElementsByTagName('object');
 						if (objs.length == 0)
-								EIBCommunicator.sendUpdate(objects, xmlResponse.childNodes[0].nodeValue);	
+								EIBCommunicator.sendUpdate(objects, xmlResponse.childNodes[0].nodeValue);
 						else {
-							for (i=0; i < objs.length; i++) {
+							for (var i=0; i < objs.length; i++) {
 								var element = objs[i];
 								EIBCommunicator.sendUpdate(element.getAttribute('id'),element.getAttribute('value'));
 							}
 						}
-					}
-					else
-						UIController.setNotification(tr("Error: ")+xmlResponse.textContent);
-				},
-				error: function (XMLHttpRequest, textStatus, errorThrown) {
-					UIController.setNotification(tr("Error: ")+textStatus);
-				},
-				complete: completeCallBack
-			});
+        if (completeCallBack) completeCallBack();
+			}
 		}
 		else if (completeCallBack)
 		    completeCallBack();
@@ -98,7 +80,7 @@ var EIBCommunicator = {
     var actions=actionsList.get(0);
 		if (actions.childNodes.length>0) {
   		var xml='<execute>';
-  		for(i=0; i<actions.childNodes.length; i++)
+  		for(var i=0; i<actions.childNodes.length; i++)
   		{
   			var action=actions.childNodes[i]; //var action=actions[i];
   			// Already dispatch new value if type == set-value
@@ -111,13 +93,11 @@ var EIBCommunicator = {
   	}
 	},
 	query: function(body, successCallBack) {
-		var t = new Date().getTime();
 
-		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: body, processData: false, dataType: 'xml' , cache: false,
-			success: function(responseXML, status) {
-				if (successCallBack) successCallBack(responseXML.documentElement);
-			}
-		})
+    var responseXML = queryLinknx(body);
+    if (responseXML) {
+      if (successCallBack) successCallBack(responseXML);
+		}
 	},
 	updateAll: function(completeCallBack) {
 		var obj = new Array();
@@ -126,6 +106,8 @@ var EIBCommunicator = {
 		EIBCommunicator.eibRead(obj, completeCallBack);
 	},
 	periodicUpdate: function() {
+    EIBCommunicator.polling = true;
+    if (EIBCommunicator.stoppolling) return;
 		EIBCommunicator.updateAll(function(XMLHttpRequest, textStatus) {
 				setTimeout('EIBCommunicator.periodicUpdate()', 1000);
 			});
@@ -137,15 +119,16 @@ var EIBCommunicator = {
       var source=new EventSource("event_linknx.php");
       source.onmessage=function(event)
       {
-        var xmlResponse = StringtoXML(event.data).documentElement; // Convert the data in xml 
-        if (xmlResponse.getAttribute('status') == 'error') { // retour de l'enregistrement de "notification"
+        var xmlResponse = StringtoXML(event.data).documentElement; // Convert the data in xml
+        /*if (xmlResponse.getAttribute('status') == 'error') { // retour de l'enregistrement de "notification"
           UIController.setNotification(tr("Error: ")+xmlResponse.textContent);
         } else if (xmlResponse.getAttribute('status') == 'success') {  // retour de l'enregistrement de "notification"
           UIController.setNotification(tr("Success: ")+xmlResponse.textContent);
-        } else if (xmlResponse.getAttribute('id') && xmlResponse.nodeName == "notify") {
+        } else */
+        if (xmlResponse.getAttribute('id') && xmlResponse.nodeName == "notify") {
           //console.log("EventSource update object id=", xmlResponse.getAttribute('id'), "value=", xmlResponse.childNodes[0].nodeValue);
           EIBCommunicator.sendUpdate(xmlResponse.getAttribute('id'), xmlResponse.childNodes[0].nodeValue);
-        } 
+        }
       }
     } else {
       if (tab_config.useJavaIfAvailable=='true')
@@ -159,7 +142,7 @@ var EIBCommunicator = {
     }
 	},
 	removeAll: function() {
-		for(key in EIBCommunicator.listeners) 
+		for(key in EIBCommunicator.listeners)
 			delete EIBCommunicator.listeners[key];
 	}
 }

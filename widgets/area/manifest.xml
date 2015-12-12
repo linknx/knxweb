@@ -14,6 +14,7 @@
       <option key="false" value="No" />
     </setting>
     <setting id="border-color" label="Border color" type="color" default="#000000" />
+		<setting id="background-picture" label="Background picture" type="picture" />
     <setting label="" type="separator" />
     <setting id="feedback-object" label="Feedback object" type="object" />
     <setting id="feedback-value" label="Show when value" type="text" />

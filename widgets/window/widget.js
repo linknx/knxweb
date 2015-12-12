@@ -13,23 +13,23 @@ function CWindow(conf) {
     if ($(this).hasClass("show")) { // si show présent on cache la fenêtre
       if ($(this).hasClass("bottom")) {
         var top = Math.round(this.owner.div.parent().css("height").replace(/px$/,""));
-        animate(this.owner.div, {"top": top + "px" , "height":"0" },callbackAnimateWindowHide);
+        animate(this.owner.div, {"top": top + "px" , "height":"0" },callbackAnimateWindowHide,this.owner.conf.getAttribute("duration"));
         ico_show = "n";
         ico_hide = "s";
       }
       if ($(this).hasClass("top")) {
-        animate(this.owner.div, {"top": "0" , "height":"0" } ,callbackAnimateWindowHide);
+        animate(this.owner.div, {"top": "0" , "height":"0" } ,callbackAnimateWindowHide,this.owner.conf.getAttribute("duration"));
         ico_show = "s";
         ico_hide = "n";
       }
       if ($(this).hasClass("right")) {
         var left = Math.round(this.owner.div.parent().css("width").replace(/px$/,""));
-        animate(this.owner.div, {"left": left + "px", "width":"0" },callbackAnimateWindowHide);
+        animate(this.owner.div, {"left": left + "px", "width":"0" },callbackAnimateWindowHide,this.owner.conf.getAttribute("duration"));
         ico_show = "e";
         ico_hide = "w";
       }
       if ($(this).hasClass("left")) {
-        animate(this.owner.div, {"left": "0", "width":"0"},callbackAnimateWindowHide);
+        animate(this.owner.div, {"left": "0", "width":"0"},callbackAnimateWindowHide,this.owner.conf.getAttribute("duration"));
         ico_show = "w";
         ico_hide = "e";
       }
@@ -41,23 +41,23 @@ function CWindow(conf) {
       $('.widget', this.owner.div).show();
       if ($(this).hasClass("bottom")){
         var top = Math.round(this.owner.div.parent().css("height").replace(/px$/,"") - this.owner.conf.getAttribute("height").replace(/px$/,""));
-        animate(this.owner.div, {"top": top + "px"  , "height": this.owner.conf.getAttribute("height")}, callbackAnimateWindowShow);
+        animate(this.owner.div, {"top": top + "px"  , "height": this.owner.conf.getAttribute("height")}, callbackAnimateWindowShow,this.owner.conf.getAttribute("duration"));
         ico_show = "n";
         ico_hide = "s";
       }
       if ($(this).hasClass("top")) {
-        animate(this.owner.div, {"top":"0" , "height": this.owner.conf.getAttribute("height")}, callbackAnimateWindowShow);
+        animate(this.owner.div, {"top":"0" , "height": this.owner.conf.getAttribute("height")}, callbackAnimateWindowShow,this.owner.conf.getAttribute("duration"));
         ico_show = "s";
         ico_hide = "n";
       }
       if ($(this).hasClass("right")) {
         var left = Math.round(this.owner.div.parent().css("width").replace(/px$/,"") - this.owner.conf.getAttribute("width").replace(/px$/,""));
-        animate(this.owner.div, {"left": left + "px" , "width": this.owner.conf.getAttribute("width")}, callbackAnimateWindowShow);
+        animate(this.owner.div, {"left": left + "px" , "width": this.owner.conf.getAttribute("width")}, callbackAnimateWindowShow,this.owner.conf.getAttribute("duration"));
         ico_show = "e";
         ico_hide = "w";
       }
       if ($(this).hasClass("left")) {
-        animate(this.owner.div, {"left": "0" , "width": this.owner.conf.getAttribute("width")}, callbackAnimateWindowShow);
+        animate(this.owner.div, {"left": "0" , "width": this.owner.conf.getAttribute("width")}, callbackAnimateWindowShow,this.owner.conf.getAttribute("duration"));
         ico_show = "w";
         ico_hide = "e";
       }
@@ -152,6 +152,12 @@ CWindow.prototype.refreshHTML = function() {
     $('.back', this.div).css('background-color','');
   else
     $('.back', this.div).css('background-color', this.conf.getAttribute("background-color"));
+
+  if (!this.conf.getAttribute("background-picture")) 
+    $(".back", this.div).css('background-image', '');
+  else
+    $(".back", this.div).css('background-image', 'url(' + getImageUrl(this.conf.getAttribute("background-picture")) + ')');
+
 
   if (!this.conf.getAttribute("opacity")) 
     $('.back', this.div).css('opacity','');

@@ -7,6 +7,19 @@ var _floating_zone_margin = 10;
 
 var _objectTypesValues = {
 	'1.001': ['on','off'],
+  '1.002': ['true ','false'],
+  '1.003': ['enable ','disable'],
+  '1.004': ['ramp ','no ramp'],
+  '1.005': ['alarm ','no alarm'],
+  '1.006': ['high ','low'],
+  '1.007': ['increase ','decrease'],
+  '1.008': ['down ','up'],
+  '1.009': ['close ','open'],
+  '1.010': ['start ','stop'],
+  '1.011': ['active ','inactive'],
+  '1.012': ['inverted ','not inverted'],
+  '1.013': ['cyclically','start/stop'],
+  '1.014': ['calculated','fixed'],
 	'3.007': ['up','down','stop'],
 	'3.008': ['close','open','stop'],
 	'20.102': ['comfort','standby','night','frost']
@@ -262,7 +275,7 @@ function queryLinknx(message) {
 	var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: message, processData: false, dataType: 'xml',async: false,
 		success: function(responseXML, status) {
 			var xmlResponse = responseXML.documentElement;
-			if (xmlResponse.getAttribute('status') == 'success') {
+      if (xmlResponse.getAttribute('status') != 'error') { // le status peut valoir "success", "error" et "ongoing"
 				data=xmlResponse;
 			}
 			else 
@@ -280,15 +293,10 @@ function queryKnxweb(action, type, message, callasync) {
 	var data;
 	var req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action='+action+'&nocache=' + t, data: message, processData: false, dataType: type,async: callasync,
 		success: function(responseXML, status) {
-			var xmlResponse = responseXML.documentElement;
-			if (xmlResponse.getAttribute('status') == 'success') {
-				data=xmlResponse;
-			}
-			else 
-			{
-				messageBox(tr("Error: ")+xmlResponse.textContent, tr('Error'), 'alert');
-				data=false;
-			}
+			data=responseXML.documentElement;
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			data=false;
 		}
 	});
 	return data;
@@ -341,7 +349,11 @@ $.fn.widgetMovable = function(method) {
     
 		if (!$(widget).hasClass("selected"))
 		{
-			$('div').removeClass("selected");
+			$("div.widget.selected").each( function() {
+				$(this).removeClass("selected");
+				var opt = $(this).data('widgetMovable');
+				if (opt.onDeSelect!=null) opt.onDeSelect($(this).get(0));
+			});
 			$(widget).addClass("selected");
 			
 			$(".resizeSE").hide();
@@ -363,8 +375,12 @@ $.fn.widgetMovable = function(method) {
 					resizable: true,
 					draggable: true,
 					onSelect: null,
+					onMoveStart: null,
 					onMove: null,
-					onResize: null
+					onMoveStop: null,
+					onResizeStart: null,
+					onResize: null,
+					onResizeStop: null
 				}, options);
 
 				var $this = $(this);
@@ -384,14 +400,18 @@ $.fn.widgetMovable = function(method) {
   				if (_editMode) { if (_designeditview) {if (design.gridwidgetsize) grid = [design.gridWidth, design.gridWidth]; }}
 					div.draggable({
   					grid: grid,
+						start: function(event, ui) {
+							if (options.onResizeStart!=null) options.onResizeStart($(this).parent().get(0));
+						},
 						containment: [left,top,9999,9999],
 						drag: function(event, ui) {
 							var div=$(this).parent();
 							div.width(ui.position.left);
 							div.height(ui.position.top);
+              if (options.onResize!=null) options.onResize($(this).parent().get(0));
 						},
 						stop: function(event, ui) {
-							if (options.onResize!=null) options.onResize($(this).parent().get(0));
+							if (options.onResizeStop!=null) options.onResizeStop($(this).parent().get(0));
 						}
 					});
 				}
@@ -427,11 +447,17 @@ $.fn.widgetMovable = function(method) {
   						top+= widgetContainer.offset().top;
               
   						$('.resizeSE', this).draggable( "option", "containment", [left,top,9999,9999] );
-  						//if (options.onMove!=null) options.onMove(this, ui.position.left, ui.position.top);
-  						if (options.onMove!=null) options.onMove(this, left2, top2);
+  						//if (options.onMoveStop!=null) options.onMoveStop(this, ui.position.left, ui.position.top);
+  						if (options.onMoveStop!=null) options.onMoveStop(this, left2, top2);
   					},
   					start: function(event, ui) {
   						select(this);
+  						var left=Math.round($(this).css('left').replace(/px$/,""));
+  						var top=Math.round($(this).css('top').replace(/px$/,""));
+  						if (options.onMoveStart!=null) options.onMoveStart(this, left, top);
+  					},
+  					drag: function(event, ui) {
+  						if (options.onMove!=null) options.onMove(this, Math.round(ui.position.left), Math.round(ui.position.top));
   					}
   				});
 				}
@@ -485,3 +511,15 @@ function StringtoXML(text){
   }
   return doc;
 }
+
+function UpdateKnxWeb(){
+  var xmlResponse = queryKnxweb('updateknxweb', '', '', false);
+  messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
+  return true;
+};
+
+function UpdateKnxWebGit(){
+  var xmlResponse = queryKnxweb('updateknxwebgit', '', '', false);
+  messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
+  return true;
+};

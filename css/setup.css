@@ -292,7 +292,6 @@ table.form td {
 }
 
 .grid {
-/*border-bottom: 1px dashed Black;  border-left: 1px dashed Black;*/
 position:absolute;
 width: 1px;
 height:1px;
@@ -1261,3 +1260,58 @@ html.knm {
   overflow: auto;
 }
 /***************** /multipleObject  ********************/
+/***************** /Plugins  ********************/
+
+.plugin {
+  cursor: default;
+  margin: 10px;
+  min-height: 40px;
+  text-align: left;
+  border-radius: 1em;
+  position: relative;
+  overflow: hidden;
+}
+.plugin:hover {
+  border: 1px solid #0070A3;
+}
+.plugin .params {
+  margin: 5px;
+  padding: 5px;
+}  
+.idplugin {
+  margin: 12px;
+}
+.commandplugin {
+  position: absolute;
+  margin: 10px;
+  right: 15px;
+  width: 75px;
+  height: 20px;
+  text-align: right;
+}
+.commandplugin img {
+  width: 20px;
+  height: 20px;
+  margin-left: 2px;
+}
+.pluginname {
+  position: absolute;
+  margin: 10px;
+  right: 95px;
+  height: 20px;
+  text-align: right;
+}
+.commandplugin img:hover {
+  -moz-box-sizing: border-box;
+  -moz-outline-radius: 6px;
+  -moz-user-select: none;
+  cursor: pointer;
+  outline: 2px solid #0070A3;
+}
+.config_plugin{
+  position: relative;
+  margin: 10px;
+  border: 1px solid #0070A3;
+}                                       
+/***************** /Plugins  ********************/
+.goog-menu-vertical {overflow:scroll; max-height:100px;overflow-x:hidden;}

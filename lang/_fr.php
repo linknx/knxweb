@@ -21,7 +21,7 @@ $_lang['IP address'] = 'Adresse IP';
 $_lang['Netmask'] = 'Masque réseau';
 $_lang['Gateway'] = 'Passerelle';
 $_lang['DNS1 / DNS2'] = 'DNS1 / DNS2';
-$_lang['New version on cvs'] = 'Nouvelle version disponible';
+$_lang['New version on cvs'] = 'Nouvelle version disponible sur le cvs';
 $_lang['(Empty = stdout)'] = '(Vide = stdout)';
 $_lang['(ex.: 0ms to 25.5s in steps of 100ms)'] = '(ex.: 0ms à 25.5s par pas de 100ms)';
 $_lang['(if specified, other parameters will be ignored)'] = '(si défini, les autres paramètres seront ignorés)';
@@ -422,6 +422,35 @@ $_lang['inactive'] = 'inactive';
 $_lang['Refresh the list of objects'] = 'Actualiser la liste des objets';
 $_lang['-no description-'] = '-aucune description-';
 
+$_lang['Refresh design'] = 'Rafraichir le design';
+$_lang['New version on git'] = 'Nouvelle version disonible sur Git';
+$_lang['Please select a date from the list'] = 'Veuillez choisir une date dans la liste';
+$_lang['Warning'] = 'Attention';
+$_lang['Build in'] = 'Construit en';
+$_lang['Save the design'] = 'Sauvegarder le design';
+$_lang['Save the sub-page'] = 'Sauvegarder la sous-page';
+$_lang['Duplicate'] = 'Dupliquer';
+$_lang['Restart'] = 'Redémarrer';
+$_lang['Regex'] = 'Regex';
+$_lang['Hex'] = 'Hex';
+
+$_lang['Plugins'] = 'Plugins';
+$_lang['Plugins list'] = 'Liste de Plugins';
+$_lang['Add a plugin'] = 'Ajouter un plugin';
+$_lang['Reload plugins'] = 'Actualiser les plugins';
+$_lang['Select a plugin'] = 'Choisissez un plugin';
+
+$_lang['Choose a rule'] = 'Choisissez une règle';
+$_lang['Choose an IO-Port'] = 'Choisissez un IO-Port';
+$_lang['Choose a Plugin'] = 'Choisissez un Plugin';
+$_lang['Choose an IO-Port'] = 'Choisissez un IO-Port';
+$_lang['No Rule'] = 'Aucune Règle';
+$_lang['No IO-Port'] = 'Aucun IO-Port';
+
+$_lang['List of rules'] = 'Liste des règles';
+$_lang['Execute "True" Actions'] = 'Exécuter les actions de type \'Vrai\'';
+$_lang['Execute "False" Actions'] = 'Exécuter les actions de type \'Faux\'';
+$_lang['Hide'] = 'Cacher';
 /*             
 $_lang[''] = '';
 */

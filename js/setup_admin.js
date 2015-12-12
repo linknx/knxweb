@@ -64,22 +64,6 @@ function reloadLogLinknx() {
   readLinknxLogFile($('#selectLinknxLogFileCount').val(), "divLinknxLog");
 };
 
-function sendAction(actiontype)
-{
-	if (actiontype !="") {
-    var url = 'design_technique.php?action='+actiontype;
-  	req = jQuery.ajax({ type: 'post', url: url, dataType: 'html', 
-  			success: function(responseHTML, status) 
-  			{
-  				$("#"+dest).html(responseHTML);
-  			},
-  			error: function (XMLHttpRequest, textStatus, errorThrown) {
-  				alert(tr("Unable to send action: ")+textStatus);
-  			}
-  	});
-	} else alert("Pas d'action à lancer");
-};
-
 function updateWidgetsCss(val)
 {
   messageBox(tr("update file widgets.css"), tr('Info'), 'info');

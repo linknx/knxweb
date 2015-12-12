@@ -40,6 +40,7 @@ jQuery(function($) {
     if ($("#widget_"+i).data("version")) {
       if (parseFloat(parseFloat(_widgets[i].version)) >= parseFloat($("#widget_"+i).data("version")))
         $(".widgetsdl", "#widget_" + i).html('<span class="ui-button-text">' + tr("Already downloaded") + " / " + tr("Up to date") + '</span>').removeAttr("onclick");
+      else $(".widgetsdl", "#widget_" + i).html('<span class="ui-button-text">' + tr("New version available") + '</span>');
     } 
   }
 

@@ -1,10 +1,47 @@
 
+TODO next task list :
+	* New version of Rules Editor "more user friendly"
+	* ... 
+	* first version of plugins function for : for exemple add some new evoluate rule action or condition
+	   * in a futur new major release we add a configuration
+	   * => dans une futur version majeur on va lier la config de linknx avec celle de knxweb ainsi une modif de config en dehors
+          de knxweb pourra poser des problème ensuite si on mixte la modification manuelle (ou externe) et knxweb
+  * ajout une fonction de compression gzip du code js,css, html et xml ("minifier") pour accélerer l'appli => permet de générer une version "min" de knxweb non utiliseable en "debug"
+    * cf => http://www.alsacreations.com/article/lire/914-compression-pages-html-css-gzip-deflate.html  et/ou http://www.feedthebot.com/pagespeed/enable-compression.html
+    * utiliser les fichiers .htaccess de apache2
+
+  ---===*** History *** ===---
+
+2015-12-12 Anthony Penhard and fraxinas v2.1.0
+	* include somes patch : Fix bugs ...
+	* integrate many new linknx "object datatype" (version of linknx 0.0.1.32)
+  * add new pictures (credit : sphinkx)
+  * activate function "floating widget" in design
+  * add new functions / bug fix with the help of fma38
+      * Color picker open ony with a button can modify color value manualy
+      *
+	* first version of New Rules Editor "more user friendly" using "Blockly"
+	* first version of plugins functions : (careful : this function will be totally functional, and can have major structural modifications before next major version)
+	   (* for exemple add some new evoluate rule action or condition)
+	   * function we can use in widget and/or linknx rules
+	   * in a futur new major release we add a configuration file make a link between knxweb and linknx configuration (like rules)
+	   * => dans une futur version majeur on va lié la config de linknx avec celle de knxweb ainsi une modif de config en dehors de knxweb pourra poser des problème ensuite si on mixte la modification manuelle (ou externe) et knxweb
+	* add new parameters to widgets :
+	   * add picture background for "window" and area and slider
+	   * window add duration animation
+	   * alarmclock bug fixed with css
+	   * charts : add liveupdate, timezone offset, use highstock on internet version (not local),
+	* new widgets :
+	   * combobox : Change zone with a select combobox
+  * we can reboot the service eibd or linknx in Admin section if exist init.d service and if the user www-data his a sudoers user
+  * Add grid in the widgets in design mode : area and window
+
 2015-12-06 Anthony Penhard v2.0.0
 	* Released stable (for several years/weeks/months), Increase version number for not confuse with previous CVS snapshots
 	* New semantic versioning  x.y.z : x major, y minor, z patch
 	   * we start with the "famous" version 2.0.0
 	* include somes patch : Fix bugs, php warning ...
-
+	
 2013-10-30 Anthony Penhard v0.9.3
 	* Add Nederlands language (credit Eme H.)
 	* Add new function for ioport add in linknx 0.0.1.31 
