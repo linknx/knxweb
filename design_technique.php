@@ -288,22 +288,22 @@ if (isset($_GET['action'])) {
 
     case 'updateknxwebgit':
       $path_knxweb2 = dirname(__FILE__);  // ex. /var/www/knxweb2
+      $git_branch = "master";
       //exec('wget -O /tmp/knxweb2.tar.gz --no-check-certificate "https://github.com/linknx/knxweb/archive/master.tar.gz"');
       if (file_exists("dev")) {
-        exec('wget -O /tmp/knxweb2.tar.gz --no-check-certificate "https://github.com/linknx/knxweb/archive/master.tar.gz"');
-        exec('tar -xzf /tmp/knxweb2.tar.gz --overwrite -C /tmp/');
-        // copier le contenu complet en le mettant à jour: cp -f -R /tmp/knxweb-master/* /var/www/knxweb2.1.0
-        exec('cp -f -R /tmp/knxweb-master/* '.$path_knxweb2.'/');
-        // Pour supprimer un répertoire non vide, la syntaxe est rm -Rf monrepertoire
-        exec('rm -Rf /tmp/knxweb-master/');
-      } else {
         exec('wget -O /tmp/knxweb2.tar.gz --no-check-certificate "https://github.com/linknx/knxweb/archive/dev.tar.gz"');
-        exec('tar -xzf /tmp/knxweb2.tar.gz --overwrite -C /tmp/');
-        exec('cp -f -R /tmp/knxweb-dev/* '.$path_knxweb2.'/');
-        exec('rm -Rf /tmp/knxweb-dev/');
+        $git_branch = "dev";
+      } else {
+        exec('wget -O /tmp/knxweb2.tar.gz --no-check-certificate "https://github.com/linknx/knxweb/archive/master.tar.gz"');
+        $git_branch = "master";
       }
+      exec('tar -xzf /tmp/knxweb2.tar.gz --overwrite -C /tmp/');
+      // copier le contenu complet en le mettant à jour: cp -f -R /tmp/knxweb-master/* /var/www/knxweb2.1.0
+      exec('cp -f -R /tmp/knxweb-'.$git_branch.'/* '.$path_knxweb2.'/');
+      // Pour supprimer un répertoire non vide, la syntaxe est rm -Rf monrepertoire
+      exec('rm -Rf /tmp/knxweb-'.$git_branch.'/');
       exec('rm /tmp/knxweb2.tar.gz ');
-      echo "<updateknxwebgit status='success' >'".$path_knxweb2."/'</updateknxwebgit>\n";
+      echo "<updateknxwebgit status='success' >' branch:".$git_branch." path:".$path_knxweb2."/'</updateknxwebgit>\n";
       break;
 
     case 'saveplugins':
