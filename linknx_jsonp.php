@@ -125,16 +125,17 @@ function xmlToArray($xml, $options = array()) {
 $xml = simplexml_load_string($xml);
 
 $arrayData = xmlToArray($xml);
-if ($func_jsonp == '')
+if ($func_jsonp == '') {
   if ($xmlresponse != false)
     echo "xml_data = '" . $xml . "';\n";
   else
     echo "json_data = " . json_encode($arrayData) . ";\n";
-else
+} else {
   if ($xmlresponse != false)
     echo $func_jsonp . "('" . $xml . "', '" . $req_xml . "' );\n";
   else
     echo $func_jsonp . "(". json_encode($arrayData) . ", '" . $req_xml . "' );\n";
+}
 
 
 ?>
