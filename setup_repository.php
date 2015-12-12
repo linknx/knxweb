@@ -35,14 +35,16 @@ if ($file) {
   
   $first_ligne = false;
   foreach ($result_tab as $k => $v) {
-    if ($first_ligne) $tab_widgetsdllist[] = explode("|",$v);
+    $tab = explode("|",$v);
+    if (!isset($tab[3])) $tab[3] = '';
+    if ($first_ligne) $tab_widgetsdllist[] = $tab;
     $first_ligne = true; 
   }
 }
 tpl()->assignByRef('tab_widgetsdllist', $tab_widgetsdllist);
 
 $widgets=getWidgets();
-tpl()->assign_by_ref("widgets",$widgets);
+tpl()->assignByRef("widgets",$widgets);
 
 /* Repository Subpages */
 $file = @file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/subpages_knxweb2/subpageslist', false, $context);

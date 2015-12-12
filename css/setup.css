@@ -291,6 +291,17 @@ table.form td {
 	cursor: pointer;
 }
 
+.grid {
+/*border-bottom: 1px dashed Black;  border-left: 1px dashed Black;*/
+position:absolute;
+width: 1px;
+height:1px;
+z-index:1;
+display: block;
+left:0;
+top:0;
+display: none;
+}
 
 /***************** Resizable ********************/
 .resizeSE {
@@ -637,6 +648,10 @@ table.form td {
 	border: 1px #FF0000 dotted;
 }
 
+#widgetdiv #background {
+  position: absolute;
+}
+
 #widgetdiv.selected { 
 	border: 1px dashed #000000;
 }
@@ -794,6 +809,12 @@ div.subpagedialog {
 
 #tab-design-list-widgets table tbody tr.active {
 	background-color: #DEEDF7;
+}
+#tab-design-list-widgets table tbody tr.global {
+	color: #FF0000;
+}
+#tab-design-list-widgets table tbody tr.child {
+	color: #0000FF;
 }
 
 /* design-zones-list : Zones list */

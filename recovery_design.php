@@ -4,7 +4,7 @@
 
   $send = isset($_POST['send'])?$_POST['send']:'none';
 
-  $dossier_image = isset($_POST['dossier_image'])?$_POST['dossier_image']:"reprise"; // dossier dans knxweb2/picture/
+  $dossier_image = isset($_POST['dossier_image'])?$_POST['dossier_image']:"reprise"; // dossier dans knxweb2/pictures/
   
   $design = isset($_POST['design'])?$_POST['design']:'default';
   $version_knxwebOld = isset($_POST['version_knxwebOld'])?$_POST['version_knxwebOld']:"design_knxweb1_2";//'design_old';
@@ -58,7 +58,7 @@ caption {
     <caption> Convert design xml </caption>
     <tbody>
       <tr class="odd">
-        <th>Dossier Image (create the dir in knxweb2/picture/) </th>
+        <th>Dossier Image (create the dir in knxweb2/pictures/) </th>
         <td><input type="text" name="dossier_image" value="<?php echo $dossier_image;?>" ></td>
       </tr>
       <tr class="even">
@@ -339,7 +339,8 @@ foreach($_design as $key0 => $value){
           $xml = $xml . " " . $attributeskey . '="Background/' . $attributesvalue2 . '"';
           $infos_image = @getImageSize('pictures/Background/' . $attributesvalue2);
         } else {                                                      
-          $xml = $xml . " " . $attributeskey . '="pictures/' . $dossier_image . '/' .  $attributesvalue2 . '"';
+          //$xml = $xml . " " . $attributeskey . '="pictures/' . $dossier_image . '/' .  $attributesvalue2 . '"';
+          $xml = $xml . " " . $attributeskey . '="' . $dossier_image . '/' .  $attributesvalue2 . '"';
           $infos_image = @getImageSize('pictures/' . $dossier_image . '/' . $attributesvalue2);
         }
         if ( $width_design < (int)$infos_image[0]) $width_design = (int)$infos_image[0];

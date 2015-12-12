@@ -1,7 +1,7 @@
 <?php
-  $_lang = array();
-  $_lang["language"] = "Deutsch";
-  $_lang['Loading, please wait'] = 'Lädt, bitte warten';
+$_lang = array();
+$_lang["language"] = "Deutsch";
+$_lang['Loading, please wait'] = 'Lädt, bitte warten';
 $_lang['Services status'] = 'Status der Services';
 $_lang['ACTIVE'] = 'AKTIV';
 $_lang['DESACTIVE'] = 'INAKTIV';

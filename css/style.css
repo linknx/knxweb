@@ -123,6 +123,9 @@ div.notification {
 	margin-right: 10px; 
 	position: absolute;
 	text-align: left;
+z-index: 10000;
+background-color: #FFF;
+color: #F00;
 }
 
 .menuTitle {
