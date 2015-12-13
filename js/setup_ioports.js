@@ -200,8 +200,6 @@ var ioports = {
 
 jQuery(document).ready(function(){
 
-	ioports.refreshIOportList();
-
 	// Bind menu buttons
 	$('#button-add-ioport').bind('click', ioports.newIOport);
 	$('#button-edit-ioport').bind('click', function() {
@@ -242,5 +240,7 @@ jQuery(document).ready(function(){
 	});
 	// Clean dummy tr
 	$('#ioports-tab-table tbody').empty();
+
+	ioports.refreshIOportList();
 
 });
