@@ -12,6 +12,9 @@ TODO next task list :
 
   ---===*** History *** ===---
 
+2015-12-13 Anthony Penhard v2.1.0
+  * add "replay.php" script can use for exemple "for the simulation of presence", can replay the state of an object 7 days ago with a rule and log of te object (issue #5)
+
 2015-12-12 Anthony Penhard and fraxinas v2.1.0
 	* include somes patch : Fix bugs ...
 	* integrate many new linknx "object datatype" (version of linknx 0.0.1.32)

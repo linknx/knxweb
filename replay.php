@@ -1,5 +1,7 @@
 <?php
 header('cache-control: no-cache');
+header("Content-type: text/html; charset=utf-8");
+//header("Content-type: text/plain; charset=utf-8");
 error_reporting(0);
 /*
 paramètres :
@@ -121,35 +123,37 @@ while ($nbenreg >= 0 ){
   // Format de sortie "html"
   /* 2011-9-18 19:21:32 > 20.7<br />2011-9-18 19:23:32 > 20.9<br />2011-9-18 19:37:32 > 21<br />2011-9-18 19:39:32 > 20.9<br />2011-9-18 19:41:32 > 21<br />2011-9-18 19:47:32 > 20.9<br />2011-9-18 19:57:33 ... */
   //$result = $data["ts"] . " > ".$data["value"]."<br />" . $result;
-  $result = $data["ts"] . " > ".$float_value."<br />" . $result;
-
+  //$result = $data["ts"] . " > ".$float_value."<br />" . $result;
+  $result = $data["ts"] . " > ".$float_value;
 
   $nbenreg--;
 }
 
 mysql_close();
 
-
-header("Content-type: text/plain; charset=utf-8");
+$ts_data=strtotime($data["ts"]);
+$ts_data_new=strtotime($data["ts"].' + '.$duration.' '.$periodicity.'s');
+$path_knxweb2 = dirname(__FILE__);  // ex. /var/www/knxweb2
 
 echo " l'object choisi est : ->".$objectlog;
-echo "<br />Prochaine valeur dans correspondant il y a ".$duration." ".$periodicity;
-echo "<br /> 'date' > 'valeur' = ".$result;
+echo "<br />\nProchaine valeur correspondante à celle d'il y a '".$duration." ".$periodicity."'";
+echo "<br />\n 'date' > 'valeur' = ".$result."<br />\n";
+echo "soit à " . date('H',$ts_data).":".date('i',$ts_data)." le ". date('d',$ts_data_new) . "/".date('m',$ts_data_new)." la nouvelle valeur sera ".$float_value; //.":".date('s',$ts_data)
 
-echo date('H',$data["ts"]).":".date('i',$data["ts"]).":".date('s',$data["ts"]);
-
-echo "<br />Mise à jour rule :";
-
+echo "<br />\nMise à jour rule :<br />\n";
+/*
+    <at hour=\"" . date('H',$ts_data) . "\" min=\"" . date('i',$ts_data) . "\" day=\"" . date('d',strtotime($data["ts"].' + '.$duration.' '.$periodicity.'s')) . "\"
+    month=\"" . date('m',strtotime($data["ts"].' + '.$duration.' '.$periodicity.'s')) . "\" ></at>
+*/
 $string_xml="<rule id=\"replay_$objectlog\" description=\"Rule Replay sur 7 jours pour $objectlog\" init=\"false\">
   <condition type=\"timer\" trigger=\"true\">
-    <at hour=\"" . date('H',$data["ts"]) . "\" min=\"" . date('i',$data["ts"]) . "\"
-    day=\"" . date('d',strtotime($data["ts"].' + '.$duration.' '.$periodicity.'s')) . "\"
-    month=\"" . date('m',strtotime($data["ts"].' + '.$duration.' '.$periodicity.'s')) . "\" ></at>
+    <at hour=\"" . date('H',$ts_data_new) . "\" min=\"" . date('i',$ts_data_new) . "\" day=\"" . date('d',$ts_data_new) . "\" month=\"" . date('m',$ts_data_new) . "\" ></at>
   </condition>
-  <actionlist>
+  <actionlist type=\"if-true\">
     <action type=\"script\">
-      <![CDATA[set(\"$objectlog\", \"$float_value\");
-      out = io.popen(\"php /var/www/knxweb2/replay.php?objectlog=$objectlog&duration=$duration&periodicity=$periodicity\");
+      <![CDATA[
+      set(\"$objectlog\", \"$float_value\");
+      out = io.popen(\"php $path_knxweb2/replay.php?objectlog=$objectlog&duration=$duration&periodicity=$periodicity\");
       out:close();]]>
     </action>
   </actionlist>
@@ -192,7 +196,7 @@ if (!$fp) {
 $result = "";
 $cmd = '<write><config><rules>'.$string_xml.'</rules></config></write>';
 // Envoi a linknx la modification de la rule
-//$result = knxsend($fp, $cmd);
+$result = knxsend($fp, $cmd);
 if ($result != "") echo "<textarea name='result' style='width:100%;' rows='30' wrap='off'>$result</textarea><br />";
 fclose($fp);
 
