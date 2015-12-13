@@ -181,7 +181,11 @@ if (isset($_GET["ajax"])) {
       $title_knxweb = $_config["title"];
 
     if (!isset($_GET['check'])) { // pas de check de fait donc on prend les valeur par défaut ou celles de la config existante 
-      if (!$_config["lang"]) $default_lang = 'en'; else $default_lang = $_config["lang"];
+      if (!$_config["lang"]) {
+        //$default_lang = 'en';
+        $default_lang = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $default_lang = strtolower(substr(chop($default_lang[0]),0,2));
+      } else $default_lang = $_config["lang"];
       if (!$_config["useJavaIfAvailable"]) $useJavaIfAvailable = "off"; else $useJavaIfAvailable = (($_config["useJavaIfAvailable"]=="true")?"on":"off");
       if (!$_config["superuser"]) $superuser = "off"; else $superuser = (($_config["superuser"]=="true")?"on":"off");
       if (!$_config["uitheme"]) $default_uitheme = 'cupertino'; else $default_uitheme = $_config["uitheme"];
@@ -220,29 +224,12 @@ if (isset($_GET["ajax"])) {
     <input type="hidden" name="check" value="yes">
 		<table class="ui-widget-content" style="border:none;" >
 			<tr>
-				<td>Linknx host</td>
-				<td><input type="text" name="linknx_host" value="<?php echo _get('linknx_host','127.0.0.1'); ?>" size="15"></td>
-			</tr>
-			<tr>
-				<td>Linknx port</td>
-				<td><input type="text" name="linknx_port" value="<?php echo _get('linknx_port',1028); ?>" size="4"></td>
-			</tr>
-      <tr><td colspan="2"><br /> </td></tr>
-      <tr><td colspan="2" id="titleknxweb" ></td></tr>
-      <tr>
 				<td>Title of HTML page of Knxweb</td>
 				<td>
           <input type="text" name="title_knxweb" value="<?php echo _get('title_knxweb',$title_knxweb); ?>" size="50">
         </td>
 			</tr>
-      <tr title="Use java applet to update objects value on display design if Java is installed on client">
-				<td>Use by default applet Java if available</td><!-- Use java applet to update objects value on display design if Java is installed on client -->
-				<td><input type="checkbox" name="useJavaIfAvailable" <?php echo ((_get('useJavaIfAvailable',$useJavaIfAvailable)==="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
-			</tr> 
-      <tr title="Use Event Source to update objects value on display design">
-				<td>Use Event Source if available on navigator</td>
-				<td><input type="checkbox" name="useEventSource" <?php echo ((_get('useEventSource',$useEventSource)==="on")?'checked="1"':""); ?>" > if supported by the WebServer (apache2) </td>
-			</tr>  
+      <tr><td colspan="2"><br /> </td></tr>
       <tr>
 				<td>Language</td>
 				<td>
@@ -254,10 +241,6 @@ if (isset($_GET["ajax"])) {
           </select>
         </td>
 			</tr>
-      <tr class="superuser">
-				<td></td>
-				<td><input type="checkbox" name="superuser" <?php echo ((_get('superuser',$superuser)==="on")?'checked="1"':""); ?>" >Super User</td>
-			</tr> 
       <tr>
 				<td>UI Theme</td>
 				<td>
@@ -268,6 +251,29 @@ if (isset($_GET["ajax"])) {
             <?php } ?>
           </select>
         </td>
+			</tr>
+      <tr><td colspan="2"><br /> </td></tr>
+			<tr><td colspan="2" id="titleknxweb" ></td></tr>
+      <tr>
+				<td>Linknx host</td>
+				<td><input type="text" name="linknx_host" value="<?php echo _get('linknx_host','127.0.0.1'); ?>" size="15"></td>
+			</tr>
+			<tr>
+				<td>Linknx port</td>
+				<td><input type="text" name="linknx_port" value="<?php echo _get('linknx_port',1028); ?>" size="4"></td>
+			</tr>
+      <tr><td colspan="2"><br /> </td></tr>
+      <!-- <tr title="Use java applet to update objects value on display design if Java is installed on client">
+				<td>Use by default applet Java if available</td>
+				<td><input type="checkbox" name="useJavaIfAvailable" <?php echo ((_get('useJavaIfAvailable',$useJavaIfAvailable)==="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
+			</tr> --> <!-- Use java applet to update objects value on display design if Java is installed on client -->
+      <tr title="Use Event Source to update objects value on display design">
+				<td>Use Event Source if available on navigator</td>
+				<td><input type="checkbox" name="useEventSource" <?php echo ((_get('useEventSource',$useEventSource)==="on")?'checked="1"':""); ?>" > if supported by the WebServer (apache2) </td>
+			</tr>
+      <tr class="superuser">
+				<td></td>
+				<td><input type="checkbox" name="superuser" <?php echo ((_get('superuser',$superuser)==="on")?'checked="1"':""); ?> >Super User</td>
 			</tr>
       <tr><td colspan="2"><br /> </td></tr>
       <tr>
