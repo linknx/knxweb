@@ -37,7 +37,7 @@ var afterSetExtremes = function(e, widget)
 
   var deferred_requests = [];
   for(var i=0; i<widget.curves.length; i++) {
-    var uri = 'http://knx.snaut.eu/knxweb2/widgets/charts/retrieve.php?objectlog=' + widget.curves[i].id
+    var uri = 'widgets/charts/retrieve.php?objectlog=' + widget.curves[i].id
     + '&start=' + Math.round(e.min) + '&end=' + Math.round(e.max) + '&valcount=' + c.chartWidth;
 //     console.log("i:", i, "scheduling detail retrieve", uri);
     widget.curves[i].ready = false;

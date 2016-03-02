@@ -26,13 +26,13 @@ function pgm_running($pgm)
     $pgm_running = exec('ps | grep '.$pgm.' | grep -v grep');
     if ($pgm_running!="") {
       /*$pgm_running_param = explode("$pgm ",$pgm_running);*/
-      $pgm_running_param = explode("$path_pgm",$pgm_running);
+      $pgm_running_param = explode("$path_pgm ",$pgm_running);
       $pgm_running_param = $pgm_running_param[1];
     } else {
       $pgm_running = exec('ps ax | grep '.$pgm.' | grep -v grep');
       if ($pgm_running!="") {
         /*$pgm_running_param = explode("$pgm ",$pgm_running);*/
-        $pgm_running_param = explode("$path_pgm",$pgm_running);
+        $pgm_running_param = explode("$path_pgm ",$pgm_running);
         $pgm_running_param = $pgm_running_param[1];
       } else {
         return false;

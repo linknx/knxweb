@@ -90,8 +90,11 @@ CCharts.prototype.refreshHTML = function() {
   for( var i = 0; i < 5; i++) {
     var curveData = {};
     curveData.id = this.conf.getAttribute("id" + i);
-
     curveData.libel = this.conf.getAttribute("libel" + i);
+    if (i == 0 && ! curveData.id ) {
+      curveData.id = this.conf.getAttribute("id");
+      curveData.libel = this.conf.getAttribute("libel");
+    }
     if (_editMode) {
       var libel = "";
       var id = curveData.id.replace(" ", "_");
