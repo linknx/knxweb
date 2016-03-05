@@ -52,6 +52,9 @@
   		{if ($it!="")}<span class="green">&nbsp;{l lang="en"}ACTIVE{/l}&nbsp;</span>{else}<span class="red">&nbsp;{l lang="en"}DESACTIVE{/l}&nbsp;</span>{/if}
     </td>
   	<td>
+  		{if ( file_exists('/etc/init.d/{$k}') )}<span onclick="queryKnxweb('restart&pgm={$k}','xml','','');" style="cursor: pointer;"><img src="images/refresh.gif" />&nbsp;{l lang="en"}Restart{/l} {$k}&nbsp;</span>{/if}
+    </td>
+  	<td>
   		<div class="codeadmin" {if ($it=='')} style="display: none;" {/if}>
   		{$it}
   		</div></td>

@@ -210,10 +210,10 @@ function switchTab(tab) {
 
 function readObjectValue(id)
 {
-	var value;
+	var value = '';
   var responseXML = queryLinknx('<read><object id="' + id + '"/></read>');
   if (responseXML) {
-    value = responseXML;
+    value = responseXML.textContent;
 	}
 	return value;
 }

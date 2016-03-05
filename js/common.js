@@ -509,7 +509,6 @@ function StringtoXML(text){
 function UpdateKnxWeb(){
   loading.show();
   var xmlResponse = queryKnxweb('updateknxweb', '', '', false);
-  //messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
   if (xmlResponse != false ) {
     if (xmlResponse.getAttribute('status') == 'success') {
       messageBox(tr("Info") + ": "+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Info'), 'check');
@@ -519,13 +518,13 @@ function UpdateKnxWeb(){
 		}
   } else messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
   loading.hide();
+  //window.location.reload()
   return true;
 };
 
 function UpdateKnxWebGit(){
   loading.show();
   var xmlResponse = queryKnxweb('updateknxwebgit', '', '', false);
-  //messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
   if (xmlResponse != false ) {
     if (xmlResponse.getAttribute('status') == 'success') {
       messageBox(tr("Info") + ": "+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Info'), 'check');
@@ -535,5 +534,6 @@ function UpdateKnxWebGit(){
 		}
   } else messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
   loading.hide();
+  //window.location.reload()
   return true;
 };

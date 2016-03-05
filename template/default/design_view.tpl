@@ -5,8 +5,9 @@
 		<meta name="google" value="notranslate">
 		<meta http-equiv="pragma" content="no-cache" />
 		<meta http-equiv="cache-control" content="no-cache, must-revalidate" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="user-scalable=no,width=device-width" />
+		<link rel="shortcut icon" type="image/png" href="favicon.png" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="user-scalable=no,width=device-width" />
 		
 		<title>{$_config.title}</title>
 		{foreach from=$cssList item=css}

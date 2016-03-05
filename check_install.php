@@ -28,38 +28,51 @@ $version_knxweb2 = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . '
  * pstree -a | grep eibd | grep -v grep => a priroi marche sur syno et PC
  *
  */  
-
-$eibd_running = exec('ps | grep eibd | grep -v grep');
-if ($eibd_running!="") {
-  $eibd_running_param = explode("eibd ",$eibd_running);
-  $eibd_running_param = $eibd_running_param[1];
-} else {
-  $eibd_running = exec('ps ax | grep eibd | grep -v grep');
-  if ($eibd_running!="") {
-    $eibd_running_param = explode("eibd ",$eibd_running);
-    $eibd_running_param = $eibd_running_param[1];
+function pgm_running($pgm)
+{
+  $path_pgm = exec('which '.$pgm);
+  if ($path_pgm!="") {
+    $pgm_running = exec('ps | grep '.$pgm.' | grep -v grep');
+    if ($pgm_running!="") {
+      /*$pgm_running_param = explode("$pgm ",$pgm_running);*/
+      $pgm_running_param = explode("$path_pgm ",$pgm_running);
+      return $pgm_running_param[1];
+    } else {
+      $pgm_running = exec('ps ax | grep '.$pgm.' | grep -v grep');
+      if ($pgm_running!="") {
+        /*$pgm_running_param = explode("$pgm ",$pgm_running);*/
+        $pgm_running_param = explode("$path_pgm ",$pgm_running);
+        return $pgm_running_param[1];
+      } else {
+        return false;
+      }
+    }
+    return $pgm_running_param;
   } else {
-    $eibd_running_param = $_config["eibd"];
+    return false;
   }
 }
-
-//$linknx_running = `ps ax | grep linknx | grep -v grep`;
-$linknx_running = exec('ps | grep linknx | grep -v grep');
-if ($linknx_running!="") {
-  $linknx_running_param = explode("linknx ",$linknx_running);
-  $linknx_running_param = $linknx_running_param[1];
-  $linknx_param_pos_w = (strpos($linknx_running_param, "-w") >= 0);
-} else {
-  $linknx_running = exec('ps ax | grep linknx | grep -v grep');
-  if ($linknx_running!="") {
-    $linknx_running_param = explode("linknx ",$linknx_running);
-    $linknx_running_param = $linknx_running_param[1];
-    $linknx_param_pos_w = (strpos($linknx_running_param, "-w") >= 0);
-  } else {
-    $linknx_running_param = $_config["linknx"];
-    $linknx_param_pos_w = false;
-  }
+$eibd_running = pgm_running("eibd");
+if ($eibd_running == false && $_config["eibd"]) $eibd_running = $_config["eibd"];
+if ($eibd_running !=  false) {
+// ajouter une ligne dans include/pgmrunning.php pour tester eibd
+  $path_pgm = exec('echo "<?php pgm_running("eibd"); ?'.'>" >> include/pgmrunning.php');
 }
+
+$knxd_running = pgm_running("knxd");
+if ($knxd_running == false && $_config["knxd"]) $eibd_running = $_config["knxd"];
+if ($knxd_running !=  false) {
+// ajouter une ligne dans include/pgmrunning.php pour tester knxd
+  $path_pgm = exec('echo "<?php pgm_running("knxd"); ?'.'>" >> include/pgmrunning.php');
+}
+
+$linknx_param_pos_w = false;
+$linknx_running = pgm_running("linknx");
+if ($linknx_running == false && $_config["linknx"]) {
+  $linknx_running = $_config["linknx"];
+}
+$linknx_param_pos_w = (strpos($linknx_running, "-w") >= 0);
+if (!$linknx_param_pos_w) $linknx_param_pos_w = (strpos($linknx_running, "-W") >= 0);
 
 if (isset($_GET["ajax"])) {
 	
@@ -135,17 +148,28 @@ if (isset($_GET["ajax"])) {
 				?>
 			</li>
     </ul>
-		Status EIBD/Linknx : <br />
-    <ul>
+		Status : <br />
+    <ul><?php
+        if ($eibd_running!="") { ?>
       <li>
-				<strong>EIBD</strong> is ACTIVE :
-        <?php
-        if ($eibd_running!="") echo '<span style="color: #00FF00">ok</span>'; 
-				else {
-					echo "<span style='color: #FF0000'>no</span> => for start exemple : <i>eibd -d -D -S -T -i ipt:192.168.1.10:3671</i> ";
-					//$error=true;
-				} ?>
-			</li>
+        <strong>EIBD</strong> is ACTIVE :
+        <span style="color: #00FF00">ok</span>
+      </li>
+      <?php
+        } else if ($knxd_running!="") { ?>
+      <li>
+        <strong>Knxd</strong> is ACTIVE :
+        <span style="color: #00FF00">ok</span>
+      </li>
+      <?php
+        } else { ?>
+
+      <li>
+        <strong>EIBD or Knxd</strong> is ACTIVE :
+        <span style='color: #FF0000'>no</span> => for exemple start eibd like this : <i>eibd -d -D -S -T -i ipt:192.168.1.10:3671</i>
+      </li>
+      <?php
+        } ?>
       <li>
 				<strong>Linknx</strong> is ACTIVE :
         <?php
@@ -281,11 +305,24 @@ if (isset($_GET["ajax"])) {
 				<td>
           <?php if ($eibd_running!="") { ?>
             <span class="green">&nbsp;ACTIVE&nbsp;</span>
-            <input type="hidden" name="eibd_param" value="<?=_get('eibd_param',$eibd_running_param)?>">
-            <input type="text" value="<?=_get('eibd_param',$eibd_running_param)?>" size="50" disabled="true">
+            <input type="hidden" name="eibd_param" value="<?=_get('eibd_param',$eibd_running)?>">
+            <input type="text" value="<?=_get('eibd_param',$eibd_running)?>" size="50" disabled="true">
           <?php } else { ?>
             <span class="red">&nbsp;DESACTIVE&nbsp;</span>
-            <input type="text" name="eibd_param" value="<?=_get('eibd_param',$eibd_running_param)?>" size="50">
+            <input type="text" name="eibd_param" value="<?=_get('eibd_param',$eibd_running)?>" size="50">
+          <?php } ?>
+        </td>
+			</tr>
+      <tr>
+				<td>Knxd</td>
+				<td>
+          <?php if ($knxd_running!="") { ?>
+            <span class="green">&nbsp;ACTIVE&nbsp;</span>
+            <input type="hidden" name="eibd_param" value="<?=_get('eibd_param',$knxd_running)?>">
+            <input type="text" value="<?=_get('eibd_param',$knxd_running)?>" size="50" disabled="true">
+          <?php } else { ?>
+            <span class="red">&nbsp;DESACTIVE&nbsp;</span>
+            <input type="text" name="eibd_param" value="<?=_get('eibd_param',$knxd_running)?>" size="50">
           <?php } ?>
         </td>
 			</tr>
@@ -294,11 +331,11 @@ if (isset($_GET["ajax"])) {
         <td>
           <?php if ($linknx_running!="") { ?>
             <span class="green">&nbsp;ACTIVE&nbsp;</span>
-            <input type="hidden" name="linknx_param" value="<?=_get('linknx_param',$linknx_running_param)?>">
-            <input type="text" value="<?=_get('linknx_param',$linknx_running_param)?>" size="50" disabled="true">
+            <input type="hidden" name="linknx_param" value="<?=_get('linknx_param',$linknx_running)?>">
+            <input type="text" value="<?=_get('linknx_param',$linknx_running)?>" size="50" disabled="true">
           <?php } else { ?>
             <span class="red">&nbsp;DESACTIVE&nbsp;</span>
-            <input type="text" name="linknx_param" value="<?=_get('linknx_param',$linknx_running_param)?>" size="50">
+            <input type="text" name="linknx_param" value="<?=_get('linknx_param',$linknx_running)?>" size="50">
           <?php } ?>
         </td>
 			</tr>
@@ -319,7 +356,8 @@ if (isset($_GET["ajax"])) {
       };
 			
 			$("#checkLinknxButton").button();
-      $("#titleknxweb").html("KnxWeb use Jquery " + $().jquery + " and Jquery-Ui " + $.ui.version );
+      //$("#titleknxweb").html("KnxWeb use Jquery " + $().jquery + " and Jquery-Ui " + $.ui.version );
+      $("#titleknxweb").html("KnxWeb use Jquery and Jquery-Ui ");
       $("#showsuperuser").dblclick( function() { $('.superuser').show();});
 		</script>
 <?php
@@ -349,6 +387,7 @@ if (isset($_GET["ajax"])) {
 					$_SESSION['haveMysql']=($info["haveMysql"]==1)?"true":"false";
           $_SESSION['linknx_param']=$_GET['linknx_param'];
           $_SESSION['eibd_param']=$_GET['eibd_param'];
+          $_SESSION['knxd_param']=$_GET['knxd_param'];
           $_SESSION['useJavaIfAvailable']=($_GET['useJavaIfAvailable']=="on")?"true":"false";
           $_SESSION['lang']=$_GET['lang'];
           $_SESSION['title_knxweb']=$_GET['title_knxweb'];
@@ -402,6 +441,7 @@ if (isset($_GET["ajax"])) {
   <defaultMobileDesign>default</defaultMobileDesign> <!-- version et design par défaut de la visu \"Mobile\" -->
   <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu \"Mobile\" -->
   <eibd>" . $_SESSION['eibd_param'] . "</eibd> <!-- paramètres d'appel de eibd exemple : ft12:/dev/ttyS0 ou -d -D -S -T -i ipt:192.168.1.10:3671 -->
+  <knxd>" . $_SESSION['knxd_param'] . "</knxd> <!-- paramètres d'appel de knxd -->
   <linknx>" . $_SESSION['linknx_param'] . "</linknx> <!-- paramètres d'appel de linknx -->
   <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx> <!-- type de log de linknx file/mysql/null -->
   <imageDir>" . $_config["imageDir"] . "</imageDir> <!-- chemin d'accès aux images -->
