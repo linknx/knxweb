@@ -1,4 +1,5 @@
 //var i18n = [];
+if (!i18n) var i18n = [];
 if (tab_config['lang'] == 'de')
 {
   i18n['January'] = 'Januar';

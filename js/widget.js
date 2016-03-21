@@ -101,6 +101,7 @@ CWidget.prototype = {
 			this.div.css('height', defaultWidgetGridWidth);
 		} else if (this.isResizable) this.div.css('height', height);
 		
+    if (this.conf.getAttribute("class")) this.div.addClass(this.conf.getAttribute("class"));
 		this.div.css('display', 'block');
 	},
 	
