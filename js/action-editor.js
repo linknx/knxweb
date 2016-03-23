@@ -420,7 +420,6 @@ jQuery(function($) {
 			buttons: [
           { text: tr("Ok"), click: function() {
 					actionEditor.processCloseDialog($(this));
-					actionEditor.subPageObjects= [ ];
 					$( this ).dialog( "close" );
           } },
           { text: tr("Cancel"), click: function() { 
