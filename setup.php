@@ -78,14 +78,18 @@ tpl()->assignByRef("lang",$lang);
   $MAJ_knxweb2 = ( $version_cvs > $version ); 
   } else $MAJ_knxweb2 = false;
 
-  $version_knxweb2_git = @file_get_contents('https://raw.githubusercontent.com/linknx/knxweb/master/version', false, $context);
+
+  if (file_exists("dev")) {
+    $version_knxweb2_git = @file_get_contents('https://raw.githubusercontent.com/linknx/knxweb/dev/version', false, $context);
+  } else {
+    $version_knxweb2_git = @file_get_contents('https://raw.githubusercontent.com/linknx/knxweb/master/version', false, $context);
+  }
   if ($version_knxweb2_git) {
   $tab_version_git = explode(".", $version_knxweb2_git);
   $version_git = $tab_version_git[0] * 100 + $tab_version_git[1] * 10 + $tab_version_git[2];
   $MAJ_knxweb2_git = ( $version_git > $version );
   } else $MAJ_knxweb2_git = false;
 
-$MAJ_knxweb2_git = true; // TODO a enlever ...
 
 /* /version on cvs sourceforge */
 

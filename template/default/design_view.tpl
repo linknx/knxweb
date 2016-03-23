@@ -16,6 +16,7 @@
 		<script type="text/javascript" >
 		var tab_config = {$_config|json_encode};
 		var _widgets = {$widgets|json_encode};
+    var i18n = {$_lang|json_encode};
 		</script>
 		{foreach from=$jsList item=js}
 		<script type="text/javascript" src="{$js}"></script>

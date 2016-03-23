@@ -20,7 +20,7 @@
 		<th>{l lang='en'}Id{/l}</th>
 		<td>
 			<input id="edit-object-id" name="edit-object-id" class="required" size="25" type="text"><br />
-      <span style="color: #F00;">{l lang='en'}for Id use only alphanumeric characters, - , _ , and NO SPACES{/l}</span>
+      <span style="color: #F00;">{l lang='en'}for Id use only alphanumeric characters, - , _ , . and NO SPACES{/l}</span>
 		</td>
 	</tr>
 	<tr>

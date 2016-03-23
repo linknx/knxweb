@@ -518,7 +518,6 @@ function UpdateKnxWeb(){
 		}
   } else messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
   loading.hide();
-  //window.location.reload()
   return true;
 };
 
@@ -534,6 +533,5 @@ function UpdateKnxWebGit(){
 		}
   } else messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
   loading.hide();
-  //window.location.reload()
   return true;
 };

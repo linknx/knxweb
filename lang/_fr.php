@@ -107,7 +107,7 @@ $_lang['False'] = 'Faux';
 $_lang['file'] = 'fichier';
 $_lang['Flags'] = 'Flags';
 $_lang['Flow'] = 'Flux';
-$_lang['for Id use only alphanumeric characters, - , _ , and NO SPACES'] = 'pour l\'Id utiliser uniquement des charactères alphanumérique , - , _ , et AUCUN ESPACE';
+$_lang['for Id use only alphanumeric characters, - , _ , . and NO SPACES'] = 'pour l\'Id utiliser uniquement des charactères alphanumérique , - , _ , . et AUCUN ESPACE';
 $_lang['Format of the logs'] = 'Format de la Log';
 $_lang['Formula : object'] = 'Formule : objet';
 $_lang['Framing'] = 'Encadrement';
@@ -451,6 +451,14 @@ $_lang['List of rules'] = 'Liste des règles';
 $_lang['Execute "True" Actions'] = 'Exécuter les actions de type \'Vrai\'';
 $_lang['Execute "False" Actions'] = 'Exécuter les actions de type \'Faux\'';
 $_lang['Hide'] = 'Cacher';
+
+$_lang['Open color picker'] = 'Ouvrir sélecteur de couleur';
+$_lang['Open images manager'] = 'Ouvrir gestionnaires d\'images';
+
+$_lang['EIS Datatype'] = 'EIS Datatype';
+$_lang['All objects'] = 'Tous les objets';
+$_lang['Use sub-page parameter'] = 'Utilisez un paramètre de la sous-page';
+
 /*             
 $_lang[''] = '';
 */
