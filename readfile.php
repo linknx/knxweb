@@ -23,6 +23,22 @@ et
 
 require_once("include/linknx.php");
 
+$callback = @$_GET['callback'];
+if ($callback && !preg_match('/^[a-zA-Z0-9_]+$/', $callback)) {
+  die('Invalid callback name');
+}
+/*
+$start = @$_GET['start'];
+if ($start && !preg_match('/^[0-9]+$/', $start)) {
+  die("Invalid start parameter: $start");
+}
+$end = @$_GET['end'];
+if ($end && !preg_match('/^[0-9]+$/', $end)) {
+  die("Invalid end parameter: $end");
+}
+if (!$end) $end = time() * 1000;
+*/
+
 $_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
 unset($_config['comment']);
 
@@ -234,7 +250,8 @@ switch ($_GET['output'])
 {
   case 'json':
     header('Content-Type: application/json');
-    print(json_encode($result_tab));
+    if ($callback)  echo $callback."(".json_encode($result_tab).");";
+    else  print(json_encode($result_tab));
     break;
   case 'html':
     header("Content-type: text/plain; charset=utf-8");
