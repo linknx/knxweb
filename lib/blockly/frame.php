@@ -31,14 +31,12 @@ initLang2();
   <script type="text/javascript" src="blockly_compressed.js"></script>
   <script type="text/javascript" src="javascript_compressed.js"></script>
   <script type="text/javascript" >
-    function tr(p) { return p; }
     try {
       jQuery = window.parent.jQuery;
       $ = window.parent.$;
       loading = window.parent.loading;
       window.parent.frameRulev2 = window;
-    }
-    catch (ex) {
+    } catch (ex) {
       console.error("externe", ex.message);
     }
     var i18n = <?php echo json_encode($_lang); ?>;

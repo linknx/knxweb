@@ -203,7 +203,7 @@ $_lang['Remove sub-page'] = 'Supprimer la Sous-page';
 $_lang['Remove zone'] = 'Supprimer la zone';
 $_lang['Remove'] = 'Supprimer';
 $_lang['request (read from bus)'] = 'requête (lecture depuis le bus)';
-$_lang['reset-delay'] = 'réinitialiser le delay';
+$_lang['reset-delay'] = 'réinitialiser le délais';
 $_lang['rts-cts'] = 'rts-cts';
 $_lang['Rule on "Init" value'] = 'Règle évaluée au démarrage de linknx';
 $_lang['Rule'] = 'Règle';
@@ -443,7 +443,6 @@ $_lang['Select a plugin'] = 'Choisissez un plugin';
 $_lang['Choose a rule'] = 'Choisissez une règle';
 $_lang['Choose an IO-Port'] = 'Choisissez un IO-Port';
 $_lang['Choose a Plugin'] = 'Choisissez un Plugin';
-$_lang['Choose an IO-Port'] = 'Choisissez un IO-Port';
 $_lang['No Rule'] = 'Aucune Règle';
 $_lang['No IO-Port'] = 'Aucun IO-Port';
 
@@ -458,6 +457,66 @@ $_lang['Open images manager'] = 'Ouvrir gestionnaires d\'images';
 $_lang['EIS Datatype'] = 'EIS Datatype';
 $_lang['All objects'] = 'Tous les objets';
 $_lang['Use sub-page parameter'] = 'Utilisez un paramètre de la sous-page';
+
+/* rules v2 */
+$_lang['trigger'] = 'déclencheur';
+
+$_lang['if-true'] = 'if-true';
+$_lang['A rule'] = 'Une règle';
+$_lang['actions'] = 'actions';
+$_lang['AND'] = 'ET';
+$_lang['Cancel rule'] = 'Annule la règle';
+$_lang['Condition OR or AND'] = 'Condition OU ou ET';
+$_lang['Conditional'] = 'Conditionné';
+$_lang['count'] = 'compte';
+$_lang['Cycle-on-off on/off nb time until count'] = 'Cycle-on-off on/off nb time until count';
+$_lang['date object'] = 'objet date';
+$_lang['day'] = 'jour';
+$_lang['delay'] = 'délais';
+$_lang['Dim-up'] = 'Dim-up';
+$_lang['duration'] = 'durée';
+$_lang['Email to'] = 'Email à';
+$_lang['FALSE'] = 'FAUX';
+$_lang['Formula'] = 'Formule';
+$_lang['Hexa'] = 'Hexa';
+$_lang['hour'] = 'heure';
+$_lang['hour : minute'] = 'heure : minute';
+$_lang['if'] = 'si';
+$_lang['if-false'] = 'si-faux';
+$_lang['Io-Port'] = 'Io-Port';
+$_lang['List of Objects'] = 'Liste d\'objets';
+$_lang['minute'] = 'minute';
+$_lang['month'] = 'mois';
+$_lang['noon'] = 'le midi';
+$_lang['NOT'] = 'NON';
+$_lang['Not Use'] = 'Non utilisé';
+$_lang['object'] = 'objet';
+$_lang['offset'] = 'offset';
+$_lang['on-false'] = 'on-faux';
+$_lang['on-true'] = 'on-vrai';
+$_lang['OR'] = 'OU';
+$_lang['Reapeat period :'] = 'Periode de répétition :';
+$_lang['Send Read Request to'] = 'Envoyer une requête de lecture à';
+$_lang['Set'] = 'Set';
+$_lang['SET object or value to an object and delay if you want'] = 'SET object or value to an object and delay if you want';
+$_lang['Shell command'] = 'commande Shell';
+$_lang['SMS to'] = 'SMS à';
+$_lang['start'] = 'démarrer';
+$_lang['Start actionlist'] = 'Start actionlist';
+$_lang['stop'] = 'stop';
+$_lang['Stop condition'] = 'condition d\'arrêt';
+$_lang['string value (on, off, 0, 1 ...)'] = 'valeur de la chaîne (on, off, 0, 1 ...)';
+$_lang['Time Counter : threshold'] = 'Compteur de temps : seuil';
+$_lang['time object'] = 'objet heure';
+$_lang['to Io-Port'] = 'pour l\'Io-Port';
+$_lang['Toggle'] = 'Basculer';
+$_lang['TRUE'] = 'VRAI';
+$_lang['WeekDays'] = 'Jours de la semaine';
+$_lang['year'] = 'année';
+$_lang['Choose an object date'] = 'Choisissez un objet date';
+$_lang['Choose an object time'] = 'Choisissez un objet heure';
+
+
 
 /*             
 $_lang[''] = '';
