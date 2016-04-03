@@ -866,7 +866,10 @@ div.subpagedialog {
 	background-color: #DEEDF7;
 }
 
-
+.widget:hover {
+  margin: -1px;
+  border: 1px solid #0070A3;
+}
 /***************** /Design ********************/
 
 /***************** SubPages ********************/
@@ -1315,3 +1318,5 @@ html.knm {
 }                                       
 /***************** /Plugins  ********************/
 .goog-menu-vertical {overflow:scroll; max-height:100px;overflow-x:hidden;}
+/* grossir la croix pour les dialogs pour les écran tactile elle est petite pour les subpages */
+.ui-dialog .ui-dialog-titlebar-close {zoom: 1.5;}
