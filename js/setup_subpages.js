@@ -443,16 +443,18 @@ var subpages = {
 		    {
 			    var input=$('<input type="checkbox">');
 			    input.get(0).paramId=this.id;
-			    input.attr('title','Use sub-page parameter');
+			    input.attr('title',tr('Use sub-page parameter'));
 			    if (isSubPageParameter) input.attr('checked',1);
 			    input.click(function() {
 			    	if ($(this).is(':checked'))
 			    	{
 							$('[name=' + this.paramId + ']', $(this).parent().parent()).css("display","none");
+							$('[id=' + this.paramId + ']', $(this).parent().parent()).css("display","none");
 							$('[name=_' + this.paramId + ']', $(this).parent().parent()).css("display","block");
 			    	} else
 		    		{
 							$('[name=_' + this.paramId + ']', $(this).parent().parent()).css("display","none");
+							$('[id=' + this.paramId + ']', $(this).parent().parent()).css("display","");
 							$('[name=' + this.paramId + ']', $(this).parent().parent()).css("display","block");
 		    		}
 
@@ -511,6 +513,82 @@ var subpages = {
 		    // Object setting
 		    if (this.type=="object")
 		    {
+	        var optname = this.id+'_eis_filter'
+
+          var only_type = [];
+          var exlude_type = [];
+          if (this.eis_type) {
+            only_type = [this.eis_type];
+          } else if (this.only_type) {
+            only_type = this.only_type.split(',');
+            exlude_type = [];
+            if (array_search( "1.001", only_type )!=-1) {
+              only_type.push('1.002','1.003','1.004','1.005','1.006','1.007','1.008','1.009','1.010','1.011','1.012','1.013','1.014');
+              only_type.push('2.001','2.002','2.003','2.004','2.005','2.006','2.007','2.008','2.009','2.010','2.011','2.012');
+            }
+            if (array_search( "3.007", only_type )!=-1) {
+              only_type.push('3.008');
+            }
+            if (array_search( "5.xxx", only_type )!=-1) {
+              only_type.push('5.001','5.003','5.010');
+            }
+            if (array_search( "9.xxx", only_type )!=-1) {
+              only_type.push('9.001','9.002','9.003','9.004','9.005','9.006','9.007','9.008','9.010','9.011','9.020','9.021','9.022','9.023','9.024','9.025','9.026','9.027','9.028');
+            }
+          }
+
+          if (this.exlude_type) {
+            exlude_type = this.exlude_type.split(',');
+            if (array_search( "1.001", exlude_type )!=-1) {
+              exlude_type.push('1.002','1.003','1.004','1.005','1.006','1.007','1.008','1.009','1.010','1.011','1.012','1.013','1.014');
+              exlude_type.push('2.001','2.002','2.003','2.004','2.005','2.006','2.007','2.008','2.009','2.010','2.011','2.012');
+            }
+            if (array_search( "3.007", exlude_type )!=-1) {
+              exlude_type.push('3.008');
+            }
+            if (array_search( "5.xxx", exlude_type )!=-1) {
+              exlude_type.push('5.001','5.003','5.010');
+            }
+            if (array_search( "9.xxx", exlude_type )!=-1) {
+              exlude_type.push('9.001','9.002','9.003','9.004','9.005','9.006','9.007','9.008','9.010','9.011','9.020','9.021','9.022','9.023','9.024','9.025','9.026','9.027','9.028');
+            }
+          }
+      		if (this.eis_type == undefined)
+      		{
+      			var table_tr_filter=$('<tr>');
+      			//table_tr_filter.append($('<th>' + this.label+"'s EIS Datatype" + '</th>'));
+            table_tr_filter.append('<th>' + tr("EIS Datatype") + '</th><th  style="width: 15px;"></th>');
+      			var td_filter=$('<td>');
+      			if (only_type.length)
+      			{
+      				select=$('<span>'+only_type.join(", ")+'</span>');
+      			} else {
+      				select=$('<select>');
+      				select.attr('name', optname);
+      				select.append("<option value=''>" + tr("All objects") + "</option>");
+      				$.each(tab_objectTypes, function(key, descr) {
+      					var option='<option value="' + key + '"';
+      					if ( array_search( key, exlude_type ) != -1 ) option= option + ' disabled="disabled"';
+      					else if (o.conf.getAttribute(optname)==key) option= option + ' selected="selected"';
+                option=option + '>' + descr + '</option>';
+      					select.append(option);
+      				});
+      			}
+      			td_filter.append(select);
+      			table_tr_filter.append(td_filter);
+            $("#tab-subpages-widget-properties tbody").append(table_tr_filter);
+      			var t = this;
+      			select.change( function() {
+      					filter_type = $(this).val();
+      					o.conf.setAttribute(optname, filter_type);
+      					var selectedWidget=$("#widgetdiv .selected").get(0);
+      					design.displayProperties(selectedWidget.owner);
+      			});
+            if (isSubPageParameter) select.css('display','none');
+      		}
+          // end EIS filter
+
+
 		    	select=$('<select>');
 		    	select.attr('name', this.id);
 
@@ -575,7 +653,6 @@ var subpages = {
                 // add placeholder to get the comma-and-space at the end
                 terms.push( "" );
                 this.value = terms.join( ", " );
-                //this.value = terms.join( "|" ); // le séparateur doit être en lien avec la fonction "split( val )" définie plus bas
                 return false;
               }
             });
@@ -604,22 +681,29 @@ var subpages = {
 		    // Picture setting
 		    if (this.type=="picture")
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + ((!isSubPageParameter)?value:"") + '">')); //o.conf.getAttribute(this.id)
-					input.click(function() {
-						openImagesManager($(this));
-					});
+					var input=($('<input type="text" style="width: 75%;" name="' + this.id + '" value="' + ((!isSubPageParameter)?value:"") + '">')); //o.conf.getAttribute(this.id)
 	    		if (isSubPageParameter) input.css('display','none');
 		    	td.append(input);
+          var openimages=($('<div id="' + this.id + '" style="width: 20%;">'+tr('Open images manager')+'</div>'));
+          openimages.button({ icons: {	primary: "ui-icon-folder-open" }, text: false }).removeClass('ui-button-text-icon-primary');
+          openimages.click(function() {
+						openImagesManager(input);
+					});
+          if (isSubPageParameter) openimages.css('display','none');
+		    	td.append(openimages);
 		  	}
 
 		    // Color setting
 		    if (this.type=="color")
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + value + '">'));
-					input.click(function() {
-						openColorPicker($(this));
-					});
+					var input=($('<input type="text" style="width: 75%;" name="' + this.id + '" value="' + value + '">'));
 		    	td.append(input);
+          var opencolor=($('<div id="' + this.id + '" style="width: 20%;">'+tr('Open color picker')+'</div>'));
+          opencolor.button({ icons: {	primary: "ui-icon-pencil" }, text: false }).removeClass('ui-button-text-icon-primary');
+          opencolor.click(function() {
+						openColorPicker(input);
+					});
+		    	td.append(opencolor);
 		  	}
 
 		    // Action setting
@@ -659,7 +743,7 @@ var subpages = {
 		    	select.attr('name', this.id);
 		    	select.attr('disabled', '1');
 
-	    		var option=($('<option value="">Execute action</option>'));
+	    		var option=($('<option value="">'+tr('Go to zone')+'</option>'));
 	    		select.append(option);
 
 		    	td.append(select);

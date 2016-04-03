@@ -576,7 +576,7 @@ var design = {
 		    // Object setting
 		    if (this.type=="object")
 		    {
-	var optname = this.id+'_eis_filter'
+	        var optname = this.id+'_eis_filter'
 
           var only_type = [];
           var exlude_type = [];
@@ -585,85 +585,103 @@ var design = {
           } else if (this.only_type) {
             only_type = this.only_type.split(',');
             exlude_type = [];
-            if (array_search( "1.001", only_type )==-1) {
-              only_type.push(['1.002','1.003','1.004','1.005','1.006','1.007','1.008','1.009','1.010','1.011','1.012','1.013','1.014']);
+            if (array_search( "1.001", only_type )!=-1) {
+              only_type.push('1.002','1.003','1.004','1.005','1.006','1.007','1.008','1.009','1.010','1.011','1.012','1.013','1.014');
+              only_type.push('2.001','2.002','2.003','2.004','2.005','2.006','2.007','2.008','2.009','2.010','2.011','2.012');
+            }
+            if (array_search( "3.007", only_type )!=-1) {
+              only_type.push('3.008');
+            }
+            if (array_search( "5.xxx", only_type )!=-1) {
+              only_type.push('5.001','5.003','5.010');
+            }
+            if (array_search( "9.xxx", only_type )!=-1) {
+              only_type.push('9.001','9.002','9.003','9.004','9.005','9.006','9.007','9.008','9.010','9.011','9.020','9.021','9.022','9.023','9.024','9.025','9.026','9.027','9.028');
             }
           }
 
           if (this.exlude_type) {
             exlude_type = this.exlude_type.split(',');
-            if (array_search( "1.001", exlude_type )==-1) {
-              exlude_type.push(['1.002','1.003','1.004','1.005','1.006','1.007','1.008','1.009','1.010','1.011','1.012','1.013','1.014']);
+            if (array_search( "1.001", exlude_type )!=-1) {
+              exlude_type.push('1.002','1.003','1.004','1.005','1.006','1.007','1.008','1.009','1.010','1.011','1.012','1.013','1.014');
+              exlude_type.push('2.001','2.002','2.003','2.004','2.005','2.006','2.007','2.008','2.009','2.010','2.011','2.012');
+            }
+            if (array_search( "3.007", exlude_type )!=-1) {
+              exlude_type.push('3.008');
+            }
+            if (array_search( "5.xxx", exlude_type )!=-1) {
+              exlude_type.push('5.001','5.003','5.010');
+            }
+            if (array_search( "9.xxx", exlude_type )!=-1) {
+              exlude_type.push('9.001','9.002','9.003','9.004','9.005','9.006','9.007','9.008','9.010','9.011','9.020','9.021','9.022','9.023','9.024','9.025','9.026','9.027','9.028');
             }
           }
-		if (this.eis_type == undefined)
-		{
-			var table_tr_filter=$('<tr>');
-			table_tr_filter.append($('<th>' + this.label+"'s EIS Datatype" + '</th>'));
-			var td_filter=$('<td>');
-			if (only_type.length)
-			{
-				select=$('<span>'+only_type.join(", ")+'</span>');
-			} else {
-				select=$('<select>');
-				select.attr('name', this.id);
-				var option=($('<option value=""></option>'));
-				select.append(option);
+      		if (this.eis_type == undefined)
+      		{
+      			var table_tr_filter=$('<tr>');
+      			//table_tr_filter.append($('<th>' + this.label+"'s EIS Datatype" + '</th>'));
+            table_tr_filter.append('<th>' + tr("EIS Datatype") + '</th>');
+      			var td_filter=$('<td>');
+      			if (only_type.length)
+      			{
+      				select=$('<span>'+only_type.join(", ")+'</span>');
+      			} else {
+      				select=$('<select>');
+      				select.attr('name', optname);
+      				select.append("<option value=''>" + tr("All objects") + "</option>");
+      				$.each(tab_objectTypes, function(key, descr) {
+      					var option='<option value="' + key + '"';
+      					if ( array_search( key, exlude_type ) != -1 ) option= option + ' disabled="disabled"';
+      					else if (o.conf.getAttribute(optname)==key) option= option + ' selected="selected"';
+                option=option + '>' + descr + '</option>';
+      					select.append(option);
+      				});
+      			}
+      			td_filter.append(select);
+      			table_tr_filter.append(td_filter);
+      			$("#tab-design-widget-properties tbody").append(table_tr_filter);
+      			var t = this;
+      			select.change( function() {
+      					filter_type = $(this).val();
+      					o.conf.setAttribute(optname, filter_type);
+      					var selectedWidget=$("#widgetdiv .selected").get(0);
+      					design.displayProperties(selectedWidget.owner);
+      			});
+      		}
 
-				select=$('<select>');
-				select.attr('name', optname);
-				select.append($("<option value=''></option>"));
-				$.each(tab_objectTypes, function(key, descr) {
-					var option=($('<option value="' + key + '">' + descr + '</option>'));
-					if ( array_search( key, exlude_type ) != -1 )
-						option.attr('disabled','1');
-					else if (o.conf.getAttribute(optname)==key) option.attr('selected','1');
-					select.append(option);
-				});
-			}
-			td_filter.append(select);
-			table_tr_filter.append(td_filter);
-			$("#tab-design-widget-properties tbody").append(table_tr_filter);
-			var t = this;
-			select.change( function() {
-					filter_type = $(this).val();
-					o.conf.setAttribute(optname, filter_type);
-					var selectedWidget=$("#widgetdiv .selected").get(0);
-					design.displayProperties(selectedWidget.owner);
-			});
-		}
+      		select=$('<select>');
+      		select.attr('name', this.id);
+          //select.append('<option value="">' + tr("All objects") + '</option>');
+          select.append('<option value=""></option>');
 
-		select=$('<select>');
-		select.attr('name', this.id);
-		var option=($('<option value=""></option>'));
-		select.append(option);
-
-		if ( o.conf.getAttribute(optname) ) {
-			only_type = [o.conf.getAttribute(optname)];
-		}
+      		if ( o.conf.getAttribute(optname) ) {
+      			only_type = [o.conf.getAttribute(optname)];
+      		}
           if (only_type.length > 0) {
             var prev_groups=["","",""];
-					$('object', _objects).each(function() {
-            if (array_search( this.getAttribute('type'), only_type )!=-1 ){
-                var groups = this.getAttribute('id').split(':');
-                if ( groups.length == 3 && ( groups[0] != prev_groups[0] || groups[1] != prev_groups[1] ) ) {
-                  var grouplabel = groups[0] + ':' + groups[1];
-                  select.append("<optgroup label='" + grouplabel + "'>");
-                  prev_groups = groups;
-                }
-		    		var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) +' (' + this.getAttribute('type') + ')</option>'));
-		    		if (this.getAttribute('id')==value) option.attr('selected','1');
-		    		select.append(option);
-            }
-					});
+  					$('object', _objects).each(function() {
+              if (array_search( this.getAttribute('type'), only_type )!=-1 ){
+                  var groups = this.getAttribute('id').split(':');
+                  if ( groups.length == 3 && ( groups[0] != prev_groups[0] || groups[1] != prev_groups[1] ) ) {
+                    var grouplabel = groups[0] + ':' + groups[1];
+                    select.append("<optgroup label='" + grouplabel + "'>");
+                    prev_groups = groups;
+                  }
+  		    		var option='<option value="' + this.getAttribute('id') + '"';
+  		    		if (this.getAttribute('id')==value) option= option + ' selected="selected"';
+              option= option + '>' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) +' (' + this.getAttribute('type') + ')</option>';
+  		    		select.append(option);
+              }
+  					});
           } else {
-					$('object', _objects).each(function() {
-            if (array_search( this.getAttribute('type'), exlude_type )==-1 ){
-		    		var option=($('<option value="' + this.getAttribute('id') + '">' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) +' (' + this.getAttribute('type') + ')</option>'));
-		    		if (this.getAttribute('id')==value) option.attr('selected','1');
-		    		select.append(option);
-            }
-					});
+  					$('object', _objects).each(function() {
+              if (array_search( this.getAttribute('type'), exlude_type )==-1 ){
+  		    		var option='<option value="' + this.getAttribute('id') + '"';
+  		    		if (this.getAttribute('id')==value) option= option + ' selected="selected"';
+              option= option + '>' + ((this.textContent=="")?this.getAttribute('id'):this.textContent) +' (' + this.getAttribute('type') + ')</option>';
+  		    		select.append(option);
+              }
+  					});
           }
 		    	td.append(select);
 		  	}
@@ -745,11 +763,20 @@ var design = {
 		    // Picture setting
 		    if (this.type=="picture")
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + value + '">'));
+					/*var input=($('<input type="text" name="' + this.id + '" value="' + value + '">'));
 					input.click(function() {
 						openImagesManager($(this));
 					});
-		    	td.append(input);
+		    	td.append(input);*/
+		    	td.append('<input type="text" style="width: 75%;" name="' + this.id + '" value="' + value + '">');
+
+
+          var openimages=($('<div style="width: 20%;">'+tr('Open images manager')+'</div>'));
+          openimages.button({ icons: {	primary: "ui-icon-folder-open" }, text: false }).removeClass('ui-button-text-icon-primary');
+          openimages.click(function() {
+						openImagesManager(input);
+					});
+		    	td.append(openimages);
 		  	}
 
 		    // Subpage setting
@@ -1018,16 +1045,6 @@ function split( val ) {
 }
 function extractLast( term ) {
   return split( term ).pop();
-}
-
-function array_search(what, where) {
-  var index_du_tableau=-1;
-  for(elt in where) {
-    index_du_tableau++;
-    if (where[elt]==what) { return index_du_tableau }
-  }
-  index_du_tableau=-1;
-  return index_du_tableau;
 }
 
 jQuery(function($) {

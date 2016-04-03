@@ -6,6 +6,16 @@ var colorPickerInput=null;
 var _superuser=(tab_config['superuser']=="true")?true:false;
 var _designeditview = false;
 
+function array_search(what, where) {
+  var index_du_tableau=-1;
+  for(elt in where) {
+    index_du_tableau++;
+    if (where[elt]==what) { return index_du_tableau }
+  }
+  index_du_tableau=-1;
+  return index_du_tableau;
+}
+
 jQuery(document).ready(function(){
 
 	$("#leftMenu").accordion({
