@@ -4,7 +4,7 @@ jQuery(function($) {
     modal: true,
     autoOpen: false,
     width: 920,
-    title: ('Charts')
+    title: tr('Charts')
   });
 
   Highcharts.setOptions({
@@ -37,7 +37,7 @@ var afterSetExtremes = function(e, widget)
 
   var deferred_requests = [];
   for(var i=0; i<widget.curves.length; i++) {
-    var uri = 'widgets/charts/retrieve.php?objectlog=' + widget.curves[i].id
+    var uri = 'widgets/charts/retrieve.php?output=json&objectlog=' + widget.curves[i].id
     + '&start=' + Math.round(e.min) + '&end=' + Math.round(e.max) + '&valcount=' + c.chartWidth;
 //     console.log("i:", i, "scheduling detail retrieve", uri);
     widget.curves[i].ready = false;
@@ -168,6 +168,7 @@ function creategraph(widget) {
           count: 1,
           text: 'Y'
         }],
+        selected: 3
       },
       scrollbar: { // scrollbar "stylée" grise
         barBackgroundColor: 'gray',
@@ -422,7 +423,7 @@ function creategraph(widget) {
 
         var deferred_requests = [];
         for(var i=0; i<widget.curves.length; i++) {
-          var uri = 'widgets/charts/retrieve.php?objectlog=' + widget.curves[i].id + '&end=' + widget.initial_start + '&valcount=' + c.chartWidth;
+          var uri = 'widgets/charts/retrieve.php?output=json&objectlog=' + widget.curves[i].id + '&end=' + widget.initial_start + '&valcount=' + c.chartWidth;
 //           console.log("i:", i, "scheduling overview retrieve", uri);
           deferred_requests.push(
             $.getJSON(uri+'&callback=?',
@@ -520,7 +521,7 @@ function createSeries(widget, i, options_chart, async) {
 
 function getdatajson_teleinfo(id, start, end, valcount) {
 
-  var url = 'widgets/charts/retrieve.php?objectlog=' + id + '&start=' + start + '&end=' + end + (valcount?('&valcount=' + valcount):'');
+  var url = 'widgets/charts/retrieve.php?output=json&objectlog=' + id + '&start=' + start + '&end=' + end + (valcount?('&valcount=' + valcount):'');
   var data_json = [];
 
   jQuery.ajax({ type: "GET", url: url, dataType: "json", async : false,

@@ -3,7 +3,7 @@
 	<name>hprogressbar</name>
 	<label>Horizontal progress bar</label>
 	<description>Horizontal progress bar</description>
-	<version>1.0</version>
+	<version>1.1</version>
 	<category>Basic widgets</category>
 	<settings>
 		<setting id="progress-color" label="Progress color" type="color" default="#FF0000" />
@@ -14,7 +14,12 @@
 		</setting>
 		<setting id="border-color" label="Border color" type="color" default="#000000" />
 
-		<setting id="feedback-object" label="Feedback object" type="object" only_type="5.xxx" />
+    <setting id="feedback-type" label="Feedback object type" type="list" default="5.001">
+      <option key="5.xxx 0-255" value="5.xxx"/>
+      <option key="5.001 0%-100%" value="5.001"/>
+      <option key="5.003 0°-360°" value="5.003"/>
+    </setting>
+		<setting id="feedback-object" label="Feedback object" type="object" only_type="5.xxx,5.001,5.003" />
 </settings>
 	<feedbacks>
 		<feedback id="feedback-object" />

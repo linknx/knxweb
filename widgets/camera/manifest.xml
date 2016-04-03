@@ -4,7 +4,7 @@
 	<label>Camera</label>
 	<description>IP Camera stream</description>
 	<version>1.0</version>
-	<category>Basic widgets</category>
+	<category>Camera widgets</category>
 	<settings>
 		<setting id="url" label="URL" type="text" />
 	</settings>

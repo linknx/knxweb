@@ -24,6 +24,7 @@ if (tab_config['lang'] == 'de')
 
   i18n['From'] = 'Von';
   i18n['to'] = 'bis';
+  i18n['Charts'] = 'Charts';
 }
 
 else if (tab_config['lang'] == 'fr')
@@ -56,6 +57,7 @@ else if (tab_config['lang'] == 'fr')
 
   i18n['From'] = 'Du';
   i18n['to'] = 'au';
+  i18n['Charts'] = 'Graphiques';
 }
 
 var _months = [tr('January'), tr('February'), tr('March'), tr('April'), tr('May'), tr('June'), tr('July'), tr('August'), tr('September'), tr('October'), tr('November'), tr('December')];
