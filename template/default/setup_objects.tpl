@@ -119,6 +119,10 @@
   </table>
 </div>
 
-{if ($fileETSexist)}
+<script type="text/javascript" >
+  var fileETSexist = {$fileETSexist};
+</script>
+
+{if ($fileETSexist == "true")}
 {include file='setup_objects_ets.tpl'}
 {/if}

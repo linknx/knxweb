@@ -219,138 +219,9 @@ function trim (myString)
   return myString.replace(/^\s+/g,'').replace(/\s+$/g,'');
 }
 
-jQuery(document).ready(function(){
-
-	// Bind menu buttons
-	$('#button-add-object').bind('click', objects.newObject);
-	$('#button-edit-object').bind('click', function() {
-		var selected=$('.row_selected:first','#objects-tab-table')[0];
-		if (selected) objects.editObject(selected.data.getAttribute('id')); else messageBox(tr('Please select an objet'),tr('Attention'),'alert');
-	});
-	$('#button-remove-object').bind('click', function() {
-		var selected=$('.row_selected:first','#objects-tab-table')[0];
-		if (selected) objects.deleteObject(selected.data.getAttribute('id')); else messageBox(tr('Please select an objet'),tr('Attention'),'alert');
-	});
-	$('#button-read-object').bind('click', objects.readwriteObject);
-
-	// Setup object edit form
-	$("#edit-object-form")[0].validator=$("#edit-object-form").validate();
-
-	// Setup object edit dialog
-	$('#edit-object-dialog').dialog({
-		autoOpen: false,
-		buttons: [
-      { text: tr("Add a listener"), click: function() {
-					var atrlistener = $("<tr>");
-					var id = $("#edit-object-id").val();
-          id = id.replace(" ", "_");
-					atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="" size="10" >  <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" > ' + tr("Read") + ' </td>'));
-					atrlistener.appendTo($('#edit-object-td-listener'));
-					$(this).dialog('option','width',650);
-					$('#edit-object-td-listener').show();
-      } },
-      { text: tr("Cancel"), click: function() {
-        $(this).dialog("close");
-        $('#edit-object-td-listener').hide();
-        $(this).dialog('option','width',430);
-      } },
-      { text: tr("Save"), click: function() {
-        if (objects.processAddEdit()) {
-          $(this).dialog("close");
-          $('#edit-object-td-listener').hide();
-          $(this).dialog('option','width',430);
-        }
-      } }
-    ],
-		resizable: false,
-		title: tr("Add/Edit an objet"), //"Ajouter/Editer un objet",
-		width: "430px",
-		modal: true
-	});
-	$('#edit-object-td-listener').hide();
-
-	// Setup read/write object dialog
-	$('#readwrite-object-dialog').dialog({
-		autoOpen: false,
-		buttons: [
-      { text: tr("Read"), click: function() {
-					var value=readObjectValue($("#readwrite-object-id").val());
-					if (value!==false)
-						$("#readwrite-object-recv").val(value);
-					else
-            messageBox(tr("Error when we read the object"),tr("Error"),"error");
-      } },
-      { text: tr("Write"), click: function() {
-					if ($("#readwrite-object-val-select").css('display')!='none')
-						var value=$("#readwrite-object-val-select").val();
-					else
-						var value=$("#readwrite-object-val-input").val();
-
-					var result=writeObjectValue($("#readwrite-object-id").val(),value);
-					if (!result) messageBox(tr("Error when we read the object"),tr("Error"),"error");
-      } },
-      { text: tr("Close"), click: function() { $( this ).dialog("close"); } }
-    ],
-		resizable: false,
-		title: tr("Read/Write value of an objet"),
-		width: "430px",
-		modal: true
-	});
-
-	$("#readwrite-object-readbutton").button();
-	$("#readwrite-object-writebutton").button();
-
-	$("#readwrite-object-id").bind('change', function() {
-		if (_objectTypesValues[$("#readwrite-object-id option:selected")[0].type])
-		{
-			values=_objectTypesValues[$("#readwrite-object-id option:selected")[0].type];
-			$("#readwrite-object-val-select").empty();
-			//$(values).each(function() { $("#readwrite-object-val-select").append('<option value="' + this + '">' + this + '</option>'); });
-			$(values).each(function() { $("#readwrite-object-val-select").append('<option value="' + this + '">' + tr(this.substr(0, 1).toUpperCase() + this.substr(1)) + '</option>'); });
-			$("#readwrite-object-val-select").show();
-			$("#readwrite-object-val-input").hide();
-		} else
-		{
-			$("#readwrite-object-val-select").hide();
-			$("#readwrite-object-val-input").show();
-		}
-	});
-
-	$("#edit-object-type").bind('change', function() {
-		if (_objectTypesValues[$("#edit-object-type option:selected")[0].type])
-		{
-			values=_objectTypesValues[$("#edit-object-type option:selected")[0].type];
-			$("#edit-object-init-val-select").empty();
-			$(values).each(function() { $("#edit-object-init-val-select").append('<option value="' + this + '">' + this + '</option>'); });
-			$("#edit-object-init-val-select").show();
-		} else
-		{
-			$("#edit-object-init-val-select").hide();
-		}
-	});
-
-	$('#edit-object-init').change(function() {
-		if ($('#edit-object-init').val()=='') {
-			$('#edit-object-init-value').css('visibility','visible');
-			$('#edit-object-init-val-select').css('visibility','visible');
-		} else {
-			$('#edit-object-init-value').css('visibility','hidden');
-			$('#edit-object-init-val-select').css('visibility','hidden');
-		}
-	});
-
-	$('#edit-object-init').trigger('change');
-
-	// Setup object table
-	$('#objects-tab-table').show();
-	$('#objects-tab-table').tableize({
-		selectable: true,
-	});
-	// Clean dummy tr
-	$('#objects-tab-table tbody').empty();
-
-  objects.refreshObjectList();
-
+function objects_ets()
+{
+  return true;
 /* test ETS.xml */ // TODO mettre dans le paramétrage/config le path + nom du fichier
   // Move tab-objects-propertybottom DOM to #OptionContainer on the bottom of the page
   var etstab = $('#tab-objects-propertybottom').clone();
@@ -483,5 +354,140 @@ C L E T M
 
 
 /* /test ETS.xml */
+}
+
+jQuery(document).ready(function(){
+
+	// Bind menu buttons
+	$('#button-add-object').bind('click', objects.newObject);
+	$('#button-edit-object').bind('click', function() {
+		var selected=$('.row_selected:first','#objects-tab-table')[0];
+		if (selected) objects.editObject(selected.data.getAttribute('id')); else messageBox(tr('Please select an objet'),tr('Attention'),'alert');
+	});
+	$('#button-remove-object').bind('click', function() {
+		var selected=$('.row_selected:first','#objects-tab-table')[0];
+		if (selected) objects.deleteObject(selected.data.getAttribute('id')); else messageBox(tr('Please select an objet'),tr('Attention'),'alert');
+	});
+	$('#button-read-object').bind('click', objects.readwriteObject);
+
+	// Setup object edit form
+	$("#edit-object-form")[0].validator=$("#edit-object-form").validate();
+
+	// Setup object edit dialog
+	$('#edit-object-dialog').dialog({
+		autoOpen: false,
+		buttons: [
+      { text: tr("Add a listener"), click: function() {
+					var atrlistener = $("<tr>");
+					var id = $("#edit-object-id").val();
+          id = id.replace(" ", "_");
+					atrlistener.append($('<th>' + tr("Listener :") + '</th><td> <input type="text" class="listener_' + id + '" value="" size="10" >  <input type="checkbox" class="flag_listener" id="flag_listener_' + id + '" > ' + tr("Read") + ' </td>'));
+					atrlistener.appendTo($('#edit-object-td-listener'));
+					$(this).dialog('option','width',650);
+					$('#edit-object-td-listener').show();
+      } },
+      { text: tr("Cancel"), click: function() {
+        $(this).dialog("close");
+        $('#edit-object-td-listener').hide();
+        $(this).dialog('option','width',430);
+      } },
+      { text: tr("Save"), click: function() {
+        if (objects.processAddEdit()) {
+          $(this).dialog("close");
+          $('#edit-object-td-listener').hide();
+          $(this).dialog('option','width',430);
+        }
+      } }
+    ],
+		resizable: false,
+		title: tr("Add/Edit an objet"), //"Ajouter/Editer un objet",
+		width: "430px",
+		modal: true
+	});
+	$('#edit-object-td-listener').hide();
+
+	// Setup read/write object dialog
+	$('#readwrite-object-dialog').dialog({
+		autoOpen: false,
+		buttons: [
+      { text: tr("Read"), click: function() {
+					var value=readObjectValue($("#readwrite-object-id").val());
+					if (value!==false)
+						$("#readwrite-object-recv").val(value);
+					else
+            messageBox(tr("Error when we read the object"),tr("Error"),"error");
+      } },
+      { text: tr("Write"), click: function() {
+					if ($("#readwrite-object-val-select").css('display')!='none')
+						var value=$("#readwrite-object-val-select").val();
+					else
+						var value=$("#readwrite-object-val-input").val();
+
+					var result=writeObjectValue($("#readwrite-object-id").val(),value);
+					if (!result) messageBox(tr("Error when we read the object"),tr("Error"),"error");
+      } },
+      { text: tr("Close"), click: function() { $( this ).dialog("close"); } }
+    ],
+		resizable: false,
+		title: tr("Read/Write value of an objet"),
+		width: "430px",
+		modal: true
+	});
+
+	$("#readwrite-object-readbutton").button();
+	$("#readwrite-object-writebutton").button();
+
+	$("#readwrite-object-id").bind('change', function() {
+		if (_objectTypesValues[$("#readwrite-object-id option:selected")[0].type])
+		{
+			values=_objectTypesValues[$("#readwrite-object-id option:selected")[0].type];
+			$("#readwrite-object-val-select").empty();
+			//$(values).each(function() { $("#readwrite-object-val-select").append('<option value="' + this + '">' + this + '</option>'); });
+			$(values).each(function() { $("#readwrite-object-val-select").append('<option value="' + this + '">' + tr(this.substr(0, 1).toUpperCase() + this.substr(1)) + '</option>'); });
+			$("#readwrite-object-val-select").show();
+			$("#readwrite-object-val-input").hide();
+		} else
+		{
+			$("#readwrite-object-val-select").hide();
+			$("#readwrite-object-val-input").show();
+		}
+	});
+
+	$("#edit-object-type").bind('change', function() {
+		if (_objectTypesValues[$("#edit-object-type option:selected")[0].type])
+		{
+			values=_objectTypesValues[$("#edit-object-type option:selected")[0].type];
+			$("#edit-object-init-val-select").empty();
+			$(values).each(function() { $("#edit-object-init-val-select").append('<option value="' + this + '">' + this + '</option>'); });
+			$("#edit-object-init-val-select").show();
+		} else
+		{
+			$("#edit-object-init-val-select").hide();
+		}
+	});
+
+	$('#edit-object-init').change(function() {
+		if ($('#edit-object-init').val()=='') {
+			$('#edit-object-init-value').css('visibility','visible');
+			$('#edit-object-init-val-select').css('visibility','visible');
+		} else {
+			$('#edit-object-init-value').css('visibility','hidden');
+			$('#edit-object-init-val-select').css('visibility','hidden');
+		}
+	});
+
+	$('#edit-object-init').trigger('change');
+
+	// Setup object table
+	$('#objects-tab-table').show();
+	$('#objects-tab-table').tableize({
+		selectable: true,
+	});
+	// Clean dummy tr
+	$('#objects-tab-table tbody').empty();
+
+  objects.refreshObjectList();
+
+  objects_ets(); /* test ETS.xml */
 
 });

@@ -20,12 +20,15 @@ tpl()->addJs('js/setup_objects.js');
 * 
 */
 $pathETSxml = 'ETS.xml';
-$fileETSexist = file_exists($pathETSxml);
+$fileETSexist = "false";
+if (file_exists($pathETSxml)) {
+  $fileETSexist = "true";
+}
 $xmletstabhead = array();
 $xmletstablines = array();
 $nbligne = 0;
 
-if ($fileETSexist) {
+if ($fileETSexist == "true") {
 
   $xml = simplexml_load_file($pathETSxml);
   foreach($xml as $key0 => $value){
