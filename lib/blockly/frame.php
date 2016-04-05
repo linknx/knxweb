@@ -139,9 +139,11 @@ if ($plugins_exist) {
   }
 }
 ?>
-  <div id="blocklyDiv" style="height: 600px; width: 100%;"></div><!-- height: 480px; -->
-  <div id="Xmlview" class="hide" style="position: absolute; bottom: 0;width: 98%;background-color: white;border: 1px solid black; border-radius : 5px;">
-  <b><?php echo l('Xml'); ?> : <input type="button" value="<?php echo l('Hide'); ?>" style="margin: 3px;" onclick="document.getElementById('Xmlview').className = (document.getElementById('Xmlview').className == '' )?'hide':'';"> <br></b>
+  <div id="blocklyDiv" style="height: 600px; width: 100%;"></div>
+  <div id="Xmlview" class="hide" style="position: absolute; bottom: 0;width: 98%;background-color: white;border: 1px solid black; border-radius : 5px;z-index: 1;">
+  <b><?php echo l('Xml'); ?> : <input type="button" value="<?php echo l('Hide'); ?>" style="margin: 3px;" onclick="document.getElementById('Xmlview').className = (document.getElementById('Xmlview').className == '' )?'hide':'';">
+  <input type="button" value="<?php echo l('enabled').'/'.l('disabled'); ?>" style="margin: 3px;" onclick="document.getElementById('displayxml').disabled = !document.getElementById('displayxml').disabled;">
+  <br></b>
   <textarea id="displayxml" rows="20" style="width: 99%;" disabled ></textarea>
   </div>
   </div>
