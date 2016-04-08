@@ -768,7 +768,9 @@ var design = {
 						openImagesManager($(this));
 					});
 		    	td.append(input);*/
-		    	td.append('<input type="text" style="width: 75%;" name="' + this.id + '" value="' + value + '">');
+		    	//td.append('<input type="text" style="width: 75%;" name="' + this.id + '" value="' + value + '">');
+          var input=($('<input type="text" style="width: 75%;" name="' + this.id + '" value="' + value + '">'));
+          td.append(input);
 
 
           var openimages=($('<div style="width: 20%;">'+tr('Open images manager')+'</div>'));
