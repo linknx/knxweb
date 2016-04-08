@@ -149,17 +149,18 @@ if ($plugins_exist) {
   </div>
 
   <xml id="toolbox" style="display: none;">
-    <category name="Objects">
-      <block type="list_objects"></block>
+    <category name="Objects" colour="20">
+      <block type="list_objects" colour="210"></block>
       <block type="value"></block>
     </category>
-    <category name="Conditions">
+    <category name="Conditions" colour="210">
       <block type="condition_AND_OR"></block>
       <block type="condition_not"></block>
       <block type="condition_object"></block>
       <block type="condition_script"></block>
       <block type="condition_time-counter"></block>
     </category>
+    <sep></sep>
     <category name="Timer Conditions">
       <block type="condition_timer"></block>
       <block type="timer_hour"></block>
@@ -168,7 +169,8 @@ if ($plugins_exist) {
       <block type="timer_type"></block>
       <block type="timer_weekdays"></block>
     </category>
-    <category name="Actions"> 
+    <sep></sep>
+    <category name="Actions" colour="160">
       <block type="action_set_value"></block>
       <block type="action_set_object"></block>
       <block type="action_toggle-value"></block>
@@ -183,12 +185,13 @@ if ($plugins_exist) {
       <block type="action_formula"></block>
       <block type="action_cycle_on_off"></block>
     </category>
-    <category name="Actions on rules">
+    <category name="Actions on rules" colour="160">
       <!-- <block type="list_rules"></block> -->
       <block type="action_Cancel"></block>
       <block type="action_start-actionlist"></block>
       <block type="action_set-rule-active"></block>
     </category>
+    <sep></sep>
     <category name="IO-Ports">
       <block type="condition_ioport-rx"></block>
       <block type="condition_ioport-connect"></block>
@@ -213,10 +216,11 @@ echo '</category>';
 
   <script>
   var toolbox = document.getElementById('toolbox');
-  Blockly.inject(document.getElementById('blocklyDiv'),
-                 { media: './media/', toolbox: toolbox,
+
+  workspace = Blockly.inject(document.getElementById('blocklyDiv'),
+                 { media: media, toolbox: toolbox,
                  grid:
-                     {spacing: 20,
+                     {spacing: 25,
                       length: 3,
                       colour: '#ccc',
                       snap: true},
@@ -234,14 +238,16 @@ echo '</category>';
   window.LoopTrap = 1000;
   Blockly.JavaScript.INFINITE_LOOP_TRAP = 'if(--window.LoopTrap == 0) throw "Infinite loop.";\n';
 
-  Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, Blockly.Xml.textToDom(xml));
+  //Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, Blockly.Xml.textToDom(xml));
+  Blockly.Xml.domToWorkspace(workspace, Blockly.Xml.textToDom(xml_));
 
   //Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-  function myUpdateFunction() {
-    var code = Blockly.JavaScript.workspaceToCode();
+  function myUpdateFunction(event) {
+    var code = Blockly.JavaScript.workspaceToCode(workspace);
     document.getElementById('displayxml').value = code;
   }
-  Blockly.addChangeListener(myUpdateFunction);
+  //Blockly.addChangeListener(myUpdateFunction);
+  workspace.addChangeListener(myUpdateFunction);
   document.addEventListener("DOMContentLoaded", function(event) {
     start2();
   });
