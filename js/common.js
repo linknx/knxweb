@@ -4,25 +4,26 @@ var _editMode = false;
 var _subpages;
 var _floating_zone = false;
 var _floating_zone_margin = 10;
+var _url_subpages = 'design/subpages.xml';
 
 var _objectTypesValues = {
-	'1.001': ['on','off'],
-  '1.002': ['true ','false'],
-  '1.003': ['enable ','disable'],
-  '1.004': ['ramp ','no ramp'],
-  '1.005': ['alarm ','no alarm'],
-  '1.006': ['high ','low'],
-  '1.007': ['increase ','decrease'],
-  '1.008': ['down ','up'],
-  '1.009': ['close ','open'],
-  '1.010': ['start ','stop'],
-  '1.011': ['active ','inactive'],
-  '1.012': ['inverted ','not inverted'],
-  '1.013': ['cyclically','start/stop'],
-  '1.014': ['calculated','fixed'],
-	'3.007': ['up','down','stop'],
-	'3.008': ['close','open','stop'],
-	'20.102': ['comfort','standby','night','frost']
+	'1.001': [tr('on'),tr('off')],
+  '1.002': [tr('true'),tr('false')],
+  '1.003': [tr('enable'),tr('disable')],
+  '1.004': [tr('ramp'),tr('no ramp')],
+  '1.005': [tr('alarm'),tr('no alarm')],
+  '1.006': [tr('high'),tr('low')],
+  '1.007': [tr('increase'),tr('decrease')],
+  '1.008': [tr('down'),tr('up')],
+  '1.009': [tr('close'),tr('open')],
+  '1.010': [tr('start'),tr('stop')],
+  '1.011': [tr('active'),tr('inactive')],
+  '1.012': [tr('inverted'),tr('not inverted')],
+  '1.013': [tr('cyclically'),tr('start/stop')],
+  '1.014': [tr('calculated'),tr('fixed')],
+	'3.007': [tr('up'),tr('down'),tr('stop')],
+	'3.008': [tr('close'),tr('open'),tr('stop')],
+	'20.102': [tr('comfort'),tr('standby'),tr('night'),tr('frost')]
 }
 
 var _tab_effects = new Array("blind","bounce","clip","drop","explode","fold","highlight","puff","pulsate","scale","shake","size","slide");
@@ -91,14 +92,14 @@ function isObjectUsed(id)
 
 	if (responseXML!=false)
 	{
-		$('condition', responseXML).each(function() {
+		$('condition', responseXML).each(function() { /* TODO à compléter car ne gère pas toutes les conditions */
 			if ((this.getAttribute('type')=='object')&&(this.getAttribute('id')==id))
 			{
 				used=true;
 				return used;
 			}
 		});
-		$('action', responseXML).each(function() {
+		$('action', responseXML).each(function() { /* TODO à compléter car ne gère pas toutes les actions */
 			if ((this.getAttribute('type')=='set-value')&&(this.getAttribute('id')==id))
 			{
 				used=true;
@@ -109,7 +110,7 @@ function isObjectUsed(id)
 	return used;
 }
 
-function isIOportUsed(id)
+function isIOportUsed(ioport)
 {
 	var used=false;
 	var responseXML=queryLinknx('<read><config><rules/></config></read>');
@@ -117,14 +118,19 @@ function isIOportUsed(id)
 	if (responseXML!=false)
 	{
 		$('condition', responseXML).each(function() {
-			if ((this.getAttribute('type')=='ioport-rx')&&(this.getAttribute('id')==id))
+			if ((this.getAttribute('type')=='ioport-rx')&&(this.getAttribute('ioport')==ioport))
+			{
+				used=true;
+				return used;
+			}
+			if ((this.getAttribute('type')=='ioport-connect')&&(this.getAttribute('ioport')==ioport))
 			{
 				used=true;
 				return used;
 			}
 		});
 		$('action', responseXML).each(function() {
-			if ((this.getAttribute('type')=='ioport-tx')&&(this.getAttribute('id')==id))
+			if ((this.getAttribute('type')=='ioport-tx')&&(this.getAttribute('ioport')==ioport))
 			{
 				used=true;
 				return used;
@@ -302,9 +308,7 @@ function queryKnxweb(action, type, message, callasync) {
 }
 
 function loadSubPages() {
-	var url = 'design/subpages.xml';
-
-	req = jQuery.ajax({ url: url, dataType: 'xml', async: false, cache: false,
+	req = jQuery.ajax({ url: _url_subpages, dataType: 'xml', async: false, cache: false,
 		success: function(responseXML, status) {
 			_subpages=responseXML
 		}
