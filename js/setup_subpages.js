@@ -406,6 +406,14 @@ var subpages = {
 			});
 		}
 
+    if (_widgetscssexist) {
+      var table_tr=$('<tr><th colspan="2">' +tr('Class CSS')+'</th><td><input id="tab-subpages-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
+			$("#tab-subpages-widget-properties tbody").append(table_tr);
+			$("#tab-subpages-properties-class").change(function() {
+				o.setSetting("class", $(this).val());
+			});
+    }
+	   
 		$("#tab-subpages-properties-x").change(function() {
 			o.setSetting("x", $(this).val());
 		});
