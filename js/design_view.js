@@ -111,7 +111,7 @@ var design_view = {
 			e.height(height);
 
 			design_view.currentZone = this.getAttribute('id');
-			e.append('<img id="bgImage_' + this.getAttribute('id') + '" src="' + getImageUrl(this.getAttribute('img')) + '" style="width: ' + width + 'px; height: ' + height + 'px;" usemap="#shapes_' + this.getAttribute('id') + '"><map id="shapes_' + this.getAttribute('id') + '" name="shapes_' + this.getAttribute('id') + '"></map>');
+			e.append('<img id="bgImage_' + this.getAttribute('id') + '" src="' + ((this.getAttribute('img')!="")?getImageUrl(this.getAttribute('img')):'images/1pixel.gif') + '" style="width: ' + width + 'px; height: ' + height + 'px;" usemap="#shapes_' + this.getAttribute('id') + '"><map id="shapes_' + this.getAttribute('id') + '" name="shapes_' + this.getAttribute('id') + '"></map>');
 			container.append(e);
 	 		 /*
        $('control', this).each(function() {
