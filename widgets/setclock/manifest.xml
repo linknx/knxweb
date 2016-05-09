@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>setclock</name>
+	<label>Clock Setter</label>
+	<description>Clock Setter</description>
+	<version>1.0</version>
+	<category>Various widgets</category>
+	<settings>
+		<setting id="user" label="Setclock User" type="text" />
+		<setting id="bgcolor" label="Background color" type="color" default="#000000" />
+		<setting id="textcolor" label="Text color" type="color" default="#FFFFFF" />
+		<setting id="icone" label="Icone Type" type="list" default="White" >
+			<option key="White" value="White" />
+			<option key="Black" value="Black" />
+		</setting>
+		<setting label="Action Alarm Clock" type="comment" />
+		<setting id="time-object" label="Time object" type="object" only_type="10.001" />
+		<setting id="enable-object" label="Enable object" type="object" only_type="1.003" />
+		<setting id="label" label="Text" type="text" default="My button" />
+	</settings>
+	<feedbacks>
+		<feedback id="time-object" />
+		<feedback id="enable-object" />
+	</feedbacks>
+</widget>
