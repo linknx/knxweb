@@ -565,6 +565,7 @@ var design = {
 		    {
 		    	select=$('<select>');
 		    	select.attr('name', this.id);
+          if (value=="") value=this.default;
 		    	$.each(this.options, function(key, label) {
 		    		var option=($('<option value="' + key + '">' + label + '</option>'));
 		    		if (key==value) option.attr('selected','1');

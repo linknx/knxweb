@@ -57,6 +57,7 @@
       <option key="candlestick" value="candlestick" />
       <option key="ohlc" value="ohlc" /> -->
     </setting>
+    <setting id="puiss" label="Puissance" type="text" />
     <setting id="libel0" label="Label" type="text" />
     <setting id="color0" label="Color" type="color" default="#7cb5ec" />
     <setting label="" type="separator" />
@@ -73,6 +74,7 @@
     </setting>
     <setting id="libel1" label="Label" type="text" />
     <setting id="color1" label="Color" type="color" default="#434348" />
+    <setting id="puiss1" label="Puissance" type="text" />
     <setting label="" type="separator" />
     <setting id="id2" label="Object" type="object" />
     <setting id="typecurve2" label="Type of the object" type="list" default="spline">
@@ -87,6 +89,7 @@
     </setting>
     <setting id="libel2" label="Label" type="text" />
     <setting id="color2" label="Color" type="color" default="#90ed7d" />
+    <setting id="puiss2" label="Puissance" type="text" />
     <setting label="" type="separator" />
     <setting id="id3" label="Object" type="object" />
     <setting id="typecurve3" label="Type of the object" type="list" default="spline">
@@ -101,6 +104,7 @@
     </setting>
     <setting id="libel3" label="Label" type="text" />
     <setting id="color3" label="Color" type="color" default="#f7a35c" />
+    <setting id="puiss3" label="Puissance" type="text" />
     <setting label="" type="separator" />
     <setting id="id4" label="Object" type="object" />
     <setting id="typecurve4" label="Type of the object" type="list" default="spline">
@@ -115,7 +119,7 @@
     </setting>
     <setting id="libel4" label="Label" type="text" />
     <setting id="color4" label="Color" type="color" default="#8085e9"  />
-    <setting label="" type="separator" />
+    <setting id="puiss4" label="Puissance" type="text" />
 
   </settings>
   <feedbacks>

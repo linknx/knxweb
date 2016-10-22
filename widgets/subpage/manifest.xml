@@ -18,6 +18,14 @@
       <option key="false" value="No" />
     </setting>
     <setting id="picture-dialog" label="Picture show dialog" type="picture" />
+    <setting id="put_left" label="Put on the Left side" type="list" default="false">
+      <option key="true" value="Yes" />
+      <option key="false" value="No" />
+    </setting>
+    <setting id="put_top" label="Put on top" type="list" default="false">
+      <option key="true" value="Yes" />
+      <option key="false" value="No" />
+    </setting>
     <setting label="" type="separator" />
 		<setting id="subpage" label="Sub-page" type="subpage" />
 	</settings>

@@ -90,12 +90,15 @@ CCharts.prototype.refreshHTML = function() {
   for( var i = 0; i < 5; i++) {
     var curveData = {};
     curveData.id = this.conf.getAttribute("id" + i);
+    curveData.puiss = this.conf.getAttribute("puiss" + i);
+
     curveData.libel = this.conf.getAttribute("libel" + i);
     if (i == 0 && ! curveData.id ) {
       curveData.id = this.conf.getAttribute("id");
       curveData.libel = this.conf.getAttribute("libel");
+      curve.puiss = this.conf.getAttribute("puiss");
     }
-    if (_editMode) {
+    if (_editMode && curveData.id) {
       var libel = "";
       var id = curveData.id.replace(" ", "_");
       $('object[id=' + id + ']', _objects).each(function() {

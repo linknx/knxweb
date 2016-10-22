@@ -12,6 +12,17 @@ TODO next task list :
 
   ---===*** History *** ===---
 
+2016-10-22 Anthony Penhard v2.1.1
+  * Bugs fixed ( widget Charts, add "class" Css on a widget when widgets/widgets.css exist)
+  * Code review ...
+  * Translation for rules editor v2
+  * Setup Design and Subpage
+    * Add a button when you select a picture like color-piker, can write the name of the picture manually
+    * Adding a select to filter the objects list by Dataype (DPT) in design and subpage setup
+  * update javascript Blockly (04/04/2016) for Rules v2
+	* widgets :
+	   * subpage : can show subpage now on the left, top or top left of the button we can show it
+
 2015-12-13 Anthony Penhard v2.1.0
   * add "replay.php" script can use for exemple "for the simulation of presence", can replay the state of an object 7 days ago with a rule and log of te object (issue #5)
 
