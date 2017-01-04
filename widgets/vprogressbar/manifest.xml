@@ -15,9 +15,9 @@
 		<setting id="border-color" label="Border color" type="color" default="#000000" />
 
     <setting id="feedback-type" label="Feedback object type" type="list" default="5.001">
-      <option key="5.xxx 0-255" value="5.xxx"/>
-      <option key="5.001 0%-100%" value="5.001"/>
-      <option key="5.003 0°-360°" value="5.003"/>
+      <option key="5.xxx" value="5.xxx : 0-255"/>
+      <option key="5.001" value="5.001 : 0%-100%"/>
+      <option key="5.003" value="5.003 : 0°-360°"/>
     </setting>
 		<setting id="feedback-object" label="Feedback object" type="object" only_type="5.xxx,5.001,5.003" />
 </settings>
