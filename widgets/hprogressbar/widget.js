@@ -36,7 +36,7 @@ CHProgressBar.prototype.updateObject = function(obj,value) {
 
 	if (obj==this.conf.getAttribute("feedback-object"))
 	{
-			if (!this.conf.getAttribute("feedback-type") || this.conf.getAttribute("feedback-type") == "5.001") $('.bar', this.div).css('height', Math.round(value) + '%');
+			if (!this.conf.getAttribute("feedback-type") || this.conf.getAttribute("feedback-type") == "5xxx" || this.conf.getAttribute("feedback-type") == "5.001") $('.bar', this.div).css('width', Math.round(value) + '%');
 			else if (this.conf.getAttribute("feedback-type") == "5.003") $('.bar', this.div).css('height', (Math.round(value) * 100 / 360) + '%');
 	}
 };
