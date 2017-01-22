@@ -110,6 +110,9 @@ var design_view = {
 			e.width(width);
 			e.height(height);
 
+			design_view.currentZone = this.getAttribute('id');
+			e.append('<img id="bgImage_' + this.getAttribute('id') + '" src="' + ((this.getAttribute('img')!="")?getImageUrl(this.getAttribute('img')):'images/1pixel.gif') + '" style="width: ' + width + 'px; height: ' + height + 'px;" usemap="#shapes_' + this.getAttribute('id') + '"><map id="shapes_' + this.getAttribute('id') + '" name="shapes_' + this.getAttribute('id') + '"></map>');
+			container.append(e);
 	 		 /*
        $('control', this).each(function() {
 				design_view.addWidget(this, e);
@@ -126,9 +129,9 @@ var design_view = {
         });
       }
 
-			e.css('background-image', 'url(' + getImageUrl(this.getAttribute('img')) + ')');
 	
-			container.append(e);
+			$('#bgImage_' + this.getAttribute('id')).maphilight();
+			design_view.currentZone = null;
 		});
 
 		if (enableSlider)
@@ -248,4 +251,44 @@ jQuery(function($) {
 			loading.hide();
 		});
 	});
+});
+
+/*
+ * En test permet de ne pas faire de "pooling" quand la fenêtre/page n'est pas active
+ */
+
+$(window).focus(function() {
+  if (EIBCommunicator.polling) {
+    if (EIBCommunicator.stoppolling) {
+      EIBCommunicator.stoppolling = false;
+      var d = new Date();
+      //console.log( "focus windows Restart le Polling à ", d.getHours(),"h", d.getMinutes(),"min.", d.getSeconds(),"sec."); // d.getTime()
+      var diff = dateDiff(EIBCommunicator.date_stop_polling, d);
+      //console.log( "Soit une pause de", diff.hour ,"h", diff.min,"min.", diff.sec,"sec."); // d.getTime()
+      EIBCommunicator.periodicUpdate();
+    }
+  }
+});
+function dateDiff(date1, date2){
+  var diff = {}                           // Initialisation du retour
+  var tmp = date2 - date1;
+
+  tmp = Math.floor(tmp/1000);             // Nombre de secondes entre les 2 dates
+  diff.sec = tmp % 60;                    // Extraction du nombre de secondes
+
+  tmp = Math.floor((tmp-diff.sec)/60);    // Nombre de minutes (partie entière)
+  diff.min = tmp % 60;                    // Extraction du nombre de minutes
+
+  tmp = Math.floor((tmp-diff.min)/60);    // Nombre d'heures (entières)
+  diff.hour = tmp % 24;                   // Extraction du nombre d'heures
+  /*
+  tmp = Math.floor((tmp-diff.hour)/24);   // Nombre de jours restants
+  diff.day = tmp;
+  */
+  return diff;
+}
+$(window).blur(function() {
+  EIBCommunicator.stoppolling = true;
+  EIBCommunicator.date_stop_polling = new Date();
+  //console.log( "blur windows Stop le Polling à ", EIBCommunicator.date_stop_polling.getHours(),"h", EIBCommunicator.date_stop_polling.getMinutes(),"min.", EIBCommunicator.date_stop_polling.getSeconds(),"sec.");
 });

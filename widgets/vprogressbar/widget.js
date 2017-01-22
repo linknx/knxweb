@@ -36,6 +36,7 @@ CVProgressBar.prototype.updateObject = function(obj,value) {
 
 	if (obj==this.conf.getAttribute("feedback-object"))
 	{
-			$('.bar', this.div).css('height', Math.round(value) + '%');
+			if (!this.conf.getAttribute("feedback-type") || this.conf.getAttribute("feedback-type") == "5.xxx" || this.conf.getAttribute("feedback-type") == "5.001") $('.bar', this.div).css('height', Math.round(value) + '%');
+			else if (this.conf.getAttribute("feedback-type") == "5.003") $('.bar', this.div).css('height', (Math.round(value) * 100 / 360) + '%');
 	}
 };

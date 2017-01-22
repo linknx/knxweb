@@ -3,7 +3,7 @@
   <name>charts</name>
   <label>Charts</label>
   <description>Charts with Highcharts</description>
-  <version>1.1</version>
+  <version>1.2</version>
   <category>Various widgets</category>
   <settings>
     <setting id="picture" label="Picture" type="picture" default="32x32_graph.png" />
@@ -21,38 +21,45 @@
       <option key="true" value="Yes" />
       <option key="false" value="No" />
     </setting>
+    <setting id="liveupdate" label="Live Update" type="list" default="true">
+      <option key="true" value="Yes" />
+      <option key="false" value="No" />
+    </setting>
 
     <setting label="Delay to date (mysql log)" type="comment" />
     <setting id="duration" label="Duration" type="text" default="1" />
     <setting id="periodicity" label="Periodicity" type="list" default="day">
       <option key="hour" value="Hour" />
       <option key="day" value="Day" />
-      <!-- <option key="week" value="Week" /> -->
+      <option key="week" value="Week" />
       <option key="month" value="Month" />
       <option key="year" value="year" />
     </setting>
     <setting label="Nb Enreg (file log)" type="comment" />
     <setting id="nbenreg" label="Nb Enreg" type="text" default="1000" />
-
+    <setting id="timezone" label="Timezone Offset" type="text" default="0" />
     <setting label="Curves" type="comment" />
-    <setting id="id" label="Object" type="object" />
+    <setting id="id0" label="Object" type="object" />
 
-    <setting id="typecurve" label="Type of the object" type="list" default="spline">
+    <setting id="typecurve0" label="Type of the object" type="list" default="spline">
       <option key="line" value="line" />
       <option key="switch" value="line 'switch On/Off'" />
       <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
       <option key="pourcent" value="line '%'" />
       <option key="area" value="area" />
-      <option key="areaspline" value="areaspline" />   
+      <option key="areaspline" value="areaspline" />
       <option key="spline" value="spline" />
       <option key="temperature" value="spline 'temperature'" />
-      <!-- <option key="bar" value="bar" />        
-      <option key="column" value="column" />     
-      <option key="pie" value="pie" />        
-      <option key="scatter" value="scatter" />      
+      <!-- <option key="bar" value="bar" />
+      <option key="column" value="column" />
+      <option key="pie" value="pie" />
+      <option key="scatter" value="scatter" />
       <option key="candlestick" value="candlestick" />
-      <option key="ohlc" value="ohlc" /> -->       
-		</setting>
+      <option key="ohlc" value="ohlc" /> -->
+    </setting>
+    <setting id="puiss" label="Puissance" type="text" />
+    <setting id="libel0" label="Label" type="text" />
+    <setting id="color0" label="Color" type="color" default="#7cb5ec" />
     <setting label="" type="separator" />
     <setting id="id1" label="Object" type="object" />
     <setting id="typecurve1" label="Type of the object" type="list" default="spline">
@@ -61,10 +68,13 @@
       <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
       <option key="pourcent" value="line '%'" />
       <option key="area" value="area" />
-      <option key="areaspline" value="areaspline" />   
+      <option key="areaspline" value="areaspline" />
       <option key="spline" value="spline" />
-      <option key="temperature" value="spline 'temperature'" />       
-		</setting>
+      <option key="temperature" value="spline 'temperature'" />
+    </setting>
+    <setting id="libel1" label="Label" type="text" />
+    <setting id="color1" label="Color" type="color" default="#434348" />
+    <setting id="puiss1" label="Puissance" type="text" />
     <setting label="" type="separator" />
     <setting id="id2" label="Object" type="object" />
     <setting id="typecurve2" label="Type of the object" type="list" default="spline">
@@ -73,10 +83,13 @@
       <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
       <option key="pourcent" value="line '%'" />
       <option key="area" value="area" />
-      <option key="areaspline" value="areaspline" />   
+      <option key="areaspline" value="areaspline" />
       <option key="spline" value="spline" />
-      <option key="temperature" value="spline 'temperature'" />       
-		</setting>
+      <option key="temperature" value="spline 'temperature'" />
+    </setting>
+    <setting id="libel2" label="Label" type="text" />
+    <setting id="color2" label="Color" type="color" default="#90ed7d" />
+    <setting id="puiss2" label="Puissance" type="text" />
     <setting label="" type="separator" />
     <setting id="id3" label="Object" type="object" />
     <setting id="typecurve3" label="Type of the object" type="list" default="spline">
@@ -85,10 +98,13 @@
       <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
       <option key="pourcent" value="line '%'" />
       <option key="area" value="area" />
-      <option key="areaspline" value="areaspline" />   
+      <option key="areaspline" value="areaspline" />
       <option key="spline" value="spline" />
-      <option key="temperature" value="spline 'temperature'" />       
-		</setting>
+      <option key="temperature" value="spline 'temperature'" />
+    </setting>
+    <setting id="libel3" label="Label" type="text" />
+    <setting id="color3" label="Color" type="color" default="#f7a35c" />
+    <setting id="puiss3" label="Puissance" type="text" />
     <setting label="" type="separator" />
     <setting id="id4" label="Object" type="object" />
     <setting id="typecurve4" label="Type of the object" type="list" default="spline">
@@ -97,12 +113,20 @@
       <option key="dimmer" value="line 'dimmer Up/Stop/Down'" />
       <option key="pourcent" value="line '%'" />
       <option key="area" value="area" />
-      <option key="areaspline" value="areaspline" />   
+      <option key="areaspline" value="areaspline" />
       <option key="spline" value="spline" />
-      <option key="temperature" value="spline 'temperature'" />       
-		</setting>
+      <option key="temperature" value="spline 'temperature'" />
+    </setting>
+    <setting id="libel4" label="Label" type="text" />
+    <setting id="color4" label="Color" type="color" default="#8085e9"  />
+    <setting id="puiss4" label="Puissance" type="text" />
 
   </settings>
   <feedbacks>
+		<feedback id="id0" />
+		<feedback id="id1" />
+		<feedback id="id2" />
+		<feedback id="id3" />
+		<feedback id="id4" />
   </feedbacks>
 </widget>

@@ -41,8 +41,6 @@ CWidget.prototype = {
     var defaultGridWidth = 20;
     var defaultWidgetGridWidth = 32;
 		if (_editMode) { // TODO en mode "subpage" design n'est pas définit et pas tenir compte de la grid ...
-      //if (design) {
-      // if(typeof design != "undefined") {
       if (_designeditview) {
 			if (design.grid) {
 			  defaultGridWidth = design.gridWidth;
@@ -85,6 +83,7 @@ CWidget.prototype = {
   } else { // _floating_zone_margin
 		this.div.css('float', "left");
     this.div.css('position', "relative");  
+    if (_floating_zone_margin) this.div.css('padding', _floating_zone_margin + "px");
   }
 		
 		var width = conf.getAttribute("width");
@@ -92,25 +91,38 @@ CWidget.prototype = {
 
 		if ((!width) && (this.isResizable))
 		{
-  		//conf.setAttribute("width", 32);
-			//this.div.css('width', 32);
   		conf.setAttribute("width", defaultWidgetGridWidth);
 			this.div.css('width', defaultWidgetGridWidth);
 		} else if (this.isResizable) this.div.css('width', width);
 
 		if ((!height) && (this.isResizable))
 		{
-  		//conf.setAttribute("height", 32);
-			//this.div.css('height', 32);
   		conf.setAttribute("height", defaultWidgetGridWidth);
 			this.div.css('height', defaultWidgetGridWidth);
 		} else if (this.isResizable) this.div.css('height', height);
 		
+    if (this.conf.getAttribute("class")) this.div.addClass(this.conf.getAttribute("class"));
 		this.div.css('display', 'block');
 	},
 	
 	// Refresh HTML from config
 	refreshHTML: function() {
+  },
+  onSelect: function() {
+  },
+  onDeSelect: function() {
+  },
+  onMoveStart: function(left, top) {
+  },
+  onMove: function(left, top) {
+  },
+  onMoveStop: function(left, top) {
+  },
+  onResizeStart: function(width, height) {
+  },
+  onResize: function(width, height) {
+  },
+  onResizeStop: function(width, height) {
   },
   
   // Switch to edit mode
@@ -121,18 +133,36 @@ CWidget.prototype = {
 		$(this.div).widgetMovable({
 			resizable: this.isResizable,
 			draggable: this.isDraggable,
-			onMove: function(widget, left, top) {
+			onMoveStart: function (widget, left, top) {
+				widget.owner.onMoveStart(Math.round(left), Math.round(top));
+			},
+			onMove: function (widget, left, top) {
+				widget.owner.onMove(Math.round(left), Math.round(top));
+			},
+			onMoveStop: function(widget, left, top) {
 				widget.owner.conf.setAttribute('x', Math.round(left) );
 				widget.owner.conf.setAttribute('y', Math.round(top) );
 				moveCallBack(widget.owner);
+        widget.owner.onMoveStop(Math.round(left), Math.round(top));
 			},
 			onSelect: function(widget) {
 				selectCallBack(widget);
+				widget.owner.onSelect();
+			},
+			onDeSelect: function(widget) {
+				widget.owner.onDeSelect();
+			},
+			onResizeStart: function(widget) {
+				widget.owner.onResizeStart($(widget).width(), $(widget).height());
 			},
 			onResize: function(widget) {
+				widget.owner.onResize($(widget).width(), $(widget).height());
+			},
+			onResizeStop: function(widget) {
 				widget.owner.conf.setAttribute('width', $(widget).width() );
 				widget.owner.conf.setAttribute('height', $(widget).height() );
 				resizeCallBack(widget.owner);
+        widget.owner.onResizeStop($(widget).width(), $(widget).height());
 			}
 		});
   },

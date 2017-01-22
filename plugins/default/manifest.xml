@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<plugin>
+  <name>defaultPluginName</name>
+  <label>Default Plugin Label</label>
+  <description>Default Plugin Description</description>
+  <version>0.1</version>
+  <category>default category</category>
+  <settings>
+    <!-- pour les type cf : http://www.w3schools.com/tags/att_input_type.asp -->
+    <setting id="emailgoogle" label="Email Google" type="email" default="toto@gmail.com" />
+    <setting id="passgoogle" label="Mot de Passe" type="password" default="pass" />
+    <setting id="feedxml" label="Feed xml calendrier" type="url" default="https://www.google.com/calendar/feeds/" />
+    <setting id="delai" label="Nombre entre min 0 et max 100" type="number" min="0" max="100" default="50" />
+  </settings>
+  <blocks>
+    <block type="condition_plugin_default"></block>
+    <block type="action_plugin_default"></block>
+    <block type="action_plugin_default2"></block>
+  </blocks>
+  <controls>
+    <control type="object" id="object_date" label="Object Date" default="" />
+    <control type="object" id="object1" label="Object n°1" default="" />
+    <control type="object" id="object2" label="Object n°2" default="" />
+  </controls>
+  <conditionrule>
+    <condition type="script" ><![CDATA[Script lua !!!]]></condition>
+    <condition type="ioport-rx" expected="" object0="" object1="" object2="" object3="" regex="true" hex="true" />
+  </conditionrule>
+  <actionrule>
+    <action type="script" ><![CDATA[Script lua !!!]]></action>
+    <action type="shell-cmd" cmd="./sh #path_plugin#default.sh ${#object1#} ${#object2#}" var="true" />
+    <action type="ioport-tx" hex="false" data="data" var="true" />
+  </actionrule>
+  <rule id="cur_time_date" init="false" description="" >
+    <condition type="timer" trigger="true"><every>1h</every></condition>
+    <actionlist><action type="set-value" id="#object_date#" value="now"/><action type="set-value" id="cur_date" value="now"/></actionlist>
+  </rule>
+</plugin>

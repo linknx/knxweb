@@ -11,10 +11,33 @@ soit :
 et
   output : "html" / "json" / ""
   nbenreg : si non renseigné si lecture fichier "20" si mysql "1000"
+  ou pour mysql :
+    duration : Nombre
+    periodicity : périodicitée (Hour, Day, (Week), Month, year)
+    TODO => gérer duration et periodicity sur le mode : datejour - ( duration * periodicity ) comme date de début de recherche
+
+
+
 
 */
 
 require_once("include/linknx.php");
+
+$callback = @$_GET['callback'];
+if ($callback && !preg_match('/^[a-zA-Z0-9_]+$/', $callback)) {
+  die('Invalid callback name');
+}
+/*
+$start = @$_GET['start'];
+if ($start && !preg_match('/^[0-9]+$/', $start)) {
+  die("Invalid start parameter: $start");
+}
+$end = @$_GET['end'];
+if ($end && !preg_match('/^[0-9]+$/', $end)) {
+  die("Invalid end parameter: $end");
+}
+if (!$end) $end = time() * 1000;
+*/
 
 $_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
 unset($_config['comment']);
@@ -111,6 +134,23 @@ if ($typelog == "mysql") {
   mysql_select_db($base,$db) or die('<h1>Connexion impossible à la base</h1>');
   mysql_query("SET NAMES 'utf8'");
    
+  /*
+  duration : Nombre
+  periodicity : périodicitée (Hour, Day, (Week), Month, year)
+  TODO => gérer duration et periodicity sur le mode : datejour - ( duration * periodicity ) comme date de début de recherche
+  SELECT something FROM tbl_name WHERE DATE_SUB(CURDATE(),INTERVAL 30 DAY) <= date_col;
+  SELECT DATE_ADD('2008-01-02', INTERVAL 31 DAY);  -> '2008-02-02'
+  */
+
+  $sql2 = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ";
+  if (isset($_GET['duration'])) {
+    $sql2 = $sql2."AND ".$ts." >= DATE_SUB(CURDATE(),INTERVAL ".$_GET['duration']." ".strtoupper($_GET['periodicity']).") ";
+  }
+  if ($_GET['output'] == "json") {
+    $sql2 = $sql2." ORDER BY ".$ts." ASC ";
+  } else {
+    $sql2 = $sql2." ORDER BY ".$ts." DESC ";
+  }
   if ($_GET['output'] == "json") {
     $sql = "SELECT COUNT(".$ts.")-".$log_nbenreg." AS lowlimit FROM ".$table." WHERE ".$object." = '".$objectlog."'";
     $req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
@@ -125,12 +165,14 @@ if ($typelog == "mysql") {
     } else {
       $lowlimit=0;
     }
-    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." ASC LIMIT ".$lowlimit." , ".$log_nbenreg;
+    //$sql2 = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." ASC LIMIT ".$lowlimit." , ".$log_nbenreg;
+    $sql2 = $sql2."LIMIT ".$lowlimit." , ".$log_nbenreg;
     //$sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' LIMIT 0 , ".$log_nbenreg;
   } else {
-    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." DESC LIMIT 0 , ".$log_nbenreg;
+    //$sql2 = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." DESC LIMIT 0 , ".$log_nbenreg;
+    $sql2 = $sql2."LIMIT 0 , ".$log_nbenreg;
   }
-  $req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
+  $req = mysql_query($sql2) or die('Erreur SQL !<br>'.$sql2.'<br>'.mysql_error());
 
   $nbenreg = mysql_num_rows($req);
   $nbenreg--;
@@ -208,7 +250,8 @@ switch ($_GET['output'])
 {
   case 'json':
     header('Content-Type: application/json');
-    print(json_encode($result_tab));
+    if ($callback)  echo $callback."(".json_encode($result_tab).");";
+    else  print(json_encode($result_tab));
     break;
   case 'html':
     header("Content-type: text/plain; charset=utf-8");

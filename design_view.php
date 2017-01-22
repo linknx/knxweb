@@ -16,9 +16,10 @@ tpl()->addJs("js/common.js");
 tpl()->addJs('js/widget.js');
 tpl()->addJs('js/design_view.js');
 tpl()->addJs('lib/jquery.ui.touch-punch.min.js');
+tpl()->addJs("lib/jquery.maphilight.min.js");
 
-$widgets=getWidgets();
-tpl()->assignByRef("widgets",$widgets);
+//$widgets=getWidgets();
+tpl()->assignByRef("widgets",$_widgets);
 tpl()->assignByRef('json_config', $json_config);
 
 addWidgetsJsCssToTpl(false);

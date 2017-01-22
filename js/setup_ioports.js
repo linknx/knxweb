@@ -1,8 +1,8 @@
 var ioports = {
-	
+
 	// Open edit dialog for ioport 'id'
 	editIOport: function (id) {
-	
+
 		var ioport=$('#ioports-tab-table tbody tr[ioport-id=' + id +']');
 		if (ioport)
 		{
@@ -35,7 +35,7 @@ var ioports = {
 				$("#edit-ioport-udp-rxport").val(ioport[0].data.getAttribute('rxport'));
 			}
 			ioports.switchType();
-			
+
 			$("#edit-ioport-form")[0].validator.resetForm();
 			$('#edit-ioport-dialog').dialog('open');
 
@@ -47,16 +47,16 @@ var ioports = {
         else {
           $("#edit-ioport-serial-timeout").removeAttr("disabled");
           $("#edit-ioport-serial-msg-length").removeAttr("disabled");
-        } 
+        }
       });
       $("#edit-ioport-serial-mode").trigger("change");
 		}
-		
+
 	},
-	
+
 	// Open edit dialog with blank fields
 	newIOport: function() {
-	
+
 		$("#edit-ioport-type-tcp").attr('checked',true);
 		$("#edit-ioport-id").val('');
 		$("#edit-ioport-udp-host").val('');
@@ -88,11 +88,11 @@ var ioports = {
       } else {
         $("#edit-ioport-serial-timeout").removeAttr("disabled");
         $("#edit-ioport-serial-msg-length").removeAttr("disabled");
-      } 
+      }
     });
     $("#edit-ioport-serial-mode").trigger("change");
 	},
-	
+
 	// Delete ioport 'id'
 	deleteIOport: function(id)
 	{
@@ -103,15 +103,15 @@ var ioports = {
 			var responseXML=queryLinknx(body);
 			if (responseXML!=false)	ioports.refreshIOportList();
 			loading.hide();
-		} else messageBox("You cannot delete this IO port because it's used in a rule.", 'Error','error');
+		} else messageBox(tr("You cannot delete this IO port because it's used in a rule."), tr('Error'),'error');
 	},
-	
+
 	// Process add/edit ioport
 	processAddEdit: function()
 	{
 		if ($("#edit-ioport-form").valid())
 		{
-		
+
 			var body='<write><config><services><ioports><ioport id="' + $("#edit-ioport-id").val() + '" ';
 			if ($("#edit-ioport-type-tcp").attr('checked'))
 			{
@@ -138,7 +138,7 @@ var ioports = {
 				body+='regex="' + (($("#edit-ioport-serial-regex").attr('checked'))?'true':'false') + '" ';
 			}
 			body+='/></ioports></services></config></write>';
-		
+
 			loading.show();
 			var responseXML=queryLinknx(body);
 			if (responseXML!=false)	ioports.refreshIOportList();
@@ -146,7 +146,7 @@ var ioports = {
 			return true;
 		} else return false;
 	},
-	
+
 	switchType: function() {
 		$('#edit-ioport-serial-tbody input').attr('disabled','1');
 		$('#edit-ioport-udp-tbody input').attr('disabled','1');
@@ -166,43 +166,35 @@ var ioports = {
 			$('#edit-ioport-serial-tbody').show();
 		}
 	},
-	
+
 	refreshIOportList: function() {
 		loading.show();
-	
-		var body = '<read><config><services><ioports /></services></config></read>';
-		var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
-			success: function(responseXML, status) {
-				var xmlResponse = responseXML.documentElement;
-				if (xmlResponse.getAttribute('status') != 'error') {
-					
-					$('#ioports-tab-table tbody').empty();
-	
-					$('ioport', responseXML).each(function() {
-						var tr = $("<tr>");
-						tr.attr('ioport-id',this.getAttribute('id'));
-						tr[0].data=this;
-						tr.append($("<td>").html(this.getAttribute('id')));
-						if (this.getAttribute('type')) tr.append($("<td>").html(this.getAttribute('type'))); else tr.append($("<td>").html('udp'));
-						
-						if (this.getAttribute('type')=='serial')
-							tr.append($("<td>").html(this.getAttribute('dev')));
-						else
-							tr.append($("<td>").html(this.getAttribute('host')));
 
-						tr.dblclick(function() {
-							ioports.editIOport(this.data.getAttribute('id'));
-						});
-						$('#ioports-tab-table').append(tr);
-					});
-					
-					$("#ioports-tab-table").trigger("refresh");
-				}
+    var responseXML = queryLinknx('<read><config><services><ioports /></services></config></read>');
+    if (responseXML) {
+			$('#ioports-tab-table tbody').empty();
+
+			$('ioport', responseXML).each(function() {
+				var tr = $("<tr>");
+				tr.attr('ioport-id',this.getAttribute('id'));
+				tr[0].data=this;
+				tr.append($("<td>").html(this.getAttribute('id')));
+				if (this.getAttribute('type')) tr.append($("<td>").html(this.getAttribute('type'))); else tr.append($("<td>").html('udp'));
+
+				if (this.getAttribute('type')=='serial')
+					tr.append($("<td>").html(this.getAttribute('dev')));
 				else
-					messageBox(tr("Error: ")+responseXML.textContent, 'Error', 'alert');
-				loading.hide();
-			}
-		});
+					tr.append($("<td>").html(this.getAttribute('host')));
+
+				tr.dblclick(function() {
+					ioports.editIOport(this.data.getAttribute('id'));
+				});
+				$('#ioports-tab-table').append(tr);
+			});
+
+			$("#ioports-tab-table").trigger("refresh");
+		}
+		loading.hide();
 	}
 }
 
@@ -214,18 +206,18 @@ jQuery(document).ready(function(){
 	$('#button-add-ioport').bind('click', ioports.newIOport);
 	$('#button-edit-ioport').bind('click', function() {
 		var selected=$('.row_selected:first','#ioports-tab-table')[0];
-		if (selected) ioports.editIOport(selected.data.getAttribute('id')); else messageBox('Please select an IO port in the list','Warning','alert');
+		if (selected) ioports.editIOport(selected.data.getAttribute('id')); else messageBox(tr('Please select an IO port in the list'),tr('Warning'),'alert');
 	});
 	$('#button-remove-ioport').bind('click', function() {
 		var selected=$('.row_selected:first','#ioports-tab-table')[0];
-		if (selected) ioports.deleteIOport(selected.data.getAttribute('id')); else messageBox('Please select an IO port in the list','Warning','alert');
+		if (selected) ioports.deleteIOport(selected.data.getAttribute('id')); else messageBox(tr('Please select an IO port in the list'),tr('Warning'),'alert');
 	});
-	
+
 	// Setup ioport edit form
 	$("#edit-ioport-form")[0].validator=$("#edit-ioport-form").validate();
 
 	// Setup ioport edit dialog
-	$('#edit-ioport-dialog').dialog({ 
+	$('#edit-ioport-dialog').dialog({
 		autoOpen: false,
 		buttons: [
       { text: tr("Cancel"), click: function() { $(this).dialog("close"); } },
@@ -236,12 +228,12 @@ jQuery(document).ready(function(){
 		width: "540px",
 		modal: true
 	});
-	
+
 	$('#edit-ioport-type-tcp').click(ioports.switchType);
 	$('#edit-ioport-type-udp').click(ioports.switchType);
 	$('#edit-ioport-type-serial').click(ioports.switchType);
 	ioports.switchType();
-	
+
 	// Setup ioport table
 	$('#ioports-tab-table').show();
 	$('#ioports-tab-table').tableize({
@@ -250,5 +242,5 @@ jQuery(document).ready(function(){
 	});
 	// Clean dummy tr
 	$('#ioports-tab-table tbody').empty();
-	
-});	
+
+});

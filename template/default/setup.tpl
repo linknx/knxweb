@@ -18,6 +18,7 @@
 		var _widgetscssexist = {$widgetscssexist};
     var i18n = {$_lang|json_encode};
 		var tab_objectTypes = {$json_objectTypes};
+    var _path_knxweb = "{$_path_knxweb}";
 		</script>
 		{foreach from=$jsList item=js}
 		<script type="text/javascript" src="{$js}"></script>
@@ -50,8 +51,9 @@ Credits : <br />
  - Anthony P. (<a href="https://sourceforge.net/users/energy01">energy01</a>) <br />
 </div>
 
-<div style="position: absolute; top: 0px; right: 0px;z-index: 1000;{if (!$MAJ_knxweb2) }display:none;{/if}">
-  <span class="green"><i>&nbsp;{l lang='en'}New version on cvs{/l}&nbsp;</i></span>
+<div style="position: absolute; top: 0px; right: 0px;z-index: 1000;cursor: pointer;{if (!$MAJ_knxweb2 && !$MAJ_knxweb2_git) }display:none;{/if}">
+  {if ($MAJ_knxweb2) }<span class="green" tiltle="{l lang='en'}Click to Update{/l}" onclick="UpdateKnxWeb()"><i>&nbsp;{l lang='en'}New version on cvs{/l}&nbsp;</i></span>{/if}
+  {if ($MAJ_knxweb2_git) }<span class="green" tiltle="{l lang='en'}Click to Update{/l}" onclick="UpdateKnxWebGit()"><i>&nbsp;{l lang='en'}New version on git{/l}&nbsp;</i></span>{/if}
 </div>
 
 <div id="loaderModal">
@@ -113,6 +115,7 @@ Credits : <br />
 				<div class="subItem" id="button-remove-object"><img src="images/remove.png" />{l lang='en'}Delete object{/l}</div>
 				<div class="subItem" id="button-edit-object"><img src="images/edit.png" />{l lang='en'}Edit object{/l}</div>
 				<div class="subItem" id="button-read-object"><img src="images/fetch.png" />{l lang='en'}Read/write object value{/l}</div>
+				<div class="subItem" id="button-refresh-object" onclick="objects.refreshObjectList()" ><img src="images/refresh.gif" />{l lang='en'}Refresh the list of objects{/l}</div>
 			</div>
 
 			<h3 tab_id="ioports" tab_label="{l lang='en'}IO Ports{/l}" tab_url="setup_ioports.php"><a href="#"><img src="images/ioport.png"> {l lang='en'}IO Ports{/l}</a></h3>
@@ -129,12 +132,18 @@ Credits : <br />
 				<div class="subItem" id="button-remove-rule" onclick="rules.deleteAllCurrentRule();reloadloadRulesList();"><img src="images/refresh.gif" />{l lang='en'}Clear/Refresh{/l}</div>
 			</div>
 			
-			<h3 tab_id="events" tab_label="{l lang='en'}Events{/l}" tab_url="setup_events.php"><a href="#"><img src="images/rules.png"> {l lang='en'}Events{/l}</a></h3>
+			<!-- <h3 tab_id="events" tab_label="{l lang='en'}Events{/l}" tab_url="setup_events.php"><a href="#"><img src="images/rules.png"> {l lang='en'}Events{/l}</a></h3>
 			<div>
-				<!-- <div class="subItem" id="button-add-event"><img src="images/add.png" />{l lang='en'}Add new event{/l}</div>
-				<div class="subItem" id="button-remove-event"><img src="images/remove.png" />{l lang='en'}Delete event{/l}</div>
-				<div class="subItem" id="button-edit-event"><img src="images/edit.png" />{l lang='en'}Edit event{/l}</div> -->
 				<div class="subItem" id="button-refresh-event" onclick="events.loadEventsStatusList();"><img src="images/refresh.gif" />{l lang='en'}Reload events{/l}</div>
+			</div>-->
+						
+      <h3 tab_id="rulesv2" tab_label="{l lang='en'}Rules{/l} v2" tab_url="setup_rulesv2.php"><a href="#"><img src="images/rules.png"> {l lang='en'}Rules{/l} v2</a></h3>
+			<div>
+				<!--
+        <div class="subItem" id="button-edit-rule" onclick="validRule()" ><img src="images/fetch.png" />{l lang='en'}Save rule{/l}</div>
+				<div class="subItem" id="button-delete-rule" onclick="deleteRule()" ><img src="images/remove.png" />{l lang='en'}Delete rule{/l}</div>
+				<div class="subItem" id="button-remove-rule" onclick="rules.deleteAllCurrentRule();reloadloadRulesList();"><img src="images/refresh.gif" />{l lang='en'}Clear/Refresh{/l}</div>
+        -->
 			</div>
 						
 			<h3 tab_id="designedit" tab_label="{l lang='en'}Edit design{/l}" tab_url="setup_design.php"><a href="#"><img src="images/setup.png"> {l lang='en'}Edit design{/l}</a></h3>
@@ -143,6 +152,7 @@ Credits : <br />
         <div class="subItem" id="button-remove-design"><img src="images/remove.png" />{l lang='en'}Remove design{/l}</div>
         <div class="subItem" id="button-add-new-zone"><img src="images/add.png" />{l lang='en'}New zone{/l}</div>
         <div class="subItem" id="button-remove-zone"><img src="images/remove.png" />{l lang='en'}Remove zone{/l}</div>
+        <div class="subItem" id="button-refresh-zone" onclick="design.refreshDesign()" ><img src="images/refresh.gif" />{l lang='en'}Refresh design{/l}</div>
 
         <div class="subItem"><img src="images/add.png" />
         
@@ -236,22 +246,20 @@ Credits : <br />
 			  <div class="subItem" tab_id="admin-config-log-linknx" tab_label="{l lang='en'}Log Linknx{/l}" tab_url="setup_admin.php?loglinknx" ><img src="images/setup.png" /> {l lang='en'}Log Linknx{/l}</div>
       </div>
       <h3 tab_id="repository" tab_label="{l lang='en'}Repository{/l}" tab_url="setup_repository.php"><a href="#"><img src="images/construct.png"> {l lang='en'}Repository{/l}</a></h3>
+      <div></div>
+      
+      {if ($plugins) }
+      <h3 tab_id="plugins" tab_label="{l lang='en'}Plugins{/l}" tab_url="setup_plugins.php" ><a href="#"><img src="images/setup.png"> {l lang='en'}Plugins{/l}</a></h3>
       <div>
-        <!-- <div class="subItem" >{l lang='en'}Repository of Subpages{/l}</div>
-        <div class="subItem" id="button-refresh-subpagesdl" onclick="subpagesdl.refresh();"><img src="images/refresh.gif" />{l lang='en'}Refresh{/l}</div>
-        <div class="subItem"><img src="images/add.png" />
-          <select id="subpagesdl-list" onchange="subpagesdl.add($(this).val()); $(this).val('')" style="width:145px;height: 16px;">
-            <option value="">{l lang='en'}Sub-pages List{/l}</option>
-          </select>
+        <div class="subItem" id="button-save-plugins" onclick="plugins.save();" ><img src="images/fetch.png" />{l lang='en'}Save{/l}</div>
+        <!--
+        <div class="subItem" id="button-add-plugin"><img src="images/add.png" />{l lang='en'}Add new plugin{/l}</div>
+        <div class="subItem" id="button-remove-plugin" onclick="plugins.delete();"><img src="images/remove.png" />{l lang='en'}Delete plugin{/l}</div>
+        <div class="subItem" id="button-edit-plugin"><img src="images/edit.png" />{l lang='en'}Edit plugin{/l}</div>
+        -->
+        <div class="subItem" id="button-refresh-plugins" onclick="plugins.refreshpluginsList();"><img src="images/refresh.gif" />{l lang='en'}Reload plugins{/l}</div>
         </div>
-        <div class="subItem" >{l lang='en'}Repository of Widgets{/l}</div>
-        <div class="subItem" id="button-refresh-widgetsdl" onclick="widgetsdl.refresh();"><img src="images/refresh.gif" />{l lang='en'}Refresh{/l}</div>
-        <div class="subItem"><img src="images/add.png" />
-          <select id="widgetsdl-list" onchange="widgetsdl.add($(this).val()); $(this).val('')" style="width:145px;height: 16px;">
-            <option value="">{l lang='en'}Widgets List{/l}</option>
-          </select>
-        </div> -->
-      </div>
+      {/if}
 			
 		</div>
 		<div id="propertiesContainer">

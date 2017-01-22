@@ -14,6 +14,7 @@
       <option key="false" value="No"/>
     </setting>
     <setting id="background-picture" label="Background picture" type="picture" default=""/>
+    <setting id="knob-picture" label="Knob picture" type="picture"/>
     <setting label="" type="separator" />
     <setting id="border" label="Border" type="list" default="true">
       <option key="true" value="Yes"/>

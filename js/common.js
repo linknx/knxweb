@@ -4,12 +4,26 @@ var _editMode = false;
 var _subpages;
 var _floating_zone = false;
 var _floating_zone_margin = 10;
+var _url_subpages = 'design/subpages.xml';
 
 var _objectTypesValues = {
-	'1.001': ['on','off'],
-	'3.007': ['up','down','stop'],
-	'3.008': ['close','open','stop'],
-	'20.102': ['comfort','standby','night','frost']
+	'1.001': [tr('on'),tr('off')],
+  '1.002': [tr('true'),tr('false')],
+  '1.003': [tr('enable'),tr('disable')],
+  '1.004': [tr('ramp'),tr('no ramp')],
+  '1.005': [tr('alarm'),tr('no alarm')],
+  '1.006': [tr('high'),tr('low')],
+  '1.007': [tr('increase'),tr('decrease')],
+  '1.008': [tr('down'),tr('up')],
+  '1.009': [tr('close'),tr('open')],
+  '1.010': [tr('start'),tr('stop')],
+  '1.011': [tr('active'),tr('inactive')],
+  '1.012': [tr('inverted'),tr('not inverted')],
+  '1.013': [tr('cyclically'),tr('start/stop')],
+  '1.014': [tr('calculated'),tr('fixed')],
+	'3.007': [tr('up'),tr('down'),tr('stop')],
+	'3.008': [tr('close'),tr('open'),tr('stop')],
+	'20.102': [tr('comfort'),tr('standby'),tr('night'),tr('frost')]
 }
 
 var _tab_effects = new Array("blind","bounce","clip","drop","explode","fold","highlight","puff","pulsate","scale","shake","size","slide");
@@ -60,7 +74,6 @@ function tr(msg)
 {
 	var cRet = (typeof(i18n)!='undefined') ? i18n[msg] : msg;
 	if(!cRet) {
-		//return "§§§" + msg + "§§§";
 		return msg;
 	}
 	return cRet;
@@ -79,14 +92,14 @@ function isObjectUsed(id)
 
 	if (responseXML!=false)
 	{
-		$('condition', responseXML).each(function() {
+		$('condition', responseXML).each(function() { /* TODO à compléter car ne gère pas toutes les conditions */
 			if ((this.getAttribute('type')=='object')&&(this.getAttribute('id')==id))
 			{
 				used=true;
 				return used;
 			}
 		});
-		$('action', responseXML).each(function() {
+		$('action', responseXML).each(function() { /* TODO à compléter car ne gère pas toutes les actions */
 			if ((this.getAttribute('type')=='set-value')&&(this.getAttribute('id')==id))
 			{
 				used=true;
@@ -97,7 +110,7 @@ function isObjectUsed(id)
 	return used;
 }
 
-function isIOportUsed(id)
+function isIOportUsed(ioport)
 {
 	var used=false;
 	var responseXML=queryLinknx('<read><config><rules/></config></read>');
@@ -105,14 +118,19 @@ function isIOportUsed(id)
 	if (responseXML!=false)
 	{
 		$('condition', responseXML).each(function() {
-			if ((this.getAttribute('type')=='ioport-rx')&&(this.getAttribute('id')==id))
+			if ((this.getAttribute('type')=='ioport-rx')&&(this.getAttribute('ioport')==ioport))
+			{
+				used=true;
+				return used;
+			}
+			if ((this.getAttribute('type')=='ioport-connect')&&(this.getAttribute('ioport')==ioport))
 			{
 				used=true;
 				return used;
 			}
 		});
 		$('action', responseXML).each(function() {
-			if ((this.getAttribute('type')=='ioport-tx')&&(this.getAttribute('id')==id))
+			if ((this.getAttribute('type')=='ioport-tx')&&(this.getAttribute('ioport')==ioport))
 			{
 				used=true;
 				return used;
@@ -262,7 +280,7 @@ function queryLinknx(message) {
 	var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd&nocache=' + t, data: message, processData: false, dataType: 'xml',async: false,
 		success: function(responseXML, status) {
 			var xmlResponse = responseXML.documentElement;
-			if (xmlResponse.getAttribute('status') == 'success') {
+      if (xmlResponse.getAttribute('status') != 'error') { // le status peut valoir "success", "error" et "ongoing"
 				data=xmlResponse;
 			}
 			else 
@@ -280,24 +298,17 @@ function queryKnxweb(action, type, message, callasync) {
 	var data;
 	var req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action='+action+'&nocache=' + t, data: message, processData: false, dataType: type,async: callasync,
 		success: function(responseXML, status) {
-			var xmlResponse = responseXML.documentElement;
-			if (xmlResponse.getAttribute('status') == 'success') {
-				data=xmlResponse;
-			}
-			else 
-			{
-				messageBox(tr("Error: ")+xmlResponse.textContent, tr('Error'), 'alert');
-				data=false;
-			}
+			data=responseXML.documentElement;
+		},
+		error: function (XMLHttpRequest, textStatus, errorThrown) {
+			data=false;
 		}
 	});
 	return data;
 }
 
 function loadSubPages() {
-	var url = 'design/subpages.xml';
-
-	req = jQuery.ajax({ url: url, dataType: 'xml', async: false, cache: false,
+	req = jQuery.ajax({ url: _url_subpages, dataType: 'xml', async: false, cache: false,
 		success: function(responseXML, status) {
 			_subpages=responseXML
 		}
@@ -341,7 +352,11 @@ $.fn.widgetMovable = function(method) {
     
 		if (!$(widget).hasClass("selected"))
 		{
-			$('div').removeClass("selected");
+			$("div.widget.selected").each( function() {
+				$(this).removeClass("selected");
+				var opt = $(this).data('widgetMovable');
+				if (opt.onDeSelect!=null) opt.onDeSelect($(this).get(0));
+			});
 			$(widget).addClass("selected");
 			
 			$(".resizeSE").hide();
@@ -363,8 +378,12 @@ $.fn.widgetMovable = function(method) {
 					resizable: true,
 					draggable: true,
 					onSelect: null,
+					onMoveStart: null,
 					onMove: null,
-					onResize: null
+					onMoveStop: null,
+					onResizeStart: null,
+					onResize: null,
+					onResizeStop: null
 				}, options);
 
 				var $this = $(this);
@@ -384,14 +403,18 @@ $.fn.widgetMovable = function(method) {
   				if (_editMode) { if (_designeditview) {if (design.gridwidgetsize) grid = [design.gridWidth, design.gridWidth]; }}
 					div.draggable({
   					grid: grid,
+						start: function(event, ui) {
+							if (options.onResizeStart!=null) options.onResizeStart($(this).parent().get(0));
+						},
 						containment: [left,top,9999,9999],
 						drag: function(event, ui) {
 							var div=$(this).parent();
 							div.width(ui.position.left);
 							div.height(ui.position.top);
+              if (options.onResize!=null) options.onResize($(this).parent().get(0));
 						},
 						stop: function(event, ui) {
-							if (options.onResize!=null) options.onResize($(this).parent().get(0));
+							if (options.onResizeStop!=null) options.onResizeStop($(this).parent().get(0));
 						}
 					});
 				}
@@ -407,8 +430,6 @@ $.fn.widgetMovable = function(method) {
   					delay: 50,
   					grid: grid,
   					stop: function(event, ui) {
-  						//var left=Math.round($(this).css('left').replace(/px$/,"")) + widgetContainer.offset().left;
-  						//var top=Math.round($(this).css('top').replace(/px$/,"")) + widgetContainer.offset().top;
   						var left=Math.round($(this).css('left').replace(/px$/,""));
   						var top=Math.round($(this).css('top').replace(/px$/,""));
               if (_editMode) {
@@ -427,11 +448,16 @@ $.fn.widgetMovable = function(method) {
   						top+= widgetContainer.offset().top;
               
   						$('.resizeSE', this).draggable( "option", "containment", [left,top,9999,9999] );
-  						//if (options.onMove!=null) options.onMove(this, ui.position.left, ui.position.top);
-  						if (options.onMove!=null) options.onMove(this, left2, top2);
+  						if (options.onMoveStop!=null) options.onMoveStop(this, left2, top2);
   					},
   					start: function(event, ui) {
   						select(this);
+  						var left=Math.round($(this).css('left').replace(/px$/,""));
+  						var top=Math.round($(this).css('top').replace(/px$/,""));
+  						if (options.onMoveStart!=null) options.onMoveStart(this, left, top);
+  					},
+  					drag: function(event, ui) {
+  						if (options.onMove!=null) options.onMove(this, Math.round(ui.position.left), Math.round(ui.position.top));
   					}
   				});
 				}
@@ -456,8 +482,6 @@ $.fn.widgetMovable = function(method) {
 	} else if ( typeof method === 'object' || ! method ) {
 		return methods.init.apply( this, arguments );
 	} else {
-		//$.error( 'Method ' +  method + ' does not exists.' );
-    //$.error( tr('Method') + ' ' +  tr(method) + ' ' +  tr('does not exists.') );
     $.error( tr('Method') + ' ' +  method + ' ' +  tr('does not exists.') );
 	}    
 
@@ -485,3 +509,33 @@ function StringtoXML(text){
   }
   return doc;
 }
+
+function UpdateKnxWeb(){
+  loading.show();
+  var xmlResponse = queryKnxweb('updateknxweb', '', '', false);
+  if (xmlResponse != false ) {
+    if (xmlResponse.getAttribute('status') == 'success') {
+      messageBox(tr("Info") + ": "+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Info'), 'check');
+		}
+		else {
+      messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
+		}
+  } else messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
+  loading.hide();
+  return true;
+};
+
+function UpdateKnxWebGit(){
+  loading.show();
+  var xmlResponse = queryKnxweb('updateknxwebgit', '', '', false);
+  if (xmlResponse != false ) {
+    if (xmlResponse.getAttribute('status') == 'success') {
+      messageBox(tr("Info") + ": "+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Info'), 'check');
+		}
+		else {
+      messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
+		}
+  } else messageBox(tr("Error: ")+ tr("Reload KnxWeb") + xmlResponse.textContent, tr('Error'), 'alert');
+  loading.hide();
+  return true;
+};

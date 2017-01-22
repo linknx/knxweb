@@ -9,35 +9,29 @@ var subpages = {
 	load: function()
 	{
 		var url = 'design/subpages.xml';
-	
+
 		req = jQuery.ajax({ url: url, dataType: 'xml', async: false, cache: false,
 			success: function(responseXML, status) {
-				
+
 				subpages.config=responseXML
 				subpages.refreshSubPagesList();
 			}
 		});
 	},
-	
+
 	// Save subpages from server
 	save: function() {
 		var string = serializeXmlToString(subpages.config);
-		var url = 'design_technique.php?action=savesubpages';
-		req = jQuery.ajax({ type: 'post', url: url, data: string, processData: false, dataType: 'xml' ,
-			success: function(responseXML, status) {
-				var xmlResponse = responseXML.documentElement;
-				if (xmlResponse.getAttribute('status') == 'success')
-				{
-					messageBox(tr("Sub-pages saved successfully"), tr("Info"), "check");
-					subpages.load();
-				}	else messageBox(tr("Error while saving design: ")+xmlResponse.textContent, tr("Error"), "alert");
-			},
-			error: function (XMLHttpRequest, textStatus, errorThrown) {
-					messageBox(tr("Error while saving design: ")+textStatus, tr("Error"), "alert");
-			}
-		});
+    var result = queryKnxweb('savesubpages', 'xml', string, false);
+    if (result != false ) {
+			if (result.getAttribute('status') == 'success')
+			{
+				messageBox(tr("Sub-pages saved successfully"), tr("Info"), "check");
+				subpages.load();
+			}	else messageBox(tr("Error while saving Subpage")+result.textContent, tr("Error"), "alert");
+    } else messageBox(tr("Error while saving Subpage"), tr("Error"), "alert");
 	},
-	
+
 	// Create a new subpage
 	new: function()	{
 		var name=prompt(tr('Enter name for new subpage'),'');
@@ -62,9 +56,9 @@ var subpages = {
 			} else messageBox(tr("Another sub-page with the same name already exists"), tr("Error"), "alert");
 		}
 	},
-  
+
   // Clone a subpage
-  clone: function()	{ 
+  clone: function()	{
     var name=prompt(tr('Enter name for new subpage cloned'),'');
     if (name!=null)	{
       $('subpage', subpages.config).each(function() {
@@ -75,22 +69,22 @@ var subpages = {
             subpage.setAttribute(attr.name, attr.value);
           });
           subpage.setAttribute('name', name);
-          
+
           $('subpages', subpages.config).append(subpage);
-          
+
           //var param = subpages.config.createElement('parameters');
           //$('parameters', this).append(subpage);
           var parameters = $('parameters', this).clone();
-          //param = parameters[0]; 
+          //param = parameters[0];
           //subpage.appendChild(param);
           subpage.appendChild(parameters[0]);
-          
+
           //var controls = subpages.config.createElement('controls');
           var controlsold = $('controls', this).clone();
           //controls = controlsold[0];
           //subpage.appendChild(controls);
           subpage.appendChild(controlsold[0]);
-          
+
           subpages.draw(name);
           subpages.refreshSubPagesList();
           return;
@@ -98,7 +92,7 @@ var subpages = {
   		});
       /* pour le clone d'un widget :
       $("#tab-subpages-clone-widget").click(function() {
-    		if ($("div .selected").length>0)	
+    		if ($("div .selected").length>0)
     		{
     			var conf=$("div .selected").get(0).owner.conf;
     			var newConf=conf.cloneNode(true);
@@ -119,12 +113,12 @@ var subpages = {
 			$('subpage[name=' + name + ']', subpages.config).each(function() { this.parentNode.removeChild( this ); });
 
 			subpages.refreshSubPagesList();
-			
+
 			var firstsubpage=$("#tab-subpages-list option:first-child").val();
 			if (firstsubpage) subpages.draw(firstsubpage); else subpages.clear();
 		}
 	},
-	
+
 	// Check if a subpage exists
 	subPageExists: function(name) {
 		var found=false;
@@ -146,7 +140,7 @@ var subpages = {
 			$('#tab-subpages-list').append(option);
 		});
 	},
-	
+
 	// Draw a subpage
 	draw: function(name) {
     if (_editMode) _designeditview = false;
@@ -154,15 +148,15 @@ var subpages = {
 		if (name!=null)
 		{
 			subpages.clear();
-	
+
 			this.currentSubPage = name;
-			
+
 			var subpage= $('subpage[name=' + name + ']', subpages.config);
-	
+
 			$('#widgetsubpagediv').width(subpage[0].getAttribute('width'));
 			$('#widgetsubpagediv').height(subpage[0].getAttribute('height'));
 			if (subpage[0].getAttribute('bgcolor')) $('#widgetsubpagediv').css("background-color", subpage[0].getAttribute('bgcolor')); else $('#widgetsubpagediv').css("background-color", "");
-	
+
 			$("#tab-subpages-width").val(subpage[0].getAttribute('width'));
 			$("#tab-subpages-height").val(subpage[0].getAttribute('height'));
 			$("#tab-subpages-color").val(subpage[0].getAttribute('bgcolor'));
@@ -172,7 +166,7 @@ var subpages = {
 			{
 		   	var isSubPageParameter=((value.substring(0,1)=="_")?true:false);
 		   	var subPageParameterValue=value.substring(1,value.length);
-				
+
 		   	var select=$('#tab-subpages-background-list');
 					$('subpage[name=' + subpages.currentSubPage + '] parameters parameter', subpages.config).each(function() {
 						if (this.getAttribute('type')=='picture') {
@@ -181,8 +175,8 @@ var subpages = {
 			    		select.append(option);
 			    	}
 				});
-						
-				if (isSubPageParameter) 
+
+				if (isSubPageParameter)
 				{
 					$('#tab-subpages-background-toggle').attr('checked', true);
 					$('#tab-subpages-background').css("display","none");
@@ -222,7 +216,7 @@ var subpages = {
 		if (cls)
 		{
 			obj = new cls(conf);
-		
+
 			if (obj!=null) {
 				$('#widgetsubpagediv').append(obj.div);
 				obj.edit(subpages.onWidgetSelect, subpages.onWidgetMove, subpages.onWidgetResize);
@@ -254,23 +248,20 @@ var subpages = {
 			return false;
 		}	else return false;
 	},
-	
+
 	// Create a new widget
 	newWidget: function(type) {
 		// Fetch default config and add widget
-		req = jQuery.ajax({ type: 'post', url: 'design_technique.php?action=newWidget&type='+type, dataType: 'xml',
-			success: function(conf) {
-
-				var conf = conf.documentElement;
-				$('subpage[name=' + subpages.currentSubPage + ']', subpages.config).each(function() {
-					this.getElementsByTagName('controls')[0].appendChild(conf);
-				});
-				var obj=subpages.addWidget(conf);
-				obj.div.widgetMovable("select");
-			}
+    var result = queryKnxweb('newWidget&type='+type, 'xml', '', false);
+    if (result != false ) {
+			$('subpage[name=' + subpages.currentSubPage + ']', subpages.config).each(function() {
+				this.getElementsByTagName('controls')[0].appendChild(result);
 		});
+			var obj=subpages.addWidget(result);
+			obj.div.widgetMovable("select");
+    }
 	},
-	
+
 	// Delete a widget
 	deleteWidget: function(o) {
     subpages.removeWidgetsList(o);
@@ -279,7 +270,7 @@ var subpages = {
 		// Remove from xml
 		$(o.conf).remove();
 	},
-	
+
 	// Remove all widget
 	clear: function() {
 		$("#widgetsubpagediv .widget").each(function() {
@@ -311,9 +302,9 @@ var subpages = {
     var type=o.conf.getAttribute('type');
     var eis_type=o.conf.getAttribute('eis_type');
     var desc=o.conf.getAttribute('desc');
-    if (!desc) desc = type;
+    if (!desc) desc = tr('-no description-');
     subpages.number++;
-    o.number = subpages.number; 
+    o.number = subpages.number;
 
     var table_tr=$('<tr/>');
     table_tr.get(0).obj = o;
@@ -331,7 +322,7 @@ var subpages = {
 
     bpviewxml.click(function() {
       $('#tab-design-fluxxml').html("<textarea rows=30 cols=125>" + serializeXmlToString(this.parentNode.obj.conf) + "</textarea>");
-      $('#tab-design-fluxxml').dialog({ 
+      $('#tab-design-fluxxml').dialog({
         width: 812,
         modal: true,
         buttons: [
@@ -342,7 +333,7 @@ var subpages = {
 
     $("#tab-subpages-widgets-list tbody").append(table_tr);
   },
-  // Refresh Widgets List	
+  // Refresh Widgets List
 	refreshWidgetsList: function() {
 		$("#tab-subpages-widgets-list tbody").empty();
     subpages.number = 0;
@@ -371,36 +362,36 @@ var subpages = {
       if (this.obj == o) $(this).addClass("active");
     });
   },
-  
-  
+
+
 	// Fill properties table when selecting a widget
 	displayProperties: function(o) {
 		var type=o.conf.getAttribute('type');
 		var eis_type=o.conf.getAttribute('eis_type');
 
-		$('#tab-subpages-properties div:first-child').html(type + ' properties');
+    $("#tab-subpages-properties div:first-child").html(tr('Properties')+' '+tr('of')+' '+type);
 
 		$('#tab-subpages-subpage-properties').hide();
 
 		$('#tab-subpages-widget-buttons').show();
-		
+
 		$("#tab-subpages-widget-properties tbody").empty();
-		
+
 		var properties = eval( "_widgets." + type + ".settings" );
 
 	  // Setup standard fields x,y,width,height
 	  var table_tr=$('<tr><th colspan="2">X</th><td><input id="tab-subpages-properties-x" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("x") + '"></td></tr>');
 	   $("#tab-subpages-widget-properties tbody").append(table_tr);
-	 
+
 	  var table_tr=$('<tr><th colspan="2">Y</th><td><input id="tab-subpages-properties-y" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("y") + '"></td></tr>');
 	   $("#tab-subpages-widget-properties tbody").append(table_tr);
-	
+
     var table_tr=$('<tr><th colspan="2">' +tr('Description')+'</th><td><input id="tab-subpages-properties-desc" type="text" name="desc" value="' + ((!o.conf.getAttribute("desc"))?'':o.conf.getAttribute("desc")) + '"></td></tr>');
     $("#tab-subpages-widget-properties tbody").append(table_tr);
     $("#tab-subpages-properties-desc").change(function() {
       o.setSetting("desc", $(this).val());
     });
-	
+
 		if (o.isResizable) {
 			var table_tr=$('<tr><th colspan="2">' +tr('Width')+'</th><td><input id="tab-subpages-properties-width" type="text" name="' + this.id + '" value="' + o.conf.getAttribute("width") + '"></td></tr>');
 			$("#tab-subpages-widget-properties tbody").append(table_tr);
@@ -414,17 +405,25 @@ var subpages = {
 				o.setSetting("height", $(this).val());
 			});
 		}
+
+    if (_widgetscssexist) {
+      var table_tr=$('<tr><th colspan="2">' +tr('Class CSS')+'</th><td><input id="tab-subpages-properties-class" type="text" value="' + (( o.conf.getAttribute("class") == null )?'':o.conf.getAttribute("class")) + '"></td></tr>');
+			$("#tab-subpages-widget-properties tbody").append(table_tr);
+			$("#tab-subpages-properties-class").change(function() {
+				o.setSetting("class", $(this).val());
+			});
+    }
 	   
 		$("#tab-subpages-properties-x").change(function() {
 			o.setSetting("x", $(this).val());
 		});
-	
+
 		$("#tab-subpages-properties-y").change(function() {
 			o.setSetting("y", $(this).val());
 		});
-		
+
 		$.each(properties, function() {
-	
+
 			// Comment or separator
 			if (this.type=="comment" || this.type=="separator")
 			{
@@ -445,33 +444,35 @@ var subpages = {
             o.conf.firstChild.nodeValue = value;
           }
           value = o.conf.firstChild.nodeValue;
-        } 
+        }
 
 		    // Add checkbox to use a sub-page parameter
 		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture") || (this.type=="zone") || (this.type=="multipleObject"))
 		    {
 			    var input=$('<input type="checkbox">');
 			    input.get(0).paramId=this.id;
-			    input.attr('title','Use sub-page parameter');
+			    input.attr('title',tr('Use sub-page parameter'));
 			    if (isSubPageParameter) input.attr('checked',1);
 			    input.click(function() {
 			    	if ($(this).is(':checked'))
 			    	{
 							$('[name=' + this.paramId + ']', $(this).parent().parent()).css("display","none");
+							$('[id=' + this.paramId + ']', $(this).parent().parent()).css("display","none");
 							$('[name=_' + this.paramId + ']', $(this).parent().parent()).css("display","block");
 			    	} else
 		    		{
 							$('[name=_' + this.paramId + ']', $(this).parent().parent()).css("display","none");
+							$('[id=' + this.paramId + ']', $(this).parent().parent()).css("display","");
 							$('[name=' + this.paramId + ']', $(this).parent().parent()).css("display","block");
 		    		}
-			    		
+
 			    });
 			    table_tr.append($('<th style="width: 15px;">').append(input));
 			  } else table_tr.append($('<th style="width: 15px;">'));
-		    
-				// Add parameter				
+
+				// Add parameter
 		    var td=$('<td>');
-	    
+
 		    if ((this.type=="text") || (this.type=="object") || (this.type=="picture") || (this.type=="zone") || (this.type=="multipleObject")) {
 					// Select for selecting sub-page parameter
 		    	var select=$('<select>');
@@ -489,7 +490,7 @@ var subpages = {
 		    }
 
 		    // Text setting
-		    if (this.type=="text") 
+		    if (this.type=="text")
 		    {
           var input=$('<input type="text" name="' + this.id + '" value="">');
           if (!isSubPageParameter) input.val(value); //o.conf.getAttribute(this.id)
@@ -503,9 +504,9 @@ var subpages = {
 	    		if (isSubPageParameter) textareaproperties.css('display','none');
           td.append(textareaproperties);
         };
-		
+
 		    // List setting
-		    if (this.type=="list") 
+		    if (this.type=="list")
 		    {
 		    	select=$('<select>');
 		    	select.attr('name', this.id);
@@ -516,16 +517,92 @@ var subpages = {
 		    	});
 		    	td.append(select);
 		  	}
-		
+
 		    // Object setting
-		    if (this.type=="object") 
+		    if (this.type=="object")
 		    {
+	        var optname = this.id+'_eis_filter'
+
+          var only_type = [];
+          var exlude_type = [];
+          if (this.eis_type) {
+            only_type = [this.eis_type];
+          } else if (this.only_type) {
+            only_type = this.only_type.split(',');
+            exlude_type = [];
+            if (array_search( "1.001", only_type )!=-1) {
+              only_type.push('1.002','1.003','1.004','1.005','1.006','1.007','1.008','1.009','1.010','1.011','1.012','1.013','1.014');
+              only_type.push('2.001','2.002','2.003','2.004','2.005','2.006','2.007','2.008','2.009','2.010','2.011','2.012');
+            }
+            if (array_search( "3.007", only_type )!=-1) {
+              only_type.push('3.008');
+            }
+            if (array_search( "5.xxx", only_type )!=-1) {
+              only_type.push('5.001','5.003','5.010');
+            }
+            if (array_search( "9.xxx", only_type )!=-1) {
+              only_type.push('9.001','9.002','9.003','9.004','9.005','9.006','9.007','9.008','9.010','9.011','9.020','9.021','9.022','9.023','9.024','9.025','9.026','9.027','9.028');
+            }
+          }
+
+          if (this.exlude_type) {
+            exlude_type = this.exlude_type.split(',');
+            if (array_search( "1.001", exlude_type )!=-1) {
+              exlude_type.push('1.002','1.003','1.004','1.005','1.006','1.007','1.008','1.009','1.010','1.011','1.012','1.013','1.014');
+              exlude_type.push('2.001','2.002','2.003','2.004','2.005','2.006','2.007','2.008','2.009','2.010','2.011','2.012');
+            }
+            if (array_search( "3.007", exlude_type )!=-1) {
+              exlude_type.push('3.008');
+            }
+            if (array_search( "5.xxx", exlude_type )!=-1) {
+              exlude_type.push('5.001','5.003','5.010');
+            }
+            if (array_search( "9.xxx", exlude_type )!=-1) {
+              exlude_type.push('9.001','9.002','9.003','9.004','9.005','9.006','9.007','9.008','9.010','9.011','9.020','9.021','9.022','9.023','9.024','9.025','9.026','9.027','9.028');
+            }
+          }
+      		if (this.eis_type == undefined)
+      		{
+      			var table_tr_filter=$('<tr>');
+      			//table_tr_filter.append($('<th>' + this.label+"'s EIS Datatype" + '</th>'));
+            table_tr_filter.append('<th>' + tr("EIS Datatype") + '</th><th  style="width: 15px;"></th>');
+      			var td_filter=$('<td>');
+      			if (only_type.length)
+      			{
+      				select=$('<span>'+only_type.join(", ")+'</span>');
+      			} else {
+      				select=$('<select>');
+      				select.attr('name', optname);
+      				select.append("<option value=''>" + tr("All objects") + "</option>");
+      				$.each(tab_objectTypes, function(key, descr) {
+      					var option='<option value="' + key + '"';
+      					if ( array_search( key, exlude_type ) != -1 ) option= option + ' disabled="disabled"';
+      					else if (o.conf.getAttribute(optname)==key) option= option + ' selected="selected"';
+                option=option + '>' + descr + '</option>';
+      					select.append(option);
+      				});
+      			}
+      			td_filter.append(select);
+      			table_tr_filter.append(td_filter);
+            $("#tab-subpages-widget-properties tbody").append(table_tr_filter);
+      			var t = this;
+      			select.change( function() {
+      					filter_type = $(this).val();
+      					o.conf.setAttribute(optname, filter_type);
+      					var selectedWidget=$("#widgetdiv .selected").get(0);
+      					design.displayProperties(selectedWidget.owner);
+      			});
+            if (isSubPageParameter) select.css('display','none');
+      		}
+          // end EIS filter
+
+
 		    	select=$('<select>');
 		    	select.attr('name', this.id);
-	
+
 	    		var option=($('<option value=""></option>'));
 	    		select.append(option);
-	
+
 					$('object', _objects).each(function() {
 		    		var option=($('<option value="' + this.getAttribute('id') + '">' + this.textContent + '</option>'));
 		    		if (!isSubPageParameter) if (this.getAttribute('id')==value) option.attr('selected','1');
@@ -536,12 +613,12 @@ var subpages = {
 		  	}
 
 		    // multipleObject setting
-		    if (this.type=="multipleObject") 
+		    if (this.type=="multipleObject")
 		    {
 					var tabobject = new Array;
           $('object', _objects).each(function() {
             var label_obj = ((this.textContent=="")?this.getAttribute('id'):this.textContent);
-            var value_obj = this.getAttribute('id');        
+            var value_obj = this.getAttribute('id');
             var tab = [];
             tab["label"] = label_obj;
             tab["value"] = value_obj;
@@ -584,7 +661,6 @@ var subpages = {
                 // add placeholder to get the comma-and-space at the end
                 terms.push( "" );
                 this.value = terms.join( ", " );
-                //this.value = terms.join( "|" ); // le séparateur doit être en lien avec la fonction "split( val )" définie plus bas 
                 return false;
               }
             });
@@ -609,35 +685,42 @@ var subpages = {
             });
 		    	td.append(wrapper);
 		  	}
-		
+
 		    // Picture setting
-		    if (this.type=="picture") 
+		    if (this.type=="picture")
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + ((!isSubPageParameter)?value:"") + '">')); //o.conf.getAttribute(this.id)
-					input.click(function() {
-						openImagesManager($(this));
-					});			
+					var input=($('<input type="text" style="width: 75%;" name="' + this.id + '" value="' + ((!isSubPageParameter)?value:"") + '">')); //o.conf.getAttribute(this.id)
 	    		if (isSubPageParameter) input.css('display','none');
 		    	td.append(input);
+          var openimages=($('<div id="' + this.id + '" style="width: 20%;">'+tr('Open images manager')+'</div>'));
+          openimages.button({ icons: {	primary: "ui-icon-folder-open" }, text: false }).removeClass('ui-button-text-icon-primary');
+          openimages.click(function() {
+						openImagesManager(input);
+					});
+          if (isSubPageParameter) openimages.css('display','none');
+		    	td.append(openimages);
 		  	}
 
 		    // Color setting
-		    if (this.type=="color") 
+		    if (this.type=="color")
 		    {
-					var input=($('<input type="text" name="' + this.id + '" value="' + value + '">'));
-					input.click(function() {
-						openColorPicker($(this));
-					});			
+					var input=($('<input type="text" style="width: 75%;" name="' + this.id + '" value="' + value + '">'));
 		    	td.append(input);
+          var opencolor=($('<div id="' + this.id + '" style="width: 20%;">'+tr('Open color picker')+'</div>'));
+          opencolor.button({ icons: {	primary: "ui-icon-pencil" }, text: false }).removeClass('ui-button-text-icon-primary');
+          opencolor.click(function() {
+						openColorPicker(input);
+					});
+		    	td.append(opencolor);
 		  	}
-		  	
+
 		    // Action setting
-		    if (this.type=="action") 
+		    if (this.type=="action")
 		    {
 		    	var propId=this.id;
 					var input=($('<button>Edit</button>'));
 					input.click(function() {
-						
+
 						// Check if node exists
 						if ($('actionlist[id=' + propId + "]",o.conf).length>0)
 							var actions=$('actionlist[id=' + propId + "]",o.conf)[0];
@@ -646,7 +729,7 @@ var subpages = {
 							actions.setAttribute("id", propId);
 							o.conf.appendChild(actions);
 						}
-						
+
 						var subPageObjects=[];
 						$('subpage[name=' + subpages.currentSubPage + '] parameters parameter', subpages.config).each(function() {
 							if (this.getAttribute('type')=='object') {
@@ -657,29 +740,29 @@ var subpages = {
 				    	}
 						});
 						actionEditor.open(actions, subPageObjects);
-					});			
+					});
 		    	td.append(input);
 		  	}
-		  	
+
 		    // Zone setting
-		    if (this.type=="zone") 
+		    if (this.type=="zone")
 		    {
 		    	select=$('<select>');
 		    	select.attr('name', this.id);
 		    	select.attr('disabled', '1');
 
-	    		var option=($('<option value="">Execute action</option>'));
+	    		var option=($('<option value="">'+tr('Go to zone')+'</option>'));
 	    		select.append(option);
-	
+
 		    	td.append(select);
 		  	}
-		
+
 		    table_tr.append(td);
 			}
-			    
+
 	    $("#tab-subpages-widget-properties tbody").append(table_tr);
 		});
-		
+
 		$("#tab-subpages-widget-properties input, #tab-subpages-widget-properties select, #tab-subpages-widget-properties textarea").change( function() {
 			// Update conf on selected object when a property change
 			if (($(this).get(0).tagName=="SELECT") || ($(this).attr('type')=="text") || ($(this).get(0).tagName=="TEXTAREA"))
@@ -695,24 +778,24 @@ var subpages = {
           //$("div .selected").get(0).owner.setSetting(name, value);
           var selectedWidget=$("div .selected").get(0);
           // if widget is a html :
-          if ((selectedWidget.owner.conf.getAttribute('type')=='html') && (name=="html")) 
+          if ((selectedWidget.owner.conf.getAttribute('type')=='html') && (name=="html"))
             $(selectedWidget.owner.conf).empty().append(selectedWidget.owner.conf.ownerDocument.createCDATASection(value));
           else selectedWidget.owner.setSetting(name, value);
         }
 			} else $("input[type=text]:visible,select:visible",$(this).parent().parent()).trigger('change');
 		});
-		
+
 		$("#tab-subpages-widget-properties input, #tab-subpages-widget-properties select").focusout(function() { $(this).trigger('change'); });
 
 	},
-	
+
 	// Callback when a widget is selected
 	onWidgetSelect: function(widget) {
 		subpages.selectWidgetsList(widget.owner);
     // Display properties corresponding to widget type
 		subpages.displayProperties(widget.owner);
 	},
-	
+
 	// Callback when a widget is moved
 	onWidgetMove: function(widget) {
 		$("#tab-subpages-properties-x").val(widget.conf.getAttribute('x'));
@@ -724,14 +807,14 @@ var subpages = {
 		$("#tab-subpages-properties-width").val(Math.round(widget.conf.getAttribute('width')));
 		$("#tab-subpages-properties-height").val(Math.round(widget.conf.getAttribute('height')));
 	},
-	
+
 	// Add a new line into the parameters dialog
 	addParameterLine: function(id, label, type, eis_type) {
 		id=((typeof(id)!='undefined')? id : "");
 		label=((typeof(label)!='undefined')? label : "");
 		type=((typeof(type)!='undefined')? type : "");
 		eis_type=((typeof(eis_type)!='undefined')? eis_type : "");
-		
+
 		var table_tr=$("<tr>");
 
 		var td=$("<td><input type='text' class='id' value='" + id + "'></td>");
@@ -739,7 +822,7 @@ var subpages = {
 		var td=$("<td><input type='text' class='label' value='" + label + "'></td>");
 		table_tr.append(td);
 		var td=$("<td>");
-		
+
 		var select=$("<select class='type'>");
 		select.append($("<option value='text'>Text</option>"));
 		select.append($("<option value='object'>Object</option>"));
@@ -751,49 +834,37 @@ var subpages = {
 		table_tr.append(td);
 
 		var td=$("<td>");
-		var select=$("<select class='eis_type'>");
-		select.append($("<option value=''>"+tr("undefined")+"</option>"));
-		
-// 		if (type=='object') {
+ 		//if (type=='object') {
+  		var select=$("<select class='eis_type'>");
+  		select.append($("<option value=''>"+tr("undefined")+"</option>"));
 			$.each(tab_objectTypes, function(key, descr) { select.append($("<option value='" + key + "'>" + descr + "</option>")); });
 			select.val(eis_type);
-// 		}
-		td.append(select);
-		table_tr.append(td);
-		
-		var td=$("<td>");
-		var select=$("<select class='eis_type'>");
-		select.append($("<option value=''>"+ tr("undefined") + "</option>"));
-		
-// 		if (type=='object') {
-			$.each(tab_objectTypes, function(key, descr) { select.append($("<option value='" + key + "'>" + descr + "</option>")); });
-			select.val(eis_type);
-// 		}
-		td.append(select);
+		  td.append(select);
+ 		//} else td.append("<span> </span>");
 		table_tr.append(td);
 
 		var td=$("<td><img src='images/remove.png'></td>");
 		$("img",td).button();
 		$("img",td).click(function(e) { $(e.target).parent().parent().remove(); });
-		
+
 		table_tr.append(td);
 
 		$("#tab-subpages-parameters-list tbody").append(table_tr);
 	},
-	
+
 	// Triggered when closing the parameters dialog
 	saveParameters: function() {
 		var res=false;
-		
+
 		$('subpage[name=' + subpages.currentSubPage + '] parameters', subpages.config).empty();
-		
+
 		$("#tab-subpages-parameters-list tbody tr").each(function() {
 
 			var id=$(".id",this).val();
 			var label=$(".label",this).val();
 			var type=$(".type",this).val();
 			var eis_type=$(".eis_type",this).val();
-			
+
 			if ((id=="")||(label=="")) {
 				messageBox(tr("Please complete all fields"), tr("Error"), "alert");
 				return false;
@@ -804,14 +875,14 @@ var subpages = {
 			parameter.setAttribute('label', label);
 			parameter.setAttribute('type', type);
 			parameter.setAttribute('eis_type', eis_type);
-			
+
 			$('subpage[name=' + subpages.currentSubPage + ']', subpages.config)[0].getElementsByTagName('parameters')[0].appendChild(parameter);
-		
+
 			res=true;
 		});
 		return res;
 	},
-	
+
 	// Fill table when opening the parameters dialog
 	fillParameters: function() {
 		$("#tab-subpages-parameters-list tbody").empty();
@@ -830,26 +901,26 @@ function extractLast( term ) {
 }
 
 jQuery(function($) {
-	
-	$("#tab-subpages-properties").draggable({ 
+
+	$("#tab-subpages-properties").draggable({
   	containment: "parent" ,
   	scroll: false
   });
 
-	$("#tab-subpages-list-widgets").draggable({ 
+	$("#tab-subpages-list-widgets").draggable({
   	containment: "parent" ,
   	scroll: false,
   	handle: "div:first"
   });
-	
+
 	$("#tab-subpages-delete-widget").button({
 		icons: {
 			primary: "ui-icon-closethick"
 		}
 	});
-	
+
 	$("#tab-subpages-delete-widget").click(function() {
-		if ($("div .selected").length>0)	
+		if ($("div .selected").length>0)
 		{
 			subpages.deleteWidget($("div .selected").get(0).owner);
 			// Show subpage properties
@@ -862,9 +933,9 @@ jQuery(function($) {
 			primary: "ui-icon-copy"
 		}
 	});
-	
+
 	$("#tab-subpages-clone-widget").click(function() {
-		if ($("div .selected").length>0)	
+		if ($("div .selected").length>0)
 		{
 			var conf=$("div .selected").get(0).owner.conf;
 			var newConf=conf.cloneNode(true);
@@ -875,7 +946,7 @@ jQuery(function($) {
 			obj.div.widgetMovable("select");
 		}
 	});
-	
+
 	$("#tab-subpages-width").change(function() {
 		var subpage = $('subpage[name=' + subpages.currentSubPage + ']', subpages.config)[0];
 		subpage.setAttribute('width', $(this).val());
@@ -887,7 +958,7 @@ jQuery(function($) {
 		subpage.setAttribute('height', $(this).val());
 		$('#widgetsubpagediv').height($(this).val());
 	});
-	
+
 	$("#tab-subpages-parameters").dialog({
 		buttons: [
       { text: tr("Ok"), click: function() { if (subpages.saveParameters()) $( this ).dialog( "close" ); } },
@@ -901,19 +972,19 @@ jQuery(function($) {
 			subpages.fillParameters();
 		},
 		"Close": function() {
-			if ($("div .selected").length>0)	
+			if ($("div .selected").length>0)
 				subpages.displayProperties($("div .selected").get(0).owner);
 		}
 	});
-	
+
 	$("#tab-subpages-parameters-add").button();
 	$("#tab-subpages-parameters-add").click(function() { subpages.addParameterLine(); });
-	
+
 	// Bind menu buttons
 	$("#button-add-subpage").click(function() {
 		subpages.new();
 	});
-  
+
   $("#button-clone-subpage").click(function() {
 		subpages.clone();
 	});
@@ -921,11 +992,11 @@ jQuery(function($) {
 	$("#button-remove-subpage").click(function() {
 		subpages.delete($('#tab-subpages-list').val());
 	});
-	
+
 	$("#tab-subpages-color").click(function() {
 		openColorPicker($(this));
-	});			
-	
+	});
+
 	$("#tab-subpages-color").change(function() {
 		var subpage = $('subpage[name=' + subpages.currentSubPage + ']', subpages.config)[0];
 		subpage.setAttribute('bgcolor', $(this).val());
@@ -947,7 +1018,7 @@ jQuery(function($) {
 		subpage.setAttribute('bgimage', "_" + $(this).val());
 		$('#widgetsubpagediv').css("background-image", "none");
 	});
-	
+
 	$("#button-save-subpage").click(function() {
 		subpages.save();
 	});
@@ -976,15 +1047,15 @@ jQuery(function($) {
         var _this_subpage = $('subpage[name=' + subpages.currentSubPage + ']', subpages.config);
         obj.number = obj.number + 1;
         var number = obj.number , objsav = obj;
-        $("tbody tr", "#tab-subpages-widgets-list").each(function() { 
+        $("tbody tr", "#tab-subpages-widgets-list").each(function() {
           if (this.obj) {
             if (this.obj.number == number && objsav != this.obj) {
               this.obj.number = this.obj.number - 1;
               $(".active", "#tab-subpages-widgets-list").before($(this));
               $(obj.conf, _this_subpage).before($(this.obj.conf, _this_subpage));
-            } 
-            this.obj.div.css("z-index", this.obj.number ); 
-            $( 'th', this).html( this.obj.number + " " + this.obj.conf.getAttribute('type') ); 
+            }
+            this.obj.div.css("z-index", this.obj.number );
+            $( 'th', this).html( this.obj.number + " " + this.obj.conf.getAttribute('type') );
           }
         });
       }
@@ -998,15 +1069,15 @@ jQuery(function($) {
         obj.number = obj.number - 1;
         var number = obj.number;
         var objsav = obj;
-        $("tbody tr", "#tab-subpages-widgets-list").each(function() { 
+        $("tbody tr", "#tab-subpages-widgets-list").each(function() {
           if (this.obj) {
             if (this.obj.number == number && objsav != this.obj) {
               this.obj.number = this.obj.number + 1;
               $(".active", "#tab-subpages-widgets-list").after($(this));
               $(obj.conf, _this_subpage).after($(this.obj.conf, _this_subpage));
-            }  
-            this.obj.div.css("z-index", this.obj.number ); 
-            $( 'th', this).html( this.obj.number + " " + this.obj.conf.getAttribute('type') ); 
+            }
+            this.obj.div.css("z-index", this.obj.number );
+            $( 'th', this).html( this.obj.number + " " + this.obj.conf.getAttribute('type') );
           }
         });
       }
@@ -1020,12 +1091,12 @@ jQuery(function($) {
 		$(this).addClass("selected");
 		subpages.displaySubpageProperties();
 	});
-	
+
 	$("#button-subpage-parameters").click(function() {
 		$('#tab-subpages-parameters').dialog('open');
 	});
 
-	
+
 	$("#tab-subpages-background-toggle").click(function() {
   	if ($(this).is(':checked'))
   	{
@@ -1044,6 +1115,6 @@ jQuery(function($) {
 	subpages.draw($('#tab-subpages-list').val());
 	subpages.displaySubpageProperties();
   subpages.displayListWidgets();
-  	
+
 	loading.hide();
 });

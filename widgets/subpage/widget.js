@@ -111,9 +111,16 @@ CSubPage.prototype.refreshHTML = function() {
     this.div.css("z-index", 1); 
     this.opensubpage[0].owner = this;
     
-    this.div.append(this.opensubpage);
+    if (this.conf.getAttribute("put_top") != "true" ) {
+      this.div.append(this.opensubpage);
+    }
     div.hide();
     this.div.append(div);
+    if (this.conf.getAttribute("put_top") == "true" ) {
+      this.div.append(this.opensubpage);
+      this.opensubpage.css("top",0);
+      this.opensubpage.css("position", "absolute");
+    }
     
     if (this.conf.getAttribute("view_mode") == "dialog" || this.conf.getAttribute("view_mode") == "dialogmodal" ) {
       this.opensubpage.click(function() {
@@ -141,11 +148,18 @@ CSubPage.prototype.refreshHTML = function() {
         dialogClass: dialogClass
       });
     } else {
-      this.div.width('auto');
-      this.div.height('auto');
+      this.div.width(0);
+      this.div.height(0);
       this.opensubpage.click(function() {
         this.owner.dialogdiv.toggle();
       });
+    }
+
+    if (this.conf.getAttribute("put_left") == "true" ) {
+      this.dialogdiv.css("right", this.dialogdiv.width());
+    }
+    if (this.conf.getAttribute("put_top") == "true" ) {
+      this.dialogdiv.css("bottom", this.dialogdiv.height());
     }
   }
 

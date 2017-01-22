@@ -110,6 +110,16 @@ if (isset($_GET['configknxweb']))
   }
 }
 
+if (file_exists('/etc/init.d/eibd')) {
+  $eibd_initd = true;
+} else $eibd_initd = false;
+tpl()->assignByRef('eibd_initd', $eibd_initd);
+if (file_exists('/etc/init.d/linknx')) {
+  $linknx_initd = true;
+} else $linknx_initd = false;
+tpl()->assignByRef('linknx_initd', $linknx_initd);
+
+
 tpl()->assignByRef('_SERVER', $_SERVER);
 
 tpl()->assignByRef('eibd_running', $eibd_running);

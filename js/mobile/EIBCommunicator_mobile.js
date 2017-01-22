@@ -24,7 +24,7 @@ var EIBCommunicator = {
 			return;
 		var body = "<write><object id='"+obj+"' value='"+value+"'/></write>";
 
-		req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml' ,
+		/*var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml' ,
 			success: function(responseXML, status) {
 				var xmlResponse = responseXML.documentElement;
 				if (xmlResponse.getAttribute('status') == 'success') {
@@ -34,7 +34,12 @@ var EIBCommunicator = {
 					alert(tr("Error: ")+xmlResponse.textContent);
 				if (successCallBack) successCallBack(response);
 			}
-		})
+		})*/
+    var responseXML = queryLinknx(body);
+    if (responseXML) {
+      EIBCommunicator.sendUpdate(obj, value);
+			if (successCallBack) successCallBack(responseXML);
+    }
 	},
 	sendUpdate: function(obj,value) {
 		var listeners = EIBCommunicator.listeners[obj];
@@ -51,7 +56,7 @@ var EIBCommunicator = {
 					body += "<object id='" + objects[i] + "'/>";
 			body += "</objects></read>";
 
-			var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
+			/*var req = jQuery.ajax({ type: 'post', url: 'linknx.php?action=cmd', data: body, processData: false, dataType: 'xml',
 				success: function(responseXML, status) {
 					var xmlResponse = responseXML.documentElement;
 					if (xmlResponse.getAttribute('status') != 'error') {
@@ -75,7 +80,22 @@ var EIBCommunicator = {
 					UIController.setAlert(tr("Error: ")+textStatus);
 				},
 				complete: completeCallBack
-			});
+			});*/
+
+      var xmlResponse = queryLinknx(body);
+      if (xmlResponse) {
+        // Send update to subscribers
+				var objs = xmlResponse.getElementsByTagName('object');
+				if (objs.length == 0)
+						EIBCommunicator.sendUpdate(objects, xmlResponse.childNodes[0].nodeValue);	
+				else {
+					for (i=0; i < objs.length; i++) {
+						var element = objs[i];
+						EIBCommunicator.sendUpdate(element.getAttribute('id'),element.getAttribute('value'));
+					}
+				}
+        if (successCallBack) successCallBack();
+      }
 		}
 		else if (completeCallBack)
 		    completeCallBack();

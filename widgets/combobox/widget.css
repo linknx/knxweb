@@ -1,0 +1,9 @@
+.combobox .comboboxContent {
+	background-repeat: no-repeat;
+	width: 100%;
+	cursor: default;
+}
+.combobox .comboboxList {
+	width: 100%;
+	cursor: default;
+}

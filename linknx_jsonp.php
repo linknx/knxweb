@@ -2,7 +2,8 @@
 header('cache-control: no-cache');
 header("Access-Control-Allow-Origin: http://www.knxweb.fr");
 header('Content-Type: application/javascript; charset=utf-8');
-$version = "0.2";
+error_reporting(0);
+$version = "0.3";
 
 $req_xml = "<read><objects/></read>";
 if (isset($_GET["xml"])) {
@@ -14,33 +15,35 @@ if (isset($_GET["jsonp"])) {
   $func_jsonp = $_GET["jsonp"];
 } else $func_jsonp = '';
 
-$_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
-unset($_config['comment']); 
+$xmlresponse = false;
+if (isset($_GET["xmlresponse"])) {
+  $xmlresponse = $_GET["xmlresponse"];
+}
 
-error_reporting(0);
+$_config = (array)simplexml_load_file('include/config.xml'); // conversion en array du fichier xml de configuration
+unset($_config['comment']);
+
 $max_result_lines = 1000;
-if ($_config['max_result_lines']) $max_result_lines = parseInt($_config['max_result_lines']);
+if ($_config['max_result_lines']) { $max_result_lines = intval($_config['max_result_lines']); }
+$xml = '';
 
 $sock = fsockopen($_config['linknx_host'], $_config['linknx_port'], $errno, $errstr, 30);
 if (!$sock)
-		$result = "<response status='error'>Unable to connect to linknx</response>\n";
+		$xml = "<response status='error'>Unable to connect to linknx</response>\n";
 else {
 	//fwrite($sock, file_get_contents("php://input") . chr(4));
   fwrite($sock, $req_xml . chr(4));
-	$result = '';
+	$xml = '';
 	$cnt = 0;
 	while ($cnt < $max_result_lines && $sock && !feof($sock)) {
-		$result .= fgets($sock, 128);
+		$xml .= fgets($sock, 128);
 		$c = fgetc($sock);
 		if ($c == "\4")	break;
-		$result .= $c;
+		$xml .= $c;
 		$cnt++;
 	}
 	fclose($sock);
 }
-
-$xml = $result;
-
 
 function xmlToArray($xml, $options = array()) {
     $defaults = array(
@@ -56,7 +59,7 @@ function xmlToArray($xml, $options = array()) {
     $options = array_merge($defaults, $options);
     $namespaces = $xml->getDocNamespaces();
     $namespaces[''] = null; //add base (empty) namespace
- 
+
     //get attributes from all namespaces
     $attributesArray = array();
     foreach ($namespaces as $prefix => $namespace) {
@@ -70,7 +73,7 @@ function xmlToArray($xml, $options = array()) {
             $attributesArray[$attributeKey] = (string)$attribute;
         }
     }
- 
+
     //get child nodes from all namespaces
     $tagsArray = array();
     foreach ($namespaces as $prefix => $namespace) {
@@ -78,13 +81,13 @@ function xmlToArray($xml, $options = array()) {
             //recurse into child nodes
             $childArray = xmlToArray($childXml, $options);
             list($childTagName, $childProperties) = each($childArray);
- 
+
             //replace characters in tag name
             if ($options['keySearch']) $childTagName =
                     str_replace($options['keySearch'], $options['keyReplace'], $childTagName);
             //add namespace prefix, if any
             if ($prefix) $childTagName = $prefix . $options['namespaceSeparator'] . $childTagName;
- 
+
             if (!isset($tagsArray[$childTagName])) {
                 //only entry with this key
                 //test if tags of this type should always be arrays, no matter the element count
@@ -103,16 +106,16 @@ function xmlToArray($xml, $options = array()) {
             }
         }
     }
- 
+
     //get text content of node
     $textContentArray = array();
     $plainText = trim((string)$xml);
     if ($plainText !== '') $textContentArray[$options['textContent']] = $plainText;
- 
+
     //stick it all together
     $propertiesArray = !$options['autoText'] || $attributesArray || $tagsArray || ($plainText === '')
             ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
- 
+
     //return node as array
     return array(
         $xml->getName() => $propertiesArray
@@ -122,10 +125,17 @@ function xmlToArray($xml, $options = array()) {
 $xml = simplexml_load_string($xml);
 
 $arrayData = xmlToArray($xml);
-if ($func_jsonp == '')
-  echo "json_data = ".json_encode($arrayData) . ";\n";
-else 
-  echo "$func_jsonp(".json_encode($arrayData) . ", $req_xml );\n";
+if ($func_jsonp == '') {
+  if ($xmlresponse != false)
+    echo "xml_data = '" . $xml . "';\n";
+  else
+    echo "json_data = " . json_encode($arrayData) . ";\n";
+} else {
+  if ($xmlresponse != false)
+    echo $func_jsonp . "('" . $xml . "', '" . $req_xml . "' );\n";
+  else
+    echo $func_jsonp . "(". json_encode($arrayData) . ", '" . $req_xml . "' );\n";
+}
 
 
 ?>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget>
+	<name>combobox</name>
+	<label>Combobox</label>
+	<description>Combobox go to a Zone</description>
+	<version>1.0</version>
+	<category>Basic widgets</category>
+	<settings>
+		<setting label="Label" type="comment" />
+		<setting id="text" label="Text" type="text" default="Go to :" />
+		<setting id="firstoption" label="First label option" type="text" default="Choose a zone" />
+		<setting id="size" label="Font size" type="text" default="12" />
+		<setting id="color" label="Color" type="color" default="#000000" />
+		<setting id="align" label="Text align" type="list" default="" >
+			<option key="" value="Default" />
+			<option key="left" value="Left" />
+			<option key="center" value="Center" />
+			<option key="right" value="Right" />
+		</setting>
+  </settings>
+	<feedbacks/>
+</widget>

@@ -72,10 +72,10 @@ background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bdbdbd),
 }
 .trpair {
 }
-.hour {/*width:50px;text-align:center;*/}
-.minute {/*width:50px;text-align:center;*/}
+.alarmclock .hour {/*width:50px;text-align:center;*/}
+.alarmclock .minute {/*width:50px;text-align:center;*/}
 
-.reveil {
+.alarmclock .reveil {
   padding: 0 15px 0 10px;
   width: 140px;  
   height: 64px;
@@ -90,11 +90,11 @@ background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bdbdbd),
   border: 1px solid black;
   font-size: 40px;
 }
-.reveil div {
+.alarmclock .reveil div {
   float: left;
   font-size: 35px;
 }
-.reveil .icoreveil {
+.alarmclock .reveil .icoreveil {
   width: 50px;
   height: 50px;
   background-position: 0 0;
@@ -102,19 +102,19 @@ background: -webkit-gradient(linear,left bottom,left top,color-stop(0, #bdbdbd),
   background-color: transparent;
   background-size: cover;
 }
-.reveil .date {
+.alarmclock .reveil .date {
   position: absolute;
   left: 60px;
   bottom: 5px;
   font-size: 13px;
 }
-.reveil .status.active {
+.alarmclock .reveil .status.active {
   background-color: green;
 }
-.reveil .status.notactive {
+.alarmclock .reveil .status.notactive {
   background-color: red;
 }
-.reveil .status {
+.alarmclock .reveil .status {
   position: absolute;
   height: 6px;
   width: 30px;

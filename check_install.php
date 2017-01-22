@@ -19,7 +19,7 @@ function _get($key, $default='') {
 
 $pwd=getcwd(); // Retourne le dossier de travail courant
 $apache_user=exec('whoami');
-$version_knxweb2 = exec('cat ' . dirname(__FILE__) . DIRECTORY_SEPARATOR . 'version');
+$version_knxweb2 = file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'version', FILE_USE_INCLUDE_PATH);
 
 //$eibd_running = `ps ax | grep eibd | grep -v grep`;
 /*
@@ -28,38 +28,51 @@ $version_knxweb2 = exec('cat ' . dirname(__FILE__) . DIRECTORY_SEPARATOR . 'vers
  * pstree -a | grep eibd | grep -v grep => a priroi marche sur syno et PC
  *
  */  
-
-$eibd_running = exec('ps | grep eibd | grep -v grep');
-if ($eibd_running!="") {
-  $eibd_running_param = explode("eibd ",$eibd_running);
-  $eibd_running_param = $eibd_running_param[1];
-} else {
-  $eibd_running = exec('ps ax | grep eibd | grep -v grep');
-  if ($eibd_running!="") {
-    $eibd_running_param = explode("eibd ",$eibd_running);
-    $eibd_running_param = $eibd_running_param[1];
+function pgm_running($pgm)
+{
+  $path_pgm = exec('which '.$pgm);
+  if ($path_pgm!="") {
+    $pgm_running = exec('ps | grep '.$pgm.' | grep -v grep');
+    if ($pgm_running!="") {
+      /*$pgm_running_param = explode("$pgm ",$pgm_running);*/
+      $pgm_running_param = explode("$path_pgm ",$pgm_running);
+      return $pgm_running_param[1];
+    } else {
+      $pgm_running = exec('ps ax | grep '.$pgm.' | grep -v grep');
+      if ($pgm_running!="") {
+        /*$pgm_running_param = explode("$pgm ",$pgm_running);*/
+        $pgm_running_param = explode("$path_pgm ",$pgm_running);
+        return $pgm_running_param[1];
+      } else {
+        return false;
+      }
+    }
+    return $pgm_running_param;
   } else {
-    $eibd_running_param = $_config["eibd"];
+    return false;
   }
 }
-
-//$linknx_running = `ps ax | grep linknx | grep -v grep`;
-$linknx_running = exec('ps | grep linknx | grep -v grep');
-if ($linknx_running!="") {
-  $linknx_running_param = explode("linknx ",$linknx_running);
-  $linknx_running_param = $linknx_running_param[1];
-  $linknx_param_pos_w = (strpos($linknx_running_param, "-w") >= 0);
-} else {
-  $linknx_running = exec('ps ax | grep linknx | grep -v grep');
-  if ($linknx_running!="") {
-    $linknx_running_param = explode("linknx ",$linknx_running);
-    $linknx_running_param = $linknx_running_param[1];
-    $linknx_param_pos_w = (strpos($linknx_running_param, "-w") >= 0);
-  } else {
-    $linknx_running_param = $_config["linknx"];
-    $linknx_param_pos_w = false;
-  }
+$eibd_running = pgm_running("eibd");
+if ($eibd_running == false && $_config["eibd"]) $eibd_running = $_config["eibd"];
+if ($eibd_running !=  false) {
+// ajouter une ligne dans include/pgmrunning.php pour tester eibd
+  $path_pgm = exec('echo "<?php pgm_running("eibd"); ?'.'>" >> include/pgmrunning.php');
 }
+
+$knxd_running = pgm_running("knxd");
+if ($knxd_running == false && $_config["knxd"]) $eibd_running = $_config["knxd"];
+if ($knxd_running !=  false) {
+// ajouter une ligne dans include/pgmrunning.php pour tester knxd
+  $path_pgm = exec('echo "<?php pgm_running("knxd"); ?'.'>" >> include/pgmrunning.php');
+}
+
+$linknx_param_pos_w = false;
+$linknx_running = pgm_running("linknx");
+if ($linknx_running == false && $_config["linknx"]) {
+  $linknx_running = $_config["linknx"];
+}
+$linknx_param_pos_w = (strpos($linknx_running, "-w") >= 0);
+if (!$linknx_param_pos_w) $linknx_param_pos_w = (strpos($linknx_running, "-W") >= 0);
 
 if (isset($_GET["ajax"])) {
 	
@@ -96,7 +109,7 @@ if (isset($_GET["ajax"])) {
 				<?php 
 					if (file_exists('template/template_c/')) echo '<span style="color: #00FF00">ok</span>'; 
 					else {
-            $mkdirtemplate_c = exec('mkdir '.$pwd.'/template/template_c/');
+            $mkdirtemplate_c = mkdir($pwd.'/template/template_c/', 0777);
             if (file_exists('template/template_c/')) {
               echo '<span style="color: #00FF00">ok</span><span style="color: #00FF00"> the directory was create</span>';
             } else {
@@ -135,17 +148,28 @@ if (isset($_GET["ajax"])) {
 				?>
 			</li>
     </ul>
-		Status EIBD/Linknx : <br />
-    <ul>
+		Status : <br />
+    <ul><?php
+        if ($eibd_running!="") { ?>
       <li>
-				<strong>EIBD</strong> is ACTIVE :
-        <?php
-        if ($eibd_running!="") echo '<span style="color: #00FF00">ok</span>'; 
-				else {
-					echo "<span style='color: #FF0000'>no</span> => for start exemple : <i>eibd -d -D -S -T -i ipt:192.168.1.10:3671</i> ";
-					//$error=true;
-				} ?>
-			</li>
+        <strong>EIBD</strong> is ACTIVE :
+        <span style="color: #00FF00">ok</span>
+      </li>
+      <?php
+        } else if ($knxd_running!="") { ?>
+      <li>
+        <strong>Knxd</strong> is ACTIVE :
+        <span style="color: #00FF00">ok</span>
+      </li>
+      <?php
+        } else { ?>
+
+      <li>
+        <strong>EIBD or Knxd</strong> is ACTIVE :
+        <span style='color: #FF0000'>no</span> => for exemple start eibd like this : <i>eibd -d -D -S -T -i ipt:192.168.1.10:3671</i>
+      </li>
+      <?php
+        } ?>
       <li>
 				<strong>Linknx</strong> is ACTIVE :
         <?php
@@ -181,7 +205,11 @@ if (isset($_GET["ajax"])) {
       $title_knxweb = $_config["title"];
 
     if (!isset($_GET['check'])) { // pas de check de fait donc on prend les valeur par défaut ou celles de la config existante 
-      if (!$_config["lang"]) $default_lang = 'en'; else $default_lang = $_config["lang"];
+      if (!$_config["lang"]) {
+        //$default_lang = 'en';
+        $default_lang = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $default_lang = strtolower(substr(chop($default_lang[0]),0,2));
+      } else $default_lang = $_config["lang"];
       if (!$_config["useJavaIfAvailable"]) $useJavaIfAvailable = "off"; else $useJavaIfAvailable = (($_config["useJavaIfAvailable"]=="true")?"on":"off");
       if (!$_config["superuser"]) $superuser = "off"; else $superuser = (($_config["superuser"]=="true")?"on":"off");
       if (!$_config["uitheme"]) $default_uitheme = 'cupertino'; else $default_uitheme = $_config["uitheme"];
@@ -220,29 +248,12 @@ if (isset($_GET["ajax"])) {
     <input type="hidden" name="check" value="yes">
 		<table class="ui-widget-content" style="border:none;" >
 			<tr>
-				<td>Linknx host</td>
-				<td><input type="text" name="linknx_host" value="<?php echo _get('linknx_host','127.0.0.1'); ?>" size="15"></td>
-			</tr>
-			<tr>
-				<td>Linknx port</td>
-				<td><input type="text" name="linknx_port" value="<?php echo _get('linknx_port',1028); ?>" size="4"></td>
-			</tr>
-      <tr><td colspan="2"><br /> </td></tr>
-      <tr><td colspan="2" id="titleknxweb" ></td></tr>
-      <tr>
 				<td>Title of HTML page of Knxweb</td>
 				<td>
           <input type="text" name="title_knxweb" value="<?php echo _get('title_knxweb',$title_knxweb); ?>" size="50">
         </td>
 			</tr>
-      <tr title="Use java applet to update objects value on display design if Java is installed on client">
-				<td>Use by default applet Java if available</td><!-- Use java applet to update objects value on display design if Java is installed on client -->
-				<td><input type="checkbox" name="useJavaIfAvailable" <?php echo ((_get('useJavaIfAvailable',$useJavaIfAvailable)==="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
-			</tr> 
-      <tr title="Use Event Source to update objects value on display design">
-				<td>Use Event Source if available on navigator</td>
-				<td><input type="checkbox" name="useEventSource" <?php echo ((_get('useEventSource',$useEventSource)==="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
-			</tr>  
+      <tr><td colspan="2"><br /> </td></tr>
       <tr>
 				<td>Language</td>
 				<td>
@@ -254,10 +265,6 @@ if (isset($_GET["ajax"])) {
           </select>
         </td>
 			</tr>
-      <tr class="superuser">
-				<td></td>
-				<td><input type="checkbox" name="superuser" <?php echo ((_get('superuser',$superuser)==="on")?'checked="1"':""); ?>" >Super User</td>
-			</tr> 
       <tr>
 				<td>UI Theme</td>
 				<td>
@@ -270,16 +277,52 @@ if (isset($_GET["ajax"])) {
         </td>
 			</tr>
       <tr><td colspan="2"><br /> </td></tr>
+			<tr><td colspan="2" id="titleknxweb" ></td></tr>
+      <tr>
+				<td>Linknx host</td>
+				<td><input type="text" name="linknx_host" value="<?php echo _get('linknx_host','127.0.0.1'); ?>" size="15"></td>
+			</tr>
+			<tr>
+				<td>Linknx port</td>
+				<td><input type="text" name="linknx_port" value="<?php echo _get('linknx_port',1028); ?>" size="4"></td>
+			</tr>
+      <tr><td colspan="2"><br /> </td></tr>
+      <!-- <tr title="Use java applet to update objects value on display design if Java is installed on client">
+				<td>Use by default applet Java if available</td>
+				<td><input type="checkbox" name="useJavaIfAvailable" <?php echo ((_get('useJavaIfAvailable',$useJavaIfAvailable)==="on")?'checked="1"':""); ?>" > if supported by the navigator</td>
+			</tr> --> <!-- Use java applet to update objects value on display design if Java is installed on client -->
+      <tr title="Use Event Source to update objects value on display design">
+				<td>Use Event Source if available on navigator</td>
+				<td><input type="checkbox" name="useEventSource" <?php echo ((_get('useEventSource',$useEventSource)==="on")?'checked="1"':""); ?>" > if supported by the WebServer (apache2) </td>
+			</tr>
+      <tr class="superuser">
+				<td></td>
+				<td><input type="checkbox" name="superuser" <?php echo ((_get('superuser',$superuser)==="on")?'checked="1"':""); ?> >Super User</td>
+			</tr>
+      <tr><td colspan="2"><br /> </td></tr>
       <tr>
 				<td>EIBD</td>
 				<td>
           <?php if ($eibd_running!="") { ?>
             <span class="green">&nbsp;ACTIVE&nbsp;</span>
-            <input type="hidden" name="eibd_param" value="<?=_get('eibd_param',$eibd_running_param)?>">
-            <input type="text" value="<?=_get('eibd_param',$eibd_running_param)?>" size="50" disabled="true">
+            <input type="hidden" name="eibd_param" value="<?=_get('eibd_param',$eibd_running)?>">
+            <input type="text" value="<?=_get('eibd_param',$eibd_running)?>" size="50" disabled="true">
           <?php } else { ?>
             <span class="red">&nbsp;DESACTIVE&nbsp;</span>
-            <input type="text" name="eibd_param" value="<?=_get('eibd_param',$eibd_running_param)?>" size="50">
+            <input type="text" name="eibd_param" value="<?=_get('eibd_param',$eibd_running)?>" size="50">
+          <?php } ?>
+        </td>
+			</tr>
+      <tr>
+				<td>Knxd</td>
+				<td>
+          <?php if ($knxd_running!="") { ?>
+            <span class="green">&nbsp;ACTIVE&nbsp;</span>
+            <input type="hidden" name="eibd_param" value="<?=_get('eibd_param',$knxd_running)?>">
+            <input type="text" value="<?=_get('eibd_param',$knxd_running)?>" size="50" disabled="true">
+          <?php } else { ?>
+            <span class="red">&nbsp;DESACTIVE&nbsp;</span>
+            <input type="text" name="eibd_param" value="<?=_get('eibd_param',$knxd_running)?>" size="50">
           <?php } ?>
         </td>
 			</tr>
@@ -288,11 +331,11 @@ if (isset($_GET["ajax"])) {
         <td>
           <?php if ($linknx_running!="") { ?>
             <span class="green">&nbsp;ACTIVE&nbsp;</span>
-            <input type="hidden" name="linknx_param" value="<?=_get('linknx_param',$linknx_running_param)?>">
-            <input type="text" value="<?=_get('linknx_param',$linknx_running_param)?>" size="50" disabled="true">
+            <input type="hidden" name="linknx_param" value="<?=_get('linknx_param',$linknx_running)?>">
+            <input type="text" value="<?=_get('linknx_param',$linknx_running)?>" size="50" disabled="true">
           <?php } else { ?>
             <span class="red">&nbsp;DESACTIVE&nbsp;</span>
-            <input type="text" name="linknx_param" value="<?=_get('linknx_param',$linknx_running_param)?>" size="50">
+            <input type="text" name="linknx_param" value="<?=_get('linknx_param',$linknx_running)?>" size="50">
           <?php } ?>
         </td>
 			</tr>
@@ -313,7 +356,8 @@ if (isset($_GET["ajax"])) {
       };
 			
 			$("#checkLinknxButton").button();
-      $("#titleknxweb").html("KnxWeb use Jquery " + $().jquery + " and Jquery-Ui " + $.ui.version );
+      //$("#titleknxweb").html("KnxWeb use Jquery " + $().jquery + " and Jquery-Ui " + $.ui.version );
+      $("#titleknxweb").html("KnxWeb use Jquery and Jquery-Ui ");
       $("#showsuperuser").dblclick( function() { $('.superuser').show();});
 		</script>
 <?php
@@ -343,6 +387,7 @@ if (isset($_GET["ajax"])) {
 					$_SESSION['haveMysql']=($info["haveMysql"]==1)?"true":"false";
           $_SESSION['linknx_param']=$_GET['linknx_param'];
           $_SESSION['eibd_param']=$_GET['eibd_param'];
+          $_SESSION['knxd_param']=$_GET['knxd_param'];
           $_SESSION['useJavaIfAvailable']=($_GET['useJavaIfAvailable']=="on")?"true":"false";
           $_SESSION['lang']=$_GET['lang'];
           $_SESSION['title_knxweb']=$_GET['title_knxweb'];
@@ -362,10 +407,6 @@ if (isset($_GET["ajax"])) {
 					<li>Mysql : <?=(($info["haveMysql"])?'<span style="color: #00FF00">Yes</span>':'<span style="color: #FF0000">No</span>')?></li>
           <li>Linknx have parameter "-w" or "--write=..."	: <?=(($linknx_param_pos_w)?'<span style="color: #00FF00">Yes</span>':'<span style="color: #FF0000">No</span>')?></li>
 				</ul>
-				<!-- <br />
-				Please ensure that linknx is started with the --write parameter, for example:<br />
-				<br />
-				<i>linknx --config=/etc/linknx.xml --write=/etc/linknx.xml</i><br /><br /> -->
 				<input style="margin-top: 15px;" type="button" id="step2NextButton" onclick="$('#tabs').tabs('select',2);" value="Next">
 				<script>
 					$('#tabs').tabs('enable',2);
@@ -385,7 +426,7 @@ if (isset($_GET["ajax"])) {
     if (!$_config["defaultVersion"]) $_config["defaultVersion"] = "design";
     if (!$_config["imageDir"]) $_config["imageDir"] = "pictures/";
 
-		$config="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
+		$config="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?".">
 <param>
   <linknx_host>" . $_SESSION['linknx_host'] . "</linknx_host> <!-- ip du serveur linknx -->
   <linknx_port>" . $_SESSION['linknx_port'] . "</linknx_port> <!-- port connexion avec serveur linknx -->
@@ -400,6 +441,7 @@ if (isset($_GET["ajax"])) {
   <defaultMobileDesign>default</defaultMobileDesign> <!-- version et design par défaut de la visu \"Mobile\" -->
   <defaultMobileVersion>mobile</defaultMobileVersion> <!-- fichier xml de description de la visu \"Mobile\" -->
   <eibd>" . $_SESSION['eibd_param'] . "</eibd> <!-- paramètres d'appel de eibd exemple : ft12:/dev/ttyS0 ou -d -D -S -T -i ipt:192.168.1.10:3671 -->
+  <knxd>" . $_SESSION['knxd_param'] . "</knxd> <!-- paramètres d'appel de knxd -->
   <linknx>" . $_SESSION['linknx_param'] . "</linknx> <!-- paramètres d'appel de linknx -->
   <loglinknx>" . $_SESSION['loglinknx'] . "</loglinknx> <!-- type de log de linknx file/mysql/null -->
   <imageDir>" . $_config["imageDir"] . "</imageDir> <!-- chemin d'accès aux images -->
@@ -416,21 +458,23 @@ if (isset($_GET["ajax"])) {
   <max_result_lines>1000</max_result_lines> <!-- max result lines read when we check linknx reponse default 1000 -->
 </param>";
 		$res=file_put_contents('include/config.xml', $config);
-$subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>
-<subpages></subpages>";
+$subpages = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?".">\n<subpages></subpages>";
     $res2 = true;
     if (!is_file('design/subpages.xml')) $res2=file_put_contents('design/subpages.xml', $subpages); 
-		if ($res!==false && $res2!==false)
+$plugins = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?".">\n<plugins></plugins>";
+    $res3 = true;
+    if (file_exists('plugins/') && !is_file('plugins/plugins.xml')) $res3=file_put_contents('plugins/plugins.xml', $plugins);
+
+		if ($res!==false && $res2!==false && $res3!==false)
 		{
 ?>
 		Configuration file written.<br />
 		<br />
-		<!--You must now delete the file check_install.php (rm <?php echo $pwd;?>/check_install.php) to finish knxweb setup.<br />-->
     If you use an old version of knxweb (version <=0.7) you can convert the "old" design with <a href="recovery_design.php">this function</a> before.<br />
 		<br />
-		<!--When done, --><a href="setup.php">click here</a> to configure knxweb.
+		<a href="setup.php">click here</a> to configure knxweb.
 <?php
-		} else echo "Error while writing configuration to file include/config.xml";
+		} else echo "Error while writing configuration to the files include/config.xml, design/subpages.xml and plugins/plugins.xml";
 	}
 	die;
 }

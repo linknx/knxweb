@@ -17,23 +17,23 @@ if (isset($_GET['action'])) {
 	    if (isset($_GET['ver']))
         $version = $_GET['ver'];
 			if (ereg("[\\/.$;!?]", $name.$version) > 0)
-				print("<savedesign status='error'>Restricted character in design or version name");
+				echo "<savedesign status='error'>Restricted character in design or version name";
 			elseif ($fp = fopen("design/".$name."/".$version.".xml", 'w')) {
 			    $conf = file_get_contents("php://input");
 				fwrite($fp, $conf);
 				fclose($fp);
-				print("<savedesign status='success'>");
+				echo "<savedesign status='success'>";
 			}
 			elseif (!is_writable("design/".$name."/".$version.".xml"))
-				print("<savedesign status='error'>Design has no write permission on server");
+				echo "<savedesign status='error'>Design has no write permission on server";
 			else
-				print("<savedesign status='error'>Unable to write design to file");
-			print("</savedesign>\n");
+				echo "<savedesign status='error'>Unable to write design to file";
+			echo "</savedesign>\n";
 	    break;
 	    
 		case 'designlist':
 			if ($dh = opendir("design")) {
-				print("<designlist status='success'>\n");
+				echo "<designlist status='success'>\n";
 				while (($file = readdir($dh)) !== false) {
 					if ($file != "." && $file != ".." && $file != "CVS" && is_dir("design/".$file)) {
 						echo "<design name='$file'>\n";
@@ -50,65 +50,65 @@ if (isset($_GET['action'])) {
 				closedir($dh);
 			}
 			else
-				print("<designlist status='error'>Unable to find design folder on server\n");
-			print("</designlist>\n");
+				echo "<designlist status='error'>Unable to find design folder on server\n";
+			echo "</designlist>\n";
 	    break;
 	    
 		case 'createdesign':
 	    if (isset($_GET['name'])) {
         $name = $_GET['name'];
 				if (file_exists("design/".$name))
-					print("<createdesign status='error'>Design already exists");
+					echo "<createdesign status='error'>Design already exists";
 				elseif (ereg("[\\/.$;!?]", $name) > 0)
-					print("<createdesign status='error'>Restricted character in design name");
+					echo "<createdesign status='error'>Restricted character in design name";
 				elseif (mkdir("design/".$name, 0777) == false)
-					print("<createdesign status='error'>Unable to create design folder");
+					echo "<createdesign status='error'>Unable to create design folder";
 				else { // TODO gérer design et mobile en paramètres 'ver' comme le save ...
           if (!isset($_GET['mobile'])) {
     				if ($fp = fopen("design/".$name."/design.xml", 'w')) {
     					fwrite($fp, "<?xml version='1.0' encoding='UTF-8'?"."><config width='1280' height='1024' enableSlider='false'><zones/></config>\n");
 					fclose($fp);
-					print("<createdesign status='success'>");
+					echo "<createdesign status='success'>";
 				}
 				else
-					print("<createdesign status='error'>Unable to save new design");
+					echo "<createdesign status='error'>Unable to save new design";
           } elseif ($fp = fopen("design/".$name."/mobile.xml", 'w')) {
     					fwrite($fp, "<?xml version='1.0' encoding='UTF-8'?"."><config><pages><page name='home' title='KnxWebMobile'><header/></page></pages></config>\n");
     					fclose($fp);
-    					print("<createdesign status='success'>");
+    					echo "<createdesign status='success'>";
     				}
     				else
-    					print("<createdesign status='error'>Unable to save new design");
+    					echo "<createdesign status='error'>Unable to save new design";
         }
 			}
 			else
-				print("<createdesign status='error'>No design name specified");
-			print("</createdesign>\n");
+				echo "<createdesign status='error'>No design name specified";
+			echo "</createdesign>\n";
 	    break;
       
 	  case 'removedesign':
 	    if (isset($_GET['name'])) {
         $name = $_GET['name'];
 				if (!file_exists("design/".$name))
-					print("<removedesign status='error'>Design not exists");
+					echo "<removedesign status='error'>Design not exists";
 				else {
           $delfile = unlink("design/".$name."/design.xml");
           $deldir = rmdir("design/".$name);
           if ($delfile == "false")
-					  print("<removedesign status='error'>Unable to remove design file");
+					  echo "<removedesign status='error'>Unable to remove design file";
           elseif ( $deldir == "false" )
-					  print("<removedesign status='error'>Unable to remove design folder");
+					  echo "<removedesign status='error'>Unable to remove design folder";
           else
-					  print("<removedesign status='success'>");
+					  echo "<removedesign status='success'>";
         }
 			}
 			else
-				print("<removedesign status='error'>No design name specified");
-			print("</removedesign>\n");
+				echo "<removedesign status='error'>No design name specified";
+			echo "</removedesign>\n";
 	    break;
       
 		case 'savefile':
-			print("<savefile status='error'>File save is not possible, please put the file manually in design folder on server</savefile>\n");
+			echo "<savefile status='error'>File save is not possible, please put the file manually in design folder on server</savefile>\n";
 	    break;
 	    
 		case 'filelist':
@@ -116,7 +116,7 @@ if (isset($_GET['action'])) {
 	    if (isset($_GET['name']))
         $name = $_GET['name'];
 			if ($dh = opendir("design/".$name)) {
-				print("<filelist status='success'>\n");
+				echo "<filelist status='success'>\n";
 				while (($file = readdir($dh)) !== false) {
 					if ($file != "." && $file != ".." && substr($file, -4) != ".xml")
 						echo "<file>$file</file>\n";
@@ -124,8 +124,8 @@ if (isset($_GET['action'])) {
 				closedir($dh);
 			}
 			else
-				print("<filelist status='error'>Unable to find design '$name' on server\n");
-			print("</filelist>\n");
+				echo "<filelist status='error'>Unable to find design '$name' on server\n";
+			echo "</filelist>\n";
 	    break;
 	    
 		case 'filelistdir':
@@ -134,7 +134,7 @@ if (isset($_GET['action'])) {
 			
 			$files=glob($_config['imageDir'] . $name . "*");
 
-			echo("<filelist status='success'>\n");
+			echo "<filelist status='success'>\n";
 			foreach($files as $f) {
 				if (is_dir($f)) echo "<directory>" . basename($f) . "</directory>\n";
 				if (is_file($f)) echo "<file>" . basename($f) . "</file>\n";
@@ -142,13 +142,13 @@ if (isset($_GET['action'])) {
 
 				
 /*				if ($dh = opendir($name)) {
-					print("<filelist status='success'>\n");
+					echo "<filelist status='success'>\n";
 					while (($file = readdir($dh)) !== false) {
 						if ($file != "." && $file != ".." && substr($file, -4) != ".xml")
 							echo "<file>$file</file>\n";
 						}
 					closedir($dh); */
-			print("</filelist>\n");
+			echo "</filelist>\n";
 			break;
 			
 		case 'saveconfig':
@@ -156,18 +156,18 @@ if (isset($_GET['action'])) {
 	    if (isset($_GET['dir']))
         $dir = $_GET['dir'];
 			if (ereg("[\\/.$;!?]", $dir) > 0)
-				print("<saveconfig status='error'>Restricted character in dir");
+				echo "<saveconfig status='error'>Restricted character in dir";
 			elseif ($fp = fopen($dir."/config.xml", 'w')) {
 			    $conf = file_get_contents("php://input");
 				fwrite($fp, $conf);
 				fclose($fp);
-				print("<saveconfig status='success'>");
+				echo "<saveconfig status='success'>";
 			}
 			elseif (!is_writable($dir."/config.xml"))
-				print("<saveconfig status='error'>Config.xml has no write permission on server");
+				echo "<saveconfig status='error'>Config.xml has no write permission on server";
 			else
-				print("<saveconfig status='error'>Unable to create config.xml file");
-			print("</saveconfig>\n");
+				echo "<saveconfig status='error'>Unable to create config.xml file";
+			echo "</saveconfig>\n";
 	    break;
 	    
 		case 'newWidget':
@@ -198,13 +198,13 @@ if (isset($_GET['action'])) {
 				$conf = file_get_contents("php://input");
 				fwrite($fp, $conf);
 				fclose($fp);
-				print("<updatewidgetscss status='success'>");
+				echo "<updatewidgetscss status='success'>";
 			}
 			elseif (!is_writable("widgets/widgets.css"))
-				print("<updatewidgetscss status='error'>widgets/widgets.css has no write permission on server");
+				echo "<updatewidgetscss status='error'>widgets/widgets.css has no write permission on server";
 			else
-				print("<updatewidgetscss status='error'>Unable to create widgets/widgets.css file");
-			print("</updatewidgetscss>\n");
+				echo "<updatewidgetscss status='error'>Unable to create widgets/widgets.css file";
+			echo "</updatewidgetscss>\n";
 	    break;
 
     case 'widgetsdl':
@@ -213,7 +213,7 @@ if (isset($_GET['action'])) {
       $path_knxweb2 = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'widgets' . DIRECTORY_SEPARATOR;
       exec('tar -xf /tmp/widget.tar --directory='.$path_knxweb2);
       exec('rm /tmp/widget.tar');
-      print("<widgetsdl status='success' />\n"); 
+      echo "<widgetsdl status='success' />\n";
       break;
       
     case 'subpagesdl':
@@ -228,7 +228,7 @@ if (isset($_GET['action'])) {
       );
       $context = stream_context_create($opts);
       $subpagexml = simplexml_load_string(file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/subpages_knxweb2/' . $subpage . '/subpage.xml', false, $context));
-      print("<subpagesdl status='success'>");
+      echo "<subpagesdl status='success'>";
       if ($subpagexml) {
         $fgc = simplexml_load_file("design/subpages.xml");
         if ($fgc) {
@@ -237,12 +237,12 @@ if (isset($_GET['action'])) {
           $domfgc  = $domsubpagesxml->ownerDocument->importNode($domfgc, TRUE);
           $domsubpagesxml->appendChild($domfgc);
           if ($fgc->asXML("design/subpages.xml"))
-  				  print("<updatesubpagesxml status='success'>");
+  				  echo "<updatesubpagesxml status='success'>";
           else
-            print("<updatesubpagesxml status='error'>Unable to update design/subpages.xml file");
+            echo "<updatesubpagesxml status='error'>Unable to update design/subpages.xml file";
   			} else
-          print("<updatesubpagesxml status='error'>Unable to load design/subpages.xml file");
-  			print("</updatesubpagesxml>\n");
+  				echo "<updatesubpagesxml status='error'>Unable to update design/subpages.xml file";
+  			echo "</updatesubpagesxml>\n";
       } 
       $widgetscss = file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/subpages_knxweb2/' . $subpage . '/widgets.css', false, $context);
       if ($widgetscss) {
@@ -250,30 +250,84 @@ if (isset($_GET['action'])) {
         if ($fp) {  
   				fwrite($fp, "\n /* Subpage " . $subpage . " Add from cvs */\n" . $widgetscss);
   				fclose($fp);
-  				print("<updatewidgetscss status='success'>");
+  				echo "<updatewidgetscss status='success'>";
   			} else
-  				print("<updatewidgetscss status='error'>Unable to update/create widgets/widgets.css file");
-  			print("</updatewidgetscss>\n");
+  				echo "<updatewidgetscss status='error'>Unable to update/create widgets/widgets.css file";
+  			echo "</updatewidgetscss>\n";
       }      
-      print("</subpagesdl>\n");
+      echo "</subpagesdl>\n";
       break;
       
+    case 'plugindl':
+      $plugin = $_GET['plugin'];
+      $opts = array(
+        'http'=>array(
+          'method'=>"GET",
+          'header'=>"Content-Type: application/xml; charset=utf-8", 
+          'timeout' => 20
+        )
+      );
+      $context = stream_context_create($opts);
+      //$pluginxml = simplexml_load_string(file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/plugins_knxweb2/' . $plugin . '/plugin.xml', false, $context));
+      $pluginxml = simplexml_load_string(file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/plugins_knxweb2/' . $plugin . '/plugin.xml', false, $context));
+      // TODO a gérer autrement ...sur github ?
+      echo "<plugindl status='success'>";
+      // TODO à compléter ...
+      echo "</plugindl>\n";
+      break;
+
     case 'updateknxweb':
       exec('wget -O /tmp/knxweb2.tar "http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/knxweb2/?view=tar"');
-      //$path_knxweb2 = dirname(__FILE__) . DIRECTORY_SEPARATOR;
       $path_knxweb2 = explode(DIRECTORY_SEPARATOR, dirname(__FILE__));
       array_splice($path_knxweb2, count($path_knxweb2)-1);
       $path_knxweb2 = implode( DIRECTORY_SEPARATOR , $path_knxweb2 ) . DIRECTORY_SEPARATOR;
-      exec('tar xvf /tmp/knxweb2.tar --directory='.$path_knxweb2);
+      exec('tar -xf /tmp/knxweb2.tar --overwrite -C '.$path_knxweb2);
       exec('rm /tmp/knxweb2.tar');
-      print("<updateknxweb status='success' />\n"); 
+      echo "<updateknxweb status='success' />\n";
+      break;
+
+    case 'updateknxwebgit':
+      $path_knxweb2 = dirname(__FILE__);  // ex. /var/www/knxweb2
+      $git_branch = "master";
+      //exec('wget -O /tmp/knxweb2.tar.gz --no-check-certificate "https://github.com/linknx/knxweb/archive/master.tar.gz"');
+      if (file_exists("dev")) {
+        exec('wget -O /tmp/knxweb2.tar.gz --no-check-certificate "https://github.com/linknx/knxweb/archive/dev.tar.gz"');
+        $git_branch = "dev";
+      } else {
+        exec('wget -O /tmp/knxweb2.tar.gz --no-check-certificate "https://github.com/linknx/knxweb/archive/master.tar.gz"');
+        $git_branch = "master";
+      }
+      exec('tar -xzf /tmp/knxweb2.tar.gz --overwrite -C /tmp/');
+      // copier le contenu complet en le mettant à jour: cp -f -R /tmp/knxweb-master/* /var/www/knxweb2.1.0
+      exec('cp -f -R /tmp/knxweb-'.$git_branch.'/* '.$path_knxweb2.'/');
+      // Pour supprimer un répertoire non vide, la syntaxe est rm -Rf monrepertoire
+      exec('rm -Rf /tmp/knxweb-'.$git_branch.'/');
+      exec('rm /tmp/knxweb2.tar.gz ');
+      echo "<updateknxwebgit status='success' >' branch:".$git_branch." path:".$path_knxweb2."/'</updateknxwebgit>\n";
+      break;
+
+    case 'saveplugins':
+      if (file_put_contents("design/plugins.xml", file_get_contents("php://input")))
+        echo "<saveplugins status='success'>";
+      elseif (!is_writable("design/plugins.xml"))
+        echo "<saveplugins status='error'>design/plugins.xml directory has no write permission on server";
+      else
+        echo "<saveplugins status='error'>Unable to write plugins to file";
+      echo "</saveplugins>\n";
+      break;
+
+    case 'restart':
+      if (isset($_GET['pgm'])) {
+        exec('sudo service '.$_GET['pgm'].' restart'); // restart eibd or linknx with init.d service if exist
+        echo "<restart status='success' >Restart ".$_GET['pgm']."</restart>\n";
+      } else echo "<restart status='error' />\n";
       break;
 
 		default:
-			print("<response status='error'>Unknown action</response>\n");
+			echo "<response status='error'>Unknown action</response>\n";
 	    break;
 	}
 }
 else
-	print("<response status='error'>No action specified</response>\n");
+	echo "<response status='error'>No action specified</response>\n";
 ?>

@@ -21,7 +21,9 @@ CSlider.prototype.refreshHTML = function() {
   $(this.div).attr( "title", this.conf.getAttribute("feedback-object"));
 
   if (this.conf.getAttribute("background-picture") != "") 
-    $( '.sliderdiv', this.div ).css('background', 'url(' + getImageUrl(this.conf.getAttribute("background-picture")) + ')');
+  {
+    $( '.sliderdiv', this.div ).css({'background': 'url(' + getImageUrl(this.conf.getAttribute("background-picture")) + ')', 'background-repeat': 'no-repeat', 'background-position': '0px 0px'});
+  }
   else $( '.sliderdiv', this.div ).css('background','');
 
   if (this.conf.getAttribute("border") == 'true') 
@@ -69,6 +71,8 @@ CSlider.prototype.refreshHTML = function() {
   $( '.ui-slider-handle', this.div ).addClass("slidera"); // met "transparent" le "boutton" pour le slide
   $( '.sliderdiv', this.div ).removeClass('ui-widget-content');
 
+  $( '.sliderdiv', this.div ).css('width', '100%');
+  $( '.sliderdiv', this.div ).css('height', '100%');
   if (this.conf.getAttribute("slider-picture")!= "")
   {
     var param = "";
@@ -79,13 +83,35 @@ CSlider.prototype.refreshHTML = function() {
     } else {
       if (this.position == 'right_bottom') param = param + "left top"; else param = param + "right bottom"; 
     } 
-    $('.ui-slider-range', this.div).css('background', 'url(' + getImageUrl(this.conf.getAttribute("slider-picture")) + ') no-repeat '+param);
+
+    this.sliderImg = new Image();
+    var tdiv = this.div;
+    this.sliderImg.onload = function() {
+      $('.ui-slider-range', tdiv).css('background', 'url('+this.src+') no-repeat '+param);
+      $('.ui-slider-range', tdiv).css({'width': this.width, 'height': this.height});
+    }
+    this.sliderImg.src = getImageUrl(this.conf.getAttribute("slider-picture"));
+
+    if (this.conf.getAttribute("knob-picture") != "" && this.conf.getAttribute("knob-picture") != null)
+    {
+      this.knobImg = new Image();
+      this.knobImg.sliderImgheight = this.sliderImg.height;
+      this.knobImg.onload = function() {
+        $('.ui-slider-handle', tdiv).css('background', 'url('+this.src+') no-repeat '+param);
+        $('.ui-slider-handle', tdiv).css({'width': this.width, 'height': this.height});
+        var vslider = ($('.ui-slider-range', tdiv).css('height')).replace('px', '');
+        var vmax = Math.max(vslider, this.height);
+        var offset = (vmax - Math.min(vslider, this.height)) / 2;
+        $( '.ui-slider-handle', tdiv ).css('top', -offset);
+        $( '.ui-slider-handle', tdiv ).css('margin-left', -this.width/2);
+        $( '.ui-slider-handle', tdiv ).css('border', '0px');
+      }
+      this.knobImg.src = getImageUrl(this.conf.getAttribute("knob-picture"));
+    }
   } else {
     if (this.conf.getAttribute("slider-color")!="") $('.ui-slider-range', this.div).css('background', this.conf.getAttribute("slider-color"));
   }
 
-  $( '.sliderdiv', this.div ).css('width', '100%');
-  $( '.sliderdiv', this.div ).css('height', '100%');
 
   if (this.orientation == 'vertical') {
     $( '.ui-slider-range', this.div ).css('width', '');

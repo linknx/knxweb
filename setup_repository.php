@@ -43,8 +43,8 @@ if ($file) {
 }
 tpl()->assignByRef('tab_widgetsdllist', $tab_widgetsdllist);
 
-$widgets=getWidgets();
-tpl()->assignByRef("widgets",$widgets);
+//$widgets=getWidgets();
+tpl()->assignByRef("widgets", $_widgets);
 
 /* Repository Subpages */
 $file = @file_get_contents('http://linknx.cvs.sourceforge.net/viewvc/linknx/knxweb/subpages_knxweb2/subpageslist', false, $context);
