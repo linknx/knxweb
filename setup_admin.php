@@ -30,7 +30,7 @@ if (isset($_GET['logobjects']) || isset($_GET['loglinknx']))
   $info=$linknx->getServices();
   if ($info!==false) {
   $logType = $info['persistence']['type'];
-  if ($logType == 'file') $pathLog = $info['persistence']['logpath'];
+  if ($logType == 'file') { $pathLog = $info['persistence']['logpath']; if ($pathLog == "") $pathLog = $info['persistence']['path']; }
   }
 
   if ($logType == 'file') {
