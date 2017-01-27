@@ -14,7 +14,8 @@ CCamerazoom.prototype.refreshHTML = function() {
 	$(".buttonContent", this.div).css({'background-image': 'url(' + getImageUrl(this.conf.getAttribute("icon-picture")) + ')', 'height': '100%'});
 
 	var conf = this.conf;
-	supported_resolutions = JSON.parse(conf.getAttribute("supported-resolutions"));
+  if (conf.getAttribute("supported-resolutions")) supported_resolutions = JSON.parse(conf.getAttribute("supported-resolutions"));
+  else supported_resolutions = [[640,480]];
 	if (supported_resolutions instanceof Array == 0)
 	{
 		console.log("can't parse supported-resolutions, use [[640,480]]");
