@@ -99,8 +99,8 @@ function finishedOverviewRetrieve(widget)
 function addPoint(widget, i, value)
 {
   var idx = i == 0 ? 0 : i+1;
-  console.log("addPoint", widget.curves[i].id, "["+Date.now(), value+"]");
-  widget.chart.series[idx].addPoint([Date.now(), value], true, true);
+  //console.log("addPoint", widget.curves[i].id, "["+Date.now(), value+"]");
+  if (widget.chart.series) widget.chart.series[idx].addPoint([Date.now(), value], true, true);
 }
 
 function getTSperiod(periodicity, duration)

@@ -216,7 +216,7 @@ if ($typelog == "mysql") {
 
   if ($_GET['output'] == 'json') {
   //$result=str_replace("\n","<br />",`tail -n $log_nbenreg $filelog`);
-  exec('tail -n ' . $log_nbenreg . ' ' . $filelog, $res);
+  exec('tail -n ' . $log_valcount . ' ' . $filelog, $res);
   $result=implode("<br />", $res);
 
     //$result2 = substr($result, 0, -6); // enlève le dernier "<br />"
@@ -241,7 +241,7 @@ if ($typelog == "mysql") {
   }
   } else {
     //$result=str_replace("\n","<br />",str_replace(">","&gt;",str_replace("<","&lt;",`tail -n $log_nbenreg $filelog`)));
-    exec('tail -n ' . $log_nbenreg . ' ' . $filelog, $res);
+    exec('tail -n ' . $log_valcount . ' ' . $filelog, $res);
     $result=str_replace("\n","<br />",str_replace(">","&gt;",str_replace("<","&lt;",implode("\n", $res))));
   }
 
