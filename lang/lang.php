@@ -38,9 +38,9 @@
   	if(isset($_lang[$keyName]))
   	{
   		$keyContent = $_lang[$keyName];
-  		$keyContent = preg_replace('~\$(\d)~e', '$params[\1]', $keyContent);
+  		$keyContent = preg_replace_callback('/\$(\d)/', function($m) { return $params[$m[1]]; }, $keyContent); /* preg_replace('~\$(\d)~e', '$params[\1]', $keyContent);*/
   		 if ($keyContent != '') return $keyContent;
-       else return "#$keyContent#"; 
+       else return "#$keyName#";
   	} else {
       $_lang[$keyName] = $keyName;
       if (isset($_config['translate']) && $_config['translate']=="true") {
