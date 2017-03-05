@@ -5,6 +5,7 @@ require_once "include/common.php";
 error_reporting(0);
 
 header('Content-Type: application/xml; charset=utf-8');
+date_default_timezone_set('Europe/Paris');
 
 if (isset($_GET['action'])) {
 	switch ($_GET['action']) 
@@ -16,7 +17,7 @@ if (isset($_GET['action'])) {
 			$version = "design";
 	    if (isset($_GET['ver']))
         $version = $_GET['ver'];
-			if (ereg("[\\/.$;!?]", $name.$version) > 0)
+			if (preg_match("/[\\/.$;!?]/i", $name.$version) > 0)
 				echo "<savedesign status='error'>Restricted character in design or version name";
 			elseif ($fp = fopen("design/".$name."/".$version.".xml", 'w')) {
 			    $conf = file_get_contents("php://input");
@@ -59,7 +60,7 @@ if (isset($_GET['action'])) {
         $name = $_GET['name'];
 				if (file_exists("design/".$name))
 					echo "<createdesign status='error'>Design already exists";
-				elseif (ereg("[\\/.$;!?]", $name) > 0)
+				elseif (preg_match("/[\\/.$;!?]/i", $name) > 0)
 					echo "<createdesign status='error'>Restricted character in design name";
 				elseif (mkdir("design/".$name, 0777) == false)
 					echo "<createdesign status='error'>Unable to create design folder";
@@ -155,7 +156,7 @@ if (isset($_GET['action'])) {
 			$dir = "include";
 	    if (isset($_GET['dir']))
         $dir = $_GET['dir'];
-			if (ereg("[\\/.$;!?]", $dir) > 0)
+			if (preg_match("/[\\/.$;!?]/i", $dir) > 0)
 				echo "<saveconfig status='error'>Restricted character in dir";
 			elseif ($fp = fopen($dir."/config.xml", 'w')) {
 			    $conf = file_get_contents("php://input");

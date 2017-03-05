@@ -4,6 +4,8 @@ error_reporting(0);
 
 require_once("include/common.php");
 
+date_default_timezone_set("Europe/Paris");
+
 if (isset($_GET['ajax']))
 {
 	ini_set("display_errors", 0);
