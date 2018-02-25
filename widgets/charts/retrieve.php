@@ -103,8 +103,10 @@ setlocale(LC_ALL , "fr_FR" );
 date_default_timezone_set("Europe/Paris");
 
 $log_valcount = @$_GET['valcount'];
-if ($log_valcount && !preg_match('/^[0-9]+$/', $log_valcount)) {
+if ($log_valcount) {
+   if (!preg_match('/^[0-9]+$/', $log_valcount)) {
   die("Invalid valcount parameter: $log_valcount");
+   }
 }
 else {
   if ($typelog == "file") {
@@ -216,7 +218,7 @@ if ($typelog == "mysql") {
 
   if ($_GET['output'] == 'json') {
   //$result=str_replace("\n","<br />",`tail -n $log_nbenreg $filelog`);
-  exec('tail -n ' . $log_nbenreg . ' ' . $filelog, $res);
+  exec('tail -n ' . $log_valcount . ' ' . $filelog, $res);
   $result=implode("<br />", $res);
 
     //$result2 = substr($result, 0, -6); // enlève le dernier "<br />"
@@ -241,7 +243,7 @@ if ($typelog == "mysql") {
   }
   } else {
     //$result=str_replace("\n","<br />",str_replace(">","&gt;",str_replace("<","&lt;",`tail -n $log_nbenreg $filelog`)));
-    exec('tail -n ' . $log_nbenreg . ' ' . $filelog, $res);
+    exec('tail -n ' . $log_valcount . ' ' . $filelog, $res);
     $result=str_replace("\n","<br />",str_replace(">","&gt;",str_replace("<","&lt;",implode("\n", $res))));
   }
 
