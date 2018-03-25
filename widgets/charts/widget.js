@@ -26,6 +26,7 @@ function CCharts(conf) {
         $("*").css("cursor", "progress");
 
         this.owner.chart = creategraph(this.owner);
+        getUnits(setUnits, this.owner);
         $( "#containerhighstock" ).show();
 
         $( "#containerhighstockdialog" ).dialog({ title: this.owner.title });

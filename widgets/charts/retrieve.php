@@ -85,18 +85,18 @@ if (isset($_GET['LogLinknx'])) { // log linknx
 if ($typelog == 'mysql') {
   // $info['perisstence'][] host/user/pass/db/table/logtable
   //nom du serveur serveur:
-  $serveur       = $info['persistence']['host'];
+  $serveur        = $info['persistence']['host'];
   // pseudo de connexion au serveur
   $login          = $info['persistence']['user'];
   // Mot de pass de connexon au serveur
   $password       = $info['persistence']['pass'];
   // Nom de la base de donnée
-  $base  = $info['persistence']['db']; //"linknx";
-  $table = $info['persistence']['logtable']; //"log";
+  $base           = $info['persistence']['db']; //"linknx";
+  $table          = $info['persistence']['logtable']; //"log";
   // structure de la table logtable
-  $ts = "ts";
-  $object = "object";
-  $value = "value";
+  $ts             = "ts";
+  $object         = "object";
+  $value          = "value";
 }
 
 setlocale(LC_ALL , "fr_FR" );
@@ -122,9 +122,8 @@ $result_tab = array();
 if ($typelog == "mysql") {
 
   // On ouvre la connexion à Mysql
-  $db = mysql_connect($serveur, $login, $password) or die('<h1>Connexion au serveur impossible !</h1>');
-  mysql_select_db($base,$db) or die('<h1>Connexion impossible à la base</h1>');
-  mysql_query("SET NAMES 'utf8'");
+  $mysqli = mysqli_connect($serveur, $login, $password, $base) or die('<h1>Connexion au serveur impossible !</h1>');
+  $mysqli->query("SET NAMES 'utf8'");
 
   if ($_GET['output'] == "json") {
 
@@ -138,46 +137,43 @@ if ($typelog == "mysql") {
   $step = 1;
 
   /*if (!$start) */{
-  $sql = "
-    SELECT COUNT($ts)
-    FROM $table
-    WHERE $object = '$objectlog'
-    AND $ts between '$startTime' and '$endTime'";
+  $sql = '
+    SELECT COUNT('.$ts.') AS tsCount
+    FROM '.$table.'
+    WHERE '.$object.' = "'.$objectlog.'"
+    AND '.$ts.' between "'.$startTime.'" and "'.$endTime.'"';
 
-  $req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
+  $req = $mysqli->query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysqli_error());
+  $row = $req->fetch_assoc();
+  $num_rows=$row["tsCount"];
 
-  if (mysql_num_rows($req)) {
-    $data=mysql_fetch_array($req);
-    $num_rows = $data[0];
-  }
   if ($num_rows > $log_valcount)
     $step = intval($num_rows / $log_valcount);
   }
 
-    $sql = "
-  SELECT * FROM
-  (
+    $sql = '
+  SELECT *
+  FROM (
     SELECT @row := @row +1 AS rownum,
-      DATE_FORMAT($ts, '%Y-%m-%d %H:%i:%s') AS ts,
-      $value AS value
+      DATE_FORMAT('.$ts.', "%Y-%m-%d %H:%i:%s") AS ts,
+      '.$value.' AS value
     FROM (
-      SELECT @row :=0) r,
-      $table
-      WHERE $object = '$objectlog'
-      AND $ts between '$startTime' and '$endTime'
+      SELECT @row :=0 ) r, '.$table.'
+      WHERE '.$object.' = "'.$objectlog.'"
+      AND '.$ts.' BETWEEN "'.$startTime.'" AND "'.$endTime.'"
   ) ranked
-  WHERE (  rownum = 1
-    OR rownum = $num_rows
-    OR (rownum % $step = 0)
+  WHERE ( rownum = 1
+    OR rownum = '.$num_rows.'
+    OR (rownum % '.$step.' = 0 )
   )
-  ORDER BY ts";
-
+  ORDER BY ts';
   } else {
-    $sql = "SELECT DATE_FORMAT(".$ts.", '%Y-%m-%d %H:%i:%s') AS ts , ".$value." AS value FROM ".$table." WHERE ".$object." = '".$objectlog."' ORDER BY ".$ts." DESC LIMIT 0 , ".$log_valcount;
+    $sql = 'SELECT DATE_FORMAT('.$ts.', "%Y-%m-%d %H:%i:%s") AS ts, '.$value.' AS value FROM '.$table.' WHERE '.$object.' = "'.$objectlog.'" ORDER BY '.$ts.' DESC LIMIT 0, '.$log_valcount;
   }
-  $req = mysql_query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysql_error());
+  $req = $mysqli->query($sql) or die('Erreur SQL !<br>'.$sql.'<br>'.mysqli_error());
 
-  $nbenreg = mysql_num_rows($req);
+  $nbenreg = $req->num_rows;
+
   $nbenreg--;
 
   while ($nbenreg >= 0 ){
@@ -187,7 +183,7 @@ if ($typelog == "mysql") {
     */
 
     // récupérer prochaine occurence de la table
-    $data = mysql_fetch_array($req);
+    $data = $req->fetch_assoc();
 
     // Conversion des "on/off ..." en "numérique" puis en float
     $float_value = $data["value"];
@@ -212,7 +208,7 @@ if ($typelog == "mysql") {
     $nbenreg--;
   }
 
-  mysql_close();
+  mysqli_close();
 
 } else if ($typelog == "file") {
 

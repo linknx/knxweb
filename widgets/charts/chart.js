@@ -419,8 +419,6 @@ function creategraph(widget) {
           c.addSeries(createSeries(widget, i, options_chart));
         }
 
-        var units = getUnits(setUnits, widget);
-
         var deferred_requests = [];
         for(var i=0; i<widget.curves.length; i++) {
           var uri = 'widgets/charts/retrieve.php?output=json&objectlog=' + widget.curves[i].id + '&end=' + widget.initial_start + '&valcount=' + c.chartWidth;
