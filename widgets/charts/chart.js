@@ -45,7 +45,7 @@ var afterSetExtremes = function(e, widget)
       $.getJSON(uri+'&callback=?',
         (function(i) {
           return function (data) {
-            var idx = i == 0 ? 0 : i+1;
+            var idx = i;
             var startx = -1, endx = -1;
             var first_part = [], last_part = [], new_data;
             for (var x=0; x < c.series[idx].options.data.length; x++) {
@@ -98,8 +98,7 @@ function finishedOverviewRetrieve(widget)
 
 function addPoint(widget, i, value)
 {
-  var idx = i == 0 ? 0 : i+1;
-  console.log("addPoint", widget.curves[i].id, "["+Date.now(), value+"]");
+  var idx = i;
   widget.chart.series[idx].addPoint([Date.now(), value], true, true);
 }
 
@@ -126,7 +125,7 @@ function getTSperiod(periodicity, duration)
 
 function setUnits(unitsDict, widget) {
     for(var i=0; i<widget.curves.length; i++) {
-      var idx = i == 0 ? 0 : i+1;
+      var idx = i;
       widget.chart.series[idx].unit = unitsDict[widget.curves[i].id];
     }
 }
@@ -419,8 +418,6 @@ function creategraph(widget) {
           c.addSeries(createSeries(widget, i, options_chart));
         }
 
-        var units = getUnits(setUnits, widget);
-
         var deferred_requests = [];
         for(var i=0; i<widget.curves.length; i++) {
           var uri = 'widgets/charts/retrieve.php?output=json&objectlog=' + widget.curves[i].id + '&end=' + widget.initial_start + '&valcount=' + c.chartWidth;
@@ -429,7 +426,7 @@ function creategraph(widget) {
             $.getJSON(uri+'&callback=?',
               (function(i) {
                 return function (data) {
-                  var idx = i == 0 ? 0 : i+1;
+                  var idx = i;
                   var concat_data = data.concat(c.series[idx].options.data);
                   c.series[idx].setData(concat_data);
                   widget.curves[i].ready = true;
@@ -457,6 +454,7 @@ function creategraph(widget) {
 
 function createSeries(widget, i, options_chart, async) {
     curve = widget.curves[i];
+
     var data2 = [];
     var series2 = {
       yAxis: 0, // premier axe yAxis par défaut
